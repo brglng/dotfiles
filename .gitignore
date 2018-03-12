@@ -1,0 +1,20 @@
+/.Trash-*
+/.recycle
+/System Volume Information
+/$Recycle.Bin
+/RECYCLER
+/RECYCLED
+*~
+.*.swp
+.DS_Store
+Thumbs.db
+thumbs.db
+Desktop.ini
+desktop.ini
+
+.netrwhist
+readline_history.txt
+/emacs
+/emacs.d/
+/.vim/pack/brglng/opt/
+*.pyc

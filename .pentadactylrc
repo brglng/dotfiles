@@ -1,0 +1,14 @@
+set guioptions+=T
+set hintkeys="abcdefghijklmnopqrstuvwxyz0123456789"
+
+hi Hint font: bold 15px "Ubuntu Mono", monospace !important; margin: -.2ex; padding: 0 0 0 1px; outline: 1px solid rgba(0, 0, 0, .5); background: rgba(255, 248, 231, .8); color: black;
+hi Hint[active] /**/
+hi HintActive   /**/
+hi HintElem     /**/
+hi HintImage    /**/
+
+map -modes=v,i,c,t <C-a> <Pass>
+map -modes=n,v,i,c,t <C-c> <Pass>
+map -modes=i,c,t <C-v> <Pass>
+map -modes=i,c,t <C-x> <Pass>
+map -modes=i,c,t <C-z> <Pass>
