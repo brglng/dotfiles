@@ -44,3 +44,6 @@ case $(uname -s) in
   Linux) install_linux ;;
   Darwin) install_mac ;;
 esac
+
+mkdir -p ~/local/src
+git clone -b stable https://github.com/rust-lang/rust.git ~/.local/src/rust

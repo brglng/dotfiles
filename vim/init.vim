@@ -400,134 +400,116 @@ endfunction
 " endif
 
 " =========================== Plugin Settings ================================ {{{
+"dein Scripts----------------------------- {{{
+if &compatible
+  set nocompatible               " Be iMproved
+endif
 
-" minpac {{{
-set packpath^=~/.vim
-packadd minpac
-call minpac#init()
-call minpac#add('k-takata/minpac', {'type': 'opt'})
+" Required:
+set runtimepath+=$HOME/.local/share/dein/repos/github.com/Shougo/dein.vim
 
-" UI Plugins
-call minpac#add('scrooloose/nerdtree')
-call minpac#add('jistr/vim-nerdtree-tabs')
-call minpac#add('vim-airline/vim-airline')
-call minpac#add('vim-airline/vim-airline-themes')
-" call minpac#add('Yggdroot/indentLine')
-call minpac#add('nathanaelkane/vim-indent-guides')
-call minpac#add('majutsushi/tagbar')
-call minpac#add('mbbill/fencview')
-call minpac#add('mbbill/undotree')
-" call minpac#add('ryanoasis/vim-devicons')
+" Required:
+if dein#load_state($HOME . '/.local/share/dein')
+  call dein#begin($HOME . '/.local/share/dein')
 
-" Moving and Editing Plugins
-call minpac#add('tpope/vim-unimpaired')
-call minpac#add('wellle/targets.vim')
-"call minpac#add('tpope/vim-commentary')
-call minpac#add('scrooloose/nerdcommenter')
-"call minpac#add('auto-pairs')
-call minpac#add('Raimondi/delimitMate')
-call minpac#add('easymotion/vim-easymotion')
-call minpac#add('tpope/vim-surround')
-call minpac#add('godlygeek/tabular')
-call minpac#add('tpope/vim-endwise')
-call minpac#add('tpope/vim-sleuth')
-call minpac#add('SirVer/ultisnips')
-call minpac#add('honza/vim-snippets')
+  " Let dein manage dein
+  " Required:
+  call dein#add($HOME . '/.local/share/dein/repos/github.com/Shougo/dein.vim')
 
-" FileType Plugins
-call minpac#add('PProvost/vim-ps1')
-call minpac#add('aklt/plantuml-syntax')
-call minpac#add('hynek/vim-python-pep8-indent')
-call minpac#add('sheerun/vim-polyglot')
+  " Add or remove your plugins here:
+  " call dein#add('Shougo/neosnippet.vim')
+  " call dein#add('Shougo/neosnippet-snippets')
 
-" Source Control Plugins
-" call minpac#add('Xuyuanp/nerdtree-git-plugin')
-call minpac#add('airblade/vim-gitgutter')
-call minpac#add('tpope/vim-fugitive')
-call minpac#add('will133/vim-dirdiff')
+  " You can specify revision/branch/tag.
+  " call dein#add('Shougo/deol.nvim', { 'rev': 'a1b5108fd' })
 
-" Building and Syntax Checking Plugins
-call minpac#add('neomake/neomake')
-" call minpac#add('w0rp/ale')
+  " UI Plugins
+  call dein#add('scrooloose/nerdtree')
+  call dein#add('jistr/vim-nerdtree-tabs')
+  call dein#add('vim-airline/vim-airline')
+  call dein#add('vim-airline/vim-airline-themes')
+  call dein#add('Yggdroot/indentLine')
+  call dein#add('nathanaelkane/vim-indent-guides')
+  call dein#add('majutsushi/tagbar')
+  call dein#add('mbbill/fencview')
+  call dein#add('mbbill/undotree')
+  call dein#add('ryanoasis/vim-devicons')
 
-" Debugging Plugins
-" call minpac#add('gilligan/vim-lldb')
-call minpac#add('vim-scripts/Conque-GDB')
+  " Moving and Editing Plugins
+  call dein#add('tpope/vim-unimpaired')
+  call dein#add('wellle/targets.vim')
+  "call dein#add('tpope/vim-commentary')
+  call dein#add('scrooloose/nerdcommenter')
+  "call dein#add('auto-pairs')
+  call dein#add('Raimondi/delimitMate')
+  call dein#add('easymotion/vim-easymotion')
+  call dein#add('tpope/vim-surround')
+  call dein#add('godlygeek/tabular')
+  call dein#add('tpope/vim-endwise')
+  call dein#add('tpope/vim-sleuth')
+  call dein#add('SirVer/ultisnips')
+  call dein#add('honza/vim-snippets')
 
-" Searching plugin: denite.vim and plugins
-call minpac#add('Shougo/denite.nvim')
-call minpac#add('Shougo/neomru.vim')
+  " FileType Plugins
+  call dein#add('PProvost/vim-ps1')
+  call dein#add('aklt/plantuml-syntax')
+  call dein#add('hynek/vim-python-pep8-indent')
+  call dein#add('sheerun/vim-polyglot')
 
-" ColorsShemes
-call minpac#add('sickill/vim-monokai')
-call minpac#add('chriskempson/vim-tomorrow-theme')
-call minpac#add('chriskempson/base16-vim')
-call minpac#add('junegunn/seoul256.vim')
-call minpac#add('nanotech/jellybeans.vim')
-call minpac#add('NLKNguyen/papercolor-theme')
-call minpac#add('joshdick/onedark.vim')
+  " Source Control Plugins
+  " call dein#add('Xuyuanp/nerdtree-git-plugin')
+  call dein#add('airblade/vim-gitgutter')
+  call dein#add('tpope/vim-fugitive')
+  call dein#add('will133/vim-dirdiff')
 
-" YouCompleteMe is really complicated, though powerful
-function s:setup_you_complete_me()
-  let ycm_dir_name = 'ycm'
-  if has('win64') && !has('win32unix')
-    let ycm_dir_name = ycm_dir_name . 'win64'
-  elseif has('win32') && !has('win32unix')
-    let ycm_dir_name = ycm_dir_name . 'win32'
-  elseif has('win32unix')
-    if system('uname -s | grep CYGWIN') != ''
-      if system('uname -m') == "x86_64\n"
-        let ycm_dir_name = ycm_dir_name . 'cyg64'
-      elseif system('uname -m') == "x86\n"
-        let ycm_dir_name = ycm_dir_name . 'cyg32'
-      endif
-    endif
-  elseif has('mac') || has('macunix')
-    let ycm_dir_name = ycm_dir_name . 'mac'
-  elseif has('unix')
-    let glibc_is_found = 0
-    let ycm_dir_name = ycm_dir_name . '-linux-glibc-'
-    if executable('/lib/x86_64-linux-gnu/libc.so.6')
-      let ycm_dir_name = ycm_dir_name . system('/lib/x86_64-linux-gnu/libc.so.6 | sed -ne ''s/^.*GLIBC \([0-9]*\)\.\([0-9]*\).*$/\1.\2/gp''')[:-2] . '-x86_64-'
-      let glibc_is_found = 1
-    elseif executable('/lib/i386-linux-gnu/libc.so.6')
-      let ycm_dir_name = ycm_dir_name . system('/lib/i386-linux-gnu/libc.so.6 | sed -ne ''s/^.*GLIBC \([0-9]*\)\.\([0-9]*\).*$/\1.\2/gp''')[:-2] . '-x86-'
-      let glibc_is_found = 1
-    elseif executable('/lib64/libc.so.6')
-      let ycm_dir_name = ycm_dir_name . system('/lib64/libc.so.6 | sed -ne ''s/^.*GLIBC \([0-9]*\)\.\([0-9]*\).*$/\1.\2/gp''')[:-2] . '-x86_64-'
-      let glibc_is_found = 1
-    elseif executable('/lib/libc.so.6')
-      let ycm_dir_name = ycm_dir_name . system('/lib/libc.so.6 | sed -ne ''s/^.*GLIBC \([0-9]*\)\.\([0-9]*\).*$/\1.\2/gp''')[:-2] . '-x86-'
-      let glibc_is_found = 1
-    endif
+  " Building and Syntax Checking Plugins
+  call dein#add('neomake/neomake')
+  " call dein#add('w0rp/ale')
+
+  " Debugging Plugins
+  call dein#add('gilligan/vim-lldb')
+  call dein#add('vim-scripts/Conque-GDB')
+
+  " Searching plugin: denite.vim and plugins
+  call dein#add('Shougo/denite.nvim')
+  call dein#add('Shougo/neomru.vim')
+
+  " ColorSchemes
+  call dein#add('sickill/vim-monokai')
+  call dein#add('chriskempson/vim-tomorrow-theme')
+  call dein#add('chriskempson/base16-vim')
+  call dein#add('junegunn/seoul256.vim')
+  call dein#add('nanotech/jellybeans.vim')
+  call dein#add('NLKNguyen/papercolor-theme')
+  call dein#add('joshdick/onedark.vim')
+
+  if has('win32')
+    let g:ycm_server_python_interpreter = 'py -3'
+    let ycm_python_interpreter = 'py - 3'
+  else
+    let ycm_python_interpreter = 'python3'
   endif
-  if has('python3')
-    let ycm_dir_name = ycm_dir_name . 'py3'
-    if has('win32')
-      let g:ycm_server_python_interpreter = 'C:/Users/zhaosheng.pan/AppData/Local/Programs/Python/Python35/python.exe'
-      let ycm_install_cmd = 'py -2'
-    else
-      let g:ycm_server_python_interpreter = system('which python3')[:-2]
-      let ycm_install_cmd = system('which python3')[:-2]
-    endif
-  elseif has('python')
-    let ycm_dir_name = ycm_dir_name . 'py2'
-    if has('win32')
-      let g:ycm_server_python_interpreter = 'C:/Python27/python.exe'
-      let ycm_install_cmd = 'py -2'
-    else
-      let g:ycm_server_python_interpreter = system('which python2.7')[:-2]
-      let ycm_install_cmd = system('which python2.7')[:-2]
-    endif
-  endif
-  if (has('python3') || has('python')) && ((!has('mac') && !has('macunix') && glibc_is_found) || has('mac') || has('macunix'))
-    let ycm_install_cmd = '!' . ycm_install_cmd . ' install.py --clang-completer --racer-completer --tern-completer'
-    call minpac#add('Valloric/YouCompleteMe', { 'name': ycm_dir_name, 'type': 'opt', 'do': ycm_install_cmd })
-    exe 'packadd ' . ycm_dir_name
-  endif
-endfunction
-call s:setup_you_complete_me()
-" }}}
+  call dein#add('Valloric/YouCompleteMe', { 'build':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer' })
+
+  call dein#local($HOME . '/.vim/dein-local')
+
+  call dein#disable(['indentLine', 'vim-devicons', 'vim-lldb'])
+
+  " Required:
+  call dein#end()
+  call dein#save_state()
+endif
+
+" Required:
+filetype plugin indent on
+syntax enable
+
+" If you want to install not installed plugins on startup.
+" if dein#check_install()
+  " call dein#install()
+" endif
+
+"End dein Scripts------------------------- }}}
 
 " UltiSnips settings {{{
 " let g:UltiSnipsExpandTrigger = "<tab>"
@@ -554,13 +536,13 @@ let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_key_invoke_completion = '<C-x><C-x>'
 
-let g:ycm_global_ycm_extra_conf = $HOME . '/.vim/global_ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = $HOME . '/.vim/ycm_extra_conf_global.py'
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_max_diagnostics_to_display = 10000
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_complete_in_strings = 1
 
-let g:ycm_rust_src_path = $HOME . '/.vim/rustc-1.19.0-src/src'
+let g:ycm_rust_src_path = $HOME . '/.local/src/rust/src'
 
 "let g:ycm_error_symbol = '⨉'
 "let g:ycm_warning_symbol = '⚠'
@@ -725,8 +707,6 @@ let g:ale_python_flake8_args = '--ignore=W0311,E265,E501,E201,E202,E111,E114,E12
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 " let g:DevIconsEnableFoldersOpenClose = 1
 
-packloadall
-
 " Denite.vim {{{
 call denite#custom#option('_', 'auto_resize', 1)
 call denite#custom#option('_', 'vertical_preview', 1)
@@ -789,7 +769,7 @@ if !has('gui_running')
     endif
     colorscheme solarized
   else
-    if !exists('g:GuiLoaded') && !exists('g:nyaovim_version') && !has('gui_vimr')
+    if !exists('g:GuiLoaded') && !exists('g:nyaovim_version') && !has('gui_vimr') && !has('gui_oni')
       set t_Co=16
       let g:solarized_termcolors = 16
       let g:onedark_termcolors = 16
