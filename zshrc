@@ -85,7 +85,7 @@ DISABLE_AUTO_UPDATE="true"
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern root line)
 
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
 
 # User configuration
 
