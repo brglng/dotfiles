@@ -75,9 +75,7 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ $(uname -s) = Darwin ]; then
-  if [ -n "$BASH" ]; then
-    source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
-  fi
+  source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
   source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
 fi
 
@@ -104,9 +102,9 @@ if [ -x /usr/bin/dircolors ]; then
   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
   alias diff='colordiff'
   if [ $(uname -s) = Darwin ]; then
-    alias ls='/usr/local/bin/gls -hF --color=auto'
+    alias ls='/usr/local/bin/gls --group-directories-first -hF --color=auto'
   else
-    alias ls='ls -hF --color=auto'
+    alias ls='ls --group-directories-first -hF --color=auto'
   fi
   alias grep='grep --color=auto'
   alias egrep='egrep --color=auto'
@@ -178,30 +176,28 @@ fi
 
 set show-all-if-ambiguous on
 
-if [ -n "$BASH" ]; then
-  if [ -e /usr/local/share/autojump/autojump.bash ]; then
-    source /usr/local/share/autojump/autojump.bash
-  elif [ -e /usr/share/autojump/autojump.bash ]; then
-    source /usr/share/autojump/autojump.bash
-  fi
+if [ -e /usr/local/share/autojump/autojump.bash ]; then
+  source /usr/local/share/autojump/autojump.bash
+elif [ -e /usr/share/autojump/autojump.bash ]; then
+  source /usr/share/autojump/autojump.bash
+fi
 
-  powerline-daemon -q
-  POWERLINE_BASH_CONTINUATION=1
-  POWERLINE_BASH_SELECT=1
-  if [ $(uname -s) = Darwin ]; then
-    source ~/Library/Python/3.6/lib/python/site-packages/powerline/bindings/bash/powerline.sh
-  else
-    if [ -e ~/.local/lib/python3.6/site-packages/powerline/bindings/bash/powerline.sh ]; then
-      . ~/.local/lib/python3.6/site-packages/powerline/bindings/bash/powerline.sh
-    elif [ -e ~/.local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh ]; then
-      . ~/.local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
-    elif [ -e /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh ]; then
-      . /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh
-    elif [ -e ~/.local/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh ]; then
-      . ~/.local/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh
-    elif [ -e /usr/local/lib/python3.4/dist-packages/powerline/bindings/bash/powerline.sh ]; then
-      . /usr/local/lib/python3.4/dist-packages/powerline/bindings/bash/powerline.sh
-    fi
+powerline-daemon -q
+POWERLINE_BASH_CONTINUATION=1
+POWERLINE_BASH_SELECT=1
+if [ $(uname -s) = Darwin ]; then
+  source ~/Library/Python/3.6/lib/python/site-packages/powerline/bindings/bash/powerline.sh
+else
+  if [ -e ~/.local/lib/python3.6/site-packages/powerline/bindings/bash/powerline.sh ]; then
+    . ~/.local/lib/python3.6/site-packages/powerline/bindings/bash/powerline.sh
+  elif [ -e ~/.local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh ]; then
+    . ~/.local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
+  elif [ -e /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh ]; then
+    . /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh
+  elif [ -e ~/.local/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh ]; then
+    . ~/.local/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh
+  elif [ -e /usr/local/lib/python3.4/dist-packages/powerline/bindings/bash/powerline.sh ]; then
+    . /usr/local/lib/python3.4/dist-packages/powerline/bindings/bash/powerline.sh
   fi
 fi
 

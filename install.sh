@@ -45,5 +45,11 @@ case $(uname -s) in
   Darwin) install_mac ;;
 esac
 
-mkdir -p ~/local/src
+mkdir -p ~/.local/share/zsh
+curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
+
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
+sh /tmp/dein-installer.sh ~/.local/share/dein
+
+mkdir -p ~/.local/src
 git clone -b stable https://github.com/rust-lang/rust.git ~/.local/src/rust

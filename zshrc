@@ -3,14 +3,41 @@ autoload -U +X bashcompinit && bashcompinit
 
 alias shopt=':'
 
-source ~/.bashrc
+source $HOME/.local/share/zsh/antigen.zsh
 
-if [ $(uname -s) = Darwin ]; then
-  source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
-fi
+antigen use oh-my-zsh
 
-# Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+antigen bundle autojump
+antigen bundle brew
+antigen bundle command-not-found
+antigen bundle common-aliases
+antigen bundle colorize
+antigen bundle docker
+antigen bundle gem
+antigen bundle git
+antigen bundle git-extras
+antigen bundle git-flow
+antigen bundle github
+antigen bundle gradle
+antigen bundle mercurial
+antigen bundle node
+antigen bundle npm
+antigen bundle perl
+antigen bundle pip
+antigen bundle pyenv
+antigen bundle pylint
+antigen bundle python
+antigen bundle redis-cli
+antigen bundle repo
+antigen bundle ruby
+antigen bundle osx
+antigen bundle tmux
+
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-completions
+antigen bundle zsh-users/zsh-syntax-highlighting
+
+antigen apply
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -58,26 +85,12 @@ DISABLE_AUTO_UPDATE="true"
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern root line)
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git ruby autojump mvn gradle)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
 
 # User configuration
 
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
-
-source $ZSH/oh-my-zsh.sh
-
-if [ -e /usr/local/share/autojump/autojump.zsh ]; then
-  source /usr/local/share/autojump/autojump.zsh
-elif [ -e /usr/share/autojump/autojump.zsh ]; then
-  source /usr/share/autojump/autojump.zsh
-fi
-
-. ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 powerline-daemon -q
 if [ $(uname -s) = Darwin ]; then
@@ -100,11 +113,11 @@ fi
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='nvim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -126,18 +139,69 @@ if [ $(uname -s) = Darwin ]; then
 else
   alias ls="ls --group-directories-first -F -h --color"
 fi
-alias vi=vim
+alias diff='colordiff'
+if [ $(uname -s) = Darwin ]; then
+  alias ll='/usr/local/bin/gls -alF'
+  alias la='/usr/local/bin/gls -A'
+  alias l='/usr/local/bin/gls -CF'
+  alias df='/usr/local/bin/gdf -h'
+  alias du='/usr/local/bin/gdu -c -h'
+  alias mkdir='/usr/local/bin/gmkdir -p -v'
+  alias cp='/usr/local/bin/gcp -i'
+  alias mv='/usr/local/bin/gmv -i'
+  alias rm='/usr/local/bin/grm -I'
+  alias ln='/usr/local/bin/gln -i'
+  alias chown='/usr/local/bin/gchown --preserve-root'
+  alias chmod='/usr/local/bin/gchmod --preserve-root'
+  alias chgrp='/usr/local/bin/gchgrp --preserve-root'
+else
+  alias ll='ls -alF'
+  alias la='ls -A'
+  alias l='ls -CF'
+  alias df='df -h'
+  alias du='du -c -h'
+  alias mkdir='mkdir -p -v'
+  alias cp='cp -i'
+  alias mv='mv -i'
+  alias rm='rm -I'
+  alias ln='ln -i'
+  alias chown='chown --preserve-root'
+  alias chmod='chmod --preserve-root'
+  alias chgrp='chgrp --preserve-root'
+fi
 
-alias -s c=vim
-alias -s h=vim
-alias -s cc=vim
-alias -s hh=vim
-alias -s cpp=vim
-alias -s hpp=vim
-alias -s cxx=vim
-alias -s hxx=vim
-alias -s java=vim
-alias -s txt=vim
+alias more='less'
+alias ping='ping -c 5'
+
+alias t='tmux attach || tmux new'
+
+alias vi=$EDITOR
+
+alias -s c=$EDITOR
+alias -s h=$EDITOR
+alias -s cc=$EDITOR
+alias -s hh=$EDITOR
+alias -s cpp=$EDITOR
+alias -s hpp=$EDITOR
+alias -s cxx=$EDITOR
+alias -s hxx=$EDITOR
+alias -s java=$EDITOR
+alias -s txt=$EDITOR
+
+setopt BANG_HIST                # Treat the '!' character specially during expansion.
+setopt INC_APPEND_HISTORY       # Write to the history file immediately, not when the shell exits.
+# setopt SHARE_HISTORY            # Share history between all sessions.
+setopt HIST_EXPIRE_DUPS_FIRST   # Expire duplicate entries first when trimming history.
+setopt HIST_IGNORE_DUPS         # Don't record an entry that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS     # Delete old recorded entry if new entry is a duplicate.
+setopt HIST_FIND_NO_DUPS        # Do not display a line previously found.
+setopt HIST_IGNORE_SPACE        # Don't record an entry starting with a space.
+setopt HIST_SAVE_NO_DUPS        # Don't write duplicate entries in the history file.
+setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks before recording entry.
+setopt HIST_VERIFY              # Don't execute immediately upon history expansion.
+
+export GOPATH=$HOME/.local/gopath
+export PATH=$GOPATH/bin:$PATH
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

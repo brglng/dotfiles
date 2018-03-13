@@ -1,27 +1,27 @@
 #!/bin/sh
 
 link() {
-  ln -s $(pwd)/.bashrc                                            ~/.bashrc
+  ln -s $(pwd)/bashrc               ~/.bashrc
   mkdir -p ~/.cgdb
-  ln -s $(pwd)/.cgdb/cgdbrc                                       ~/.cgdb/
+  ln -s $(pwd)/cgdb/cgdbrc          ~/.cgdb/
   mkdir -p ~/.config
-  ln -s $(pwd)/.config/powerline                                  ~/.config/
-  ln -s $(pwd)/.gitconfig                                         ~/.gitconfig
-  ln -s $(pwd)/.gitignore_global                                  ~/.gitignore_global
-  ln -s $(pwd)/.oh-my-zsh                                         ~/.oh-my-zsh
-  ln -s $(pwd)/.pentadactylrc                                     ~/.pentadactylrc
-  ln -s $(pwd)/.tmux.conf                                         ~/.tmux.conf
-  ln -s $(pwd)/.tmux.conf.d                                       ~/.tmux.conf.d
-  ln -s $(pwd)/.vimrc                                             ~/.vimrc
-  ln -s $(pwd)/.vim                                               ~/.vim
-  ln -s $(pwd)/.vim                                               ~/.config/nvim
-  ln -s $(pwd)/.zshrc                                             ~/.zshrc
+  ln -s $(pwd)/config/powerline     ~/.config/
+  ln -s $(pwd)/gitconfig            ~/.gitconfig
+  ln -s $(pwd)/gitignore_global     ~/.gitignore_global
+  ln -s $(pwd)/oh-my-zsh            ~/.oh-my-zsh
+  ln -s $(pwd)/pentadactylrc        ~/.pentadactylrc
+  ln -s $(pwd)/tmux.conf            ~/.tmux.conf
+  ln -s $(pwd)/tmux.conf.d          ~/.tmux.conf.d
+  ln -s $(pwd)/vimrc                ~/.vimrc
+  ln -s $(pwd)/vim                  ~/.vim
+  ln -s $(pwd)/vim                  ~/.config/nvim
+  ln -s $(pwd)/zshrc                ~/.zshrc
 }
 
 link_linux() {
   link
   mkdir -p ~/.config/fontconfig
-  ln -s $(pwd)/.config/fontconfig/fonts.conf.$distname.$distver   ~/.config/fontconfig/fonts.conf
+  ln -s $(pwd)/config/fontconfig/fonts.conf.$distname.$distver   ~/.config/fontconfig/fonts.conf
 }
 
 link_mac() {

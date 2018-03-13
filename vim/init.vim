@@ -706,6 +706,14 @@ let g:ale_linters = {'c': [], 'cpp': []}
 let g:ale_python_pylint_options = '-d E265 -d E501 -d E201 -d E202 -d E111 -d W0311 -d C0111 -d C0103 -d C0326 -d C0111 -E114 -E122'
 let g:ale_python_flake8_args = '--ignore=W0311,E265,E501,E201,E202,E111,E114,E122'
 
+" Neomake
+call neomake#configure#automake({
+      \ 'TextChanged': {},
+      \ 'InsertLeave': {},
+      \ 'BufWritePost': {'delay': 0},
+      \ 'BufWinEnter': {},
+      \ }, 500)
+
 " DevIcons
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 " let g:DevIconsEnableFoldersOpenClose = 1
