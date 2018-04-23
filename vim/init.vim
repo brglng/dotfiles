@@ -5,13 +5,7 @@ endif
 
 let &viewdir = $HOME . '/.cache/vim/view'
 if !isdirectory(&viewdir)
-  if !isdirectory($HOME . '/.cache/vim')
-    if !isdirectory($HOME . '/.cache')
-      call mkdir($HOME . '/.cache')
-    endif
-    call mkdir($HOME . '/.cache/vim')
-  endif
-  call mkdir(&viewdir)
+  silent! call mkdir($HOME . '/.cache/vim', 'p')
 endif
 
 "set diffexpr=MyDiff()
@@ -319,6 +313,7 @@ else
 endif
 
 " Exuberant-ctags and Cscope settings
+set tags=./.tags;,.tags
 if executable('gtags-cscope')
   set cscopeprg=gtags-cscope
   let $CSCOPE_DB = 'GTAGS'
@@ -434,6 +429,9 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('mbbill/fencview')
   call dein#add('mbbill/undotree')
   call dein#add('ryanoasis/vim-devicons')
+  call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
+  call dein#add('Xuyuanp/nerdtree-git-plugin')
+  call dein#add('mhinz/vim-startify')
 
   " Moving and Editing Plugins
   call dein#add('tpope/vim-unimpaired')
@@ -444,13 +442,20 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('Raimondi/delimitMate')
   call dein#add('easymotion/vim-easymotion')
   call dein#add('tpope/vim-surround')
-  call dein#add('godlygeek/tabular')
+  " call dein#add('godlygeek/tabular')
+  call dein#add('junegunn/vim-easy-align')
   call dein#add('tpope/vim-endwise')
   call dein#add('tpope/vim-sleuth')
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
   call dein#add('rhysd/clever-f.vim')
   call dein#add('andymass/vim-matchup')
+  call dein#add('tpope/vim-repeat')
+  call dein#add('kana/vim-textobj-user')
+  call dein#add('kana/vim-textobj-indent')
+  call dein#add('kana/vim-textobj-syntax')
+  call dein#add('kana/vim-textobj-function')
+  call dein#add('sgur/vim-textobj-parameter')
 
   " FileType Plugins
   call dein#add('PProvost/vim-ps1')
@@ -460,17 +465,18 @@ if dein#load_state($HOME . '/.local/share/dein')
 
   " Source Control Plugins
   " call dein#add('Xuyuanp/nerdtree-git-plugin')
-  call dein#add('airblade/vim-gitgutter')
+  " call dein#add('airblade/vim-gitgutter')
+  call dein#add('mhinz/vim-signify')
   call dein#add('tpope/vim-fugitive')
   call dein#add('will133/vim-dirdiff')
-
-  " Debugging Plugins
-  call dein#add('gilligan/vim-lldb')
-  call dein#add('vim-scripts/Conque-GDB')
 
   " Searching plugin: denite.vim and plugins
   call dein#add('Shougo/denite.nvim')
   call dein#add('Shougo/neomru.vim')
+
+  call dein#add('ludovicchabant/vim-gutentags')
+  call dein#add('tpope/vim-eunuch')
+  call dein#add('justinmk/vim-dirvish')
 
   " ColorSchemes
   call dein#add('lifepillar/vim-solarized8')
@@ -487,6 +493,7 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('neomake/neomake')
   " call dein#add('w0rp/ale')
   " call dein#add('Shougo/deoplete.nvim')
+  " call dein#add('Shougo/deoplete-clangx')
   if !has('nvim')
     call dein#add('roxma/nvim-yarp')
     call dein#add('roxma/vim-hug-neovim-rpc')
@@ -494,6 +501,9 @@ if dein#load_state($HOME . '/.local/share/dein')
   let g:deoplete#enable_at_startup = 1
 
   " call dein#add('tweekmonster/deoplete-clang2')
+
+  call dein#add('octol/vim-cpp-enhanced-highlight')
+  call dein#add('Shougo/echodoc.vim')
 
   if !has('win32')
     " call dein#add('autozimu/LanguageClient-neovim', {'rev': 'next', 'build': 'bash install.sh'})
@@ -509,7 +519,7 @@ if dein#load_state($HOME . '/.local/share/dein')
 
   call dein#local($HOME . '/.vim/dein-local')
 
-  call dein#disable(['vim-indent-guides', 'vim-devicons', 'vim-lldb'])
+  call dein#disable(['vim-indent-guides', 'indentLine'])
 
   " Required:
   call dein#end()
@@ -799,9 +809,18 @@ call denite#custom#map('normal', '<PageDown>',  '<denite:scroll_page_forwards>',
 call denite#custom#map('normal', '<PageUp>',    '<denite:scroll_page_backwards>',   'noremap')
 call denite#custom#map('normal', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
 call denite#custom#map('normal', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
-
-
 " }}}
+
+" Gutentags
+let g:gutentags_ctags_tagfile = '.tags'
+let g:gutentags_cache_dir = $HOME . '/.cache/vim/gutentags'
+if !isdirectory(g:gutentags_cache_dir)
+  silent! call mkdir(g:gutentags_cache_dir, 'p')
+endif
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
 
 " UI settings {{{
 set mouse=a
