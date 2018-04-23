@@ -5,7 +5,7 @@ endif
 
 let &viewdir = $HOME . '/.cache/vim/view'
 if !isdirectory(&viewdir)
-  silent! call mkdir($HOME . '/.cache/vim', 'p')
+  silent! call mkdir($HOME . '/.cache/vim/view', 'p')
 endif
 
 "set diffexpr=MyDiff()
@@ -264,13 +264,7 @@ autocmd BufRead,BufNewFile *.md set filetype=markdown
 
 set undofile
 if !isdirectory($HOME . '/.cache/vim/undo')
-  if !isdirectory($HOME . '/.cache/vim')
-    if !isdirectory($HOME . '/.cache')
-      call mkdir($HOME . '/.cache')
-    endif
-    call mkdir($HOME . '/.cache/vim')
-  endif
-  call mkdir($HOME . '/.cache/vim/undo')
+  call mkdir($HOME . '/.cache/vim/undo', 'p')
 endif
 set undodir=$HOME/.cache/vim/undo
 
@@ -464,7 +458,6 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('sheerun/vim-polyglot')
 
   " Source Control Plugins
-  " call dein#add('Xuyuanp/nerdtree-git-plugin')
   " call dein#add('airblade/vim-gitgutter')
   call dein#add('mhinz/vim-signify')
   call dein#add('tpope/vim-fugitive')
@@ -503,7 +496,6 @@ if dein#load_state($HOME . '/.local/share/dein')
   " call dein#add('tweekmonster/deoplete-clang2')
 
   call dein#add('octol/vim-cpp-enhanced-highlight')
-  call dein#add('Shougo/echodoc.vim')
 
   if !has('win32')
     " call dein#add('autozimu/LanguageClient-neovim', {'rev': 'next', 'build': 'bash install.sh'})
@@ -576,9 +568,24 @@ function! s:onCompleteDone()
   if startIdx < 0
     return abbr
   endif
-  let endIdx = strridx(abbr, ")")
-  if endIdx - startIdx > 1
-    let argsStr = strpart(abbr, startIdx + 1, endIdx - startIdx -1)
+
+  let countParen = 1
+  let argsStr = strpart(abbr, startIdx + 1)
+  let argLen = 0
+  while argLen < strlen(argsStr)
+    if argsStr[argLen] == '('
+      let countParen += 1
+    elseif argsStr[argLen] == ')'
+      let countParen -= 1
+    endif
+    if countParen == 0
+      break
+    endif
+    let argLen += 1
+  endwhile
+
+  if countParen == 0
+    let argsStr = strpart(abbr, startIdx + 1, argLen)
     "let argsList = split(argsStr, ",")
 
     let argsList = []
@@ -809,6 +816,19 @@ call denite#custom#map('normal', '<PageDown>',  '<denite:scroll_page_forwards>',
 call denite#custom#map('normal', '<PageUp>',    '<denite:scroll_page_backwards>',   'noremap')
 call denite#custom#map('normal', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
 call denite#custom#map('normal', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
+
+nnoremap <silent> <Leader>df :Denite -buffer-name=file_rec              file_rec<CR>
+nnoremap <silent> <Leader>dF :Denite -buffer-name=file_rec      -resume file_rec<CR>
+nnoremap <silent> <Leader>dd :Denite -buffer-name=file                  file<CR>
+nnoremap <silent> <Leader>dD :Denite -buffer-name=file          -resume file<CR>
+nnoremap <silent> <Leader>db :Denite -buffer-name=buffer                buffer<CR>
+nnoremap <silent> <Leader>dg :Denite -buffer-name=grep                  grep<CR>
+nnoremap <silent> <Leader>dG :Denite -buffer-name=grep          -resume grep<CR>
+nnoremap <silent> <Leader>dl :Denite -buffer-name=line_<C-r>%           line<CR>
+nnoremap <silent> <Leader>dL :Denite -buffer-name=line_<C-r>%   -resume line<CR>
+nnoremap <silent> <Leader>do :Denite -buffer-name=outline               outline<CR>
+nnoremap <silent> <Leader>dr :Denite -buffer-name=file_mru              file_mru<CR>
+nnoremap <silent> <Leader>dR :Denite -buffer-name=file_mru      -resume file_mru<CR>
 " }}}
 
 " Gutentags
@@ -821,6 +841,9 @@ let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
+" EasyAlign
+vmap <Enter> <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAligh)
 
 " UI settings {{{
 set mouse=a
@@ -946,8 +969,8 @@ nnoremap <silent> <Leader>w7    7<C-w>w
 nnoremap <silent> <Leader>w8    8<C-w>w
 nnoremap <silent> <Leader>w9    9<C-w>w
 
-nnoremap <silent> <Leader>wf    :NERDTreeTabsToggle<CR>
-nnoremap <silent> <Leader>wt    :TagbarToggle<CR>
+nnoremap <silent> <Leader>nt    :NERDTreeTabsToggle<CR>
+nnoremap <silent> <Leader>tb    :TagbarToggle<CR>
 
 " QuickFix and Location windows
 nnoremap <silent> <Leader>cw    :call <SID>QuickFixToggle('copen')<CR>
@@ -981,20 +1004,3 @@ nnoremap <Leader>r      :.,$s/\<<C-r><C-w>\>//g<Left><Left>
 nnoremap <Leader>R      :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 
 nnoremap <silent> <Leader>gd :YcmCompleter GoTo<CR>
-
-" denite
-nnoremap <silent> <Leader>df :Denite -buffer-name=file_rec              file_rec<CR>
-nnoremap <silent> <Leader>dF :Denite -buffer-name=file_rec      -resume file_rec<CR>
-nnoremap <silent> <Leader>dd :Denite -buffer-name=file                  file<CR>
-nnoremap <silent> <Leader>dD :Denite -buffer-name=file          -resume file<CR>
-nnoremap <silent> <Leader>db :Denite -buffer-name=buffer                buffer<CR>
-nnoremap <silent> <Leader>dg :Denite -buffer-name=grep                  grep<CR>
-nnoremap <silent> <Leader>dG :Denite -buffer-name=grep          -resume grep<CR>
-nnoremap <silent> <Leader>dl :Denite -buffer-name=line_<C-r>%           line<CR>
-nnoremap <silent> <Leader>dL :Denite -buffer-name=line_<C-r>%   -resume line<CR>
-nnoremap <silent> <Leader>do :Denite -buffer-name=outline               outline<CR>
-nnoremap <silent> <Leader>dr :Denite -buffer-name=file_mru              file_mru<CR>
-nnoremap <silent> <Leader>dR :Denite -buffer-name=file_mru      -resume file_mru<CR>
-
-" nnoremap <silent> <Leader>ig :IndentGuidesToggle<CR>
-nnoremap <silent> <Leader>il :IndentLinesToggle<CR>
