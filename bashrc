@@ -88,7 +88,7 @@ if [ -x /usr/bin/dircolors ]; then
   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
   alias diff='colordiff'
   if [ $(uname -s) = Darwin ]; then
-    alias ls='/usr/local/bin/gls -AhF --color=auto'
+    alias ls='/usr/local/bin/gls -hF --color=auto'
   else
     alias ls='ls -hF --color=auto'
   fi

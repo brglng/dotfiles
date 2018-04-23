@@ -123,9 +123,9 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 if [ $(uname -s) = Darwin ]; then
-  alias ls="/usr/local/bin/gls -AhF --color=auto"
+  alias ls="/usr/local/bin/gls -hF --color=auto"
 else
-  alias ls="ls --group-directories-first -AhF --color=auto"
+  alias ls="ls --group-directories-first -hF --color=auto"
 fi
 alias diff='colordiff'
 if [ $(uname -s) = Darwin ]; then
