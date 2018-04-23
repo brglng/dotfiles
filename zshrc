@@ -37,6 +37,11 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-syntax-highlighting
 
+POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable virtualenv anaconda rbenv vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history)
+antigen theme bhilburn/powerlevel9k powerlevel9k
+
 antigen apply
 
 # Set name of the theme to load.
@@ -85,29 +90,12 @@ DISABLE_AUTO_UPDATE="true"
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern root line)
 
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
+# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=24'
 
 # User configuration
 
 export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
-
-powerline-daemon -q
-if [ $(uname -s) = Darwin ]; then
-  source ~/Library/Python/3.6/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
-else
-  if [ -e ~/.local/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
-    . ~/.local/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
-  elif [ -e ~/.local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
-    . ~/.local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
-  elif [ -e /usr/local/lib/python3.5/dist-packages/powerline/bindings/zsh/powerline.zsh ]; then
-    . /usr/local/lib/python3.5/dist-packages/powerline/bindings/zsh/powerline.zsh
-  elif [ -e ~/.local/lib/python3.4/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
-    . ~/.local/lib/python3.4/site-packages/powerline/bindings/zsh/powerline.zsh
-  elif [ -e /usr/local/lib/python3.4/dist-packages/powerline/bindings/zsh/powerline.zsh ]; then
-    . /usr/local/lib/python3.4/dist-packages/powerline/bindings/zsh/powerline.zsh
-  fi
-fi
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -135,15 +123,15 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 if [ $(uname -s) = Darwin ]; then
-  alias ls="/usr/local/bin/gls --group-directories-first -F -h --color"
+  alias ls="/usr/local/bin/gls -AhF --color=auto"
 else
-  alias ls="ls --group-directories-first -F -h --color"
+  alias ls="ls --group-directories-first -AhF --color=auto"
 fi
 alias diff='colordiff'
 if [ $(uname -s) = Darwin ]; then
-  alias ll='/usr/local/bin/gls -alF'
-  alias la='/usr/local/bin/gls -A'
-  alias l='/usr/local/bin/gls -CF'
+  alias ll='/usr/local/bin/gls -ahlF --color=auto'
+  alias la='/usr/local/bin/gls -AhF --color=auto'
+  alias l='/usr/local/bin/gls -hF --color=auto'
   alias df='/usr/local/bin/gdf -h'
   alias du='/usr/local/bin/gdu -c -h'
   alias mkdir='/usr/local/bin/gmkdir -p -v'
@@ -155,9 +143,9 @@ if [ $(uname -s) = Darwin ]; then
   alias chmod='/usr/local/bin/gchmod --preserve-root'
   alias chgrp='/usr/local/bin/gchgrp --preserve-root'
 else
-  alias ll='ls -alF'
-  alias la='ls -A'
-  alias l='ls -CF'
+  alias ll='ls -al --color -F'
+  alias la='ls -A --color -F'
+  alias l='ls --color -F'
   alias df='df -h'
   alias du='du -c -h'
   alias mkdir='mkdir -p -v'

@@ -45,6 +45,9 @@ case $(uname -s) in
   Darwin) install_mac ;;
 esac
 
+mkdir -p ~/.tmux/plugins
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 mkdir -p ~/.local/share/zsh
 curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
 

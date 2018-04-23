@@ -42,11 +42,6 @@ HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-  debian_chroot=$(cat /etc/debian_chroot)
-fi
-
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
   xterm-color|*-256color)
@@ -82,29 +77,20 @@ fi
 GIT_PS1_SHOWDIRTYSTATE=true
 
 if [ "$color_prompt" = yes ]; then
-  PS1='${debian_chroot:+($debian_chroot)}\[\e[0;32m\]\u@\h\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]$(__git_ps1 "(%s)")\n\$\[\e[m\] '
+  PS1='\e[0;32m\u@\h\e[0m \e[0;34m\w\e[0m \e[1;93m$(__git_ps1 "(%s) ")$\e[0m '
 else
-  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+  PS1='\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
   alias diff='colordiff'
   if [ $(uname -s) = Darwin ]; then
-    alias ls='/usr/local/bin/gls --group-directories-first -hF --color=auto'
+    alias ls='/usr/local/bin/gls -AhF --color=auto'
   else
-    alias ls='ls --group-directories-first -hF --color=auto'
+    alias ls='ls -hF --color=auto'
   fi
   alias grep='grep --color=auto'
   alias egrep='egrep --color=auto'
@@ -112,9 +98,9 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 if [ $(uname -s) = Darwin ]; then
-  alias ll='/usr/local/bin/gls -alF'
-  alias la='/usr/local/bin/gls -A'
-  alias l='/usr/local/bin/gls -CF'
+  alias ll='/usr/local/bin/gls -ahlF --color=auto'
+  alias la='/usr/local/bin/gls -AhF --color=auto'
+  alias l='/usr/local/bin/gls -hF --color'
   alias df='/usr/local/bin/gdf -h'
   alias du='/usr/local/bin/gdu -c -h'
   alias mkdir='/usr/local/bin/gmkdir -p -v'
@@ -126,9 +112,9 @@ if [ $(uname -s) = Darwin ]; then
   alias chmod='/usr/local/bin/gchmod --preserve-root'
   alias chgrp='/usr/local/bin/gchgrp --preserve-root'
 else
-  alias ll='ls -alF'
-  alias la='ls -A'
-  alias l='ls -CF'
+  alias ll='ls -al --color -F'
+  alias la='ls -A --color -F'
+  alias l='ls --color -F'
   alias df='df -h'
   alias du='du -c -h'
   alias mkdir='mkdir -p -v'
@@ -180,25 +166,6 @@ if [ -e /usr/local/share/autojump/autojump.bash ]; then
   source /usr/local/share/autojump/autojump.bash
 elif [ -e /usr/share/autojump/autojump.bash ]; then
   source /usr/share/autojump/autojump.bash
-fi
-
-powerline-daemon -q
-POWERLINE_BASH_CONTINUATION=1
-POWERLINE_BASH_SELECT=1
-if [ $(uname -s) = Darwin ]; then
-  source ~/Library/Python/3.6/lib/python/site-packages/powerline/bindings/bash/powerline.sh
-else
-  if [ -e ~/.local/lib/python3.6/site-packages/powerline/bindings/bash/powerline.sh ]; then
-    . ~/.local/lib/python3.6/site-packages/powerline/bindings/bash/powerline.sh
-  elif [ -e ~/.local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh ]; then
-    . ~/.local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
-  elif [ -e /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh ]; then
-    . /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh
-  elif [ -e ~/.local/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh ]; then
-    . ~/.local/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh
-  elif [ -e /usr/local/lib/python3.4/dist-packages/powerline/bindings/bash/powerline.sh ]; then
-    . /usr/local/lib/python3.4/dist-packages/powerline/bindings/bash/powerline.sh
-  fi
 fi
 
 export GEEKNOTE_BASE=yinxiang

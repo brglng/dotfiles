@@ -11,7 +11,6 @@ link() {
   ln -s $(pwd)/oh-my-zsh            ~/.oh-my-zsh
   ln -s $(pwd)/pentadactylrc        ~/.pentadactylrc
   ln -s $(pwd)/tmux.conf            ~/.tmux.conf
-  ln -s $(pwd)/tmux.conf.d          ~/.tmux.conf.d
   ln -s $(pwd)/vimrc                ~/.vimrc
   ln -s $(pwd)/vim                  ~/.vim
   ln -s $(pwd)/vim                  ~/.config/nvim

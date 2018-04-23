@@ -1,5 +1,5 @@
 " The default runtimepath on windows is $USERPROFILE/vimfiles, but I am not going to use it
-if ((has('win32') || has('win64')) && !has('win32unix')) || !has('nvim')
+if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
   let &runtimepath = $HOME . '/.vim,' . &runtimepath . ',' . $HOME . '/.vim/after'
 endif
 
@@ -121,7 +121,7 @@ set listchars=tab:>-,trail:.,extends:>,precedes:<
 " set list
 "set scrolloff=3
 set sidescrolloff=5
-set cursorline                  " highlight current line
+"set cursorline                  " highlight current line
 set showmatch                   " blink matched pairs
 set matchtime=0
 autocmd FileType html,xml setlocal matchpairs+=<:>
@@ -142,7 +142,7 @@ runtime! macros/matchit.vim
 set confirm
 "set switchbuf=usetab,newtab,useopen
 
-set colorcolumn=80
+" set colorcolumn=80
 
 " arrow keys and wrap settings
 set wrap                        " auto wrap long lines
@@ -328,7 +328,6 @@ set cscopequickfix=s-,c-,d-,i-,t-,e-
 autocmd FileType help set foldcolumn=0 colorcolumn=
 
 autocmd FileType qf setlocal wrap foldcolumn=0 colorcolumn=
-autocmd FileType qf nnoremap <buffer> <silent> q <C-w>p:cclose<CR>:lclose<CR>
 autocmd FileType qf wincmd J
 autocmd FileType qf call Vimrc_adjustQuickFixWindowHeight(1, 10)
 function! Vimrc_adjustQuickFixWindowHeight(minheight, maxheight)
@@ -418,12 +417,11 @@ if dein#load_state($HOME . '/.local/share/dein')
   " Required:
   call dein#add($HOME . '/.local/share/dein/repos/github.com/Shougo/dein.vim')
 
+  call dein#add('haya14busa/dein-command.vim')
+
   " Add or remove your plugins here:
   " call dein#add('Shougo/neosnippet.vim')
   " call dein#add('Shougo/neosnippet-snippets')
-
-  " You can specify revision/branch/tag.
-  " call dein#add('Shougo/deol.nvim', { 'rev': 'a1b5108fd' })
 
   " UI Plugins
   call dein#add('scrooloose/nerdtree')
@@ -451,6 +449,8 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('tpope/vim-sleuth')
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
+  call dein#add('rhysd/clever-f.vim')
+  call dein#add('andymass/vim-matchup')
 
   " FileType Plugins
   call dein#add('PProvost/vim-ps1')
@@ -463,10 +463,6 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('airblade/vim-gitgutter')
   call dein#add('tpope/vim-fugitive')
   call dein#add('will133/vim-dirdiff')
-
-  " Building and Syntax Checking Plugins
-  call dein#add('neomake/neomake')
-  " call dein#add('w0rp/ale')
 
   " Debugging Plugins
   call dein#add('gilligan/vim-lldb')
@@ -485,6 +481,23 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('nanotech/jellybeans.vim')
   call dein#add('NLKNguyen/papercolor-theme')
   call dein#add('joshdick/onedark.vim')
+  call dein#add('arcticicestudio/nord-vim')
+
+  " Language Sementic Plugins
+  call dein#add('neomake/neomake')
+  " call dein#add('w0rp/ale')
+  " call dein#add('Shougo/deoplete.nvim')
+  if !has('nvim')
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
+  let g:deoplete#enable_at_startup = 1
+
+  " call dein#add('tweekmonster/deoplete-clang2')
+
+  if !has('win32')
+    " call dein#add('autozimu/LanguageClient-neovim', {'rev': 'next', 'build': 'bash install.sh'})
+  endif
 
   if has('win32')
     let g:ycm_server_python_interpreter = 'py -3'
@@ -492,15 +505,15 @@ if dein#load_state($HOME . '/.local/share/dein')
   else
     let ycm_python_interpreter = 'python3'
   endif
-  call dein#add('Valloric/YouCompleteMe', { 'build':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer' })
+  call dein#add('Valloric/YouCompleteMe', {'build':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer'})
 
   call dein#local($HOME . '/.vim/dein-local')
 
-  call dein#disable(['indentLine', 'vim-devicons', 'vim-lldb'])
+  call dein#disable(['vim-indent-guides', 'vim-devicons', 'vim-lldb'])
 
   " Required:
   call dein#end()
-  " call dein#save_state()
+  call dein#save_state()
 endif
 
 " Required:
@@ -521,13 +534,6 @@ let g:UltiSnipsJumpForwardTrigger = "<tab>"
 " }}}
 
 " YouCompleteMe settings {{{
-autocmd FileType c,cpp,objc,objcpp,cs,go,javascript,python,rust,typescript
-      \   nnoremap <buffer> <silent> <F12>   :YcmCompleter GoTo<CR>
-autocmd FileType cs,go,javascript,python,rust,typescript
-      \   nnoremap <buffer> <silent> <C-]>   :YcmCompleter GoTo<CR>
-autocmd FileType javascript,python,typescript
-      \   nnoremap <buffer> <silent> <S-F12> :YcmCompleter GoToReferences<CR> |
-      \   nnoremap <buffer> <silent> <C-\>s  :YcmCompleter GoToReferences<CR>
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_seed_identifiers_with_syntax = 1
 
@@ -547,18 +553,22 @@ let g:ycm_complete_in_strings = 1
 
 let g:ycm_rust_src_path = $HOME . '/.local/src/rust/src'
 
-"let g:ycm_error_symbol = '⨉'
-"let g:ycm_warning_symbol = '⚠'
+let g:ycm_error_symbol = '✗'
+let g:ycm_warning_symbol = '!'
 
 function! s:onCompleteDone()
-  let abbr = v:completed_item.abbr
-  let startIdx = stridx(abbr,"(")
+  if &filetype == 'c' || &filetype == 'cpp'
+    let abbr = v:completed_item.abbr
+  elseif &filetype == 'rust'
+    let abbr = v:completed_item.menu
+  endif
+  let startIdx = stridx(abbr, "(")
   if startIdx < 0
     return abbr
   endif
-  let endIdx = strridx(abbr,")")
+  let endIdx = strridx(abbr, ")")
   if endIdx - startIdx > 1
-    let argsStr = strpart(abbr, startIdx+1, endIdx - startIdx -1)
+    let argsStr = strpart(abbr, startIdx + 1, endIdx - startIdx -1)
     "let argsList = split(argsStr, ",")
 
     let argsList = []
@@ -625,13 +635,9 @@ let g:NERDTreeDirArrows = 1
 
 " NERDTreeTabs settings {{{
 let g:nerdtree_tabs_open_on_gui_startup = 0
-nnoremap <silent> <M-1> :NERDTreeTabsToggle<CR>
-inoremap <silent> <M-1> <C-o>:NERDTreeTabsToggle<CR>
 " }}}
 
 " Tagbar settings
-nnoremap <silent> <M-0> :TagbarToggle<CR>
-inoremap <silent> <M-0> <C-o>:TagbarToggle<CR>
 
 " Indent Guides settings
 "autocmd FileType python IndentGuidesEnable
@@ -640,9 +646,10 @@ let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 
 " indentLine settings
-"let g:indentLine_char = '┊'
+" let g:indentLine_char = '┊'
 let g:indentLine_first_char = ''
 let g:indentLine_faster = 1
+let g:indentLine_enabled = 0
 
 " Taggist settings {{{
 if has('win32') || has('win64')
@@ -687,6 +694,7 @@ if 0
 endif
 
 " NERDCommenter
+let NERDDefaultAlign = 'left'
 let NERDSpaceDelims = 1
 
 " Git Gutter
@@ -696,17 +704,28 @@ if has('win32')
 endif
 
 " ConqueGDB
-nnoremap <Leader>g <Nop>
-let g:ConqueGdb_Leader = '<Leader>g'
+let g:ConqueGdb_Leader = '<Leader>cg'
 
 " ALE
-" let g:ale_sign_error = '⨉'
-let g:ale_sign_warning = '>>'
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '!'
 let g:ale_linters = {'c': [], 'cpp': []}
 let g:ale_python_pylint_options = '-d E265 -d E501 -d E201 -d E202 -d E111 -d W0311 -d C0111 -d C0103 -d C0326 -d C0111 -E114 -E122'
 let g:ale_python_flake8_args = '--ignore=W0311,E265,E501,E201,E202,E111,E114,E122'
 
 " Neomake
+let g:neomake_c_enabled_makers = []
+let g:neomake_cpp_enabled_makers = []
+let g:neomake_error_sign = {'text': '✗', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = {
+    \   'text': '!',
+    \   'texthl': 'NeomakeWarningSign',
+    \ }
+" let g:neomake_message_sign = {
+"      \   'text': '>',
+"      \   'texthl': 'NeomakeMessageSign',
+"      \ }
+" let g:neomake_info_sign = {'text': 'i', 'texthl': 'NeomakeInfoSign'}
 call neomake#configure#automake({
       \ 'TextChanged': {},
       \ 'InsertLeave': {},
@@ -733,7 +752,14 @@ let g:neomru#file_mru_ignore_pattern = '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw
 call denite#custom#var('file_mru', 'ignore_pattern', '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)')
 let g:neomru#directory_mru_ignore_pattern = '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)'
 call denite#custom#var('directory_mru', 'ignore_pattern', '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)')
-if executable('ag')
+if executable('rg')
+  call denite#custom#var('grep', 'command', ['rg'])
+  call denite#custom#var('grep', 'default_opts', ['-S', '--vimgrep'])
+  call denite#custom#var('grep', 'recursive_opts', [])
+  call denite#custom#var('grep', 'pattern_opt', [])
+  call denite#custom#var('grep', 'separator', ['--'])
+  call denite#custom#var('grep', 'final_opts', [])
+elseif executable('ag')
   call denite#custom#var('grep', 'command', ['ag'])
   call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
   call denite#custom#var('grep', 'recursive_opts', [])
@@ -755,8 +781,25 @@ elseif executable('win32')
   call denite#custom#var('grep', 'default_opts', ['/n'])
 endif
 
-call denite#custom#map('insert', '<TAB>', '<denite:move_to_next_line>', 'noremap')
-call denite#custom#map('insert', '<S-TAB>', '<denite:move_to_previous_line>', 'noremap')
+call denite#custom#map('insert', '<TAB>',       '<denite:move_to_next_line>',       'noremap')
+call denite#custom#map('insert', '<S-TAB>',     '<denite:move_to_previous_line>',   'noremap')
+call denite#custom#map('insert', '<Down>',      '<denite:move_to_next_line>',       'noremap')
+call denite#custom#map('insert', '<Up>',        '<denite:move_to_previous_line>',   'noremap')
+call denite#custom#map('insert', '<C-J>',       '<denite:move_to_next_line>',       'noremap')
+call denite#custom#map('insert', '<C-K>',       '<denite:move_to_previous_line>',   'noremap')
+call denite#custom#map('insert', '<PageDown>',  '<denite:scroll_page_forwards>',    'noremap')
+call denite#custom#map('insert', '<PageUp>',    '<denite:scroll_page_backwards>',   'noremap')
+call denite#custom#map('insert', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
+call denite#custom#map('insert', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
+call denite#custom#map('normal', '<Down>',      '<denite:move_to_next_line>',       'noremap')
+call denite#custom#map('normal', '<Up>',        '<denite:move_to_previous_line>',   'noremap')
+call denite#custom#map('normal', '<C-J>',       '<denite:move_to_next_line>',       'noremap')
+call denite#custom#map('normal', '<C-K>',       '<denite:move_to_previous_line>',   'noremap')
+call denite#custom#map('normal', '<PageDown>',  '<denite:scroll_page_forwards>',    'noremap')
+call denite#custom#map('normal', '<PageUp>',    '<denite:scroll_page_backwards>',   'noremap')
+call denite#custom#map('normal', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
+call denite#custom#map('normal', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
+
 
 " }}}
 
@@ -780,7 +823,8 @@ endif
 
 syntax on
 set background=dark
-colorscheme solarized8
+" colorscheme solarized8
+colorscheme nord
 
 if exists('g:gui_oni') || exists('g:gui_gonvim')
   set laststatus=0
@@ -883,6 +927,9 @@ nnoremap <silent> <Leader>w7    7<C-w>w
 nnoremap <silent> <Leader>w8    8<C-w>w
 nnoremap <silent> <Leader>w9    9<C-w>w
 
+nnoremap <silent> <Leader>wf    :NERDTreeTabsToggle<CR>
+nnoremap <silent> <Leader>wt    :TagbarToggle<CR>
+
 " QuickFix and Location windows
 nnoremap <silent> <Leader>cw    :call <SID>QuickFixToggle('copen')<CR>
 nnoremap <silent> <Leader>lw    :call <SID>QuickFixToggle('lopen')<CR>
@@ -914,14 +961,21 @@ nnoremap <Leader>s      :.,$s/\<<C-r><C-w>\>/
 nnoremap <Leader>r      :.,$s/\<<C-r><C-w>\>//g<Left><Left>
 nnoremap <Leader>R      :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 
+nnoremap <silent> <Leader>gd :YcmCompleter GoTo<CR>
+
 " denite
-nnoremap <silent> <Leader>df :Denite -buffer-name=file_rec      -resume file_rec<CR>
-nnoremap <silent> <Leader>dd :Denite -buffer-name=file          -resume file<CR>
+nnoremap <silent> <Leader>df :Denite -buffer-name=file_rec              file_rec<CR>
+nnoremap <silent> <Leader>dF :Denite -buffer-name=file_rec      -resume file_rec<CR>
+nnoremap <silent> <Leader>dd :Denite -buffer-name=file                  file<CR>
+nnoremap <silent> <Leader>dD :Denite -buffer-name=file          -resume file<CR>
 nnoremap <silent> <Leader>db :Denite -buffer-name=buffer                buffer<CR>
-nnoremap <silent> <Leader>dg :Denite -buffer-name=grep          -resume grep<CR>
-nnoremap <silent> <Leader>dG :Denite -buffer-name=grep                  grep<CR>
-nnoremap <silent> <Leader>dl :Denite -buffer-name=line_<C-r>%   -resume line<CR>
-nnoremap <silent> <Leader>dL :Denite -buffer-name=line_<C-r>%           line<CR>
+nnoremap <silent> <Leader>dg :Denite -buffer-name=grep                  grep<CR>
+nnoremap <silent> <Leader>dG :Denite -buffer-name=grep          -resume grep<CR>
+nnoremap <silent> <Leader>dl :Denite -buffer-name=line_<C-r>%           line<CR>
+nnoremap <silent> <Leader>dL :Denite -buffer-name=line_<C-r>%   -resume line<CR>
 nnoremap <silent> <Leader>do :Denite -buffer-name=outline               outline<CR>
-nnoremap <silent> <Leader>dr :Denite -buffer-name=file_mru      -resume file_mru<CR>
-nnoremap <silent> <Leader>dR :Denite -buffer-name=file_mru              file_mru<CR>
+nnoremap <silent> <Leader>dr :Denite -buffer-name=file_mru              file_mru<CR>
+nnoremap <silent> <Leader>dR :Denite -buffer-name=file_mru      -resume file_mru<CR>
+
+" nnoremap <silent> <Leader>ig :IndentGuidesToggle<CR>
+nnoremap <silent> <Leader>il :IndentLinesToggle<CR>
