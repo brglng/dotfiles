@@ -5,7 +5,8 @@ link() {
   mkdir -p ~/.cgdb
   ln -s $(pwd)/cgdb/cgdbrc          ~/.cgdb/
   mkdir -p ~/.config
-  ln -s $(pwd)/config/powerline     ~/.config/
+  # ln -s $(pwd)/config/powerline     ~/.config/
+  ln -s $(pwd)/config/oni           ~/.config/
   ln -s $(pwd)/gitconfig            ~/.gitconfig
   ln -s $(pwd)/gitignore_global     ~/.gitignore_global
   ln -s $(pwd)/oh-my-zsh            ~/.oh-my-zsh
@@ -19,8 +20,8 @@ link() {
 
 link_linux() {
   link
-  mkdir -p ~/.config/fontconfig
-  ln -s $(pwd)/config/fontconfig/fonts.conf.$distname.$distver   ~/.config/fontconfig/fonts.conf
+  # mkdir -p ~/.config/fontconfig
+  # ln -s $(pwd)/config/fontconfig/fonts.conf.$distname.$distver   ~/.config/fontconfig/fonts.conf
 }
 
 link_mac() {
