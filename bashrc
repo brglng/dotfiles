@@ -70,14 +70,14 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ $(uname -s) = Darwin ]; then
-  source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
-  source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
+  source /Applications/Xcode-beta.app/Contents/Developer/usr/share/git-core/git-completion.bash
+  source /Applications/Xcode-beta.app/Contents/Developer/usr/share/git-core/git-prompt.sh
 fi
 
 GIT_PS1_SHOWDIRTYSTATE=true
 
 if [ "$color_prompt" = yes ]; then
-  PS1='\e[0;32m\u@\h\e[0m \e[0;34m\w\e[0m \e[1;93m$(__git_ps1 "(%s) ")$\e[0m '
+  PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\] \[\e[1;93m\]$(__git_ps1 "(%s) ")\[\e[0m\]\$ '
 else
   PS1='\u@\h:\w\$ '
 fi

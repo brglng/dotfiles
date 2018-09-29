@@ -9,7 +9,7 @@ link() {
   ln -s $(pwd)/gitconfig            ~/.gitconfig
   ln -s $(pwd)/gitignore_global     ~/.gitignore_global
   ln -s $(pwd)/oh-my-zsh            ~/.oh-my-zsh
-  ln -s $(pwd)/pentadactylrc        ~/.pentadactylrc
+  # ln -s $(pwd)/pentadactylrc        ~/.pentadactylrc
   ln -s $(pwd)/tmux.conf            ~/.tmux.conf
   ln -s $(pwd)/vimrc                ~/.vimrc
   ln -s $(pwd)/vim                  ~/.vim

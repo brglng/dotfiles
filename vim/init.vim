@@ -92,8 +92,11 @@ if (has('unix') || has('mac') || has('macunix')) && system('whoami') != "root\n"
 endif
 set backupcopy=yes
 "set noswapfile
-set showcmd                     " show commands in normal mode at the right-bottom
-set ruler                       " show row,col at the right-bottom
+
+set showcmd                   " show commands in normal mode at the right-bottom
+
+set ruler                     " show row,col at the right-bottom
+
 set formatoptions+=mM           " deal with Chinese charactors' wrap correctly
 set display=lastline            " display incomplete lines as much as possible
 " set ambiwidth=double            " show double-width charactors correctly when encoding=utf8
@@ -104,7 +107,9 @@ set smartcase
 nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
 set number                      " show line number
 "set relativenumber
+
 set laststatus=2
+
 set wildmenu
 "if has('unnamedplus')
 "    set clipboard+=unnamedplus
@@ -135,6 +140,10 @@ runtime! macros/matchit.vim
 
 set confirm
 "set switchbuf=usetab,newtab,useopen
+
+set nostartofline
+set splitbelow
+set splitright
 
 " set colorcolumn=80
 
@@ -225,7 +234,7 @@ set tabstop=8
 set softtabstop=4
 set expandtab
 set smarttab            " use shiftwidth as indent at line's beginning
-set shiftwidth=2
+set shiftwidth=4
 set shiftround
 set preserveindent
 set copyindent
@@ -387,6 +396,13 @@ endfunction
 "   autocmd FocusLost * call s:imFocusLost()
 " endif
 
+" Netrw
+" let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = -30
+
 " =========================== Plugin Settings ================================ {{{
 "dein Scripts----------------------------- {{{
 if &compatible
@@ -402,46 +418,56 @@ let g:dein#install_process_timeout = 3600 * 2
 if dein#load_state($HOME . '/.local/share/dein')
   call dein#begin($HOME . '/.local/share/dein')
 
-  " Let dein manage dein
-  " Required:
+  " Dein
   call dein#add($HOME . '/.local/share/dein/repos/github.com/Shougo/dein.vim')
-
   call dein#add('haya14busa/dein-command.vim')
+  call dein#add('wsdjeg/dein-ui.vim')
 
-  " Add or remove your plugins here:
-  " call dein#add('Shougo/neosnippet.vim')
-  " call dein#add('Shougo/neosnippet-snippets')
+  " Generic Plugins
+  if !has('nvim')
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
+  call dein#add('tpope/vim-eunuch')
+  call dein#add('justinmk/vim-dirvish')
 
   " UI Plugins
   call dein#add('scrooloose/nerdtree')
   call dein#add('jistr/vim-nerdtree-tabs')
+
   call dein#add('vim-airline/vim-airline')
   call dein#add('vim-airline/vim-airline-themes')
-  call dein#add('Yggdroot/indentLine')
-  call dein#add('nathanaelkane/vim-indent-guides')
+
+  "call dein#add('Yggdroot/indentLine')
+  "call dein#add('nathanaelkane/vim-indent-guides')
   call dein#add('majutsushi/tagbar')
+  call dein#add('lvht/tagbar-markdown')
   call dein#add('mbbill/fencview')
   call dein#add('mbbill/undotree')
-  call dein#add('ryanoasis/vim-devicons')
-  call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
-  call dein#add('Xuyuanp/nerdtree-git-plugin')
+  " call dein#add('ryanoasis/vim-devicons')
+  " call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
+  " call dein#add('Xuyuanp/nerdtree-git-plugin')
   call dein#add('mhinz/vim-startify')
 
   " Moving and Editing Plugins
-  call dein#add('tpope/vim-unimpaired')
+  if !exists('g:gui_oni')
+    call dein#add('tpope/vim-unimpaired')
+    call dein#add('tpope/vim-surround')
+  endif
   call dein#add('wellle/targets.vim')
   "call dein#add('tpope/vim-commentary')
   call dein#add('scrooloose/nerdcommenter')
   "call dein#add('auto-pairs')
-  call dein#add('Raimondi/delimitMate')
+  " call dein#add('Raimondi/delimitMate')
   call dein#add('easymotion/vim-easymotion')
-  call dein#add('tpope/vim-surround')
   " call dein#add('godlygeek/tabular')
   call dein#add('junegunn/vim-easy-align')
-  call dein#add('tpope/vim-endwise')
+  " call dein#add('tpope/vim-endwise')
   call dein#add('tpope/vim-sleuth')
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
+  " call dein#add('Shougo/neosnippet.vim')
+  " call dein#add('Shougo/neosnippet-snippets')
   call dein#add('rhysd/clever-f.vim')
   call dein#add('andymass/vim-matchup')
   call dein#add('tpope/vim-repeat')
@@ -450,6 +476,7 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('kana/vim-textobj-syntax')
   call dein#add('kana/vim-textobj-function')
   call dein#add('sgur/vim-textobj-parameter')
+  call dein#add('tpope/vim-rsi')
 
   " FileType Plugins
   call dein#add('PProvost/vim-ps1')
@@ -462,56 +489,54 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('mhinz/vim-signify')
   call dein#add('tpope/vim-fugitive')
   call dein#add('will133/vim-dirdiff')
+  call dein#add('gregsexton/gitv')
 
   " Searching plugin: denite.vim and plugins
   call dein#add('Shougo/denite.nvim')
   call dein#add('Shougo/neomru.vim')
 
-  call dein#add('ludovicchabant/vim-gutentags')
-  call dein#add('tpope/vim-eunuch')
-  call dein#add('justinmk/vim-dirvish')
-
   " ColorSchemes
-  call dein#add('lifepillar/vim-solarized8')
-  call dein#add('sickill/vim-monokai')
-  call dein#add('chriskempson/vim-tomorrow-theme')
-  call dein#add('chriskempson/base16-vim')
-  call dein#add('junegunn/seoul256.vim')
-  call dein#add('nanotech/jellybeans.vim')
-  call dein#add('NLKNguyen/papercolor-theme')
-  call dein#add('joshdick/onedark.vim')
+  " call dein#add('lifepillar/vim-solarized8')
+  " call dein#add('sickill/vim-monokai')
+  " call dein#add('chriskempson/vim-tomorrow-theme')
+  " call dein#add('chriskempson/base16-vim')
+  " call dein#add('junegunn/seoul256.vim')
+  " call dein#add('nanotech/jellybeans.vim')
+  " call dein#add('NLKNguyen/papercolor-theme')
+  " call dein#add('joshdick/onedark.vim')
   call dein#add('arcticicestudio/nord-vim')
+  " call dein#add('soft-aesthetic/soft-era-vim')
+
+  " Project Management
+  call dein#add('editorconfig/editorconfig-vim')
+  " call dein#add('ludovicchabant/vim-gutentags')
 
   " Language Sementic Plugins
-  call dein#add('neomake/neomake')
-  " call dein#add('w0rp/ale')
-  " call dein#add('Shougo/deoplete.nvim')
-  " call dein#add('Shougo/deoplete-clangx')
-  if !has('nvim')
-    call dein#add('roxma/nvim-yarp')
-    call dein#add('roxma/vim-hug-neovim-rpc')
-  endif
-  let g:deoplete#enable_at_startup = 1
-
-  " call dein#add('tweekmonster/deoplete-clang2')
-
-  call dein#add('octol/vim-cpp-enhanced-highlight')
-
-  if !has('win32')
-    " call dein#add('autozimu/LanguageClient-neovim', {'rev': 'next', 'build': 'bash install.sh'})
-  endif
-
+  " call dein#add('neomake/neomake')
+  call dein#add('w0rp/ale')
   if has('win32')
     let g:ycm_server_python_interpreter = 'py -3'
     let ycm_python_interpreter = 'py - 3'
   else
     let ycm_python_interpreter = 'python3'
   endif
-  call dein#add('Valloric/YouCompleteMe', {'build':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer'})
+
+  if !exists('g:gui_oni')
+    call dein#add('Valloric/YouCompleteMe', {'build':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer'})
+  endif
+  " call dein#add('Shougo/deoplete.nvim')
+  " call dein#add('Shougo/deoplete-clangx')
+  let g:deoplete#enable_at_startup = 1
+  " call dein#add('tweekmonster/deoplete-clang2')
+  if !has('win32')
+    " call dein#add('autozimu/LanguageClient-neovim', {'rev': 'next', 'build': 'bash install.sh'})
+  endif
+  call dein#add('tenfyzhong/CompleteParameter.vim')
+
+  " Debug
+  call dein#add('cpiger/NeoDebug')
 
   call dein#local($HOME . '/.vim/dein-local')
-
-  call dein#disable(['vim-indent-guides', 'indentLine'])
 
   " Required:
   call dein#end()
@@ -556,93 +581,116 @@ let g:ycm_complete_in_strings = 1
 let g:ycm_rust_src_path = $HOME . '/.local/src/rust/src'
 
 let g:ycm_error_symbol = '✗'
-let g:ycm_warning_symbol = '!'
+let g:ycm_warning_symbol = '⚠'
 
-function! s:onCompleteDone()
-  if &filetype == 'c' || &filetype == 'cpp'
-    let abbr = v:completed_item.abbr
-  elseif &filetype == 'rust'
-    let abbr = v:completed_item.menu
-  endif
-  let startIdx = stridx(abbr, "(")
-  if startIdx < 0
-    return abbr
-  endif
+" function! s:onCompleteDone()
+"   if &filetype == 'c' || &filetype == 'cpp'
+"     let abbr = v:completed_item.abbr
+"   elseif &filetype == 'rust'
+"     let abbr = v:completed_item.menu
+"   endif
+"   let startIdx = stridx(abbr, "(")
+"   if startIdx < 0
+"     return abbr
+"   endif
 
-  let countParen = 1
-  let argsStr = strpart(abbr, startIdx + 1)
-  let argLen = 0
-  while argLen < strlen(argsStr)
-    if argsStr[argLen] == '('
-      let countParen += 1
-    elseif argsStr[argLen] == ')'
-      let countParen -= 1
-    endif
-    if countParen == 0
-      break
-    endif
-    let argLen += 1
-  endwhile
+"   let countParen = 1
+"   let argsStr = strpart(abbr, startIdx + 1)
+"   let argLen = 0
+"   while argLen < strlen(argsStr)
+"     if argsStr[argLen] == '('
+"       let countParen += 1
+"     elseif argsStr[argLen] == ')'
+"       let countParen -= 1
+"     endif
+"     if countParen == 0
+"       break
+"     endif
+"     let argLen += 1
+"   endwhile
 
-  if countParen == 0
-    let argsStr = strpart(abbr, startIdx + 1, argLen)
-    "let argsList = split(argsStr, ",")
+"   if countParen == 0
+"     let argsStr = strpart(abbr, startIdx + 1, argLen)
+"     "let argsList = split(argsStr, ",")
 
-    let argsList = []
-    let arg = ''
-    let countParen = 0
-    for i in range(strlen(argsStr))
-      if argsStr[i] == ',' && countParen == 0
-        call add(argsList, arg)
-        let arg = ''
-      elseif argsStr[i] == '('
-        let countParen += 1
-        let arg = arg . argsStr[i]
-      elseif argsStr[i] == ')'
-        let countParen -= 1
-        let arg = arg . argsStr[i]
-      else
-        let arg = arg . argsStr[i]
-      endif
-    endfor
-    if arg != '' && countParen == 0
-      call add(argsList, arg)
-    endif
-  else
-    let argsList = []
-  endif
+"     let argsList = []
+"     let arg = ''
+"     let countParen = 0
+"     for i in range(strlen(argsStr))
+"       if argsStr[i] == ',' && countParen == 0
+"         call add(argsList, arg)
+"         let arg = ''
+"       elseif argsStr[i] == '('
+"         let countParen += 1
+"         let arg = arg . argsStr[i]
+"       elseif argsStr[i] == ')'
+"         let countParen -= 1
+"         let arg = arg . argsStr[i]
+"       else
+"         let arg = arg . argsStr[i]
+"       endif
+"     endfor
+"     if arg != '' && countParen == 0
+"       call add(argsList, arg)
+"     endif
+"   else
+"     let argsList = []
+"   endif
 
-  let snippet = '('
-  let c = 1
-  for i in argsList
-    if c > 1
-      let snippet = snippet . ", "
-    endif
-    " strip space
-    let arg = substitute(i, '^\s*\(.\{-}\)\s*$', '\1', '')
-    let snippet = snippet . '${' . c . ":" . arg . '}'
-    let c += 1
-  endfor
-  let snippet = snippet . ')' . "$0"
-  return UltiSnips#Anon(snippet)
-endfunction
+"   let snippet = '('
+"   let c = 1
+"   for i in argsList
+"     if c > 1
+"       let snippet = snippet . ", "
+"     endif
+"     " strip space
+"     let arg = substitute(i, '^\s*\(.\{-}\)\s*$', '\1', '')
+"     let snippet = snippet . '${' . c . ":" . arg . '}'
+"     let c += 1
+"   endfor
+"   let snippet = snippet . ')' . "$0"
+"   return UltiSnips#Anon(snippet)
+" endfunction
+
+" autocmd VimEnter * imap <expr> (
+"       \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
+"       \ v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
+"       \ v:completed_item.kind == 'm') ?
+"       \ "\<C-R>=\<SID>onCompleteDone()\<CR>" : "<Plug>delimitMate("
+
+" autocmd VimEnter * imap <expr> <CR>
+"       \ pumvisible() ?
+"       \   (exists('v:completed_item') && !empty(v:completed_item) &&
+"       \     v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
+"       \     v:completed_item.kind == 'm')) ?
+"       \       "\<C-R>=\<SID>onCompleteDone()\<CR>" :
+"       \       "\<C-y>" :
+"       \   "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
 autocmd VimEnter * imap <expr> (
       \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
       \ v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
       \ v:completed_item.kind == 'm') ?
-      \ "\<C-R>=\<SID>onCompleteDone()\<CR>" : "<Plug>delimitMate("
+      \ "\<C-R>=complete_parameter#pre_complete('()')\<CR>" : "("
 
 autocmd VimEnter * imap <expr> <CR>
       \ pumvisible() ?
       \   (exists('v:completed_item') && !empty(v:completed_item) &&
       \     v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
       \     v:completed_item.kind == 'm')) ?
-      \       "\<C-R>=\<SID>onCompleteDone()\<CR>" :
+      \       "\<C-R>=complete_parameter#pre_complete('()')\<CR>" :
       \       "\<C-y>" :
-      \   "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+      \   "\<CR>"
 
 " }}}
+
+let g:complete_parameter_use_ultisnips_mapping = 1
+nmap <C-J> <Plug>(complete_parameter#overload_down)
+imap <C-J> <Plug>(complete_parameter#overload_down)
+smap <C-J> <Plug>(complete_parameter#overload_down)
+nmap <C-K> <Plug>(complete_parameter#overload_up)
+imap <C-K> <Plug>(complete_parameter#overload_up)
+smap <C-K> <Plug>(complete_parameter#overload_up)
 
 let g:syntastic_auto_loc_list = 0
 
@@ -675,12 +723,16 @@ endif
 let g:taggist_indexers = ['cscope']
 " }}}
 
+" match-up
+let g:matchup_matchparen_status_offscreen = 0
+
 " delimiterMate settings
 let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_balance_matchpairs = 1
-autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
-autocmd VimEnter * inoremap <S-TAB> <S-TAB>
+" autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
+autocmd VimEnter * imap <silent> <expr> <TAB> "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
+" autocmd VimEnter * inoremap <S-TAB> <S-TAB>
 
 " vim-airline settings
 let g:airline#extensions#branch#enabled = 1
@@ -727,15 +779,17 @@ let g:ConqueGdb_Leader = '<Leader>cg'
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '!'
 let g:ale_linters = {'c': [], 'cpp': []}
-let g:ale_python_pylint_options = '-d E265 -d E501 -d E201 -d E202 -d E111 -d W0311 -d C0111 -d C0103 -d C0326 -d C0111 -E114 -E122'
-let g:ale_python_flake8_args = '--ignore=W0311,E265,E501,E201,E202,E111,E114,E122'
+let g:ale_python_pylint_executable = 'python3'
+let g:ale_python_pylint_options = '-m pylint -d E265 -d E501 -d E201 -d E202 -d E111 -d W0311 -d C0111 -d C0103 -d C0326 -d C0111 -d E114 -d E122 -d E402 -d E203 -d E241'
+let g:ale_python_flake8_executable = 'python3'
+let g:ale_python_flake8_options = '-m flake8 --ignore=W0311,E265,E501,E201,E202,E111,E114,E122,E402,E203,E241'
 
 " Neomake
 let g:neomake_c_enabled_makers = []
 let g:neomake_cpp_enabled_makers = []
 let g:neomake_error_sign = {'text': '✗', 'texthl': 'NeomakeErrorSign'}
 let g:neomake_warning_sign = {
-    \   'text': '!',
+    \   'text': '⚠',
     \   'texthl': 'NeomakeWarningSign',
     \ }
 " let g:neomake_message_sign = {
@@ -743,12 +797,7 @@ let g:neomake_warning_sign = {
 "      \   'texthl': 'NeomakeMessageSign',
 "      \ }
 " let g:neomake_info_sign = {'text': 'i', 'texthl': 'NeomakeInfoSign'}
-call neomake#configure#automake({
-      \ 'TextChanged': {},
-      \ 'InsertLeave': {},
-      \ 'BufWritePost': {'delay': 0},
-      \ 'BufWinEnter': {},
-      \ }, 500)
+" call neomake#configure#automake('nrwi', 10)
 
 " DevIcons
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
@@ -759,16 +808,20 @@ call denite#custom#option('_', 'auto_resize', 1)
 call denite#custom#option('_', 'vertical_preview', 1)
 " call denite#custom#option('_', 'auto_highlight', 0)
 call denite#custom#option('_', 'highlight_matched_char', 'Underlined')
-call denite#custom#var('file_rec', 'command', ['bfind'])
+" call denite#custom#var('file_rec', 'command', ['bfind'])
 call denite#custom#source('file,' .
       \                   'file_rec,' .
       \                   'directory_rec',
       \                   'matchers', ['matcher_fuzzy', 'matcher_project_files'])
-"call denite#custom#source('file_rec', 'sorters', ['sorter_sublime'])
-let g:neomru#file_mru_ignore_pattern = '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)'
-call denite#custom#var('file_mru', 'ignore_pattern', '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)')
-let g:neomru#directory_mru_ignore_pattern = '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)'
-call denite#custom#var('directory_mru', 'ignore_pattern', '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)')
+call denite#custom#source('file,' .
+      \                   'file_rec,' .
+      \                   'directory_rec',
+      \                   'max_candidates', 10000)
+" call denite#custom#source('file_rec', 'sorters', ['sorter_sublime'])
+" let g:neomru#file_mru_ignore_pattern = '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)'
+" call denite#custom#var('file_mru', 'ignore_pattern', '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)')
+" let g:neomru#directory_mru_ignore_pattern = '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)'
+" call denite#custom#var('directory_mru', 'ignore_pattern', '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)')
 if executable('rg')
   call denite#custom#var('grep', 'command', ['rg'])
   call denite#custom#var('grep', 'default_opts', ['-S', '--vimgrep'])
@@ -792,7 +845,7 @@ elseif executable('ack')
   call denite#custom#var('grep', 'pattern_opt', ['--match'])
   call denite#custom#var('grep', 'separator', ['--'])
   call denite#custom#var('grep', 'final_opts', [])
-elseif executable('win32')
+elseif has('win32')
   call denite#custom#var('grep', 'command', ['findstr'])
   call denite#custom#var('grep', 'recursive_opts', ['/s'])
   call denite#custom#var('grep', 'default_opts', ['/n'])
@@ -844,6 +897,14 @@ let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 " EasyAlign
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAligh)
+
+" Startify
+let g:startify_change_to_dir = 0
+let g:startify_change_to_vcs_root = 1
+
+" plugins from SpaceVim
+let g:spacevim_plugin_manager = 'dein'
+let g:spacevim_plugin_manager_max_processes = 4
 
 " UI settings {{{
 set mouse=a
@@ -919,25 +980,25 @@ endif
 " Key bindings
 
 " Some Emacs-like keys in insert mode and command-line mode
-inoremap <silent> <C-n>     <Down>
-inoremap <silent> <C-p>     <Up>
-inoremap <silent> <C-b>     <Left>
-inoremap <silent> <C-f>     <Right>
-inoremap <silent> <C-BS>    <C-w>
-inoremap <silent> <M-b>     <C-Left>
-inoremap <silent> <M-f>     <C-Right>
-inoremap <silent> <M-k>     <C-Right><C-w>
-inoremap <silent> <C-a>     <C-o>^
-inoremap <silent> <C-e>     <End>
-inoremap <silent> <C-x>o    <C-o><C-w>w
+" inoremap <silent> <C-n>     <Down>
+" inoremap <silent> <C-p>     <Up>
+" inoremap <silent> <C-b>     <Left>
+" inoremap <silent> <C-f>     <Right>
+" inoremap <silent> <C-BS>    <C-w>
+" inoremap <silent> <M-b>     <C-Left>
+" inoremap <silent> <M-f>     <C-Right>
+" inoremap <silent> <M-k>     <C-Right><C-w>
+" inoremap <silent> <C-a>     <C-o>^
+" inoremap <silent> <C-e>     <End>
+" inoremap <silent> <C-x>o    <C-o><C-w>w
 
-cnoremap <silent> <C-b>     <Left>
-cnoremap <silent> <C-f>     <Right>
-cnoremap <silent> <C-BS>    <C-w>
-cnoremap <silent> <M-b>     <C-Left>
-cnoremap <silent> <M-f>     <C-Right>
-cnoremap <silent> <M-k>     <C-Right><C-w>
-cnoremap <silent> <C-a>     <Home>
+" cnoremap <silent> <C-b>     <Left>
+" cnoremap <silent> <C-f>     <Right>
+" cnoremap <silent> <C-BS>    <C-w>
+" cnoremap <silent> <M-b>     <C-Left>
+" cnoremap <silent> <M-f>     <C-Right>
+" cnoremap <silent> <M-k>     <C-Right><C-w>
+" cnoremap <silent> <C-a>     <Home>
 
 " buffer
 nnoremap <silent> <Leader>bp    :bp<CR>
@@ -956,6 +1017,7 @@ nnoremap <silent> <Leader>b9    :b 9<CR>
 nnoremap <silent> <Leader>wp    <C-w>p
 nnoremap <silent> <Leader>wn    <C-w>n
 nnoremap <silent> <Leader>wq    <C-w>q
+nnoremap <silent> <Leader>q     <C-w>q
 nnoremap <silent> <Leader>ww    <C-w>w
 nnoremap <silent> <Leader>ws    <C-w>s
 nnoremap <silent> <Leader>wv    <C-w>v
@@ -969,6 +1031,7 @@ nnoremap <silent> <Leader>w7    7<C-w>w
 nnoremap <silent> <Leader>w8    8<C-w>w
 nnoremap <silent> <Leader>w9    9<C-w>w
 
+nnoremap <silent> <Leader>we    :Vexplore<CR>
 nnoremap <silent> <Leader>nt    :NERDTreeTabsToggle<CR>
 nnoremap <silent> <Leader>tb    :TagbarToggle<CR>
 

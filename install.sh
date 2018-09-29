@@ -6,7 +6,7 @@ install_yum() {
 }
 
 install_apt() {
-  sudo apt install -y build-essential g++ gdb clang lldb automake autoconf libtool pkg-config make cmake git global exuberant-ctags silversearcher-ag python3-pip python3-dev vim-gtk3 zsh tmux autojump neovim luajit libluajit-5.1-dev ruby-dev
+  sudo apt install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global exuberant-ctags silversearcher-ag python3-pip python3-dev vim-gtk3 zsh tmux autojump neovim luajit libluajit-5.1-dev ruby-dev
 }
 
 install_linux() {
@@ -25,7 +25,7 @@ install_linux() {
   esac
 
   sudo -H pip3 install neovim
-  sudo -H pip3 install powerline-status
+  # sudo -H pip3 install powerline-status
   sudo gem install neovim
 }
 
@@ -54,5 +54,5 @@ curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
 sh /tmp/dein-installer.sh ~/.local/share/dein
 
-mkdir -p ~/.local/src
-git clone -b stable https://github.com/rust-lang/rust.git ~/.local/src/rust
+# mkdir -p ~/.local/src
+# git clone -b stable https://github.com/rust-lang/rust.git ~/.local/src/rust
