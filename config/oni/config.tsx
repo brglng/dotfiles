@@ -1,5 +1,7 @@
-import * as React from "/opt/Oni/resources/app/node_modules/react"
-import * as Oni from "/opt/Oni/resources/app/node_modules/oni-api"
+// import * as React from "/opt/Oni/resources/app/node_modules/react"
+// import * as Oni from "/opt/Oni/resources/app/node_modules/oni-api"
+import * as React from "react"
+import * as Oni from "oni-api"
 
 export const activate = (oni: Oni.Plugin.Api) => {
     console.log("config activated")
@@ -23,7 +25,7 @@ export const configuration = {
 
     // "editor.completions.mode": "hidden",
     "editor.cursorLine": false,
-    "editor.fontSize": "15px",
+    "editor.fontSize": "14px",
     "editor.fontFamily": "FuraCode Nerd Font Mono",
     "editor.maximizeScreenOnStart": true,
 
