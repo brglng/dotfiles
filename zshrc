@@ -7,7 +7,6 @@ source $HOME/.local/share/zsh/antigen.zsh
 
 antigen use oh-my-zsh
 
-antigen bundle autojump
 antigen bundle brew
 antigen bundle command-not-found
 antigen bundle common-aliases
@@ -43,6 +42,8 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs histor
 antigen theme bhilburn/powerlevel9k powerlevel9k
 
 antigen apply
+
+eval "$(luajit $HOME/.local/share/z.lua --init zsh)"
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/

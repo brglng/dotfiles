@@ -70,8 +70,8 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ $(uname -s) = Darwin ]; then
-  source /Applications/Xcode-beta.app/Contents/Developer/usr/share/git-core/git-completion.bash
-  source /Applications/Xcode-beta.app/Contents/Developer/usr/share/git-core/git-prompt.sh
+  source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
+  source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
 fi
 
 GIT_PS1_SHOWDIRTYSTATE=true
@@ -166,6 +166,10 @@ if [ -e /usr/local/share/autojump/autojump.bash ]; then
   source /usr/local/share/autojump/autojump.bash
 elif [ -e /usr/share/autojump/autojump.bash ]; then
   source /usr/share/autojump/autojump.bash
+fi
+
+if [ -e ~/.local/share/z.lua ]; then
+  eval "$(luajit ~/.local/share/z.lua --init bash)"
 fi
 
 export GEEKNOTE_BASE=yinxiang
