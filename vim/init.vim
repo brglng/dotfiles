@@ -444,9 +444,9 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('lvht/tagbar-markdown')
   call dein#add('mbbill/fencview')
   call dein#add('mbbill/undotree')
-  " call dein#add('ryanoasis/vim-devicons')
+  call dein#add('ryanoasis/vim-devicons')
   " call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
-  " call dein#add('Xuyuanp/nerdtree-git-plugin')
+  call dein#add('Xuyuanp/nerdtree-git-plugin')
   call dein#add('mhinz/vim-startify')
 
   " Moving and Editing Plugins
@@ -458,11 +458,11 @@ if dein#load_state($HOME . '/.local/share/dein')
   "call dein#add('tpope/vim-commentary')
   call dein#add('scrooloose/nerdcommenter')
   "call dein#add('auto-pairs')
-  " call dein#add('Raimondi/delimitMate')
+  call dein#add('Raimondi/delimitMate')
   call dein#add('easymotion/vim-easymotion')
   " call dein#add('godlygeek/tabular')
   call dein#add('junegunn/vim-easy-align')
-  " call dein#add('tpope/vim-endwise')
+  call dein#add('tpope/vim-endwise')
   call dein#add('tpope/vim-sleuth')
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
@@ -477,6 +477,8 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('kana/vim-textobj-function')
   call dein#add('sgur/vim-textobj-parameter')
   call dein#add('tpope/vim-rsi')
+
+  call dein#add('Shougo/vinarise.vim')
 
   " FileType Plugins
   call dein#add('PProvost/vim-ps1')
@@ -531,10 +533,10 @@ if dein#load_state($HOME . '/.local/share/dein')
   if !has('win32')
     " call dein#add('autozimu/LanguageClient-neovim', {'rev': 'next', 'build': 'bash install.sh'})
   endif
-  call dein#add('tenfyzhong/CompleteParameter.vim')
+  " call dein#add('tenfyzhong/CompleteParameter.vim')
 
   " Debug
-  call dein#add('cpiger/NeoDebug')
+  " call dein#add('cpiger/NeoDebug')
 
   call dein#local($HOME . '/.vim/dein-local')
 
@@ -667,20 +669,22 @@ let g:ycm_warning_symbol = '⚠'
 "       \       "\<C-y>" :
 "       \   "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
-autocmd VimEnter * imap <expr> (
-      \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
-      \ v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
-      \ v:completed_item.kind == 'm') ?
-      \ "\<C-R>=complete_parameter#pre_complete('()')\<CR>" : "("
+autocmd VimEnter * imap <expr> <CR> "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
-autocmd VimEnter * imap <expr> <CR>
-      \ pumvisible() ?
-      \   (exists('v:completed_item') && !empty(v:completed_item) &&
-      \     v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
-      \     v:completed_item.kind == 'm')) ?
-      \       "\<C-R>=complete_parameter#pre_complete('()')\<CR>" :
-      \       "\<C-y>" :
-      \   "\<CR>"
+" autocmd VimEnter * imap <expr> (
+"       \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
+"       \ v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
+"       \ v:completed_item.kind == 'm') ?
+"       \ "\<C-R>=complete_parameter#pre_complete('()')\<CR>" : "("
+" 
+" autocmd VimEnter * imap <expr> <CR>
+"       \ pumvisible() ?
+"       \   (exists('v:completed_item') && !empty(v:completed_item) &&
+"       \     v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
+"       \     v:completed_item.kind == 'm')) ?
+"       \       "\<C-R>=complete_parameter#pre_complete('()')\<CR>" :
+"       \       "\<C-y>" :
+"       \   "\<CR>"
 
 " }}}
 
@@ -730,8 +734,7 @@ let g:matchup_matchparen_status_offscreen = 0
 let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_balance_matchpairs = 1
-" autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
-autocmd VimEnter * imap <silent> <expr> <TAB> "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
+autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
 " autocmd VimEnter * inoremap <S-TAB> <S-TAB>
 
 " vim-airline settings
