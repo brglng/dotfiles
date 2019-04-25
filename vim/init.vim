@@ -8,35 +8,9 @@ if !isdirectory(&viewdir)
   silent! call mkdir($HOME . '/.cache/vim/view', 'p')
 endif
 
-"set diffexpr=MyDiff()
-"function MyDiff()
-"  let opt = '-a --binary '
-"  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-"  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-"  let arg1 = v:fname_in
-"  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-"  let arg2 = v:fname_new
-"  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-"  let arg3 = v:fname_out
-"  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-"  if $VIMRUNTIME =~ ' '
-"    if &sh =~ '\<cmd'
-"      if empty(&shellxquote)
-"        let l:shxq_sav = ''
-"        set shellxquote&
-"      endif
-"      let cmd = '"' . $VIMRUNTIME . '\diff"'
-"    else
-"      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-"    endif
-"  else
-"    let cmd = $VIMRUNTIME . '\diff'
-"  endif
-"  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-"  if exists('l:shxq_sav')
-"    let &shellxquote=l:shxq_sav
-"  endif
-"endfunction
+if has("patch-8.1.0360")
+  set diffopt+=internal,algorithm:patience
+endif
 
 " enc, tenc, fenc, fencs, ff settings
 " *MUST* be put at the very beginning, in order to prevent potential problems
@@ -404,157 +378,9 @@ let g:netrw_altv = 1
 let g:netrw_winsize = -30
 
 " =========================== Plugin Settings ================================ {{{
-"dein Scripts----------------------------- {{{
-if &compatible
-  set nocompatible               " Be iMproved
-endif
-
-" Required:
-set runtimepath+=$HOME/.local/share/dein/repos/github.com/Shougo/dein.vim
-
-let g:dein#install_process_timeout = 3600 * 2
-
-" Required:
-if dein#load_state($HOME . '/.local/share/dein')
-  call dein#begin($HOME . '/.local/share/dein')
-
-  " Dein
-  call dein#add($HOME . '/.local/share/dein/repos/github.com/Shougo/dein.vim')
-  call dein#add('haya14busa/dein-command.vim')
-  call dein#add('wsdjeg/dein-ui.vim')
-
-  " Generic Plugins
-  if !has('nvim')
-    call dein#add('roxma/nvim-yarp')
-    call dein#add('roxma/vim-hug-neovim-rpc')
-  endif
-  call dein#add('tpope/vim-eunuch')
-  call dein#add('justinmk/vim-dirvish')
-
-  " UI Plugins
-  call dein#add('scrooloose/nerdtree')
-  call dein#add('jistr/vim-nerdtree-tabs')
-
-  call dein#add('vim-airline/vim-airline')
-  call dein#add('vim-airline/vim-airline-themes')
-
-  "call dein#add('Yggdroot/indentLine')
-  "call dein#add('nathanaelkane/vim-indent-guides')
-  call dein#add('majutsushi/tagbar')
-  call dein#add('lvht/tagbar-markdown')
-  call dein#add('mbbill/fencview')
-  call dein#add('mbbill/undotree')
-  call dein#add('ryanoasis/vim-devicons')
-  " call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
-  call dein#add('Xuyuanp/nerdtree-git-plugin')
-  call dein#add('mhinz/vim-startify')
-
-  " Moving and Editing Plugins
-  if !exists('g:gui_oni')
-    call dein#add('tpope/vim-unimpaired')
-    call dein#add('tpope/vim-surround')
-  endif
-  call dein#add('wellle/targets.vim')
-  "call dein#add('tpope/vim-commentary')
-  call dein#add('scrooloose/nerdcommenter')
-  "call dein#add('auto-pairs')
-  call dein#add('Raimondi/delimitMate')
-  call dein#add('easymotion/vim-easymotion')
-  " call dein#add('godlygeek/tabular')
-  call dein#add('junegunn/vim-easy-align')
-  call dein#add('tpope/vim-endwise')
-  call dein#add('tpope/vim-sleuth')
-  call dein#add('SirVer/ultisnips')
-  call dein#add('honza/vim-snippets')
-  " call dein#add('Shougo/neosnippet.vim')
-  " call dein#add('Shougo/neosnippet-snippets')
-  call dein#add('rhysd/clever-f.vim')
-  call dein#add('andymass/vim-matchup')
-  call dein#add('tpope/vim-repeat')
-  call dein#add('kana/vim-textobj-user')
-  call dein#add('kana/vim-textobj-indent')
-  call dein#add('kana/vim-textobj-syntax')
-  call dein#add('kana/vim-textobj-function')
-  call dein#add('sgur/vim-textobj-parameter')
-  call dein#add('tpope/vim-rsi')
-
-  call dein#add('Shougo/vinarise.vim')
-
-  " FileType Plugins
-  call dein#add('PProvost/vim-ps1')
-  call dein#add('aklt/plantuml-syntax')
-  call dein#add('hynek/vim-python-pep8-indent')
-  call dein#add('sheerun/vim-polyglot')
-
-  " Source Control Plugins
-  " call dein#add('airblade/vim-gitgutter')
-  call dein#add('mhinz/vim-signify')
-  call dein#add('tpope/vim-fugitive')
-  call dein#add('will133/vim-dirdiff')
-  call dein#add('gregsexton/gitv')
-
-  " Searching plugin: denite.vim and plugins
-  call dein#add('Shougo/denite.nvim')
-  call dein#add('Shougo/neomru.vim')
-
-  " ColorSchemes
-  " call dein#add('lifepillar/vim-solarized8')
-  " call dein#add('sickill/vim-monokai')
-  " call dein#add('chriskempson/vim-tomorrow-theme')
-  " call dein#add('chriskempson/base16-vim')
-  " call dein#add('junegunn/seoul256.vim')
-  " call dein#add('nanotech/jellybeans.vim')
-  " call dein#add('NLKNguyen/papercolor-theme')
-  " call dein#add('joshdick/onedark.vim')
-  call dein#add('arcticicestudio/nord-vim')
-  " call dein#add('soft-aesthetic/soft-era-vim')
-
-  " Project Management
-  call dein#add('editorconfig/editorconfig-vim')
-  " call dein#add('ludovicchabant/vim-gutentags')
-
-  " Language Sementic Plugins
-  " call dein#add('neomake/neomake')
-  call dein#add('w0rp/ale')
-  if has('win32')
-    let g:ycm_server_python_interpreter = 'py -3'
-    let ycm_python_interpreter = 'py - 3'
-  else
-    let ycm_python_interpreter = 'python3'
-  endif
-
-  if !exists('g:gui_oni')
-    call dein#add('Valloric/YouCompleteMe', {'build':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer'})
-  endif
-  " call dein#add('Shougo/deoplete.nvim')
-  " call dein#add('Shougo/deoplete-clangx')
-  let g:deoplete#enable_at_startup = 1
-  " call dein#add('tweekmonster/deoplete-clang2')
-  if !has('win32')
-    " call dein#add('autozimu/LanguageClient-neovim', {'rev': 'next', 'build': 'bash install.sh'})
-  endif
-  " call dein#add('tenfyzhong/CompleteParameter.vim')
-
-  " Debug
-  " call dein#add('cpiger/NeoDebug')
-
-  call dein#local($HOME . '/.vim/dein-local')
-
-  " Required:
-  call dein#end()
-  call dein#save_state()
-endif
-
-" Required:
-filetype plugin indent on
-syntax enable
-
-" If you want to install not installed plugins on startup.
-if dein#check_install()
-  call dein#install()
-endif
-
-"End dein Scripts------------------------- }}}
+runtime zpan/init/key_mappings.vim
+runtime zpan/init/plugins.vim
+runtime zpan/init/ui.vim
 
 " UltiSnips settings {{{
 " let g:UltiSnipsExpandTrigger = "<tab>"
@@ -583,7 +409,7 @@ let g:ycm_complete_in_strings = 1
 let g:ycm_rust_src_path = $HOME . '/.local/src/rust/src'
 
 let g:ycm_error_symbol = '✗'
-let g:ycm_warning_symbol = '⚠'
+let g:ycm_warning_symbol = "\uf071"
 
 " function! s:onCompleteDone()
 "   if &filetype == 'c' || &filetype == 'cpp'
@@ -669,22 +495,20 @@ let g:ycm_warning_symbol = '⚠'
 "       \       "\<C-y>" :
 "       \   "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
-autocmd VimEnter * imap <expr> <CR> "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+autocmd VimEnter * imap <expr> (
+      \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
+      \ v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
+      \ v:completed_item.kind == 'm') ?
+      \ "\<C-R>=complete_parameter#pre_complete('()')\<CR>" : "("
 
-" autocmd VimEnter * imap <expr> (
-"       \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
-"       \ v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
-"       \ v:completed_item.kind == 'm') ?
-"       \ "\<C-R>=complete_parameter#pre_complete('()')\<CR>" : "("
-" 
-" autocmd VimEnter * imap <expr> <CR>
-"       \ pumvisible() ?
-"       \   (exists('v:completed_item') && !empty(v:completed_item) &&
-"       \     v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
-"       \     v:completed_item.kind == 'm')) ?
-"       \       "\<C-R>=complete_parameter#pre_complete('()')\<CR>" :
-"       \       "\<C-y>" :
-"       \   "\<CR>"
+autocmd VimEnter * imap <expr> <CR>
+      \ pumvisible() ?
+      \   (exists('v:completed_item') && !empty(v:completed_item) &&
+      \     v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
+      \     v:completed_item.kind == 'm')) ?
+      \       "\<C-R>=complete_parameter#pre_complete('()')\<CR>" :
+      \       "\<C-y>" :
+      \   "\<CR>"
 
 " }}}
 
@@ -706,6 +530,7 @@ let g:NERDTreeDirArrows = 1
 let g:nerdtree_tabs_open_on_gui_startup = 0
 " }}}
 
+
 " Tagbar settings
 
 " Indent Guides settings
@@ -713,12 +538,15 @@ let g:nerdtree_tabs_open_on_gui_startup = 0
 "let g:indent_guides_color_change_percent = 5
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
+" nnoremap <silent> <Leader>ig :IndentGuidesToggle<CR>
 
 " indentLine settings
 " let g:indentLine_char = '┊'
 let g:indentLine_first_char = ''
 let g:indentLine_faster = 1
 let g:indentLine_enabled = 0
+nnoremap <silent> <Leader>il :IndentLinesToggle<CR>
+
 
 " Taggist settings {{{
 if has('win32') || has('win64')
@@ -734,7 +562,8 @@ let g:matchup_matchparen_status_offscreen = 0
 let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_balance_matchpairs = 1
-autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
+" autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
+autocmd VimEnter * imap <silent> <expr> <TAB> "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
 " autocmd VimEnter * inoremap <S-TAB> <S-TAB>
 
 " vim-airline settings
@@ -746,24 +575,6 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#tabline#buffer_nr_format = '%s '
 let g:airline_powerline_fonts = 1
-
-" MiniBufExpl
-if 0
-  let g:miniBufExplCycleArround = 1
-  let g:miniBufExplUseSingleClick = 1
-  let g:did_minibufexplorer_syntax_inits = 1
-
-  au FileType minibufexpl call s:MiniBufExplHighlights()
-
-  function! s:MiniBufExplHighlights()
-    hi link MBENormal               Normal
-    hi link MBEChanged              String
-    hi link MBEVisibleNormal        Special
-    hi link MBEVisibleChanged       Error
-    hi link MBEVisibleActiveNormal  StatusLineNC
-    call brglng#hilink('MBEVisibleActiveChanged', 'StatusLineNC', 'bg', 'Error', 'fg')
-  endfunction
-endif
 
 " NERDCommenter
 let NERDDefaultAlign = 'left'
@@ -780,7 +591,7 @@ let g:ConqueGdb_Leader = '<Leader>cg'
 
 " ALE
 let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '!'
+let g:ale_sign_warning = "\uf071"
 let g:ale_linters = {'c': [], 'cpp': []}
 let g:ale_python_pylint_executable = 'python3'
 let g:ale_python_pylint_options = '-m pylint -d E265 -d E501 -d E201 -d E202 -d E111 -d W0311 -d C0111 -d C0103 -d C0326 -d C0111 -d E114 -d E122 -d E402 -d E203 -d E241'
@@ -792,7 +603,7 @@ let g:neomake_c_enabled_makers = []
 let g:neomake_cpp_enabled_makers = []
 let g:neomake_error_sign = {'text': '✗', 'texthl': 'NeomakeErrorSign'}
 let g:neomake_warning_sign = {
-    \   'text': '⚠',
+    \   'text': "\uf071",
     \   'texthl': 'NeomakeWarningSign',
     \ }
 " let g:neomake_message_sign = {
@@ -805,87 +616,6 @@ let g:neomake_warning_sign = {
 " DevIcons
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 " let g:DevIconsEnableFoldersOpenClose = 1
-
-" Denite.vim {{{
-call denite#custom#option('_', 'auto_resize', 1)
-call denite#custom#option('_', 'vertical_preview', 1)
-" call denite#custom#option('_', 'auto_highlight', 0)
-call denite#custom#option('_', 'highlight_matched_char', 'Underlined')
-" call denite#custom#var('file_rec', 'command', ['bfind'])
-call denite#custom#source('file,' .
-      \                   'file_rec,' .
-      \                   'directory_rec',
-      \                   'matchers', ['matcher_fuzzy', 'matcher_project_files'])
-call denite#custom#source('file,' .
-      \                   'file_rec,' .
-      \                   'directory_rec',
-      \                   'max_candidates', 10000)
-" call denite#custom#source('file_rec', 'sorters', ['sorter_sublime'])
-" let g:neomru#file_mru_ignore_pattern = '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)'
-" call denite#custom#var('file_mru', 'ignore_pattern', '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)')
-" let g:neomru#directory_mru_ignore_pattern = '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)'
-" call denite#custom#var('directory_mru', 'ignore_pattern', '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)')
-if executable('rg')
-  call denite#custom#var('grep', 'command', ['rg'])
-  call denite#custom#var('grep', 'default_opts', ['-S', '--vimgrep'])
-  call denite#custom#var('grep', 'recursive_opts', [])
-  call denite#custom#var('grep', 'pattern_opt', [])
-  call denite#custom#var('grep', 'separator', ['--'])
-  call denite#custom#var('grep', 'final_opts', [])
-elseif executable('ag')
-  call denite#custom#var('grep', 'command', ['ag'])
-  call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
-  call denite#custom#var('grep', 'recursive_opts', [])
-  call denite#custom#var('grep', 'pattern_opt', [])
-  call denite#custom#var('grep', 'separator', ['--'])
-  call denite#custom#var('grep', 'final_opts', [])
-elseif executable('ack')
-  call denite#custom#var('grep', 'command', ['ack'])
-  call denite#custom#var('grep', 'default_opts',
-        \ ['--ackrc', $HOME.'/.ackrc', '-H',
-        \  '--nopager', '--nocolor', '--nogroup', '--column'])
-  call denite#custom#var('grep', 'recursive_opts', [])
-  call denite#custom#var('grep', 'pattern_opt', ['--match'])
-  call denite#custom#var('grep', 'separator', ['--'])
-  call denite#custom#var('grep', 'final_opts', [])
-elseif has('win32')
-  call denite#custom#var('grep', 'command', ['findstr'])
-  call denite#custom#var('grep', 'recursive_opts', ['/s'])
-  call denite#custom#var('grep', 'default_opts', ['/n'])
-endif
-
-call denite#custom#map('insert', '<TAB>',       '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('insert', '<S-TAB>',     '<denite:move_to_previous_line>',   'noremap')
-call denite#custom#map('insert', '<Down>',      '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('insert', '<Up>',        '<denite:move_to_previous_line>',   'noremap')
-call denite#custom#map('insert', '<C-J>',       '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('insert', '<C-K>',       '<denite:move_to_previous_line>',   'noremap')
-call denite#custom#map('insert', '<PageDown>',  '<denite:scroll_page_forwards>',    'noremap')
-call denite#custom#map('insert', '<PageUp>',    '<denite:scroll_page_backwards>',   'noremap')
-call denite#custom#map('insert', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
-call denite#custom#map('insert', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
-call denite#custom#map('normal', '<Down>',      '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('normal', '<Up>',        '<denite:move_to_previous_line>',   'noremap')
-call denite#custom#map('normal', '<C-J>',       '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('normal', '<C-K>',       '<denite:move_to_previous_line>',   'noremap')
-call denite#custom#map('normal', '<PageDown>',  '<denite:scroll_page_forwards>',    'noremap')
-call denite#custom#map('normal', '<PageUp>',    '<denite:scroll_page_backwards>',   'noremap')
-call denite#custom#map('normal', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
-call denite#custom#map('normal', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
-
-nnoremap <silent> <Leader>df :Denite -buffer-name=file_rec              file_rec<CR>
-nnoremap <silent> <Leader>dF :Denite -buffer-name=file_rec      -resume file_rec<CR>
-nnoremap <silent> <Leader>dd :Denite -buffer-name=file                  file<CR>
-nnoremap <silent> <Leader>dD :Denite -buffer-name=file          -resume file<CR>
-nnoremap <silent> <Leader>db :Denite -buffer-name=buffer                buffer<CR>
-nnoremap <silent> <Leader>dg :Denite -buffer-name=grep                  grep<CR>
-nnoremap <silent> <Leader>dG :Denite -buffer-name=grep          -resume grep<CR>
-nnoremap <silent> <Leader>dl :Denite -buffer-name=line_<C-r>%           line<CR>
-nnoremap <silent> <Leader>dL :Denite -buffer-name=line_<C-r>%   -resume line<CR>
-nnoremap <silent> <Leader>do :Denite -buffer-name=outline               outline<CR>
-nnoremap <silent> <Leader>dr :Denite -buffer-name=file_mru              file_mru<CR>
-nnoremap <silent> <Leader>dR :Denite -buffer-name=file_mru      -resume file_mru<CR>
-" }}}
 
 " Gutentags
 let g:gutentags_ctags_tagfile = '.tags'
@@ -905,168 +635,3 @@ nmap ga <Plug>(EasyAligh)
 let g:startify_change_to_dir = 0
 let g:startify_change_to_vcs_root = 1
 
-" plugins from SpaceVim
-let g:spacevim_plugin_manager = 'dein'
-let g:spacevim_plugin_manager_max_processes = 4
-
-" UI settings {{{
-set mouse=a
-
-if has('gui_running') || exists('g:GuiLoaded') || exists('g:nyaovim_version') || exists('g:gui_oni')
-  if exists('&termguicolors')
-    set termguicolors
-  endif
-  if has('nvim')
-    call rpcnotify(1, 'Gui', 'Font', 'Fira Code:h11')
-    call rpcnotify(1, 'Gui', 'Linespace', '0')
-    " call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
-  endif
-else
-  set t_Co=16
-  let g:solarized_use16 = 1
-  let g:onedark_termcolors = 16
-endif
-
-syntax on
-set background=dark
-" colorscheme solarized8
-colorscheme nord
-
-if exists('g:gui_oni') || exists('g:gui_gonvim')
-  set laststatus=0
-endif
-
-if has('gui_running')
-  set mousehide
-  set lines=48
-  set columns=100
-  " if has('win32')
-    " autocmd GUIEnter * simalt ~x
-  " endif
-
-  set guioptions+=aA
-  set guioptions-=T
-  " set guioptions-=r
-  " set guioptions-=L
-  set guioptions-=l
-  set guioptions-=b
-  if has('unix') && !has('mac') && !has('macunix')
-    set guioptions-=m
-  endif
-
-  " Alt-Space is System menu
-  if has("gui_running")
-    noremap <M-Space> :simalt ~<CR>
-    inoremap <M-Space> <C-O>:simalt ~<CR>
-    cnoremap <M-Space> <C-C>:simalt ~<CR>
-  endif
-
-  if has('win32') || has('win64')
-    set guifont=Fira_Code:h11,Ubuntu_Mono_for_Powerline:h13,Consolas:h12,Lucida_Console:h12,Courier_New:h12
-  elseif has('mac') || has('macunix')
-    set guifont=Fira_Code:h14,Ubuntu_Mono_for_Powerline:h13,Menlo:h12
-  elseif has('unix')
-    if system('uname -s') == "Linux\n"
-      " font height bug of GVim on Ubuntu
-      let $LC_ALL='en_US.UTF-8'
-    endif
-    set guifont=Fira\ Code\ 11,Ubuntu\ Mono\ for\ Powerline\ 13,DejaVu\ Sans\ Mono\ 12
-  endif
-  if has('mac') || has('macunix')
-    set guifontwide=Noto_Sans_CJK_SC:h12,Noto_Sans_CJK_TC:h12,Noto_Sans_CJK_JP:h12,Noto_Sans_CJK_KR:h12,Hiragino_Sans_GB:h12,STHeiti:h12
-  elseif has('unix')
-    set guifontwide=Noto\ Sans\ CJK\ SC\ 12,Noto\ Sans\ CJK\ TC\ 12,Noto\ Sans\ CJK\ JP\ 12,Noto\ Sans\ CJK\ KR\ 12,WenQuanYi\ Zen\ Hei\ 12,WenQuanYi\ Micro\ Hei\ 12
-  endif
-endif
-" }}}
-
-" Key bindings
-
-" Some Emacs-like keys in insert mode and command-line mode
-" inoremap <silent> <C-n>     <Down>
-" inoremap <silent> <C-p>     <Up>
-" inoremap <silent> <C-b>     <Left>
-" inoremap <silent> <C-f>     <Right>
-" inoremap <silent> <C-BS>    <C-w>
-" inoremap <silent> <M-b>     <C-Left>
-" inoremap <silent> <M-f>     <C-Right>
-" inoremap <silent> <M-k>     <C-Right><C-w>
-" inoremap <silent> <C-a>     <C-o>^
-" inoremap <silent> <C-e>     <End>
-" inoremap <silent> <C-x>o    <C-o><C-w>w
-
-" cnoremap <silent> <C-b>     <Left>
-" cnoremap <silent> <C-f>     <Right>
-" cnoremap <silent> <C-BS>    <C-w>
-" cnoremap <silent> <M-b>     <C-Left>
-" cnoremap <silent> <M-f>     <C-Right>
-" cnoremap <silent> <M-k>     <C-Right><C-w>
-" cnoremap <silent> <C-a>     <Home>
-
-" buffer
-nnoremap <silent> <Leader>bp    :bp<CR>
-nnoremap <silent> <Leader>bn    :bn<CR>
-nnoremap <silent> <Leader>b1    :b 1<CR>
-nnoremap <silent> <Leader>b2    :b 2<CR>
-nnoremap <silent> <Leader>b3    :b 3<CR>
-nnoremap <silent> <Leader>b4    :b 4<CR>
-nnoremap <silent> <Leader>b5    :b 5<CR>
-nnoremap <silent> <Leader>b6    :b 6<CR>
-nnoremap <silent> <Leader>b7    :b 7<CR>
-nnoremap <silent> <Leader>b8    :b 8<CR>
-nnoremap <silent> <Leader>b9    :b 9<CR>
-
-" window
-nnoremap <silent> <Leader>wp    <C-w>p
-nnoremap <silent> <Leader>wn    <C-w>n
-nnoremap <silent> <Leader>wq    <C-w>q
-nnoremap <silent> <Leader>q     <C-w>q
-nnoremap <silent> <Leader>ww    <C-w>w
-nnoremap <silent> <Leader>ws    <C-w>s
-nnoremap <silent> <Leader>wv    <C-w>v
-nnoremap <silent> <Leader>w1    1<C-w>w
-nnoremap <silent> <Leader>w2    2<C-w>w
-nnoremap <silent> <Leader>w3    3<C-w>w
-nnoremap <silent> <Leader>w4    4<C-w>w
-nnoremap <silent> <Leader>w5    5<C-w>w
-nnoremap <silent> <Leader>w6    6<C-w>w
-nnoremap <silent> <Leader>w7    7<C-w>w
-nnoremap <silent> <Leader>w8    8<C-w>w
-nnoremap <silent> <Leader>w9    9<C-w>w
-
-nnoremap <silent> <Leader>we    :Vexplore<CR>
-nnoremap <silent> <Leader>nt    :NERDTreeTabsToggle<CR>
-nnoremap <silent> <Leader>tb    :TagbarToggle<CR>
-
-" QuickFix and Location windows
-nnoremap <silent> <Leader>cw    :call <SID>QuickFixToggle('copen')<CR>
-nnoremap <silent> <Leader>lw    :call <SID>QuickFixToggle('lopen')<CR>
-function! s:QuickFixToggle(opencmd)
-  let quickfix_opened = 0
-  for nr in range(1, winnr('$'))
-    if getbufvar(winbufnr(nr), '&buftype') == 'quickfix'
-      let quickfix_opened = 1
-      break
-    endif
-  endfor
-  if quickfix_opened == 1
-    if getbufvar(bufnr('%'), '&buftype') == 'quickfix'
-      wincmd p
-    endif
-    cclose
-    lclose
-  else
-    execute 'botright ' . a:opencmd
-    "wincmd p
-  endif
-endfunction
-
-" search and replace
-nnoremap <Leader>gs     :%s/\<<C-r><C-w>\>/
-nnoremap <Leader>gr     :%s/\<<C-r><C-w>\>//g<Left><Left>
-nnoremap <Leader>gR     :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
-nnoremap <Leader>s      :.,$s/\<<C-r><C-w>\>/
-nnoremap <Leader>r      :.,$s/\<<C-r><C-w>\>//g<Left><Left>
-nnoremap <Leader>R      :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
-
-nnoremap <silent> <Leader>gd :YcmCompleter GoTo<CR>

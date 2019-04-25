@@ -34,7 +34,11 @@ antigen bundle tmux
 
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
-antigen bundle zsh-users/zsh-syntax-highlighting
+#antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zdharma/fast-syntax-highlighting
+
+ZLUA_EXEC=$(which luajit)
+antigen bundle skywind3000/z.lua
 
 POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable virtualenv anaconda rbenv vcs)
@@ -42,8 +46,6 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs histor
 antigen theme bhilburn/powerlevel9k powerlevel9k
 
 antigen apply
-
-eval "$(luajit $HOME/.local/share/z.lua --init zsh)"
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -176,6 +178,13 @@ alias -s cxx=$EDITOR
 alias -s hxx=$EDITOR
 alias -s java=$EDITOR
 alias -s txt=$EDITOR
+
+# z.lua aliases
+alias zh='z -I -t .'
+alias zc='z -c'      # restrict matches to subdirs of $PWD
+alias zz='z -i'      # cd with interactive selection
+alias zf='z -I'      # use fzf to select in multiple matches
+alias zb='z -b'      # quickly cd to the parent directory
 
 setopt BANG_HIST                # Treat the '!' character specially during expansion.
 setopt INC_APPEND_HISTORY       # Write to the history file immediately, not when the shell exits.

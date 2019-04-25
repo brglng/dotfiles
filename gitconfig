@@ -1,6 +1,6 @@
 [user]
 	name = Zhaosheng Pan
-	email = brglng@gmail.com
+	email = brglng@sololand.moe
 [core]
 	autocrlf = false
 	excludesfile = /Users/brglng/.gitignore_global
@@ -33,7 +33,7 @@
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [difftool "vim-dirdiff"]
 	cmd = ~/Dropbox/Projects/tools/vimdirdiff.py \"$LOCAL\" \"$REMOTE\"
