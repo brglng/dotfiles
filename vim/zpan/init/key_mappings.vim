@@ -1,3 +1,12 @@
+let mapleader = "\<Space>"
+nmap ; :
+
+" arrows move through screen lines
+noremap  <silent> <Down>      gj
+noremap  <silent> <Up>        gk
+inoremap <silent> <Down> <C-o>gj
+inoremap <silent> <Up>   <C-o>gk
+
 " Some Emacs-like keys in insert mode and command-line mode
 " inoremap <silent> <C-n>     <Down>
 " inoremap <silent> <C-p>     <Up>

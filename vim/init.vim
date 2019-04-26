@@ -110,12 +110,11 @@ endif
 set history=1000
 set tabpagemax=50
 set sessionoptions-=options
-runtime! macros/matchit.vim
 
 set confirm
 "set switchbuf=usetab,newtab,useopen
 
-set nostartofline
+" set nostartofline
 set splitbelow
 set splitright
 
@@ -126,15 +125,6 @@ set wrap                        " auto wrap long lines
 set whichwrap=b,s,<,>,[,]       " cursor auto move to next/previous line when reach line's tail/head
 set backspace=indent,eol,start  " backspace can delete newlines in insert mode
 "set textwidth=78                " auto break lines longer than 78 charactors
-
-let mapleader = "\<Space>"
-nmap ; :
-
-" arrows move through screen lines
-noremap  <silent> <Down>      gj
-noremap  <silent> <Up>        gk
-inoremap <silent> <Down> <C-o>gj
-inoremap <silent> <Up>   <C-o>gk
 
 if !has('gui_running') && !(has('win32') && !has('win32unix')) && !has('nvim')
   " fix meta-keys under terminal
@@ -634,4 +624,3 @@ nmap ga <Plug>(EasyAligh)
 " Startify
 let g:startify_change_to_dir = 0
 let g:startify_change_to_vcs_root = 1
-
