@@ -73,7 +73,6 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('kana/vim-textobj-syntax')
   call dein#add('kana/vim-textobj-function')
   call dein#add('sgur/vim-textobj-parameter')
-  call dein#add('tpope/vim-rsi')
 
   call dein#add('Shougo/vinarise.vim')
 
@@ -153,6 +152,9 @@ endif
 
 "End dein Scripts------------------------- }}}
 
+runtime zpan/init/plugins/complete_parameter.vim
 runtime zpan/init/plugins/defx.vim
 runtime zpan/init/plugins/dein-ui.vim
 runtime zpan/init/plugins/denite.vim
+runtime zpan/init/plugins/ultisnips.vim
+runtime zpan/init/plugins/you_complete_me.vim

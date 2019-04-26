@@ -1,3 +1,4 @@
+call denite#custom#option('_', 'auto_accl', 1)
 call denite#custom#option('_', 'auto_resize', 1)
 call denite#custom#option('_', 'vertical_preview', 1)
 " call denite#custom#option('_', 'auto_highlight', 0)

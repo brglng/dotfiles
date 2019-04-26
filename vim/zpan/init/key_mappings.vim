@@ -1,6 +1,17 @@
 let mapleader = "\<Space>"
 nmap ; :
 
+autocmd VimEnter * imap <expr> ( pumvisible() ?  complete_parameter#pre_complete('()') : "("
+autocmd VimEnter * imap <expr> <CR> pumvisible() ? complete_parameter#pre_complete('()') : "\<CR>"
+autocmd VimEnter * smap <silent> <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=UltiSnips#ExpandSnippetOrJump()\<CR>"
+autocmd VimEnter * imap <silent> <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=UltiSnips#ExpandSnippetOrJump()\<CR>"
+autocmd VimEnter * smap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
+autocmd VimEnter * imap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
+imap <C-J> <Plug>(complete_parameter#overload_down)
+smap <C-J> <Plug>(complete_parameter#overload_down)
+imap <C-K> <Plug>(complete_parameter#overload_up)
+smap <C-K> <Plug>(complete_parameter#overload_up)
+
 " arrows move through screen lines
 noremap  <silent> <Down>      gj
 noremap  <silent> <Up>        gk
@@ -8,25 +19,37 @@ inoremap <silent> <Down> <C-o>gj
 inoremap <silent> <Up>   <C-o>gk
 
 " Some Emacs-like keys in insert mode and command-line mode
-" inoremap <silent> <C-n>     <Down>
-" inoremap <silent> <C-p>     <Up>
-" inoremap <silent> <C-b>     <Left>
-" inoremap <silent> <C-f>     <Right>
-" inoremap <silent> <C-BS>    <C-w>
-" inoremap <silent> <M-b>     <C-Left>
-" inoremap <silent> <M-f>     <C-Right>
-" inoremap <silent> <M-k>     <C-Right><C-w>
-" inoremap <silent> <C-a>     <C-o>^
-" inoremap <silent> <C-e>     <End>
-" inoremap <silent> <C-x>o    <C-o><C-w>w
+inoremap <silent> <expr>    <Home>      col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
+inoremap <silent> <expr>    <C-A>       col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
+inoremap <silent>           <C-X><C-A>  <C-A>
+cnoremap <silent>           <C-A>       <Home>
+cnoremap <silent>           <C-X><C-A>  <C-A>
 
-" cnoremap <silent> <C-b>     <Left>
-" cnoremap <silent> <C-f>     <Right>
-" cnoremap <silent> <C-BS>    <C-w>
-" cnoremap <silent> <M-b>     <C-Left>
-" cnoremap <silent> <M-f>     <C-Right>
-" cnoremap <silent> <M-k>     <C-Right><C-w>
-" cnoremap <silent> <C-a>     <Home>
+inoremap <silent> <expr>    <C-B>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-D>\<Lt>Esc>kJs" : "\<Lt>Left>"
+cnoremap <silent>           <C-B>       <Left>
+
+inoremap <silent> <expr>    <C-D>       col('.') > strlen(getline('.')) ? "\<Lt>C-D>":"\<Lt>Del>"
+cnoremap <silent> <expr>    <C-D>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-D>":"\<Lt>Del>"
+
+inoremap <silent> <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> pumvisible() ? "\<Lt>C-E>" : "\<Lt>End>"
+
+inoremap <silent> <expr>    <C-F>       col('.') > strlen(getline('.')) ? "\<Lt>C-F>":"\<Lt>Right>"
+cnoremap <silent> <expr>    <C-F>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
+
+inoremap <silent> <expr>    <C-n>       pumvisible() ? "\<C-N>" : "\<Down>"
+inoremap <silent> <expr>    <C-p>       pumvisible() ? "\<C-P>" : "\<Up>"
+
+inoremap <silent>           <C-BS>      <C-w>
+inoremap <silent>           <M-b>       <C-Left>
+inoremap <silent>           <M-f>       <C-Right>
+inoremap <silent>           <M-k>       <C-Right><C-w>
+inoremap <silent>           <C-x>o      <C-o><C-w>w
+
+cnoremap <silent>           <C-BS>      <C-w>
+cnoremap <silent>           <M-b>       <C-Left>
+cnoremap <silent>           <M-f>       <C-Right>
+cnoremap <silent>           <M-k>       <C-Right><C-w>
+cnoremap <silent>           <C-a>       <Home>
 
 " buffer
 nnoremap <silent> <Leader>bp    :bp<CR>
@@ -63,8 +86,9 @@ nnoremap <silent> <M-1>         :Defx<CR>
 nnoremap <silent> <M-7>         :TagbarToggle<CR>
 
 " QuickFix and Location windows
-nnoremap <silent> <Leader>cw    :call <SID>QuickFixToggle('copen')<CR>
-nnoremap <silent> <Leader>lw    :call <SID>QuickFixToggle('lopen')<CR>
+autocmd FileType qf,help nnoremap <silent> q <C-w>q
+nnoremap <silent> <M-6> :call <SID>QuickFixToggle('copen')<CR>
+nnoremap <silent> <M-^> :call <SID>QuickFixToggle('lopen')<CR>
 function! s:QuickFixToggle(opencmd)
   let quickfix_opened = 0
   for nr in range(1, winnr('$'))

@@ -60,7 +60,7 @@ set nocompatible                " turn of vi compatible mode
 set winaltkeys=no
 "set helplang=cn                 " Chinese help
 "set autoread                    " auto read files modified outside vim
-if (has('unix') || has('mac') || has('macunix')) && system('whoami') != "root\n"
+if has('win32') || system('whoami') != "root\n"
   set nobackup                  " do not create backups before editing
   set nowritebackup
 endif
@@ -193,7 +193,7 @@ set selectmode=                 " always use visual mode
 " tab and incdent settings
 set autoindent
 set cindent
-set cinoptions=Ls,:0,l1,g0,N0,t0,(0,u0,U1,w1,Ws,j1,J1,)1000,*1000
+set cinoptions=Ls,l1,g0,N-s,E-s,t0,(0,u0,U1,w1,Ws,m1,j1,J1,)10000,*10000
 set tabstop=8
 set softtabstop=4
 set expandtab
@@ -372,178 +372,12 @@ runtime zpan/init/key_mappings.vim
 runtime zpan/init/plugins.vim
 runtime zpan/init/ui.vim
 
-" UltiSnips settings {{{
-" let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-" }}}
-
-" YouCompleteMe settings {{{
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_seed_identifiers_with_syntax = 1
-
-"let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_autoclose_preview_window_after_completion = 0
-let g:ycm_autoclose_preview_window_after_insertion = 1
-
-let g:ycm_key_list_select_completion = ['<Down>']
-let g:ycm_key_list_previous_completion = ['<Up>']
-let g:ycm_key_invoke_completion = '<C-x><C-x>'
-
-let g:ycm_global_ycm_extra_conf = $HOME . '/.vim/ycm_extra_conf_global.py'
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_max_diagnostics_to_display = 10000
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_complete_in_strings = 1
-
-let g:ycm_rust_src_path = $HOME . '/.local/src/rust/src'
-
-let g:ycm_error_symbol = '✗'
-let g:ycm_warning_symbol = "\uf071"
-
-" function! s:onCompleteDone()
-"   if &filetype == 'c' || &filetype == 'cpp'
-"     let abbr = v:completed_item.abbr
-"   elseif &filetype == 'rust'
-"     let abbr = v:completed_item.menu
-"   endif
-"   let startIdx = stridx(abbr, "(")
-"   if startIdx < 0
-"     return abbr
-"   endif
-
-"   let countParen = 1
-"   let argsStr = strpart(abbr, startIdx + 1)
-"   let argLen = 0
-"   while argLen < strlen(argsStr)
-"     if argsStr[argLen] == '('
-"       let countParen += 1
-"     elseif argsStr[argLen] == ')'
-"       let countParen -= 1
-"     endif
-"     if countParen == 0
-"       break
-"     endif
-"     let argLen += 1
-"   endwhile
-
-"   if countParen == 0
-"     let argsStr = strpart(abbr, startIdx + 1, argLen)
-"     "let argsList = split(argsStr, ",")
-
-"     let argsList = []
-"     let arg = ''
-"     let countParen = 0
-"     for i in range(strlen(argsStr))
-"       if argsStr[i] == ',' && countParen == 0
-"         call add(argsList, arg)
-"         let arg = ''
-"       elseif argsStr[i] == '('
-"         let countParen += 1
-"         let arg = arg . argsStr[i]
-"       elseif argsStr[i] == ')'
-"         let countParen -= 1
-"         let arg = arg . argsStr[i]
-"       else
-"         let arg = arg . argsStr[i]
-"       endif
-"     endfor
-"     if arg != '' && countParen == 0
-"       call add(argsList, arg)
-"     endif
-"   else
-"     let argsList = []
-"   endif
-
-"   let snippet = '('
-"   let c = 1
-"   for i in argsList
-"     if c > 1
-"       let snippet = snippet . ", "
-"     endif
-"     " strip space
-"     let arg = substitute(i, '^\s*\(.\{-}\)\s*$', '\1', '')
-"     let snippet = snippet . '${' . c . ":" . arg . '}'
-"     let c += 1
-"   endfor
-"   let snippet = snippet . ')' . "$0"
-"   return UltiSnips#Anon(snippet)
-" endfunction
-
-" autocmd VimEnter * imap <expr> (
-"       \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
-"       \ v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
-"       \ v:completed_item.kind == 'm') ?
-"       \ "\<C-R>=\<SID>onCompleteDone()\<CR>" : "<Plug>delimitMate("
-
-" autocmd VimEnter * imap <expr> <CR>
-"       \ pumvisible() ?
-"       \   (exists('v:completed_item') && !empty(v:completed_item) &&
-"       \     v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
-"       \     v:completed_item.kind == 'm')) ?
-"       \       "\<C-R>=\<SID>onCompleteDone()\<CR>" :
-"       \       "\<C-y>" :
-"       \   "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
-
-autocmd VimEnter * imap <expr> (
-      \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
-      \ v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
-      \ v:completed_item.kind == 'm') ?
-      \ "\<C-R>=complete_parameter#pre_complete('()')\<CR>" : "("
-
-autocmd VimEnter * imap <expr> <CR>
-      \ pumvisible() ?
-      \   (exists('v:completed_item') && !empty(v:completed_item) &&
-      \     v:completed_item.word != '' && (v:completed_item.kind == 'f' \|\|
-      \     v:completed_item.kind == 'm')) ?
-      \       "\<C-R>=complete_parameter#pre_complete('()')\<CR>" :
-      \       "\<C-y>" :
-      \   "\<CR>"
-
-" }}}
-
-let g:complete_parameter_use_ultisnips_mapping = 1
-nmap <C-J> <Plug>(complete_parameter#overload_down)
-imap <C-J> <Plug>(complete_parameter#overload_down)
-smap <C-J> <Plug>(complete_parameter#overload_down)
-nmap <C-K> <Plug>(complete_parameter#overload_up)
-imap <C-K> <Plug>(complete_parameter#overload_up)
-smap <C-K> <Plug>(complete_parameter#overload_up)
-
-let g:syntastic_auto_loc_list = 0
-
-" NERDTree settings
-let g:NERDTreeDirArrows = 1
-"let g:NERDTreeWinSize = 40
-
-" NERDTreeTabs settings {{{
-let g:nerdtree_tabs_open_on_gui_startup = 0
-" }}}
-
-
-" Tagbar settings
-
-" Indent Guides settings
-"autocmd FileType python IndentGuidesEnable
-"let g:indent_guides_color_change_percent = 5
-let g:indent_guides_guide_size = 1
-let g:indent_guides_start_level = 2
-" nnoremap <silent> <Leader>ig :IndentGuidesToggle<CR>
-
 " indentLine settings
 " let g:indentLine_char = '┊'
 let g:indentLine_first_char = ''
 let g:indentLine_faster = 1
 let g:indentLine_enabled = 0
 nnoremap <silent> <Leader>il :IndentLinesToggle<CR>
-
-
-" Taggist settings {{{
-if has('win32') || has('win64')
-  let g:taggist_vim_bin = 'vim.bat'
-endif
-let g:taggist_indexers = ['cscope']
-" }}}
 
 " match-up
 let g:matchup_matchparen_status_offscreen = 0
@@ -552,9 +386,6 @@ let g:matchup_matchparen_status_offscreen = 0
 let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_balance_matchpairs = 1
-" autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
-autocmd VimEnter * imap <silent> <expr> <TAB> "\<C-r>=UltiSnips#ExpandSnippetOrJump()\<CR>"
-" autocmd VimEnter * inoremap <S-TAB> <S-TAB>
 
 " vim-airline settings
 let g:airline#extensions#branch#enabled = 1
