@@ -32,8 +32,8 @@ function! s:defx_my_settings() abort
   setlocal cursorline
 
   " Define mappings
-  nnoremap <silent><buffer><expr>   <CR>            defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('multi', ['drop', 'quit'])
-  nnoremap <silent><buffer><expr>   <2-LeftMouse>   defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('multi', ['drop', 'quit'])
+  nnoremap <silent><buffer><expr>   <CR>            defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('drop')
+  nnoremap <silent><buffer><expr>   <2-LeftMouse>   defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('drop')
   nnoremap <silent><buffer><expr>   c               defx#do_action('copy')
   nnoremap <silent><buffer><expr>   m               defx#do_action('move')
   nnoremap <silent><buffer><expr>   p               defx#do_action('paste')
