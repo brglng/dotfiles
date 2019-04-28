@@ -71,7 +71,7 @@ function! s:quit_when_close_last_window()
   let count = 0
   for nr in range(1, winnr('$'))
     let type = getbufvar(winbufnr(nr), '&filetype')
-    if type != 'defx' && type != 'qf' && type != 'tagbar'
+    if type != 'defx' && type != 'qf' && type != 'tagbar' && type != 'help'
       let count += 1
     endif
   endfor
@@ -84,8 +84,7 @@ autocmd WinEnter * call s:quit_when_close_last_window()
 function! s:move_help_window()
   if winwidth('%') >= 160
     wincmd L
-  else
-    wincmd J
   endif
 endfunction
 autocmd FileType help call s:move_help_window()
+

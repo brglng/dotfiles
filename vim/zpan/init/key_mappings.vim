@@ -1,5 +1,9 @@
 nmap ; :
 
+function! s:pumselected()
+  return pumvisible() && !empty(v:completed_item) && !(v:completed_item['abbr'] == '' && v:completed_item['info'] == '' && v:completed_item['kind'] == '')
+endfunction
+
 let g:ulti_expand_or_jump_res = 0
 function s:expand_snippet_or_jump()
   let expanded = UltiSnips#ExpandSnippetOrJump()
@@ -10,8 +14,9 @@ function s:expand_snippet_or_jump()
   endif
 endfunction
 
-imap <expr> ( pumvisible() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
-imap <expr> <CR> pumvisible() ? complete_parameter#pre_complete("\<C-Y>") : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+inoremap <expr> <Esc> pumvisible() ? !empty(v:completed_item) && !(v:completed_item['abbr'] == '' && v:completed_item['info'] == '' && v:completed_item['kind'] == '') ? "\<C-e>" : "\<Esc>" : "\<Esc>"
+imap <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('') : "\<Plug>delimitMate("
+imap <expr> <CR> <SID>pumselected() ? complete_parameter#pre_complete("\<C-Y>") : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 smap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
 imap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
 smap <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
@@ -40,13 +45,13 @@ cnoremap           <C-B>       <Left>
 inoremap <expr>    <C-D>       col('.') > strlen(getline('.')) ? "\<Lt>C-D>":"\<Lt>Del>"
 cnoremap <expr>    <C-D>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-D>":"\<Lt>Del>"
 
-inoremap <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> pumvisible() ? "\<Lt>C-E>" : "\<Lt>End>"
+inoremap <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> <SID>pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
 
 inoremap <expr>    <C-F>       col('.') > strlen(getline('.')) ? "\<Lt>C-F>":"\<Lt>Right>"
 cnoremap <expr>    <C-F>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
 
-inoremap <expr>    <C-n>       pumvisible() ? "\<C-N>" : "\<Down>"
-inoremap <expr>    <C-p>       pumvisible() ? "\<C-P>" : "\<Up>"
+inoremap <expr>    <C-n>       <SID>pumselected() ? "\<C-N>" : "\<Down>"
+inoremap <expr>    <C-p>       <SID>pumselected() ? "\<C-P>" : "\<Up>"
 
 inoremap           <C-BS>      <C-w>
 inoremap           <M-b>       <C-Left>
