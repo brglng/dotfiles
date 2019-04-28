@@ -54,12 +54,12 @@ if dein#load_state($HOME . '/.local/share/dein')
   call dein#add('wellle/targets.vim')
   "call dein#add('tpope/vim-commentary')
   call dein#add('scrooloose/nerdcommenter')
-  "call dein#add('auto-pairs')
-  " call dein#add('Raimondi/delimitMate')
+
   call dein#add('easymotion/vim-easymotion')
   " call dein#add('godlygeek/tabular')
   call dein#add('junegunn/vim-easy-align')
-  " call dein#add('tpope/vim-endwise')
+  call dein#add('Raimondi/delimitMate')
+  call dein#add('tpope/vim-endwise')
   call dein#add('tpope/vim-sleuth')
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
@@ -154,7 +154,10 @@ endif
 
 runtime zpan/init/plugins/complete_parameter.vim
 runtime zpan/init/plugins/defx.vim
-runtime zpan/init/plugins/dein-ui.vim
+runtime zpan/init/plugins/dein_ui.vim
+runtime zpan/init/plugins/delimit_mate.vim
 runtime zpan/init/plugins/denite.vim
+runtime zpan/init/plugins/endwise.vim
+runtime zpan/init/plugins/tagbar.vim
 runtime zpan/init/plugins/ultisnips.vim
 runtime zpan/init/plugins/you_complete_me.vim

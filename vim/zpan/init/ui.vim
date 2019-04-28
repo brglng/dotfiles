@@ -66,3 +66,26 @@ if has('gui_running')
     set guifontwide=Noto\ Sans\ CJK\ SC\ 12,Noto\ Sans\ CJK\ TC\ 12,Noto\ Sans\ CJK\ JP\ 12,Noto\ Sans\ CJK\ KR\ 12,WenQuanYi\ Zen\ Hei\ 12,WenQuanYi\ Micro\ Hei\ 12
   endif
 endif
+
+function! s:quit_when_close_last_window()
+  let count = 0
+  for nr in range(1, winnr('$'))
+    let type = getbufvar(winbufnr(nr), '&filetype')
+    if type != 'defx' && type != 'qf' && type != 'tagbar'
+      let count += 1
+    endif
+  endfor
+  if count == 0
+    quitall
+  endif
+endfunction
+autocmd WinEnter * call s:quit_when_close_last_window()
+
+function! s:move_help_window()
+  if winwidth('%') >= 160
+    wincmd L
+  else
+    wincmd J
+  endif
+endfunction
+autocmd FileType help call s:move_help_window()

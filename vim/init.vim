@@ -368,8 +368,9 @@ let g:netrw_altv = 1
 let g:netrw_winsize = -30
 
 " =========================== Plugin Settings ================================ {{{
-runtime zpan/init/key_mappings.vim
+let mapleader = "\<Space>"
 runtime zpan/init/plugins.vim
+runtime zpan/init/key_mappings.vim
 runtime zpan/init/ui.vim
 
 " indentLine settings
@@ -381,11 +382,6 @@ nnoremap <silent> <Leader>il :IndentLinesToggle<CR>
 
 " match-up
 let g:matchup_matchparen_status_offscreen = 0
-
-" delimiterMate settings
-let g:delimitMate_expand_space = 1
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_balance_matchpairs = 1
 
 " vim-airline settings
 let g:airline#extensions#branch#enabled = 1

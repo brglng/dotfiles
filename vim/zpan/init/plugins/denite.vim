@@ -65,15 +65,15 @@ call denite#custom#map('normal', '<PageUp>',    '<denite:scroll_page_backwards>'
 call denite#custom#map('normal', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
 call denite#custom#map('normal', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
 
-nnoremap <silent> <Leader>df :Denite -buffer-name=file_rec              file/rec<CR>
-nnoremap <silent> <Leader>dF :Denite -buffer-name=file_rec      -resume file/rec<CR>
-nnoremap <silent> <Leader>dd :Denite -buffer-name=file                  file<CR>
-nnoremap <silent> <Leader>dD :Denite -buffer-name=file          -resume file<CR>
-nnoremap <silent> <Leader>db :Denite -buffer-name=buffer                buffer<CR>
-nnoremap <silent> <Leader>dg :Denite -buffer-name=grep                  grep<CR>
-nnoremap <silent> <Leader>dG :Denite -buffer-name=grep          -resume grep<CR>
-nnoremap <silent> <Leader>dl :Denite -buffer-name=line_<C-r>%           line<CR>
-nnoremap <silent> <Leader>dL :Denite -buffer-name=line_<C-r>%   -resume line<CR>
-nnoremap <silent> <Leader>do :Denite -buffer-name=outline               outline<CR>
-nnoremap <silent> <Leader>dr :Denite -buffer-name=file_mru              file_mru<CR>
-nnoremap <silent> <Leader>dR :Denite -buffer-name=file_mru      -resume file_mru<CR>
+nnoremap <silent> <Leader>df :cclose <BAR> lclose <BAR> Denite -buffer-name=file_rec              file/rec<CR>
+nnoremap <silent> <Leader>dF :cclose <BAR> lclose <BAR> Denite -buffer-name=file_rec      -resume file/rec<CR>
+nnoremap <silent> <Leader>dd :cclose <BAR> lclose <BAR> Denite -buffer-name=file                  file<CR>
+nnoremap <silent> <Leader>dD :cclose <BAR> lclose <BAR> Denite -buffer-name=file          -resume file<CR>
+nnoremap <silent> <Leader>db :cclose <BAR> lclose <BAR> Denite -buffer-name=buffer                buffer<CR>
+nnoremap <silent> <Leader>dg :cclose <BAR> lclose <BAR> Denite -buffer-name=grep                  grep<CR>
+nnoremap <silent> <Leader>dG :cclose <BAR> lclose <BAR> Denite -buffer-name=grep          -resume grep<CR>
+nnoremap <silent> <Leader>dl :cclose <BAR> lclose <BAR> Denite -buffer-name=line_<C-r>%           line<CR>
+nnoremap <silent> <Leader>dL :cclose <BAR> lclose <BAR> Denite -buffer-name=line_<C-r>%   -resume line<CR>
+nnoremap <silent> <Leader>do :cclose <BAR> lclose <BAR> Denite -buffer-name=outline               outline<CR>
+nnoremap <silent> <Leader>dr :cclose <BAR> lclose <BAR> Denite -buffer-name=file_mru              file_mru<CR>
+nnoremap <silent> <Leader>dR :cclose <BAR> lclose <BAR> Denite -buffer-name=file_mru      -resume file_mru<CR>

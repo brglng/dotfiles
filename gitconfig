@@ -1,6 +1,6 @@
 [user]
 	name = Zhaosheng Pan
-	email = brglng@sololand.moe
+	email = zhaosheng.pan@sololand.moe
 [core]
 	autocrlf = false
 	excludesfile = /Users/brglng/.gitignore_global

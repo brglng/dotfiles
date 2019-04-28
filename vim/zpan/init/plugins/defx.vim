@@ -25,15 +25,15 @@ function! s:defx_my_settings() abort
   setlocal nonumber
   setlocal listchars=
   setlocal foldcolumn=0
-  setlocal buftype=nofile
+  " setlocal buftype=nofile
   setlocal noswapfile
   setlocal nolist
   setlocal nospell
   setlocal cursorline
 
   " Define mappings
-  nnoremap <silent><buffer><expr>   <CR>            defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('drop')
-  nnoremap <silent><buffer><expr>   <2-LeftMouse>   defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('drop')
+  nnoremap <silent><buffer><expr>   <CR>            defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('multi', ['drop'])
+  nnoremap <silent><buffer><expr>   <2-LeftMouse>   defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('multi', ['drop'])
   nnoremap <silent><buffer><expr>   c               defx#do_action('copy')
   nnoremap <silent><buffer><expr>   m               defx#do_action('move')
   nnoremap <silent><buffer><expr>   p               defx#do_action('paste')
@@ -64,5 +64,3 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr>   <C-g>           defx#do_action('print')
   nnoremap <silent><buffer><expr>   cd              defx#do_action('change_vim_cwd')
 endfunction
-
-autocmd WinEnter * if &filetype == 'defx' && winnr('$') == 1 | quit | endif

@@ -1,113 +1,193 @@
-let mapleader = "\<Space>"
 nmap ; :
 
-autocmd VimEnter * imap <expr> ( pumvisible() ?  complete_parameter#pre_complete('()') : "("
-autocmd VimEnter * imap <expr> <CR> pumvisible() ? complete_parameter#pre_complete('()') : "\<CR>"
-autocmd VimEnter * smap <silent> <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=UltiSnips#ExpandSnippetOrJump()\<CR>"
-autocmd VimEnter * imap <silent> <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=UltiSnips#ExpandSnippetOrJump()\<CR>"
-autocmd VimEnter * smap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
-autocmd VimEnter * imap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
+let g:ulti_expand_or_jump_res = 0
+function s:expand_snippet_or_jump()
+  let expanded = UltiSnips#ExpandSnippetOrJump()
+  if g:ulti_expand_or_jump_res == 0
+    return "\<TAB>"
+  else
+    return expanded
+  endif
+endfunction
+
+imap <expr> ( pumvisible() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
+imap <expr> <CR> pumvisible() ? complete_parameter#pre_complete("\<C-Y>") : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+smap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
+imap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
+smap <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
+imap <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
 imap <C-J> <Plug>(complete_parameter#overload_down)
 smap <C-J> <Plug>(complete_parameter#overload_down)
 imap <C-K> <Plug>(complete_parameter#overload_up)
 smap <C-K> <Plug>(complete_parameter#overload_up)
 
 " arrows move through screen lines
-noremap  <silent> <Down>      gj
-noremap  <silent> <Up>        gk
-inoremap <silent> <Down> <C-o>gj
-inoremap <silent> <Up>   <C-o>gk
+noremap  <Down>      gj
+noremap  <Up>        gk
+inoremap <Down> <C-o>gj
+inoremap <Up>   <C-o>gk
 
-" Some Emacs-like keys in insert mode and command-line mode
-inoremap <silent> <expr>    <Home>      col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
-inoremap <silent> <expr>    <C-A>       col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
-inoremap <silent>           <C-X><C-A>  <C-A>
-cnoremap <silent>           <C-A>       <Home>
-cnoremap <silent>           <C-X><C-A>  <C-A>
+" Some Emkeys in insert mode and command-line mode
+inoremap <expr>    <Home>      col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
+inoremap <expr>    <C-A>       col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
+inoremap           <C-X><C-A>  <C-A>
+cnoremap           <C-A>       <Home>
+cnoremap           <C-X><C-A>  <C-A>
 
-inoremap <silent> <expr>    <C-B>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-D>\<Lt>Esc>kJs" : "\<Lt>Left>"
-cnoremap <silent>           <C-B>       <Left>
+inoremap <expr>    <C-B>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-D>\<Lt>Esc>kJs" : "\<Lt>Left>"
+cnoremap           <C-B>       <Left>
 
-inoremap <silent> <expr>    <C-D>       col('.') > strlen(getline('.')) ? "\<Lt>C-D>":"\<Lt>Del>"
-cnoremap <silent> <expr>    <C-D>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-D>":"\<Lt>Del>"
+inoremap <expr>    <C-D>       col('.') > strlen(getline('.')) ? "\<Lt>C-D>":"\<Lt>Del>"
+cnoremap <expr>    <C-D>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-D>":"\<Lt>Del>"
 
-inoremap <silent> <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> pumvisible() ? "\<Lt>C-E>" : "\<Lt>End>"
+inoremap <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> pumvisible() ? "\<Lt>C-E>" : "\<Lt>End>"
 
-inoremap <silent> <expr>    <C-F>       col('.') > strlen(getline('.')) ? "\<Lt>C-F>":"\<Lt>Right>"
-cnoremap <silent> <expr>    <C-F>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
+inoremap <expr>    <C-F>       col('.') > strlen(getline('.')) ? "\<Lt>C-F>":"\<Lt>Right>"
+cnoremap <expr>    <C-F>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
 
-inoremap <silent> <expr>    <C-n>       pumvisible() ? "\<C-N>" : "\<Down>"
-inoremap <silent> <expr>    <C-p>       pumvisible() ? "\<C-P>" : "\<Up>"
+inoremap <expr>    <C-n>       pumvisible() ? "\<C-N>" : "\<Down>"
+inoremap <expr>    <C-p>       pumvisible() ? "\<C-P>" : "\<Up>"
 
-inoremap <silent>           <C-BS>      <C-w>
-inoremap <silent>           <M-b>       <C-Left>
-inoremap <silent>           <M-f>       <C-Right>
-inoremap <silent>           <M-k>       <C-Right><C-w>
-inoremap <silent>           <C-x>o      <C-o><C-w>w
+inoremap           <C-BS>      <C-w>
+inoremap           <M-b>       <C-Left>
+inoremap           <M-f>       <C-Right>
+inoremap           <M-k>       <C-Right><C-w>
+inoremap           <C-x>o      <C-o><C-w>w
 
-cnoremap <silent>           <C-BS>      <C-w>
-cnoremap <silent>           <M-b>       <C-Left>
-cnoremap <silent>           <M-f>       <C-Right>
-cnoremap <silent>           <M-k>       <C-Right><C-w>
-cnoremap <silent>           <C-a>       <Home>
+cnoremap           <C-BS>      <C-w>
+cnoremap           <M-b>       <C-Left>
+cnoremap           <M-f>       <C-Right>
+cnoremap           <M-k>       <C-Right><C-w>
+cnoremap           <C-a>       <Home>
 
 " buffer
-nnoremap <silent> <Leader>bp    :bp<CR>
-nnoremap <silent> <Leader>bn    :bn<CR>
-nnoremap <silent> <Leader>b1    :b 1<CR>
-nnoremap <silent> <Leader>b2    :b 2<CR>
-nnoremap <silent> <Leader>b3    :b 3<CR>
-nnoremap <silent> <Leader>b4    :b 4<CR>
-nnoremap <silent> <Leader>b5    :b 5<CR>
-nnoremap <silent> <Leader>b6    :b 6<CR>
-nnoremap <silent> <Leader>b7    :b 7<CR>
-nnoremap <silent> <Leader>b8    :b 8<CR>
-nnoremap <silent> <Leader>b9    :b 9<CR>
+nnoremap <Leader>bp    :bp<CR>
+nnoremap <Leader>bn    :bn<CR>
+nnoremap <Leader>b1    :b 1<CR>
+nnoremap <Leader>b2    :b 2<CR>
+nnoremap <Leader>b3    :b 3<CR>
+nnoremap <Leader>b4    :b 4<CR>
+nnoremap <Leader>b5    :b 5<CR>
+nnoremap <Leader>b6    :b 6<CR>
+nnoremap <Leader>b7    :b 7<CR>
+nnoremap <Leader>b8    :b 8<CR>
+nnoremap <Leader>b9    :b 9<CR>
 
 " window
-nnoremap <silent> <Leader>wp    <C-w>p
-nnoremap <silent> <Leader>wn    <C-w>n
-nnoremap <silent> <Leader>wq    <C-w>q
-nnoremap <silent> <Leader>q     <C-w>q
-nnoremap <silent> <Leader>ww    <C-w>w
-nnoremap <silent> <Leader>ws    <C-w>s
-nnoremap <silent> <Leader>wv    <C-w>v
-nnoremap <silent> <Leader>w1    1<C-w>w
-nnoremap <silent> <Leader>w2    2<C-w>w
-nnoremap <silent> <Leader>w3    3<C-w>w
-nnoremap <silent> <Leader>w4    4<C-w>w
-nnoremap <silent> <Leader>w5    5<C-w>w
-nnoremap <silent> <Leader>w6    6<C-w>w
-nnoremap <silent> <Leader>w7    7<C-w>w
-nnoremap <silent> <Leader>w8    8<C-w>w
-nnoremap <silent> <Leader>w9    9<C-w>w
+nnoremap <Leader>wp    <C-w>p
+nnoremap <Leader>wn    <C-w>n
+nnoremap <Leader>wq    <C-w>q
+nnoremap <Leader>q     <C-w>q
+nnoremap <Leader>ww    <C-w>w
+nnoremap <Leader>ws    <C-w>s
+nnoremap <Leader>wv    <C-w>v
+nnoremap <Leader>w1    1<C-w>w
+nnoremap <Leader>w2    2<C-w>w
+nnoremap <Leader>w3    3<C-w>w
+nnoremap <Leader>w4    4<C-w>w
+nnoremap <Leader>w5    5<C-w>w
+nnoremap <Leader>w6    6<C-w>w
+nnoremap <Leader>w7    7<C-w>w
+nnoremap <Leader>w8    8<C-w>w
+nnoremap <Leader>w9    9<C-w>w
 
-nnoremap <silent> <M-1>         :Defx<CR>
-nnoremap <silent> <M-7>         :TagbarToggle<CR>
-
-" QuickFix and Location windows
-autocmd FileType qf,help nnoremap <silent> q <C-w>q
-nnoremap <silent> <M-6> :call <SID>QuickFixToggle('copen')<CR>
-nnoremap <silent> <M-^> :call <SID>QuickFixToggle('lopen')<CR>
-function! s:QuickFixToggle(opencmd)
-  let quickfix_opened = 0
+function! s:toggle_quickfix()
+  let found_nr = 0
   for nr in range(1, winnr('$'))
-    if getbufvar(winbufnr(nr), '&buftype') == 'quickfix'
-      let quickfix_opened = 1
+    if getbufvar(winbufnr(nr), '&filetype') == 'qf'
+      let found_nr = nr
       break
     endif
   endfor
-  if quickfix_opened == 1
-    if getbufvar(bufnr('%'), '&buftype') == 'quickfix'
-      wincmd p
+
+  if found_nr > 0
+    if getwininfo(win_getid(nr))[0]['loclist']
+      lclose
+      copen
+    else
+      cclose
     endif
-    cclose
-    lclose
   else
-    execute 'botright ' . a:opencmd
-    "wincmd p
+    copen
   endif
 endfunction
+
+function! s:toggle_loclist()
+  let found_nr = 0
+  for nr in range(1, winnr('$'))
+    if getbufvar(winbufnr(nr), '&filetype') == 'qf'
+      let found_nr = nr
+      break
+    endif
+  endfor
+
+  if found_nr > 0
+    if getwininfo(win_getid(nr))[0]['loclist']
+      lclose
+    else
+      cclose
+      lopen
+    endif
+  else
+    lopen
+  endif
+endfunction
+
+function! s:toggle_defx()
+  let found_nr = 0
+  let found_type = ''
+  for nr in range(1, winnr('$'))
+    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
+    if win_filetype == 'defx' || win_filetype == 'tagbar' || win_filetype == 'nerdtree'
+      let found_nr = nr
+      let found_type = win_filetype
+      break
+    endif
+  endfor
+
+  if found_nr > 0
+    if found_type == 'defx'
+      Defx
+    else
+      execute found_nr . 'wincmd q'
+      Defx
+    endif
+  else
+    Defx
+  endif
+endfunction
+
+function! s:toggle_tagbar()
+  let found_nr = 0
+  let found_type = ''
+  for nr in range(1, winnr('$'))
+    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
+    if win_filetype == 'defx' || win_filetype == 'tagbar' || win_filetype == 'nerdtree'
+      let found_nr = nr
+      let found_type = win_filetype
+      break
+    endif
+  endfor
+
+  if found_nr > 0
+    if found_type == 'tagbar'
+      TagbarToggle
+    else
+      execute found_nr . 'wincmd q'
+      TagbarToggle
+    endif
+  else
+    TagbarToggle
+  endif
+endfunction
+
+nnoremap <silent> <M-1>         :call <SID>toggle_defx()<CR>
+nnoremap <silent> <M-7>         :call <SID>toggle_tagbar()<CR>
+
+" QuickFix and Location windows
+autocmd FileType qf,help,tagbar nnoremap <silent> q <C-w>q
+nnoremap <silent> <M-6> :call <SID>toggle_quickfix()<CR>
+nnoremap <silent> <M-^> :call <SID>toggle_loclist()<CR>
 
 " search and replace
 nnoremap <Leader>gs     :%s/\<<C-r><C-w>\>/
