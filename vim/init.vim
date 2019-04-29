@@ -255,7 +255,7 @@ autocmd FileType python setl foldmethod=indent foldnestmax=2
 autocmd FileType * let &l:foldcolumn = &l:foldnestmax + 1
 
 " omni complete settings
-set completeopt=menuone,longest
+set completeopt=menuone,noinsert,noselect
 set pumheight=15
 
 " Always show the complete popup under the cursor,

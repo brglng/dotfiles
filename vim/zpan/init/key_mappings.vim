@@ -1,11 +1,12 @@
 nmap ; :
 
 function! s:pumselected()
-  return pumvisible() && !empty(v:completed_item) && !(v:completed_item['abbr'] == '' && v:completed_item['info'] == '' && v:completed_item['kind'] == '')
+  " assume 'noinsert' is in 'completeopt'
+  return pumvisible() && !empty(v:completed_item)
 endfunction
 
 let g:ulti_expand_or_jump_res = 0
-function s:expand_snippet_or_jump()
+function! s:expand_snippet_or_jump()
   let expanded = UltiSnips#ExpandSnippetOrJump()
   if g:ulti_expand_or_jump_res == 0
     return "\<TAB>"
@@ -14,7 +15,8 @@ function s:expand_snippet_or_jump()
   endif
 endfunction
 
-inoremap <expr> <Esc> pumvisible() ? !empty(v:completed_item) && !(v:completed_item['abbr'] == '' && v:completed_item['info'] == '' && v:completed_item['kind'] == '') ? "\<C-e>" : "\<Esc>" : "\<Esc>"
+" assume 'noinsert' is in 'completeopt'
+inoremap <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<C-e>" : "\<Esc>" : "\<Esc>"
 imap <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('') : "\<Plug>delimitMate("
 imap <expr> <CR> <SID>pumselected() ? complete_parameter#pre_complete("\<C-Y>") : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 smap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
