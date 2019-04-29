@@ -24,6 +24,7 @@ inoremap <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\
 imap <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
 imap <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
+" https://github.com/Valloric/YouCompleteMe/issues/2696
 imap <BS> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
 imap <C-h> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
 function! YcmOnDeleteChar()

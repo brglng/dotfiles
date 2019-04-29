@@ -69,7 +69,7 @@ endif
 
 function! s:is_helper_window(nr)
   let type = getbufvar(winbufnr(a:nr), '&filetype')
-  if type == 'defx' || type == 'qf' || type == 'tagbar' || type == 'help' || type != 'man'
+  if type == 'defx' || type == 'qf' || type == 'tagbar' || type == 'help' || type == 'man'
     return 1
   endif
   return 0
