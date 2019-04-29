@@ -20,8 +20,8 @@ function! s:pre_complete_cr()
 endfunction
 
 " assume 'noinsert' is in 'completeopt'
-inoremap <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<C-e>" : "\<Esc>" : "\<Esc>"
-imap <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('') : "\<Plug>delimitMate("
+inoremap <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
+imap <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
 imap <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 smap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
 imap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"

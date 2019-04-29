@@ -67,11 +67,18 @@ if has('gui_running')
   endif
 endif
 
+function! s:is_helper_window(nr)
+  let type = getbufvar(winbufnr(a:nr), '&filetype')
+  if type == 'defx' || type == 'qf' || type == 'tagbar' || type == 'help' || type != 'man'
+    return true
+  endif
+  return false
+endfunction
+
 function! s:quit_when_close_last_window()
   let count = 0
   for nr in range(1, winnr('$'))
-    let type = getbufvar(winbufnr(nr), '&filetype')
-    if type != 'defx' && type != 'qf' && type != 'tagbar' && type != 'help'
+    if s:is_helper_window(nr)
       let count += 1
     endif
   endfor
@@ -88,3 +95,10 @@ function! s:move_help_window()
 endfunction
 autocmd FileType help call s:move_help_window()
 
+function! s:init_man_buffer()
+  setlocal bufhidden
+  if winwidth('%') >= 160
+    wincmd L
+  endif
+endfunction
+autocmd FileType man call s:init_man_buffer()
