@@ -23,6 +23,16 @@ endfunction
 inoremap <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
 imap <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
 imap <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+
+imap <BS> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
+imap <C-h> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
+function! YcmOnDeleteChar()
+  if pumvisible()
+    return "\<C-y>"
+  endif
+  return "" 
+endfunction
+
 smap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
 imap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
 smap <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"

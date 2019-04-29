@@ -78,7 +78,7 @@ endfunction
 function! s:quit_when_close_last_window()
   let count = 0
   for nr in range(1, winnr('$'))
-    if s:is_helper_window(nr)
+    if !s:is_helper_window(nr)
       let count += 1
     endif
   endfor
