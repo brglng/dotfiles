@@ -59,5 +59,7 @@ curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
 
 zsh -c 'source ~/.zshrc && antigen update'
 
+nvim +UpdateRemotePlugins +qall
+
 # mkdir -p ~/.local/src
 # git clone -b stable https://github.com/rust-lang/rust.git ~/.local/src/rust
