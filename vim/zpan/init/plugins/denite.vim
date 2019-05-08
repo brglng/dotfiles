@@ -1,22 +1,18 @@
 call denite#custom#option('_', 'auto_accl', 1)
 call denite#custom#option('_', 'auto_resize', 1)
+if exists('*nvim_open_win')
+  call denite#custom#option('_', 'split', 'floating')
+endif
 call denite#custom#option('_', 'vertical_preview', 1)
-" call denite#custom#option('_', 'auto_highlight', 0)
-call denite#custom#option('_', 'highlight_matched_char', 'Underlined')
+call denite#custom#option('_', 'highlight_matched_char', 'Keyword')
+call denite#custom#option('_', 'highlight_matched_range', 'String')
 call denite#custom#var('file/rec', 'command', ['bfind'])
-call denite#custom#source('file,' .
-      \                   'file/rec,' .
-      \                   'directory_rec',
-      \                   'matchers', ['matcher_fuzzy', 'matcher_project_files'])
-call denite#custom#source('file,' .
-      \                   'file_rec,' .
-      \                   'directory_rec',
-      \                   'max_candidates', 10000)
-" call denite#custom#source('file_rec', 'sorters', ['sorter_sublime'])
-" let g:neomru#file_mru_ignore_pattern = '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)'
-" call denite#custom#var('file_mru', 'ignore_pattern', '\~$\|\.\%(o\|exe\|dll\|bak\|zwc\|pyc\|sw[po]\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)\|\%(^\%(fugitive\)://\)\|\%(^\%(term\)://\)')
-" let g:neomru#directory_mru_ignore_pattern = '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)'
-" call denite#custom#var('directory_mru', 'ignore_pattern', '\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|^\%(\\\\\|/temp/\|/tmp/\|\%(/private\)\=/var/folders/\)')
+call denite#custom#source('file,file/rec,directory_rec',
+      \                   'matchers', ['matcher/fuzzy', 'matcher/project_files'])
+call denite#custom#source('line', 'matchers', ['matcher/regexp'])
+call denite#custom#source('command,outline', 'matchers', ['matcher/fuzzy'])
+call denite#custom#source('file,file/rec,directory_rec,line', 'max_candidates', 100000)
+call denite#custom#source('file_rec', 'sorters', ['sorter/rank'])
 if executable('rg')
   call denite#custom#var('grep', 'command', ['rg'])
   call denite#custom#var('grep', 'default_opts', ['-S', '--vimgrep'])
@@ -46,34 +42,36 @@ elseif has('win32')
   call denite#custom#var('grep', 'default_opts', ['/n'])
 endif
 
-call denite#custom#map('insert', '<TAB>',       '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('insert', '<S-TAB>',     '<denite:move_to_previous_line>',   'noremap')
 call denite#custom#map('insert', '<Down>',      '<denite:move_to_next_line>',       'noremap')
 call denite#custom#map('insert', '<Up>',        '<denite:move_to_previous_line>',   'noremap')
-call denite#custom#map('insert', '<C-J>',       '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('insert', '<C-K>',       '<denite:move_to_previous_line>',   'noremap')
+call denite#custom#map('insert', '<C-j>',       '<denite:move_to_next_line>',       'noremap')
+call denite#custom#map('insert', '<C-k>',       '<denite:move_to_previous_line>',   'noremap')
 call denite#custom#map('insert', '<PageDown>',  '<denite:scroll_page_forwards>',    'noremap')
 call denite#custom#map('insert', '<PageUp>',    '<denite:scroll_page_backwards>',   'noremap')
-call denite#custom#map('insert', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
-call denite#custom#map('insert', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
+call denite#custom#map('insert', '<Home>',      '<denite:move_to_first_line>',      'noremap')
+call denite#custom#map('insert', '<End>',       '<denite:move_to_last_line>',       'noremap')
 call denite#custom#map('normal', '<Down>',      '<denite:move_to_next_line>',       'noremap')
 call denite#custom#map('normal', '<Up>',        '<denite:move_to_previous_line>',   'noremap')
-call denite#custom#map('normal', '<C-J>',       '<denite:move_to_next_line>',       'noremap')
-call denite#custom#map('normal', '<C-K>',       '<denite:move_to_previous_line>',   'noremap')
+call denite#custom#map('normal', '<C-j>',       '<denite:move_to_next_line>',       'noremap')
+call denite#custom#map('normal', '<C-k>',       '<denite:move_to_previous_line>',   'noremap')
 call denite#custom#map('normal', '<PageDown>',  '<denite:scroll_page_forwards>',    'noremap')
 call denite#custom#map('normal', '<PageUp>',    '<denite:scroll_page_backwards>',   'noremap')
-call denite#custom#map('normal', '<C-Home>',    '<denite:move_to_first_line>',      'noremap')
-call denite#custom#map('normal', '<C-End>',     '<denite:move_to_last_line>',       'noremap')
+call denite#custom#map('normal', '<Home>',      '<denite:move_to_first_line>',      'noremap')
+call denite#custom#map('normal', '<End>',       '<denite:move_to_last_line>',       'noremap')
 
-nnoremap <silent> <Leader>df :cclose <BAR> lclose <BAR> Denite -buffer-name=file_rec              file/rec<CR>
-nnoremap <silent> <Leader>dF :cclose <BAR> lclose <BAR> Denite -buffer-name=file_rec      -resume file/rec<CR>
-nnoremap <silent> <Leader>dd :cclose <BAR> lclose <BAR> Denite -buffer-name=file                  file<CR>
-nnoremap <silent> <Leader>dD :cclose <BAR> lclose <BAR> Denite -buffer-name=file          -resume file<CR>
-nnoremap <silent> <Leader>db :cclose <BAR> lclose <BAR> Denite -buffer-name=buffer                buffer<CR>
-nnoremap <silent> <Leader>dg :cclose <BAR> lclose <BAR> Denite -buffer-name=grep                  grep<CR>
-nnoremap <silent> <Leader>dG :cclose <BAR> lclose <BAR> Denite -buffer-name=grep          -resume grep<CR>
-nnoremap <silent> <Leader>dl :cclose <BAR> lclose <BAR> Denite -buffer-name=line_<C-r>%           line<CR>
-nnoremap <silent> <Leader>dL :cclose <BAR> lclose <BAR> Denite -buffer-name=line_<C-r>%   -resume line<CR>
-nnoremap <silent> <Leader>do :cclose <BAR> lclose <BAR> Denite -buffer-name=outline               outline<CR>
-nnoremap <silent> <Leader>dr :cclose <BAR> lclose <BAR> Denite -buffer-name=file_mru              file_mru<CR>
-nnoremap <silent> <Leader>dR :cclose <BAR> lclose <BAR> Denite -buffer-name=file_mru      -resume file_mru<CR>
+nnoremap <silent> <Leader>f;    :Denite -buffer-name=command        -resume command<CR>
+nnoremap <silent> <Leader>f:    :Denite -buffer-name=command                command<CR>
+nnoremap <silent> <Leader>ff    :Denite -buffer-name=file_rec       -resume file/rec<CR>
+nnoremap <silent> <Leader>fF    :Denite -buffer-name=file_rec               file/rec<CR>
+nnoremap <silent> <Leader>ft    :Denite -buffer-name=file           -resume file<CR>
+nnoremap <silent> <Leader>fT    :Denite -buffer-name=file                   file<CR>
+nnoremap <silent> <Leader>fg    :Denite -buffer-name=grep           -resume grep<CR>
+nnoremap <silent> <Leader>fG    :Denite -buffer-name=grep                   grep<CR>
+nnoremap <silent> <Leader>fl    :Denite -buffer-name=line_<C-r>%    -resume line<CR>
+nnoremap <silent> <Leader>fL    :Denite -buffer-name=line_<C-r>%            line<CR>
+nnoremap <silent> <Leader>fo    :Denite -buffer-name=outline                outline<CR>
+nnoremap <silent> <Leader>fb    :Denite -buffer-name=buffer                 buffer<CR>
+nnoremap <silent> <Leader>fr    :Denite -buffer-name=file_mru       -resume file_mru<CR>
+nnoremap <silent> <Leader>fR    :Denite -buffer-name=file_mru               file_mru<CR>
+nnoremap <silent> <Leader>fh    :Denite -buffer-name=help           -resume help<CR>
+nnoremap <silent> <Leader>fH    :Denite -buffer-name=help                   help<CR>

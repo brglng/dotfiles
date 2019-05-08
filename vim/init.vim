@@ -115,8 +115,8 @@ set confirm
 "set switchbuf=usetab,newtab,useopen
 
 " set nostartofline
-set splitbelow
-set splitright
+" set splitbelow
+" set splitright
 
 " set colorcolumn=80
 

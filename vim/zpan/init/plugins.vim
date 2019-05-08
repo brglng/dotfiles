@@ -101,7 +101,7 @@ if dein#load_state($HOME . '/.local/share/dein')
   " call dein#add('junegunn/seoul256.vim')
   " call dein#add('nanotech/jellybeans.vim')
   " call dein#add('NLKNguyen/papercolor-theme')
-  " call dein#add('joshdick/onedark.vim')
+  call dein#add('joshdick/onedark.vim')
   call dein#add('arcticicestudio/nord-vim')
   " call dein#add('soft-aesthetic/soft-era-vim')
 

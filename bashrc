@@ -42,33 +42,6 @@ HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-  xterm-color|*-256color)
-    color_prompt=yes
-    ;;
-  *)
-    TERM=xterm-256color
-    ;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # We have color support; assume it's compliant with Ecma-48
-    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-    # a case would tend to support setf rather than setaf.)
-    color_prompt=yes
-    export CLICOLOR="true"
-  else
-    color_prompt=
-  fi
-fi
-
 if [ $(uname -s) = Darwin ]; then
   source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
   source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
@@ -76,12 +49,7 @@ fi
 
 GIT_PS1_SHOWDIRTYSTATE=true
 
-if [ "$color_prompt" = yes ]; then
-  PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\] \[\e[1;93m\]$(__git_ps1 "(%s) ")\[\e[0m\]\$ '
-else
-  PS1='\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
+PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\] \[\e[1;93m\]$(__git_ps1 "(%s) ")\[\e[0m\]\$ '
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then

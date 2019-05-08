@@ -5,28 +5,18 @@ function! s:pumselected()
   return pumvisible() && !empty(v:completed_item)
 endfunction
 
-let g:ulti_expand_or_jump_res = 0
-function! s:expand_snippet_or_jump()
-  let expanded = UltiSnips#ExpandSnippetOrJump()
-  if g:ulti_expand_or_jump_res == 0
-    return "\<TAB>"
-  else
-    return expanded
-  endif
-endfunction
-
 function! s:pre_complete_cr()
-  return substitute(complete_parameter#pre_complete("\<C-Y>"), '(', "\<C-V>(", 'g')
+  return substitute(complete_parameter#pre_complete("\<C-y>"), '(', "\<C-v>(", 'g')
 endfunction
 
 " assume 'noinsert' is in 'completeopt'
-inoremap <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
-imap <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
-imap <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+inoremap <silent> <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
+imap <silent> <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
+imap <silent> <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
 " https://github.com/Valloric/YouCompleteMe/issues/2696
-imap <BS> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
-imap <C-h> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
+imap <silent> <BS> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
+imap <silent> <C-h> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
 function! YcmOnDeleteChar()
   if pumvisible()
     return "\<C-y>"
@@ -34,84 +24,96 @@ function! YcmOnDeleteChar()
   return "" 
 endfunction
 
-smap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
-imap <expr> <TAB> cmp#jumpable(1) ? "\<Plug>(complete_parameter#goto_next_parameter)" : delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<C-R>=\<SID>expand_snippet_or_jump()\<CR>"
-smap <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
-imap <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
-imap <C-J> <Plug>(complete_parameter#overload_down)
-smap <C-J> <Plug>(complete_parameter#overload_down)
-imap <C-K> <Plug>(complete_parameter#overload_up)
-smap <C-K> <Plug>(complete_parameter#overload_up)
+" autocmd VimEnter * smap <silent> <expr> <TAB> cmp#jumpable(1) ? "\<Lt>Plug>(complete_parameter#goto_next_parameter)" : "\<Lt>C-r>=UltiSnips#ExpandSnippetOrJump()\<Lt>CR>"
+autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<Lt>C-r>=UltiSnips#ExpandSnippetOrJump()\<Lt>CR>"
+" smap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
+" imap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
+imap <silent> <C-j> <Plug>(complete_parameter#goto_next_parameter);
+smap <silent> <C-j> <Plug>(complete_parameter#goto_next_parameter);
+imap <silent> <C-k> <Plug>(complete_parameter#goto_previous_parameter);
+smap <silent> <C-k> <Plug>(complete_parameter#goto_previous_parameter);
+imap <silent> <M-j> <Plug>(complete_parameter#overload_down)
+smap <silent> <M-j> <Plug>(complete_parameter#overload_down)
+imap <silent> <M-k> <Plug>(complete_parameter#overload_up)
+smap <silent> <M-k> <Plug>(complete_parameter#overload_up)
 
 " arrows move through screen lines
-noremap  <Down>      gj
-noremap  <Up>        gk
-inoremap <Down> <C-o>gj
-inoremap <Up>   <C-o>gk
+noremap  <silent> <Down>      gj
+noremap  <silent> <Up>        gk
+inoremap <silent> <Down> <C-o>gj
+inoremap <silent> <Up>   <C-o>gk
 
-" Some Emkeys in insert mode and command-line mode
-inoremap <expr>    <Home>      col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
-inoremap <expr>    <C-A>       col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
-inoremap           <C-X><C-A>  <C-A>
-cnoremap           <C-A>       <Home>
-cnoremap           <C-X><C-A>  <C-A>
+" Some Emacs-like keys in insert mode and command-line mode
+inoremap <silent> <expr>    <Home>      col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
+inoremap <silent> <expr>    <C-A>       col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
+inoremap <silent>           <C-X><C-A>  <C-A>
+cnoremap <silent>           <C-A>       <Home>
+cnoremap <silent>           <C-X><C-A>  <C-A>
 
-inoremap <expr>    <C-B>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-D>\<Lt>Esc>kJs" : "\<Lt>Left>"
-cnoremap           <C-B>       <Left>
+inoremap <silent> <expr>    <C-B>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-D>\<Lt>Esc>kJs" : "\<Lt>Left>"
+cnoremap <silent>           <C-B>       <Left>
 
-inoremap <expr>    <C-D>       col('.') > strlen(getline('.')) ? "\<Lt>C-D>":"\<Lt>Del>"
-cnoremap <expr>    <C-D>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-D>":"\<Lt>Del>"
+inoremap <silent> <expr>    <C-D>       col('.') > strlen(getline('.')) ? "\<Lt>C-D>":"\<Lt>Del>"
+cnoremap <silent> <expr>    <C-D>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-D>":"\<Lt>Del>"
 
-inoremap <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> <SID>pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
+inoremap <silent> <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> <SID>pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
 
-inoremap <expr>    <C-F>       col('.') > strlen(getline('.')) ? "\<Lt>C-F>":"\<Lt>Right>"
-cnoremap <expr>    <C-F>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
+inoremap <silent> <expr>    <C-F>       col('.') > strlen(getline('.')) ? "\<Lt>C-F>":"\<Lt>Right>"
+cnoremap <silent> <expr>    <C-F>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
 
-inoremap <expr>    <C-n>       <SID>pumselected() ? "\<C-N>" : "\<Down>"
-inoremap <expr>    <C-p>       <SID>pumselected() ? "\<C-P>" : "\<Up>"
+inoremap <silent> <expr>    <C-n>       <SID>pumselected() ? "\<C-N>" : "\<Down>"
+inoremap <silent> <expr>    <C-p>       <SID>pumselected() ? "\<C-P>" : "\<Up>"
 
-inoremap           <C-BS>      <C-w>
-inoremap           <M-b>       <C-Left>
-inoremap           <M-f>       <C-Right>
-inoremap           <M-k>       <C-Right><C-w>
-inoremap           <C-x>o      <C-o><C-w>w
+inoremap <silent>           <C-BS>      <C-w>
+inoremap <silent>           <M-b>       <C-Left>
+inoremap <silent>           <M-f>       <C-Right>
+inoremap <silent>           <M-k>       <C-Right><C-w>
+inoremap <silent>           <C-x>o      <C-o><C-w>w
 
-cnoremap           <C-BS>      <C-w>
-cnoremap           <M-b>       <C-Left>
-cnoremap           <M-f>       <C-Right>
-cnoremap           <M-k>       <C-Right><C-w>
-cnoremap           <C-a>       <Home>
+cnoremap <silent>           <C-BS>      <C-w>
+cnoremap <silent>           <M-b>       <C-Left>
+cnoremap <silent>           <M-f>       <C-Right>
+cnoremap <silent>           <M-k>       <C-Right><C-w>
+cnoremap <silent>           <C-a>       <Home>
+
+nnoremap <silent> <M-Left>      <C-o>
+nnoremap <silent> <M-Right>     <C-i>
 
 " buffer
-nnoremap <Leader>bp    :bp<CR>
-nnoremap <Leader>bn    :bn<CR>
-nnoremap <Leader>b1    :b 1<CR>
-nnoremap <Leader>b2    :b 2<CR>
-nnoremap <Leader>b3    :b 3<CR>
-nnoremap <Leader>b4    :b 4<CR>
-nnoremap <Leader>b5    :b 5<CR>
-nnoremap <Leader>b6    :b 6<CR>
-nnoremap <Leader>b7    :b 7<CR>
-nnoremap <Leader>b8    :b 8<CR>
-nnoremap <Leader>b9    :b 9<CR>
+nnoremap <silent> <C-Tab>       :bp<CR>
+nnoremap <silent> <C-S-Tab>     :bn<CR>
+nnoremap <silent> <Leader>bp    :bp<CR>
+nnoremap <silent> <Leader>bn    :bn<CR>
+nnoremap <silent> <Leader>b1    :b 1<CR>
+nnoremap <silent> <Leader>b2    :b 2<CR>
+nnoremap <silent> <Leader>b3    :b 3<CR>
+nnoremap <silent> <Leader>b4    :b 4<CR>
+nnoremap <silent> <Leader>b5    :b 5<CR>
+nnoremap <silent> <Leader>b6    :b 6<CR>
+nnoremap <silent> <Leader>b7    :b 7<CR>
+nnoremap <silent> <Leader>b8    :b 8<CR>
+nnoremap <silent> <Leader>b9    :b 9<CR>
 
 " window
-nnoremap <Leader>wp    <C-w>p
-nnoremap <Leader>wn    <C-w>n
-nnoremap <Leader>wq    <C-w>q
-nnoremap <Leader>q     <C-w>q
-nnoremap <Leader>ww    <C-w>w
-nnoremap <Leader>ws    <C-w>s
-nnoremap <Leader>wv    <C-w>v
-nnoremap <Leader>w1    1<C-w>w
-nnoremap <Leader>w2    2<C-w>w
-nnoremap <Leader>w3    3<C-w>w
-nnoremap <Leader>w4    4<C-w>w
-nnoremap <Leader>w5    5<C-w>w
-nnoremap <Leader>w6    6<C-w>w
-nnoremap <Leader>w7    7<C-w>w
-nnoremap <Leader>w8    8<C-w>w
-nnoremap <Leader>w9    9<C-w>w
+nnoremap <silent> <Leader>wp    <C-w>p
+nnoremap <silent> <Leader>wn    <C-w>n
+nnoremap <silent> <Leader>wq    <C-w>q
+nnoremap <silent> <Leader>q     <C-w>q
+nnoremap <silent> <Leader>ww    <C-w>w
+nnoremap <silent> <Leader>wo    <C-w>o
+nnoremap <silent> <Leader>ws    <C-w>s
+nnoremap <silent> <Leader>wv    <C-w>v
+nnoremap <silent> <Leader>w1    1<C-w>w
+nnoremap <silent> <Leader>w2    2<C-w>w
+nnoremap <silent> <Leader>w3    3<C-w>w
+nnoremap <silent> <Leader>w4    4<C-w>w
+nnoremap <silent> <Leader>w5    5<C-w>w
+nnoremap <silent> <Leader>w6    6<C-w>w
+nnoremap <silent> <Leader>w7    7<C-w>w
+nnoremap <silent> <Leader>w8    8<C-w>w
+nnoremap <silent> <Leader>w9    9<C-w>w
+
+nnoremap <silent> <Leader>Q     :qa<CR>
 
 function! s:toggle_quickfix()
   let found_nr = 0
@@ -167,16 +169,11 @@ function! s:toggle_defx()
     endif
   endfor
 
-  if found_nr > 0
-    if found_type == 'defx'
-      Defx
-    else
-      execute found_nr . 'wincmd q'
-      Defx
-    endif
-  else
-    Defx
+  if found_nr > 0 && found_type != 'defx'
+    execute found_nr . 'wincmd q'
   endif
+
+  Defx
 endfunction
 
 function! s:toggle_tagbar()
@@ -191,32 +188,27 @@ function! s:toggle_tagbar()
     endif
   endfor
 
-  if found_nr > 0
-    if found_type == 'tagbar'
-      TagbarToggle
-    else
-      execute found_nr . 'wincmd q'
-      TagbarToggle
-    endif
-  else
-    TagbarToggle
+  if found_nr > 0 && found_type != 'tagbar'
+    execute found_nr . 'wincmd q'
   endif
+
+  TagbarToggle
 endfunction
 
-nnoremap <silent> <M-1>         :call <SID>toggle_defx()<CR>
-nnoremap <silent> <M-7>         :call <SID>toggle_tagbar()<CR>
+nnoremap <silent> <M-1> :call <SID>toggle_defx()<CR>
+nnoremap <silent> <M-7> :call <SID>toggle_tagbar()<CR>
 
 " QuickFix and Location windows
-autocmd FileType qf,help,tagbar nnoremap <silent> q <C-w>q
+autocmd FileType qf,help,tagbar,man nnoremap <silent> <buffer> q <C-w>q
 nnoremap <silent> <M-6> :call <SID>toggle_quickfix()<CR>
 nnoremap <silent> <M-^> :call <SID>toggle_loclist()<CR>
 
 " search and replace
-nnoremap <Leader>gs     :%s/\<<C-r><C-w>\>/
-nnoremap <Leader>gr     :%s/\<<C-r><C-w>\>//g<Left><Left>
-nnoremap <Leader>gR     :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
-nnoremap <Leader>s      :.,$s/\<<C-r><C-w>\>/
-nnoremap <Leader>r      :.,$s/\<<C-r><C-w>\>//g<Left><Left>
-nnoremap <Leader>R      :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
+nnoremap <Leader>gs    :%s/\<<C-r><C-w>\>/
+nnoremap <Leader>gr    :%s/\<<C-r><C-w>\>//g<Left><Left>
+nnoremap <Leader>gR    :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
+nnoremap <Leader>s     :.,$s/\<<C-r><C-w>\>/
+nnoremap <Leader>r     :.,$s/\<<C-r><C-w>\>//g<Left><Left>
+nnoremap <Leader>R     :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 
-nnoremap <silent> <Leader>gd :YcmCompleter GoTo<CR>
+nnoremap <silent> <Leader>gd    :YcmCompleter GoTo<CR>

@@ -1,24 +1,24 @@
 set mouse=a
 
-if has('gui_running') || exists('g:GuiLoaded') || exists('g:nyaovim_version') || exists('g:gui_oni')
-  if exists('&termguicolors')
-    set termguicolors
-  endif
-  if has('nvim')
-    call rpcnotify(1, 'Gui', 'Font', 'Fira Code:h11')
-    call rpcnotify(1, 'Gui', 'Linespace', '0')
-    " call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
-  endif
+if exists('&termguicolors')
+  set termguicolors
 else
   set t_Co=16
   let g:solarized_use16 = 1
   let g:onedark_termcolors = 16
 endif
 
+if exists('g:GuiLoaded') || exists('g:nyaovim_version') || exists('g:gui_oni')
+  call rpcnotify(1, 'Gui', 'Font', 'Fira Code:h11')
+  call rpcnotify(1, 'Gui', 'Linespace', '0')
+  " call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
+endif
+
 syntax on
 set background=dark
 " colorscheme solarized8
 colorscheme nord
+" colorscheme onedark
 
 if exists('g:gui_oni') || exists('g:gui_gonvim')
   set laststatus=0
@@ -74,19 +74,6 @@ function! s:is_helper_window(nr)
   endif
   return 0
 endfunction
-
-function! s:quit_when_close_last_window()
-  let count = 0
-  for nr in range(1, winnr('$'))
-    if !s:is_helper_window(nr)
-      let count += 1
-    endif
-  endfor
-  if count == 0
-    quitall
-  endif
-endfunction
-autocmd WinEnter * call s:quit_when_close_last_window()
 
 function! s:move_help_window()
   if winwidth('%') >= 160
