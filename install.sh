@@ -30,10 +30,10 @@ install_linux() {
 }
 
 install_mac() {
-  if [[ ! -e /usr/local/bin/brew ]]; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  else
+  if [[ -e /usr/local/bin/brew ]]; then
     brew update
+  else
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   brew install coreutils make automake autoconf libtool pkg-config make cmake ctags global ripgrep sk python python3 tmux luajit reattach-to-user-namespace
   brew install vim --with-override-system-vi --with-gettext --with-python3 --with-luajit
@@ -50,16 +50,14 @@ esac
 
 mkdir -p ~/.tmux/plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
-sh /tmp/dein-installer.sh ~/.cache/dein
+~/.tmux/plugins/tpm/bin/install_plugins
 
 mkdir -p ~/.local/share/zsh
 curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
-
 zsh -c 'source ~/.zshrc && antigen update'
 
-nvim +UpdateRemotePlugins +qall
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
+sh /tmp/dein-installer.sh ~/.cache/dein
 
 # mkdir -p ~/.local/src
 # git clone -b stable https://github.com/rust-lang/rust.git ~/.local/src/rust
