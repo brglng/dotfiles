@@ -1,12 +1,10 @@
 # dotfiles
+
 My dotfiles
 
 ## Prerequisites
-- Vim 8.0 and [Neovim](https://neovim.io) in your system's package
-repositories. For old Ubuntu versions that do not have Vim 8.0, you can use
-[ppa:jonathonf/vim](https://launchpad.net/~jonathonf/+archive/ubuntu/vim).
-For Neovim on Linux, please see
-[Installing Neovim](https://github.com/neovim/neovim/wiki/Installing-Neovim).
+
+Currently only macOS and Ubuntu (16.04+) is supported.
 
 ## Installation
 
@@ -23,8 +21,9 @@ For Neovim on Linux, please see
     $ ./link.sh
     ```
 
-   This assumes you have already setup the necessary environment manually. If
-   you want to setup a basic environment by installing necessary packages
+   This assumes you have already setup the necessary environment manually.
+
+   If you want to setup a basic environment by installing necessary packages
    automatically, run
 
     ```sh
@@ -32,5 +31,6 @@ For Neovim on Linux, please see
     ```
 
    The script will use the proper package manager on your system to install the
-   packages (`apt` on Ubuntu/Debian and `yum` on Fedora/CentOS. On macOS, it
-   uses [Homebrew](https://brew.sh/)).
+   packages (`apt` on Ubuntu/Debian. On macOS, it uses
+   [Homebrew](https://brew.sh/)).  If Homebrew is not installed, it will be
+   installed automatically.
