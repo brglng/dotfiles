@@ -1,21 +1,21 @@
 #!/bin/sh
 
 link() {
-  ln -s $(pwd)/bashrc               ~/.bashrc
+  ln -fs $(pwd)/bashrc              ~/.bashrc
   mkdir -p ~/.cgdb
-  ln -s $(pwd)/cgdb/cgdbrc          ~/.cgdb/
+  ln -fs $(pwd)/cgdb/cgdbrc         ~/.cgdb/
   mkdir -p ~/.config
-  # ln -s $(pwd)/config/powerline     ~/.config/
-  ln -s $(pwd)/config/oni           ~/.config/
-  ln -s $(pwd)/gitconfig            ~/.gitconfig
-  ln -s $(pwd)/gitignore_global     ~/.gitignore_global
-  ln -s $(pwd)/oh-my-zsh            ~/.oh-my-zsh
-  # ln -s $(pwd)/pentadactylrc        ~/.pentadactylrc
-  ln -s $(pwd)/tmux.conf            ~/.tmux.conf
-  ln -s $(pwd)/vimrc                ~/.vimrc
-  ln -s $(pwd)/vim                  ~/.vim
-  ln -s $(pwd)/vim                  ~/.config/nvim
-  ln -s $(pwd)/zshrc                ~/.zshrc
+  # ln -fs $(pwd)/config/powerline    ~/.config/
+  ln -fs $(pwd)/config/oni          ~/.config/
+  ln -fs $(pwd)/gitconfig           ~/.gitconfig
+  ln -fs $(pwd)/gitignore_global    ~/.gitignore_global
+  ln -fs $(pwd)/oh-my-zsh           ~/.oh-my-zsh
+  # ln -fs $(pwd)/pentadactylrc       ~/.pentadactylrc
+  ln -fs $(pwd)/tmux.conf           ~/.tmux.conf
+  ln -fs $(pwd)/vimrc               ~/.vimrc
+  ln -fs $(pwd)/vim                 ~/.vim
+  ln -fs $(pwd)/vim                 ~/.config/nvim
+  ln -fs $(pwd)/zshrc               ~/.zshrc
 }
 
 link_linux() {

@@ -4,16 +4,16 @@ if &compatible
 endif
 
 " Required:
-set runtimepath+=$HOME/.local/share/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=$HOME/.cache/dein/repos/github.com/Shougo/dein.vim
 
 let g:dein#install_process_timeout = 3600 * 2
 
 " Required:
-if dein#load_state($HOME . '/.local/share/dein')
-  call dein#begin($HOME . '/.local/share/dein')
+if dein#load_state($HOME . '/.cache/dein')
+  call dein#begin($HOME . '/.cache/dein')
 
   " Dein
-  call dein#add($HOME . '/.local/share/dein/repos/github.com/Shougo/dein.vim')
+  call dein#add($HOME . '/.cache/dein/repos/github.com/Shougo/dein.vim')
   call dein#add('haya14busa/dein-command.vim')
   call dein#add('wsdjeg/dein-ui.vim')
 

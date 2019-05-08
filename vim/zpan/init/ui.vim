@@ -1,6 +1,6 @@
 set mouse=a
 
-if exists('&termguicolors')
+if exists('&termguicolors') && !has('mac')
   set termguicolors
 else
   set t_Co=16
