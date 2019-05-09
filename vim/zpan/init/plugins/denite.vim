@@ -6,7 +6,9 @@ endif
 call denite#custom#option('_', 'vertical_preview', 1)
 call denite#custom#option('_', 'highlight_matched_char', 'Keyword')
 call denite#custom#option('_', 'highlight_matched_range', 'String')
-call denite#custom#var('file/rec', 'command', ['bfind'])
+if executable('bfind')
+  call denite#custom#var('file/rec', 'command', ['bfind'])
+endif
 call denite#custom#source('file,file/rec,directory_rec',
       \                   'matchers', ['matcher/fuzzy', 'matcher/project_files'])
 call denite#custom#source('line', 'matchers', ['matcher/regexp'])
@@ -75,3 +77,5 @@ nnoremap <silent> <Leader>fr    :Denite -buffer-name=file_mru       -resume file
 nnoremap <silent> <Leader>fR    :Denite -buffer-name=file_mru               file_mru<CR>
 nnoremap <silent> <Leader>fh    :Denite -buffer-name=help           -resume help<CR>
 nnoremap <silent> <Leader>fH    :Denite -buffer-name=help                   help<CR>
+nnoremap <silent> <Leader>fc    :Denite -buffer-name=colorscheme    -resume colorscheme<CR>
+nnoremap <silent> <Leader>fC    :Denite -buffer-name=colorscheme            colorscheme<CR>

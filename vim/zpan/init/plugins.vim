@@ -16,18 +16,18 @@ if dein#load_state($HOME . '/.cache/dein')
   call dein#add($HOME . '/.cache/dein/repos/github.com/Shougo/dein.vim')
   call dein#add('haya14busa/dein-command.vim')
   call dein#add('wsdjeg/dein-ui.vim')
-
-  " Generic Plugins
   if !has('nvim')
     call dein#add('roxma/nvim-yarp')
     call dein#add('roxma/vim-hug-neovim-rpc')
   endif
+
+  " Generic Plugins
   call dein#add('tpope/vim-eunuch')
-  call dein#add('justinmk/vim-dirvish')
+  " call dein#add('justinmk/vim-dirvish')
 
   " UI Plugins
-  " call dein#add('scrooloose/nerdtree')
-  " call dein#add('jistr/vim-nerdtree-tabs')
+  call dein#add('ryanoasis/vim-devicons')
+
   call dein#add('Shougo/defx.nvim')
   call dein#add('kristijanhusak/defx-git')
   call dein#add('kristijanhusak/defx-icons')
@@ -41,9 +41,6 @@ if dein#load_state($HOME . '/.cache/dein')
   call dein#add('lvht/tagbar-markdown')
   call dein#add('mbbill/fencview')
   call dein#add('mbbill/undotree')
-  call dein#add('ryanoasis/vim-devicons')
-  " call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
-  call dein#add('Xuyuanp/nerdtree-git-plugin')
   call dein#add('mhinz/vim-startify')
 
   " Moving and Editing Plugins
@@ -83,7 +80,6 @@ if dein#load_state($HOME . '/.cache/dein')
   call dein#add('sheerun/vim-polyglot')
 
   " Source Control Plugins
-  " call dein#add('airblade/vim-gitgutter')
   call dein#add('mhinz/vim-signify')
   call dein#add('tpope/vim-fugitive')
   call dein#add('will133/vim-dirdiff')
@@ -94,16 +90,17 @@ if dein#load_state($HOME . '/.cache/dein')
   call dein#add('Shougo/neomru.vim')
 
   " ColorSchemes
-  " call dein#add('lifepillar/vim-solarized8')
-  " call dein#add('sickill/vim-monokai')
-  " call dein#add('chriskempson/vim-tomorrow-theme')
+  call dein#add('lifepillar/vim-solarized8')
+  call dein#add('iCyMind/NeoSolarized')
+  call dein#add('sickill/vim-monokai')
+  call dein#add('chriskempson/vim-tomorrow-theme')
   " call dein#add('chriskempson/base16-vim')
-  " call dein#add('junegunn/seoul256.vim')
-  " call dein#add('nanotech/jellybeans.vim')
-  " call dein#add('NLKNguyen/papercolor-theme')
+  call dein#add('junegunn/seoul256.vim')
+  call dein#add('nanotech/jellybeans.vim')
+  call dein#add('NLKNguyen/papercolor-theme')
   call dein#add('joshdick/onedark.vim', {'merged': 0})
   call dein#add('arcticicestudio/nord-vim')
-  " call dein#add('soft-aesthetic/soft-era-vim')
+  call dein#add('soft-aesthetic/soft-era-vim')
 
   " Project Management
   call dein#add('editorconfig/editorconfig-vim')
