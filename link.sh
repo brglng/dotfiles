@@ -7,7 +7,6 @@ link() {
   mkdir -p ~/.config
   # ln -fs $(pwd)/config/powerline    ~/.config/
   ln -fs $(pwd)/config/oni          ~/.config/
-  ln -fs $(pwd)/gitconfig           ~/.gitconfig
   ln -fs $(pwd)/gitignore_global    ~/.gitignore_global
   ln -fs $(pwd)/oh-my-zsh           ~/.oh-my-zsh
   # ln -fs $(pwd)/pentadactylrc       ~/.pentadactylrc
