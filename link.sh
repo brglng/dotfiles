@@ -16,6 +16,14 @@ link() {
   ln -fs $(pwd)/vim                 ~/.vim
   ln -fs $(pwd)/vim                 ~/.config/nvim
   ln -fs $(pwd)/zshrc               ~/.zshrc
+
+  cat << EOF >> ~/.gitconfig
+[include]
+	path = $(pwd)/gitconfig
+EOF
+
+  mkdir -p ~/.local/bin
+  ln -fs $(pwd)/local/bin/*         ~/.local/bin/
 }
 
 link_linux() {

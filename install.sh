@@ -7,6 +7,11 @@ install_yum() {
 
 install_apt() {
   sudo apt install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global exuberant-ctags ripgrep python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev
+
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
+  sudo apt install yarn
 }
 
 install_linux() {
@@ -30,12 +35,12 @@ install_linux() {
 }
 
 install_mac() {
-  if [[ -e /usr/local/bin/brew ]]; then
+  if which brew; then
     brew update
   else
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
-  brew install coreutils make automake autoconf libtool pkg-config make cmake ctags global ripgrep sk python python3 tmux luajit reattach-to-user-namespace
+  brew install coreutils make automake autoconf libtool pkg-config make cmake ctags global ripgrep sk python python3 tmux luajit reattach-to-user-namespace yarn
   brew install vim --with-override-system-vi --with-gettext --with-python3 --with-luajit
   brew install neovim --HEAD
   brew cask install macvim

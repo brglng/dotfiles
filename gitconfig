@@ -1,16 +1,11 @@
-[user]
-	name = Zhaosheng Pan
-	email = zhaosheng.pan@sololand.moe
 [core]
 	autocrlf = false
-	excludesfile = /Users/brglng/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	filemodes = true
 	fileMode = true
 [push]
 	default = simple
 	recurseSubmodules = on-demand
-[commit]
-	template = /Users/brglng/.stCommitMsg
 [gc]
 	autoDetach = false
 [format]
@@ -22,27 +17,19 @@
 	smudge = git lfs smudge %f
 	required = true
 [diff]
-	tool = vim-dirdiff
+	tool = nvim-dirdiff
 	guitool = bc3
 [merge]
 	tool = bc3
 	guitool = bc3
 [difftool]
 	prompt = No
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [difftool "vim-dirdiff"]
-	cmd = ~/Dropbox/Projects/tools/vimdirdiff.py \"$LOCAL\" \"$REMOTE\"
+	cmd = ~/.local/bin/vimdirdiff.py \"$LOCAL\" \"$REMOTE\"
 [difftool "nvim-dirdiff"]
-	cmd = ~/Dropbox/Projects/tools/nvimdirdiff.py \"$LOCAL\" \"$REMOTE\"
+	cmd = ~/.local/bin/nvimdirdiff.py \"$LOCAL\" \"$REMOTE\"
 [difftool "gvim-dirdiff"]
-	cmd = ~/Dropbox/Projects/tools/gvimdirdiff.py \"$LOCAL\" \"$REMOTE\"
-[difftool "nyaovim-dirdiff"]
-	cmd = ~/Dropbox/Projects/tools/nyaovimdirdiff.py \"$LOCAL\" \"$REMOTE\"
+	cmd = ~/.local/bin/gvimdirdiff.py \"$LOCAL\" \"$REMOTE\"
 [mergetool "kdiff3-noauto"]
 	cmd = kdiff3 --L1 \"$MERGED (Base)\" --L2 \"$MERGED (Local)\" --L3 \"$MERGED (Remote)\" -o \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
 [alias]
