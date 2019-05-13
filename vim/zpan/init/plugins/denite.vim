@@ -6,9 +6,9 @@ endif
 call denite#custom#option('_', 'vertical_preview', 1)
 call denite#custom#option('_', 'highlight_matched_char', 'Keyword')
 call denite#custom#option('_', 'highlight_matched_range', 'String')
-if executable('bfind')
-  call denite#custom#var('file/rec', 'command', ['bfind'])
-endif
+" if executable('bfind')
+"   call denite#custom#var('file/rec', 'command', ['bfind'])
+" endif
 call denite#custom#source('file,file/rec,directory_rec',
       \                   'matchers', ['matcher/fuzzy', 'matcher/ignore_globs', 'matcher/project_files'])
 call denite#custom#filter('matcher/ignore_globs', 'ignore_globs', ['*~', '*.o', '*.exe', '*.bak', '.DS_Store', '*.pyc', '*.sw[po]', '*.class', '.hg/', '.git/', '.bzr/', '.svn/', 'tags', 'tags-*', '.ccls*'])

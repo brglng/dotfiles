@@ -59,7 +59,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('PProvost/vim-ps1')
   call dein#add('aklt/plantuml-syntax')
   call dein#add('hynek/vim-python-pep8-indent')
-  call dein#add('sheerun/vim-polyglot')
+  call dein#add('sheerun/vim-polyglot', {'merged': 0})
   " call dein#add('Shougo/deorise.vim')
 
   " Source Control Plugins
