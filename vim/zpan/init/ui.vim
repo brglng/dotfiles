@@ -78,14 +78,16 @@ endif
 function! s:move_help_window()
   if winwidth('%') >= 160
     wincmd L
+    vertical resize 85
   endif
 endfunction
-autocmd FileType help call s:move_help_window()
+autocmd BufEnter * if &filetype == 'help' | call s:move_help_window() | endif
 
 function! s:init_man_buffer()
   setlocal bufhidden
   if winwidth('%') >= 160
     wincmd L
+    vertical resize 85
   endif
 endfunction
-autocmd FileType man call s:init_man_buffer()
+autocmd BufEnter * if &buftype == 'man' | call s:init_man_buffer() | endif

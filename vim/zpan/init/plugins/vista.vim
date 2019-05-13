@@ -41,7 +41,7 @@ let g:vista#renderer#icons = {
 \   "variable": "\uf71b",
 \  }
 
-let g:vista_sidebar_position = 'vertical topleft'
+" let g:vista_sidebar_position = 'vertical topleft'
 let g:vista_sidebar_width = 40
 let g:vista_echo_cursor_strategy = 'floating_win'
 

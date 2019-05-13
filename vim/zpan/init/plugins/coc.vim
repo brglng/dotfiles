@@ -7,7 +7,7 @@ nmap <silent> <Leader>gd <Plug>(coc-definition)
 nmap <silent> <Leader>gk <Plug>(coc-declaration)
 nmap <silent> <Leader>gt <Plug>(coc-type-definition)
 nmap <silent> <Leader>gi <Plug>(coc-implementation)
-nmap <silent> <Leader>gr <Plug>(coc-references)
+nmap <silent> <Leader>gf <Plug>(coc-references)
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>

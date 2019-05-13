@@ -229,11 +229,11 @@ function! s:toggle_vista()
   endfor
 
   if found_nr > 0
-    if bufname(winbufnr(found_nr)) =~ '__vista__'
-      execute found_nr . 'wincmd q'
-    else
+    if bufname(winbufnr(found_nr)) !~ '__vista__'
       execute found_nr . 'wincmd q'
       Vista
+    else
+      Vista!
     endif
   else
     Vista
@@ -265,7 +265,7 @@ nnoremap <silent> <M-2> :call <SID>toggle_vista()<CR>
 nnoremap <silent> <M-3> :call <SID>toggle_undotree()<CR>
 
 " QuickFix and Location windows
-autocmd FileType qf,help,man,tagbar,vista nnoremap <silent> <buffer> q <C-w>q
+autocmd FileType qf,help,man,tagbar nnoremap <silent> <buffer> q <C-w>q
 nnoremap <silent> <M-6> :call <SID>toggle_quickfix()<CR>
 nnoremap <silent> <M-^> :call <SID>toggle_loclist()<CR>
 
