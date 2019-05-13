@@ -17,8 +17,10 @@ link() {
   ln -fs $(pwd)/zshrc               ~/.zshrc
 
   cat << EOF >> ~/.gitconfig
+# begin brglng/dotfiles
 [include]
 	path = $(pwd)/gitconfig
+# end brglng/dotfiles
 EOF
 
   mkdir -p ~/.local/bin
@@ -33,9 +35,12 @@ link_linux() {
 
 link_mac() {
   link
-  mkdir -p ~/Library/Python/2.7/lib/python/site-packages
-  echo 'import site; site.addsitedir("/usr/local/lib/python2.7/site-packages")' >> ~/Library/Python/2.7/lib/python/site-packages/homebrew.pth
-  echo '[[ -r ~/.bashrc ]] && . ~/.bashrc' >> ~/.bash_profile
+
+  cat << EOF >> ~/.bash_profile
+# begin brglng/dotfiles
+echo '[[ -r ~/.bashrc ]] && . ~/.bashrc'
+# end brglng/dotfiles
+EOF
 }
 
 case $(uname -s) in

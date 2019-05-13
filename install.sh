@@ -2,7 +2,8 @@
 set -e
 
 install_yum() {
-  :
+  echo "Not implemented yet!"
+  exit -1
 }
 
 install_apt() {
@@ -30,9 +31,9 @@ install_linux() {
   esac
 
   # install Universal Ctags
-  rm -rf /tmp/ctags
-  git clone --depth=1 --recursive https://github.com/universal-ctags/ctags.git /tmp/ctags
-  pushd /tmp/ctags
+  rm -rf /tmp/uctags
+  git clone --depth=1 --recursive https://github.com/universal-ctags/ctags.git /tmp/uctags
+  pushd /tmp/uctags
   ./autogen.sh
   ./configure --prefix=~/.local
   make
@@ -73,10 +74,6 @@ case $(uname -s) in
   Darwin) install_mac ;;
 esac
 
-pip3 install pynvim
-gem install neovim
-yarn global add neovim
-
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup update
 rustup component add rls rust-analysis rust-src
@@ -85,6 +82,10 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 nvm install --latest npm node
 nvm use node
 nvm alias default node
+
+pip3 install pynvim
+gem install neovim
+yarn global add neovim
 
 mkdir -p ~/.tmux/plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -96,6 +97,3 @@ zsh -c 'source ~/.zshrc && antigen update'
 
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
 sh /tmp/dein-installer.sh ~/.cache/dein
-
-# mkdir -p ~/.local/src
-# git clone -b stable https://github.com/rust-lang/rust.git ~/.local/src/rust

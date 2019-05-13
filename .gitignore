@@ -16,6 +16,7 @@ desktop.ini
 readline_history.txt
 /emacs
 /emacs.d/
-/vim/plugged_disabled/
+/vim/dein-local
+/vim/dein-local-disabled
 doc/tags
 *.pyc

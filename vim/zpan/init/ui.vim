@@ -22,9 +22,7 @@ endif
 syntax on
 set background=dark
 " colorscheme solarized8
-if !empty(glob('~/.cache/vim/plugged/vim-plug/plug.vim'))
-  colorscheme nord
-endif
+colorscheme nord
 " colorscheme onedark
 
 if exists('g:gui_oni') || exists('g:gui_gonvim')
