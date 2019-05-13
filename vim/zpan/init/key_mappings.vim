@@ -1,7 +1,7 @@
 nmap ; :
 
+" assume 'noinsert' is in 'completeopt'
 function! s:pumselected()
-  " assume 'noinsert' is in 'completeopt'
   return pumvisible() && !empty(v:completed_item)
 endfunction
 
@@ -9,33 +9,53 @@ function! s:pre_complete_cr()
   return substitute(complete_parameter#pre_complete("\<C-y>"), '(', "\<C-v>(", 'g')
 endfunction
 
-" assume 'noinsert' is in 'completeopt'
-" inoremap <silent> <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
-imap <silent> <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
-imap <silent> <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
-
-" https://github.com/Valloric/YouCompleteMe/issues/2696
-imap <silent> <BS> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
-imap <silent> <C-h> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
-function! YcmOnDeleteChar()
-  if pumvisible()
-    return "\<C-y>"
-  endif
-  return "" 
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+inoremap <silent><expr> <TAB>
+      \ <SID>pumselected() ?
+      \ coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ?
+      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ delimitMate#ShouldJump() ? delimitMate#JumpAny() :
+      \ coc#refresh()
+
+inoremap <silent> <expr> <C-x><C-x> coc#refresh()
+
+imap <silent> <expr> <CR>
+      \ <SID>pumselected() ?
+      \ "\<C-y>" :
+      \ "\<C-g>u\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+
+" inoremap <silent> <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
+" imap <silent> <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
+" imap <silent> <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+
+" https://github.com/Valloric/YouCompleteMe/issues/2696
+" imap <silent> <BS> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
+" imap <silent> <C-h> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
+" function! YcmOnDeleteChar()
+"   if pumvisible()
+"     return "\<C-y>"
+"   endif
+"   return "" 
+" endfunction
+
 " autocmd VimEnter * smap <silent> <expr> <TAB> cmp#jumpable(1) ? "\<Lt>Plug>(complete_parameter#goto_next_parameter)" : "\<Lt>C-r>=UltiSnips#ExpandSnippetOrJump()\<Lt>CR>"
-autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<Lt>C-r>=UltiSnips#ExpandSnippetOrJump()\<Lt>CR>"
+" autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<Lt>C-r>=UltiSnips#ExpandSnippetOrJump()\<Lt>CR>"
 " smap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
 " imap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
-imap <silent> <C-j> <Plug>(complete_parameter#goto_next_parameter);
-smap <silent> <C-j> <Plug>(complete_parameter#goto_next_parameter);
-imap <silent> <C-k> <Plug>(complete_parameter#goto_previous_parameter);
-smap <silent> <C-k> <Plug>(complete_parameter#goto_previous_parameter);
-imap <silent> <M-j> <Plug>(complete_parameter#overload_down)
-smap <silent> <M-j> <Plug>(complete_parameter#overload_down)
-imap <silent> <M-k> <Plug>(complete_parameter#overload_up)
-smap <silent> <M-k> <Plug>(complete_parameter#overload_up)
+" imap <silent> <C-j> <Plug>(complete_parameter#goto_next_parameter);
+" smap <silent> <C-j> <Plug>(complete_parameter#goto_next_parameter);
+" imap <silent> <C-k> <Plug>(complete_parameter#goto_previous_parameter);
+" smap <silent> <C-k> <Plug>(complete_parameter#goto_previous_parameter);
+" imap <silent> <M-j> <Plug>(complete_parameter#overload_down)
+" smap <silent> <M-j> <Plug>(complete_parameter#overload_down)
+" imap <silent> <M-k> <Plug>(complete_parameter#overload_up)
+" smap <silent> <M-k> <Plug>(complete_parameter#overload_up)
 
 " arrows move through screen lines
 noremap  <silent> <Down>      gj
@@ -84,15 +104,16 @@ nnoremap <silent> <C-Tab>       :bp<CR>
 nnoremap <silent> <C-S-Tab>     :bn<CR>
 nnoremap <silent> <Leader>bp    :bp<CR>
 nnoremap <silent> <Leader>bn    :bn<CR>
-nnoremap <silent> <Leader>b1    :b 1<CR>
-nnoremap <silent> <Leader>b2    :b 2<CR>
-nnoremap <silent> <Leader>b3    :b 3<CR>
-nnoremap <silent> <Leader>b4    :b 4<CR>
-nnoremap <silent> <Leader>b5    :b 5<CR>
-nnoremap <silent> <Leader>b6    :b 6<CR>
-nnoremap <silent> <Leader>b7    :b 7<CR>
-nnoremap <silent> <Leader>b8    :b 8<CR>
-nnoremap <silent> <Leader>b9    :b 9<CR>
+nmap <silent> <Leader>b1 <Plug>lightline#bufferline#go(1)
+nmap <silent> <Leader>b2 <Plug>lightline#bufferline#go(2)
+nmap <silent> <Leader>b3 <Plug>lightline#bufferline#go(3)
+nmap <silent> <Leader>b4 <Plug>lightline#bufferline#go(4)
+nmap <silent> <Leader>b5 <Plug>lightline#bufferline#go(5)
+nmap <silent> <Leader>b6 <Plug>lightline#bufferline#go(6)
+nmap <silent> <Leader>b7 <Plug>lightline#bufferline#go(7)
+nmap <silent> <Leader>b8 <Plug>lightline#bufferline#go(8)
+nmap <silent> <Leader>b9 <Plug>lightline#bufferline#go(9)
+nmap <silent> <Leader>b0 <Plug>lightline#bufferline#go(10)
 
 " window
 nnoremap <silent> <Leader>wp    <C-w>p
@@ -162,7 +183,7 @@ function! s:toggle_defx()
   let found_type = ''
   for nr in range(1, winnr('$'))
     let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if win_filetype == 'defx' || win_filetype == 'tagbar' || win_filetype == 'nerdtree'
+    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
       let found_nr = nr
       let found_type = win_filetype
       break
@@ -181,25 +202,70 @@ function! s:toggle_tagbar()
   let found_type = ''
   for nr in range(1, winnr('$'))
     let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if win_filetype == 'defx' || win_filetype == 'tagbar' || win_filetype == 'nerdtree'
+    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
       let found_nr = nr
       let found_type = win_filetype
       break
     endif
   endfor
 
-  if found_nr > 0 && found_type != 'tagbar'
+  if found_nr > 0 && bufname(winbufnr(found_nr)) =~ '__Tagbar__'
     execute found_nr . 'wincmd q'
   endif
 
   TagbarToggle
 endfunction
 
+function! s:toggle_vista()
+  let found_nr = 0
+  let found_type = ''
+  for nr in range(1, winnr('$'))
+    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
+    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
+      let found_nr = nr
+      let found_type = win_filetype
+      break
+    endif
+  endfor
+
+  if found_nr > 0
+    if bufname(winbufnr(found_nr)) =~ '__vista__'
+      execute found_nr . 'wincmd q'
+    else
+      execute found_nr . 'wincmd q'
+      Vista
+    endif
+  else
+    Vista
+  endif
+endfunction
+
+function! s:toggle_undotree()
+  let found_nr = 0
+  let found_type = ''
+  for nr in range(1, winnr('$'))
+    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
+    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
+      let found_nr = nr
+      let found_type = win_filetype
+      break
+    endif
+  endfor
+
+  if found_nr > 0 && found_type != 'undotree'
+    execute found_nr . 'wincmd q'
+  endif
+
+  UndotreeToggle
+endfunction
+
 nnoremap <silent> <M-1> :call <SID>toggle_defx()<CR>
-nnoremap <silent> <M-7> :call <SID>toggle_tagbar()<CR>
+" nnoremap <silent> <M-2> :call <SID>toggle_tagbar()<CR>
+nnoremap <silent> <M-2> :call <SID>toggle_vista()<CR>
+nnoremap <silent> <M-3> :call <SID>toggle_undotree()<CR>
 
 " QuickFix and Location windows
-autocmd FileType qf,help,tagbar,man nnoremap <silent> <buffer> q <C-w>q
+autocmd FileType qf,help,man,tagbar,vista nnoremap <silent> <buffer> q <C-w>q
 nnoremap <silent> <M-6> :call <SID>toggle_quickfix()<CR>
 nnoremap <silent> <M-^> :call <SID>toggle_loclist()<CR>
 
@@ -210,5 +276,3 @@ nnoremap <Leader>gR    :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
 nnoremap <Leader>s     :.,$s/\<<C-r><C-w>\>/
 nnoremap <Leader>r     :.,$s/\<<C-r><C-w>\>//g<Left><Left>
 nnoremap <Leader>R     :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
-
-nnoremap <silent> <Leader>gd    :YcmCompleter GoTo<CR>

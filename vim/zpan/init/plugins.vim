@@ -1,160 +1,128 @@
-"dein Scripts----------------------------- {{{
-if &compatible
-  set nocompatible               " Be iMproved
+call plug#begin('~/.cache/vim/plugged')
+
+Plug 'junegunn/vim-plug'
+
+" Generic Plugins
+Plug 'roxma/nvim-yarp', !has('nvim') ? {} : { 'on': [] }
+Plug 'roxma/vim-hug-neovim-rpc', !has('nvim') ? {} : { 'on': [] }
+Plug 'tpope/vim-eunuch'
+
+" UI Plugins
+Plug 'ryanoasis/vim-devicons'
+Plug 'justinmk/vim-dirvish'
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'Yggdroot/indentLine'
+" Plug 'nathanaelkane/vim-indent-guides'
+Plug 'mbbill/fencview'
+Plug 'mbbill/undotree'
+Plug 'mhinz/vim-startify'
+
+" Moving Plugins
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-surround'
+Plug 'wellle/targets.vim'
+Plug 'easymotion/vim-easymotion'
+Plug 'rhysd/clever-f.vim'
+Plug 'andymass/vim-matchup'
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-syntax'
+Plug 'kana/vim-textobj-function'
+Plug 'sgur/vim-textobj-parameter'
+
+" Editing Plugins
+" Plug 'tpope/vim-commentary'
+Plug 'scrooloose/nerdcommenter'
+" Plug 'godlygeek/tabular'
+Plug 'junegunn/vim-easy-align'
+Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-repeat'
+Plug 'Shougo/vinarise.vim'
+
+" FileType Plugins
+Plug 'PProvost/vim-ps1'
+Plug 'aklt/plantuml-syntax'
+Plug 'hynek/vim-python-pep8-indent'
+Plug 'sheerun/vim-polyglot'
+" Plug 'Shougo/deorise.vim'
+
+" Source Control Plugins
+Plug 'tpope/vim-fugitive'
+Plug 'will133/vim-dirdiff'
+Plug 'gregsexton/gitv'
+Plug 'iamcco/sran.nvim', { 'do': { -> sran#util#install() } }
+Plug 'iamcco/git-p.nvim'
+
+" Searching plugin: denite.vim and plugins
+Plug 'Shougo/denite.nvim'
+Plug 'Shougo/neomru.vim'
+
+" Project management
+Plug 'Shougo/defx.nvim'
+Plug 'kristijanhusak/defx-git'
+Plug 'kristijanhusak/defx-icons'
+Plug 'editorconfig/editorconfig-vim'
+" Plug 'ludovicchabant/vim-gutentags'
+
+" Language Sementic Plugins
+" Plug 'neomake/neomake'
+Plug 'w0rp/ale'
+
+" if has('win32')
+"   let g:ycm_server_python_interpreter = 'py -3'
+"   let ycm_python_interpreter = 'py -3'
+" else
+"   let ycm_python_interpreter = 'python3'
+" endif
+" if !exists('g:gui_oni')
+"   Plug 'Valloric/YouCompleteMe', {'do':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer'})
+" endif
+" Plug 'tenfyzhong/CompleteParameter.vim'
+
+Plug 'neoclide/coc.nvim', { 'tag': '*', 'do': './install.sh' }
+Plug 'honza/vim-snippets'
+" Plug 'majutsushi/tagbar'
+" Plug 'lvht/tagbar-markdown'
+Plug 'liuchengxu/vista.vim'
+
+" Debuggig Plugins
+" call dein#add('cpiger/NeoDebug')
+
+" ColorSchemes
+Plug 'lifepillar/vim-solarized8'
+Plug 'iCyMind/NeoSolarized'
+Plug 'sickill/vim-monokai'
+Plug 'chriskempson/vim-tomorrow-theme'
+" Plug 'chriskempson/base16-vim')
+Plug 'junegunn/seoul256.vim'
+Plug 'nanotech/jellybeans.vim'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'joshdick/onedark.vim'
+Plug 'arcticicestudio/nord-vim'
+Plug 'soft-aesthetic/soft-era-vim'
+
+call plug#end()
+
+if empty(glob('~/.cache/vim/plugged/vim-plug/plug.vim'))
+  autocmd VimEnter * PlugInstall --sync
 endif
 
-" Required:
-set runtimepath+=$HOME/.cache/dein/repos/github.com/Shougo/dein.vim
-
-let g:dein#install_process_timeout = 3600 * 2
-
-" Required:
-if dein#load_state($HOME . '/.cache/dein')
-  call dein#begin($HOME . '/.cache/dein')
-
-  " Dein
-  call dein#add($HOME . '/.cache/dein/repos/github.com/Shougo/dein.vim')
-  call dein#add('haya14busa/dein-command.vim')
-  call dein#add('wsdjeg/dein-ui.vim')
-  if !has('nvim')
-    call dein#add('roxma/nvim-yarp')
-    call dein#add('roxma/vim-hug-neovim-rpc')
-  endif
-
-  " Generic Plugins
-  call dein#add('tpope/vim-eunuch')
-  " call dein#add('justinmk/vim-dirvish')
-
-  " UI Plugins
-  call dein#add('ryanoasis/vim-devicons')
-
-  call dein#add('Shougo/defx.nvim')
-  call dein#add('kristijanhusak/defx-git')
-  call dein#add('kristijanhusak/defx-icons')
-
-  call dein#add('vim-airline/vim-airline')
-  call dein#add('vim-airline/vim-airline-themes')
-
-  call dein#add('Yggdroot/indentLine')
-  " call dein#add('nathanaelkane/vim-indent-guides')
-  call dein#add('majutsushi/tagbar')
-  call dein#add('lvht/tagbar-markdown')
-  call dein#add('mbbill/fencview')
-  call dein#add('mbbill/undotree')
-  call dein#add('mhinz/vim-startify')
-
-  " Moving and Editing Plugins
-  if !exists('g:gui_oni')
-    call dein#add('tpope/vim-unimpaired')
-    call dein#add('tpope/vim-surround')
-  endif
-  call dein#add('wellle/targets.vim')
-  "call dein#add('tpope/vim-commentary')
-  call dein#add('scrooloose/nerdcommenter')
-
-  call dein#add('easymotion/vim-easymotion')
-  " call dein#add('godlygeek/tabular')
-  call dein#add('junegunn/vim-easy-align')
-  call dein#add('Raimondi/delimitMate')
-  call dein#add('tpope/vim-endwise')
-  call dein#add('tpope/vim-sleuth')
-  call dein#add('SirVer/ultisnips')
-  call dein#add('honza/vim-snippets')
-  " call dein#add('Shougo/neosnippet.vim')
-  " call dein#add('Shougo/neosnippet-snippets')
-  call dein#add('rhysd/clever-f.vim')
-  call dein#add('andymass/vim-matchup')
-  call dein#add('tpope/vim-repeat')
-  call dein#add('kana/vim-textobj-user')
-  call dein#add('kana/vim-textobj-indent')
-  call dein#add('kana/vim-textobj-syntax')
-  call dein#add('kana/vim-textobj-function')
-  call dein#add('sgur/vim-textobj-parameter')
-
-  call dein#add('Shougo/vinarise.vim')
-
-  " FileType Plugins
-  call dein#add('PProvost/vim-ps1')
-  call dein#add('aklt/plantuml-syntax')
-  call dein#add('hynek/vim-python-pep8-indent')
-  call dein#add('sheerun/vim-polyglot')
-
-  " Source Control Plugins
-  call dein#add('mhinz/vim-signify')
-  call dein#add('tpope/vim-fugitive')
-  call dein#add('will133/vim-dirdiff')
-  call dein#add('gregsexton/gitv')
-
-  " Searching plugin: denite.vim and plugins
-  call dein#add('Shougo/denite.nvim')
-  call dein#add('Shougo/neomru.vim')
-
-  " ColorSchemes
-  call dein#add('lifepillar/vim-solarized8')
-  call dein#add('iCyMind/NeoSolarized')
-  call dein#add('sickill/vim-monokai')
-  call dein#add('chriskempson/vim-tomorrow-theme')
-  " call dein#add('chriskempson/base16-vim')
-  call dein#add('junegunn/seoul256.vim')
-  call dein#add('nanotech/jellybeans.vim')
-  call dein#add('NLKNguyen/papercolor-theme')
-  call dein#add('joshdick/onedark.vim', {'merged': 0})
-  call dein#add('arcticicestudio/nord-vim')
-  call dein#add('soft-aesthetic/soft-era-vim')
-
-  " Project Management
-  call dein#add('editorconfig/editorconfig-vim')
-  " call dein#add('ludovicchabant/vim-gutentags')
-
-  " Language Sementic Plugins
-  " call dein#add('neomake/neomake')
-  call dein#add('w0rp/ale')
-  if has('win32')
-    let g:ycm_server_python_interpreter = 'py -3'
-    let ycm_python_interpreter = 'py - 3'
-  else
-    let ycm_python_interpreter = 'python3'
-  endif
-
-  if !exists('g:gui_oni')
-    call dein#add('Valloric/YouCompleteMe', {'build':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer'})
-  endif
-  " call dein#add('Shougo/deoplete.nvim')
-  " call dein#add('Shougo/deoplete-clangx')
-  let g:deoplete#enable_at_startup = 1
-  " call dein#add('tweekmonster/deoplete-clang2')
-  if !has('win32')
-    " call dein#add('autozimu/LanguageClient-neovim', {'rev': 'next', 'build': 'bash install.sh'})
-  endif
-  call dein#add('tenfyzhong/CompleteParameter.vim')
-
-  " Debug
-  " call dein#add('cpiger/NeoDebug')
-
-  call dein#local($HOME . '/.vim/dein-local')
-
-  " Required:
-  call dein#end()
-  call dein#save_state()
+if !empty(glob('~/.cache/vim/plugged/vim-plug/plug.vim'))
+  " runtime zpan/init/plugins/complete_parameter.vim
+  runtime zpan/init/plugins/coc.vim
+  runtime zpan/init/plugins/defx.vim
+  runtime zpan/init/plugins/dein_ui.vim
+  runtime zpan/init/plugins/delimit_mate.vim
+  runtime zpan/init/plugins/denite.vim
+  runtime zpan/init/plugins/endwise.vim
+  runtime zpan/init/plugins/git_p.vim
+  runtime zpan/init/plugins/lightline.vim
+  " runtime zpan/init/plugins/tagbar.vim
+  " runtime zpan/init/plugins/ultisnips.vim
+  runtime zpan/init/plugins/undotree.vim
+  runtime zpan/init/plugins/vista.vim
+  " runtime zpan/init/plugins/you_complete_me.vim
 endif
-
-" Required:
-filetype plugin indent on
-syntax enable
-
-" If you want to install not installed plugins on startup.
-if dein#check_install()
-  call dein#install()
-endif
-
-"End dein Scripts------------------------- }}}
-
-runtime zpan/init/plugins/complete_parameter.vim
-runtime zpan/init/plugins/defx.vim
-runtime zpan/init/plugins/dein_ui.vim
-runtime zpan/init/plugins/delimit_mate.vim
-runtime zpan/init/plugins/denite.vim
-runtime zpan/init/plugins/endwise.vim
-runtime zpan/init/plugins/tagbar.vim
-runtime zpan/init/plugins/ultisnips.vim
-runtime zpan/init/plugins/you_complete_me.vim

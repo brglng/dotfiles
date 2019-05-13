@@ -68,7 +68,7 @@ set backupcopy=yes
 "set noswapfile
 
 set showcmd                   " show commands in normal mode at the right-bottom
-
+set noshowmode
 set ruler                     " show row,col at the right-bottom
 
 set formatoptions+=mM           " deal with Chinese charactors' wrap correctly
@@ -83,8 +83,11 @@ set number                      " show line number
 "set relativenumber
 
 set laststatus=2
-
+set shortmess+=c
 set wildmenu
+if has('nvim')
+  set wildoptions=pum
+endif
 "if has('unnamedplus')
 "    set clipboard+=unnamedplus
 "else
@@ -98,9 +101,15 @@ set sidescrolloff=5
 set showmatch                   " blink matched pairs
 set matchtime=0
 autocmd FileType html,xml setlocal matchpairs+=<:>
-set updatetime=500
-set ttimeout
-set ttimeoutlen=100
+set updatetime=300
+
+" set notimeout
+" set timeoutlen=4000
+" set ttimeout
+" set ttimeoutlen=100
+
+set hidden
+
 if v:version > 703 || v:version == 703 && has("patch541")
   set formatoptions+=j " Delete comment character when joining commented lines
 endif
@@ -190,7 +199,7 @@ inoremap <silent> <C-U> <C-G>u<C-U>
 
 set selectmode=                 " always use visual mode
 
-" tab and incdent settings
+" tab and indent settings
 set autoindent
 set cindent
 set cinoptions=Ls,l1,g0,N-s,E-s,t0,(0,u0,U1,w1,Ws,m1,j1,J1,)10000,*10000
@@ -215,6 +224,7 @@ if exists('&breakindent')
         \   setlocal showbreak=⤷\  |
         \ endif
 endif
+set showtabline=2
 
 "autocmd FileType c,cpp
 "      \   setl tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab
@@ -270,11 +280,15 @@ set pumheight=15
       " \ endif
 
 if has('win32')
-  if executable('vim-ag.cmd')
+  if executable('vim-rg.cmd')
+    let &grepprg = 'vim-rg.cmd --vimgrep'
+  elseif executable('vim-ag.cmd')
     let &grepprg = 'vim-ag.cmd --vimgrep'
   endif
 else
-  if executable('ag')
+  if executable('rg')
+    let &grepprg = 'rg --vimgrep'
+  elseif executable('ag')
     let &grepprg = 'ag --vimgrep'
   endif
 endif

@@ -1,15 +1,20 @@
 set mouse=a
 
-if exists('&termguicolors') && !has('mac')
+if exists('&termguicolors') && $TERM_PROGRAM != 'Apple_Terminal'
+  if !has('nvim')
+    " fix bug for vim
+    set t_8f=[38;2;%lu;%lu;%lum
+    set t_8b=[48;2;%lu;%lu;%lum
+  endif
   set termguicolors
 else
-  set t_Co=16
-  let g:solarized_use16 = 1
-  let g:onedark_termcolors = 16
+  set t_Co=256
+  let g:solarized_use16 = 0
+  let g:onedark_termcolors = 256
 endif
 
 if exists('g:GuiLoaded') || exists('g:nyaovim_version') || exists('g:gui_oni')
-  call rpcnotify(1, 'Gui', 'Font', 'Fira Code:h11')
+  call rpcnotify(1, 'Gui', 'Font', 'Fura Code Nerd Font:h11')
   call rpcnotify(1, 'Gui', 'Linespace', '0')
   " call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
 endif
@@ -17,7 +22,9 @@ endif
 syntax on
 set background=dark
 " colorscheme solarized8
-colorscheme nord
+if !empty(glob('~/.cache/vim/plugged/vim-plug/plug.vim'))
+  colorscheme nord
+endif
 " colorscheme onedark
 
 if exists('g:gui_oni') || exists('g:gui_gonvim')
@@ -60,20 +67,13 @@ if has('gui_running')
     endif
     set guifont=Fura\ Code\ Nerd\ Font\ 11,Ubuntu\ Mono\ for\ Powerline\ 13,DejaVu\ Sans\ Mono\ 12
   endif
+
   if has('mac') || has('macunix')
     set guifontwide=Noto_Sans_CJK_SC:h12,Noto_Sans_CJK_TC:h12,Noto_Sans_CJK_JP:h12,Noto_Sans_CJK_KR:h12,Hiragino_Sans_GB:h12,STHeiti:h12
   elseif has('unix')
     set guifontwide=Noto\ Sans\ CJK\ SC\ 12,Noto\ Sans\ CJK\ TC\ 12,Noto\ Sans\ CJK\ JP\ 12,Noto\ Sans\ CJK\ KR\ 12,WenQuanYi\ Zen\ Hei\ 12,WenQuanYi\ Micro\ Hei\ 12
   endif
 endif
-
-function! s:is_helper_window(nr)
-  let type = getbufvar(winbufnr(a:nr), '&filetype')
-  if type == 'defx' || type == 'qf' || type == 'tagbar' || type == 'help' || type == 'man'
-    return 1
-  endif
-  return 0
-endfunction
 
 function! s:move_help_window()
   if winwidth('%') >= 160

@@ -1,3 +1,3 @@
-let g:UltiSnipsExpandTrigger = "<TAB>"
-let g:UltiSnipsJumpForwardTrigger = "<TAB>"
+let g:UltiSnipsExpandTrigger = "<NUL>"
+let g:UltiSnipsJumpForwardTrigger = "<NUL>"
 let g:UltiSnipsJumpBackwardTrigger = "<NUL>"

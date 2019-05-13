@@ -1,0 +1,4 @@
+-I .
+-I .\include
+.\hello.c
+.\main.c

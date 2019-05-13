@@ -10,7 +10,8 @@ if executable('bfind')
   call denite#custom#var('file/rec', 'command', ['bfind'])
 endif
 call denite#custom#source('file,file/rec,directory_rec',
-      \                   'matchers', ['matcher/fuzzy', 'matcher/project_files'])
+      \                   'matchers', ['matcher/fuzzy', 'matcher/ignore_globs', 'matcher/project_files'])
+call denite#custom#filter('matcher/ignore_globs', 'ignore_globs', ['*~', '*.o', '*.exe', '*.bak', '.DS_Store', '*.pyc', '*.sw[po]', '*.class', '.hg/', '.git/', '.bzr/', '.svn/', 'tags', 'tags-*', '.ccls*'])
 call denite#custom#source('line', 'matchers', ['matcher/regexp'])
 call denite#custom#source('command,outline', 'matchers', ['matcher/fuzzy'])
 call denite#custom#source('file,file/rec,directory_rec,line', 'max_candidates', 100000)
@@ -71,7 +72,6 @@ nnoremap <silent> <Leader>fg    :Denite -buffer-name=grep           -resume grep
 nnoremap <silent> <Leader>fG    :Denite -buffer-name=grep                   grep<CR>
 nnoremap <silent> <Leader>fl    :Denite -buffer-name=line_<C-r>%    -resume line<CR>
 nnoremap <silent> <Leader>fL    :Denite -buffer-name=line_<C-r>%            line<CR>
-nnoremap <silent> <Leader>fo    :Denite -buffer-name=outline                outline<CR>
 nnoremap <silent> <Leader>fb    :Denite -buffer-name=buffer                 buffer<CR>
 nnoremap <silent> <Leader>fr    :Denite -buffer-name=file_mru       -resume file_mru<CR>
 nnoremap <silent> <Leader>fR    :Denite -buffer-name=file_mru               file_mru<CR>

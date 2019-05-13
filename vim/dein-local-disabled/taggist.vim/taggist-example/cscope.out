@@ -1,0 +1,84 @@
+cscope 15 $HOME\Dropbox\.vim\bundle\taggist.vim\taggist-example"               0000000407
+	@hello.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~"h–lo.h
+"
+
+4 
+	$b
+(è{
+	}
+}
+
+6 
+	$PrštH–lo
+()
+
+8 
+	`´štf
+("Hello World!\n");
+
+9 
+	}
+}
+
+	@main.c
+
+1 
+	~"h–lo.h
+"
+
+3 
+	$a
+(è{
+	}
+}
+
+5 
+	$maš
+(
+¬gc
+, cÚ¡ *
+¬gv
+[])
+
+7 
+	`PrštH–lo
+();
+
+9 
+	}
+}
+
+	@include/hello.h
+
+1 #iâdeà
+__HELLO_H__
+
+
+2 
+	#__HELLO_H__
+
+
+	)
+
+4 
+PrštH–lo
+();
+
+	@
+1
+.
+2
+.
+include
+3
+31
+hello.c
+main.c
+include/hello.h
