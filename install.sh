@@ -35,7 +35,7 @@ install_linux() {
   git clone --depth=1 --recursive https://github.com/universal-ctags/ctags.git /tmp/uctags
   pushd /tmp/uctags
   ./autogen.sh
-  ./configure --prefix=~/.local
+  ./configure --prefix=$HOME/.local
   make
   make install
   popd
@@ -47,7 +47,7 @@ install_linux() {
   pushd /tmp/ccls
   wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
   tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-  cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_INSTALL_PREFIX=~/.local
+  cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_INSTALL_PREFIX=$HOME/.local
   cmake --build Release
   make install
   popd

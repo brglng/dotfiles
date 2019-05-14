@@ -19,6 +19,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('roxma/nvim-yarp', {'if': !has('nvim')})
   call dein#add('roxma/vim-hug-neovim-rpc', {'if': !has('nvim')})
   call dein#add('tpope/vim-eunuch')
+  call dein#add('tmux-plugins/vim-tmux-focus-events')
+  call dein#add('roxma/vim-tmux-clipboard')
 
   " UI Plugins
   call dein#add('ryanoasis/vim-devicons')
@@ -60,6 +62,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('aklt/plantuml-syntax')
   call dein#add('hynek/vim-python-pep8-indent')
   call dein#add('sheerun/vim-polyglot', {'merged': 0})
+  call dein#add('tmux-plugins/vim-tmux')
   " call dein#add('Shougo/deorise.vim')
 
   " Source Control Plugins

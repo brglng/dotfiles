@@ -5,7 +5,6 @@ link() {
   mkdir -p ~/.cgdb
   ln -fs $(pwd)/cgdb/cgdbrc         ~/.cgdb/
   mkdir -p ~/.config
-  # ln -fs $(pwd)/config/powerline    ~/.config/
   ln -fs $(pwd)/config/oni          ~/.config/
   ln -fs $(pwd)/gitignore_global    ~/.gitignore_global
   ln -fs $(pwd)/oh-my-zsh           ~/.oh-my-zsh
@@ -16,6 +15,7 @@ link() {
   ln -fs $(pwd)/vim                 ~/.config/nvim
   ln -fs $(pwd)/zshrc               ~/.zshrc
 
+  sed '/# begin brglng\/dotfiles/,/# end brglng\/dotfiles/d' ~/.gitconfig > ~/.gitconfig
   cat << EOF >> ~/.gitconfig
 # begin brglng/dotfiles
 [include]
@@ -36,6 +36,7 @@ link_linux() {
 link_mac() {
   link
 
+  sed '/# begin brglng\/dotfiles/,/# end brglng\/dotfiles/d' ~/.bash_profile > ~/.bash_profile
   cat << EOF >> ~/.bash_profile
 # begin brglng/dotfiles
 echo '[[ -r ~/.bashrc ]] && . ~/.bashrc'
