@@ -48,3 +48,5 @@ case $(uname -s) in
   Linux) link_linux ;;
   Darwin) link_mac ;;
 esac
+
+rm -rf ~/.cache/dein/state*.vim
