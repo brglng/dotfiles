@@ -59,7 +59,7 @@ install_mac() {
   else
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
-  brew install coreutils make automake autoconf libtool pkg-config make cmake global ripgrep sk python python3 tmux luajit reattach-to-user-namespace yarn ccls
+  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake global ripgrep sk python python3 tmux luajit reattach-to-user-namespace yarn ccls
   brew install vim --with-override-system-vi --with-gettext --with-python3 --with-luajit
   brew install neovim --HEAD
   brew cask install macvim
