@@ -41,8 +41,9 @@ let g:vista#renderer#icons = {
 \   "variable": "\uf71b",
 \  }
 
-" let g:vista_sidebar_position = 'vertical topleft'
+let g:vista_sidebar_position = 'vertical topleft'
 let g:vista_sidebar_width = 40
-let g:vista_echo_cursor_strategy = 'floating_win'
 
-autocmd BufEnter * if expand('%:t') =~ '__vista__' | wincmd H | vertical resize 40 | endif
+if exists('*nvim_open_win')
+  let g:vista_echo_cursor_strategy = 'floating_win'
+endif

@@ -228,16 +228,11 @@ function! s:toggle_vista()
     endif
   endfor
 
-  if found_nr > 0
-    if bufname(winbufnr(found_nr)) !~ '__vista__'
+  if found_nr > 0 && bufname(winbufnr(found_nr)) !~ '__vista__'
       execute found_nr . 'wincmd q'
-      Vista
-    else
-      Vista!
-    endif
-  else
-    Vista
   endif
+
+  Vista!!
 endfunction
 
 function! s:toggle_undotree()
