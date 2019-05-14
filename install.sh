@@ -23,7 +23,7 @@ install_linux() {
   distver=$(cat /etc/*release | sed -ne 's/DISTRIB_RELEASE=\(.*\)/\1/gp')
   machine=$(uname -m)
 
-  case $(distname) in
+  case $distname in
     Ubuntu) install_apt ;;
     Debian) install_apt ;;
     Fedora) install_yum ;;
