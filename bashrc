@@ -42,9 +42,11 @@ HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-if [ $(uname -s) = Darwin ]; then
+if [ "$(uname -s)" = "Darwin" ]; then
   source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
   source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
+elif [ "$(uname -s)" = "Linux" ]; then
+  source /etc/bash_completion.d/git-prompt
 fi
 
 GIT_PS1_SHOWDIRTYSTATE=true
