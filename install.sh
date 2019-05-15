@@ -24,7 +24,7 @@ install_apt() {
     # Install a newer CMake version
     mkdir -p ~/.cache/brglng/dotfiles/cmake
     wget -c https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh -O ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh
-    sh ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh --prefix=$HOME/.local/bin --exclude-subdir
+    sh ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh --prefix=$HOME/.local --exclude-subdir
   fi
 
   git config --global http.postBuffer 524288000
