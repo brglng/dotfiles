@@ -137,8 +137,8 @@ nvm install node npm
 nvm use node
 nvm alias default node
 
-pip3 install pynvim
-gem install neovim
+sudo -H pip3 install pynvim
+sudo -H gem install neovim
 yarn global add neovim
 
 mkdir -p ~/.tmux/plugins
