@@ -80,7 +80,11 @@ install_linux() {
   cd ccls
 
   if [ "$distname" = "Ubuntu" ]; then
-    cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver -DCMAKE_INSTALL_PREFIX=$HOME/.local
+    if [ "$distver" = "16.04" ]; thenn
+      CC=gcc-8 CXX=gcc-8 cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver -DCMAKE_INSTALL_PREFIX=$HOME/.local
+    else
+      cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver -DCMAKE_INSTALL_PREFIX=$HOME/.local
+    fi
   else
     cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04 -DCMAKE_INSTALL_PREFIX=$HOME/.local
   fi
