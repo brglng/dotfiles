@@ -14,7 +14,7 @@ install_apt() {
 
   sudo apt-get update
 
-  sudo apt-get install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn
+  sudo apt-get install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev
   git config --global http.postBuffer 524288000
 }
 
@@ -46,7 +46,6 @@ install_linux() {
   popd
 
   # install CCLS
-  sudo apt install zlib1g-dev libncurses-dev
   mkdir -p ~/.cache/brglng/dotfiles/ccls
   pushd ~/.cache/brglng/dotfiles/ccls
   if [ ! -e download.timestamp ]; then
