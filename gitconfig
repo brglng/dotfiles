@@ -3,6 +3,8 @@
 	excludesfile = ~/.gitignore_global
 	filemodes = true
 	fileMode = true
+[http]
+	postBuffer = 524288000
 [push]
 	default = simple
 	recurseSubmodules = on-demand

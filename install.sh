@@ -10,7 +10,7 @@ install_apt() {
   sudo add-apt-repository ppa:neovim-ppa/unstable
   sudo apt-get update
 
-  sudo apt-get install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global ripgrep python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev
+  sudo apt-get install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev
 
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
@@ -31,9 +31,14 @@ install_linux() {
   esac
 
   # install Universal Ctags
-  rm -rf /tmp/uctags
-  git clone --depth=1 --recursive https://github.com/universal-ctags/ctags.git /tmp/uctags
-  pushd /tmp/uctags
+  mkdir -p ~/.cache/brglng/dotfiles/universal-ctags
+  pushd ~/.cache/brglng/dotfiles/universal-ctags
+  if [ ! -e download.timestamp ]; then
+    rm -rf ctags
+    git clone --depth=1 --recursive https://github.com/universal-ctags/ctags.git
+    echo $(date +%s) > download.timestamp
+  fi
+  cd ctags
   ./autogen.sh
   ./configure --prefix=$HOME/.local
   make
@@ -42,11 +47,15 @@ install_linux() {
 
   # install CCLS
   sudo apt install zlib1g-dev libncurses-dev
-  rm -rf /tmp/ccls
-  git clone --depth=1 --recursive https://github.com/MaskRay/ccls /tmp/ccls
-  pushd /tmp/ccls
-  wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-  tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+  mkdir -p ~/.cache/brglng/dotfiles/ccls
+  pushd ~/.cache/brglng/dotfiles/ccls
+  if [ ! -e download.timestamp ]; then
+    git clone --depth=1 --recursive https://github.com/MaskRay/ccls
+    cd ccls
+    wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    echo $(date +%s) > download.timestamp
+  fi
   cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_INSTALL_PREFIX=$HOME/.local
   cmake --build Release
   make install
@@ -59,7 +68,7 @@ install_mac() {
   else
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
-  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake global ripgrep sk python python3 tmux luajit reattach-to-user-namespace yarn ccls
+  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake global python python3 tmux luajit reattach-to-user-namespace yarn ccls
   brew install vim --with-override-system-vi --with-gettext --with-python3 --with-luajit
   brew install neovim --HEAD
   brew cask install macvim
@@ -67,16 +76,19 @@ install_mac() {
   brew install --HEAD universal-ctags
 }
 
-./link.sh
+git config --global http.postBuffer 524288000
 
 case $(uname -s) in
   Linux) install_linux ;;
   Darwin) install_mac ;;
 esac
 
+export PATH=$HOME/.local/bin:$PATH
+
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup update
 rustup component add rls rust-analysis rust-src
+cargo install ripgrep skim
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 nvm install --latest npm node
@@ -93,7 +105,8 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 mkdir -p ~/.local/share/zsh
 curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
-zsh -c 'source ~/.zshrc && antigen update'
 
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
 sh /tmp/dein-installer.sh ~/.cache/dein
+
+./link.sh

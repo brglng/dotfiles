@@ -1,12 +1,9 @@
 let g:dein#install_process_timeout = 3600 * 24      " internet is too slow in China...
 let g:dein#types#git#clone_depth = 1
-
 if &compatible
   set nocompatible
 endif
-" Add the dein installation directory into runtimepath
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
-
 if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
 
@@ -55,7 +52,9 @@ if dein#load_state('~/.cache/dein')
   call dein#add('tpope/vim-endwise')
   call dein#add('tpope/vim-sleuth')
   call dein#add('tpope/vim-repeat')
+  call dein#add('mg979/vim-visual-multi')
   call dein#add('Shougo/vinarise.vim')
+  " call dein#add('Shougo/deorise.vim')
 
   " FileType Plugins
   call dein#add('PProvost/vim-ps1')
@@ -63,7 +62,6 @@ if dein#load_state('~/.cache/dein')
   call dein#add('hynek/vim-python-pep8-indent')
   call dein#add('sheerun/vim-polyglot', {'merged': 0})
   call dein#add('tmux-plugins/vim-tmux')
-  " call dein#add('Shougo/deorise.vim')
 
   " Source Control Plugins
   call dein#add('tpope/vim-fugitive')
@@ -125,10 +123,8 @@ if dein#load_state('~/.cache/dein')
   call dein#end()
   call dein#save_state()
 endif
-
 filetype plugin indent on
 syntax enable
-
 if dein#check_install()
   call dein#install()
 endif
