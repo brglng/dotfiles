@@ -48,6 +48,10 @@ install_linux() {
     rm -rf ctags
     git clone --depth 1 --recursive https://github.com/universal-ctags/ctags.git
     echo $(date +%s) > download.timestamp
+  else
+    pushd ctags
+    git pull
+    popd
   fi
   cd ctags
   ./autogen.sh
@@ -68,6 +72,10 @@ install_linux() {
     tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 
     echo $(date +%s) > download.timestamp
+  else
+    pushd ccls
+    git pull
+    popd
   fi
 
   cd ccls
@@ -107,22 +115,32 @@ case $(uname -s) in
   Darwin) install_mac ;;
 esac
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 rustup update
 rustup component add rls rust-analysis rust-src
 cargo install ripgrep skim
+source $HOME/.cargo/env
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 nvm install --latest npm node
 nvm use node
 nvm alias default node
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
 pip3 install pynvim
 gem install neovim
 yarn global add neovim
 
 mkdir -p ~/.tmux/plugins
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+if [ -e ~/.tmux/tpm ]; then
+  pushd ~/.tmux/plugins/tpm
+  git pull
+  popd
+else
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
 ~/.tmux/plugins/tpm/bin/install_plugins
 
 mkdir -p ~/.local/share/zsh
@@ -132,3 +150,5 @@ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh >
 sh /tmp/dein-installer.sh ~/.cache/dein
 
 ./link.sh
+
+echo "Congratulations! Installation is finished. It is recommended that you log out your current shell and log in again now immediately."
