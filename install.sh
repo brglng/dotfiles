@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 install_yum() {
@@ -59,12 +59,25 @@ install_linux() {
   if [ ! -e download.timestamp ]; then
     rm -rf ccls
     git clone --depth 1 --recursive https://github.com/MaskRay/ccls
-    cd ccls
-    wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver.tar.xz
-    tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver.tar.xz
+
+    if [ "$distname" = "Ubuntu" ]; then
+      wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver.tar.xz
+      tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver.tar.xz
+    else
+      wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+      tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+    fi
+
     echo $(date +%s) > download.timestamp
   fi
-  cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver -DCMAKE_INSTALL_PREFIX=$HOME/.local
+  cd ccls
+
+  if [ "$distname" = "Ubuntu" ]; then
+    cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver -DCMAKE_INSTALL_PREFIX=$HOME/.local
+  else
+    cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04 -DCMAKE_INSTALL_PREFIX=$HOME/.local
+  fi
+
   cmake --build Release
   make install
   popd
