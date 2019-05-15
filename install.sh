@@ -7,8 +7,6 @@ install_yum() {
 }
 
 install_apt() {
-  distver=$1
-
   sudo add-apt-repository ppa:neovim-ppa/unstable
 
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -34,8 +32,8 @@ install_linux() {
   machine=$(uname -m)
 
   case $distname in
-    Ubuntu) install_apt $distver ;;
-    Debian) install_apt $distver ;;
+    Ubuntu) install_apt ;;
+    Debian) install_apt ;;
     Fedora) install_yum ;;
     CentOS) install_yum ;;
   esac

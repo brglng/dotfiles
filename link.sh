@@ -15,21 +15,17 @@ link() {
   ln -fs `pwd`/vim                 ~/.config/nvim
   ln -fs `pwd`/zshrc               ~/.zshrc
 
-  if [ "`perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s'`" = "" ]; then
-  cat << EOF >> ~/.gitconfig
+  gitconfig_str=`cat << EOF
 # begin brglng/dotfiles
 [include]
 	path = `pwd`/gitconfig
 # end brglng/dotfiles
-EOF
-  else
-    gitignore_str=`cat << EOF
-# begin brglng\\/dotfiles
-[include]
-	path = `pwd`\\/gitconfig
-# end brglng\\/dotfiles
 EOF`
-    perl -ip0e "s/(# begin brglng\\/dotfiles.*# end brglng\\/dotfiles)/$gitignore_str/g" ~/.gitconfig
+
+  if [ "`perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s'`" = "" ]; then
+    cat $gitconfig_str >> ~/.gitconfig
+  else
+    perl -ip0e "s/(# begin brglng\\/dotfiles.*# end brglng\\/dotfiles)/${gitconfig_str/\//\\\\\/}/g" ~/.gitconfig
   fi
 
   mkdir -p ~/.local/bin
@@ -45,19 +41,16 @@ link_linux() {
 link_mac() {
   link
 
-  if [ "`perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s'`" = "" ]; then
-  cat << EOF >> ~/.gitconfig
+  bash_profile_str=`cat << EOF
 # begin brglng/dotfiles
 [[ -r ~/.bashrc ]] && . ~/.bashrc
 # end brglng/dotfiles
-EOF
-  else
-    bash_profile_str=`cat << EOF
-# begin brglng\\/dotfiles
-[[ -r ~\\/.bashrc ]] && . ~\\/.bashrc
-# end brglng\\/dotfiles
 EOF`
-    perl -ip0e "s/(# begin brglng\\/dotfiles.*# end brglng\\/dotfiles)/$bash_profile_str/g" ~/.bash_profile
+
+  if [ "`perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s'`" = "" ]; then
+    cat $bash_profile_str >> ~/.bash_profile
+  else
+    perl -ip0e "s/(# begin brglng\\/dotfiles.*# end brglng\\/dotfiles)/${bash_profile_str/\//\\\\\/}/g" ~/.bash_profile
   fi
 }
 
