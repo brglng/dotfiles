@@ -52,11 +52,11 @@ install_linux() {
     rm -rf ccls
     git clone --depth 1 --recursive https://github.com/MaskRay/ccls
     cd ccls
-    wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-    tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver.tar.xz
+    tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver.tar.xz
     echo $(date +%s) > download.timestamp
   fi
-  cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_INSTALL_PREFIX=$HOME/.local
+  cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver -DCMAKE_INSTALL_PREFIX=$HOME/.local
   cmake --build Release
   make install
   popd
@@ -89,7 +89,7 @@ rustup update
 rustup component add rls rust-analysis rust-src
 cargo install ripgrep skim
 
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 nvm install --latest npm node
 nvm use node
 nvm alias default node
