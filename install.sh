@@ -119,15 +119,23 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source $HOME/.cargo/env
 rustup update
 rustup component add rls rust-analysis rust-src
-cargo install ripgrep skim
+
+if [ "$(which rg)" = "" ]; then
+  cargo install ripgrep
+fi
+
+if [ "$(which sk)" = "" ]; then
+  cargo install skim
+fi
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
-nvm install --latest npm node
-nvm use node
-nvm alias default node
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+nvm install --latest npm node
+nvm use node
+nvm alias default node
 
 pip3 install pynvim
 gem install neovim
