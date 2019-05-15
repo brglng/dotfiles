@@ -1,20 +1,39 @@
 #!/usr/bin/env bash
 
 link() {
+  [ ! -L ~/.bashrc ] && mv -f ~/.bashrc ~/.bashrc.orig
   ln -fs $(pwd)/bashrc ~/.bashrc
 
   mkdir -p ~/.cgdb
+  [ ! -L ~/.cgdb/cgdbrc ] && mv -f ~/.cgdb/cgdbrc ~/.cgdb/cgdbrc.orig
   ln -fs $(pwd)/cgdb/cgdbrc ~/.cgdb/
 
-  ln -fs $(pwd)/gitignore_global    ~/.gitignore_global
-  ln -fs $(pwd)/tmux.conf           ~/.tmux.conf
+  [ ! -L ~/.gitignore_global ] && mv -f ~/.gitignore_global ~/.gitignore_global.orig
+  ln -fs $(pwd)/gitignore_global ~/.gitignore_global
+
+  [ ! -L ~/.tmux.conf ] && mv -f ~/.tmux.conf ~/.tmux.conf.orig
+  ln -fs $(pwd)/tmux.conf ~/.tmux.conf
 
   mkdir -p ~/.config
-  ln -fs $(pwd)/vim	~/.config/nvim
-  ln -fs $(pwd)/vim     ~/.vim
-  ln -fs $(pwd)/vimrc   ~/.vimrc
+  if [ -L ~/.config/nvim ]; then
+    rm -f ~/.config/nvim
+  else
+    mv -f ~/.config/nvim ~/.config/nvim.orig
+  fi
+  ln -s $(pwd)/vim ~/.config/nvim
 
-  ln -fs $(pwd)/zshrc               ~/.zshrc
+  if [ -L ~/.vim ]; then
+    rm -f ~/.vim
+  else
+    mv ~/.vim ~/.vim.orig
+  fi
+  ln -s $(pwd)/vim ~/.vim
+
+  [ ! -L ~/.vimrc ] && mv -f ~/.vimrc ~/.vimrc.orig
+  ln -fs $(pwd)/vimrc ~/.vimrc
+
+  [ ! -L ~/.zshrc ] && mv -f ~/.zshrc ~/.zshrc.orig
+  ln -fs $(pwd)/zshrc ~/.zshrc
 
   mkdir -p /tmp/brglng/dotfiles
   cat << EOF > /tmp/brglng/dotfiles/gitconfig
