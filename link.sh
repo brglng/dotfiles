@@ -43,7 +43,7 @@ link_mac() {
   mkdir -p /tmp/brglng/dotfiles
   cat << EOF > /tmp/brglng/dotfiles/bash_profile
 # begin brglng/dotfiles
-[[ -r ~/.bashrc ]] && . ~/.bashrc
+[ -r ~/.bashrc ] && . ~/.bashrc
 # end brglng/dotfiles
 EOF
 
