@@ -127,6 +127,9 @@ filetype plugin indent on
 syntax enable
 if dein#check_install()
   call dein#install()
+  if has('nvim')
+    UpdateRemotePlugins
+  endif
 endif
 
 " runtime zpan/init/plugins/complete_parameter.vim

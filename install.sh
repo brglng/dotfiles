@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 install_yum() {
@@ -160,4 +160,4 @@ sh /tmp/dein-installer.sh ~/.cache/dein
 
 ./link.sh
 
-echo "Congratulations! Installation is finished. It is recommended that you log out your current shell and log in again now immediately."
+echo "Congratulations! Installation is finished. It is strongly recommended that you log out from your current shell and log in again now immediately."

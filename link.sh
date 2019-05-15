@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 link() {
   ln -fs $(pwd)/bashrc              ~/.bashrc
@@ -28,7 +28,7 @@ EOF
   fi
 
   mkdir -p ~/.local/bin
-  ln -fs `pwd`/local/bin/* ~/.local/bin/
+  ln -fs $(pwd)/local/bin/* ~/.local/bin/
 }
 
 link_linux() {
