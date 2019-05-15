@@ -116,10 +116,10 @@ case $(uname -s) in
 esac
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+source $HOME/.cargo/env
 rustup update
 rustup component add rls rust-analysis rust-src
 cargo install ripgrep skim
-source $HOME/.cargo/env
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 nvm install --latest npm node
