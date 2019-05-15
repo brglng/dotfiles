@@ -14,11 +14,18 @@ install_apt() {
 
   sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
 
+  if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
+    sudo add-apt-repository -y ppa:deadsnakes/ppa
+  fi
+
   sudo apt-get update
 
   sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git global python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev
 
   if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
+    # Install Python 3.6
+    sudo apt-get install -y python3.6
+
     # Install a newer CMake version
     mkdir -p ~/.cache/brglng/dotfiles/cmake
     wget -c https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh -O ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh
