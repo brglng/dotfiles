@@ -141,5 +141,6 @@ runtime zpan/init/plugins/lightline.vim
 " runtime zpan/init/plugins/tagbar.vim
 " runtime zpan/init/plugins/ultisnips.vim
 runtime zpan/init/plugins/undotree.vim
+runtime zpan/init/plugins/vim_visual_multi.vim
 runtime zpan/init/plugins/vista.vim
 " runtime zpan/init/plugins/you_complete_me.vim
