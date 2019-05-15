@@ -8,14 +8,13 @@ install_yum() {
 
 install_apt() {
   sudo add-apt-repository ppa:neovim-ppa/unstable
-  sudo apt-get update
-
-  sudo apt-get install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev
 
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
-  sudo apt-get install yarn
+  sudo apt-get update
+
+  sudo apt-get install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn
 }
 
 install_linux() {
@@ -35,7 +34,7 @@ install_linux() {
   pushd ~/.cache/brglng/dotfiles/universal-ctags
   if [ ! -e download.timestamp ]; then
     rm -rf ctags
-    git clone --depth=1 --recursive https://github.com/universal-ctags/ctags.git
+    git clone --depth 1 --recursive https://github.com/universal-ctags/ctags.git
     echo $(date +%s) > download.timestamp
   fi
   cd ctags
@@ -50,7 +49,8 @@ install_linux() {
   mkdir -p ~/.cache/brglng/dotfiles/ccls
   pushd ~/.cache/brglng/dotfiles/ccls
   if [ ! -e download.timestamp ]; then
-    git clone --depth=1 --recursive https://github.com/MaskRay/ccls
+    rm -rf ccls
+    git clone --depth 1 --recursive https://github.com/MaskRay/ccls
     cd ccls
     wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
     tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
