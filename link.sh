@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 
 link() {
-  ln -fs $(pwd)/bashrc              ~/.bashrc
+  ln -fs $(pwd)/bashrc ~/.bashrc
+
   mkdir -p ~/.cgdb
-  ln -fs $(pwd)/cgdb/cgdbrc         ~/.cgdb/
-  mkdir -p ~/.config
-  ln -fs $(pwd)/config/oni          ~/.config/
+  ln -fs $(pwd)/cgdb/cgdbrc ~/.cgdb/
+
   ln -fs $(pwd)/gitignore_global    ~/.gitignore_global
   ln -fs $(pwd)/tmux.conf           ~/.tmux.conf
-  ln -fs $(pwd)/vimrc               ~/.vimrc
-  ln -fs $(pwd)/vim                 ~/.vim
-  ln -fs $(pwd)/vim                 ~/.config/nvim
+
+  mkdir -p ~/.config
+  ln -fs $(pwd)/vim	~/.config/nvim
+  ln -fs $(pwd)/vim     ~/.vim
+  ln -fs $(pwd)/vimrc   ~/.vimrc
+
   ln -fs $(pwd)/zshrc               ~/.zshrc
 
   mkdir -p /tmp/brglng/dotfiles
@@ -33,8 +36,6 @@ EOF
 
 link_linux() {
   link
-  # mkdir -p ~/.config/fontconfig
-  # ln -s $(pwd)/config/fontconfig/fonts.conf.$distname.$distver   ~/.config/fontconfig/fonts.conf
 }
 
 link_mac() {
