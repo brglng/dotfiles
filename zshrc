@@ -42,7 +42,18 @@ antigen bundle skywind3000/z.lua
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable virtualenv anaconda rbenv vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
-antigen theme romkatv/powerlevel10k
+
+if [ "$(uname -s)" = "Linux" ]; then
+  distname=$(cat /etc/*release | sed -ne 's/DISTRIB_ID=\(.*\)/\1/gp')
+  distver=$(cat /etc/*release | sed -ne 's/DISTRIB_RELEASE=\(.*\)/\1/gp')
+  if [ "$distver" = "16.04" ]; then
+    antigen theme bhilburn/powerlevel9k
+  else
+    antigen theme romkatv/powerlevel10k
+  fi
+else
+  antigen theme romkatv/powerlevel10k
+fi
 
 antigen apply
 

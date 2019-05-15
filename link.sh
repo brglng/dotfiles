@@ -7,26 +7,24 @@ link() {
   mkdir -p ~/.config
   ln -fs $(pwd)/config/oni          ~/.config/
   ln -fs $(pwd)/gitignore_global    ~/.gitignore_global
-  ln -fs $(pwd)/oh-my-zsh           ~/.oh-my-zsh
-  # ln -fs $(pwd)/pentadactylrc       ~/.pentadactylrc
   ln -fs $(pwd)/tmux.conf           ~/.tmux.conf
   ln -fs $(pwd)/vimrc               ~/.vimrc
   ln -fs $(pwd)/vim                 ~/.vim
   ln -fs $(pwd)/vim                 ~/.config/nvim
   ln -fs $(pwd)/zshrc               ~/.zshrc
 
-  gitconfig_str=$(cat << EOF
+  mkdir -p /tmp/brglng/dotfiles
+  cat << EOF > /tmp/brglng/dotfiles/gitconfig
 # begin brglng/dotfiles
 [include]
 	path = $(pwd)/gitconfig
 # end brglng/dotfiles
 EOF
-)
 
-  if [ "$(perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s')" = "" ]; then
-    cat $gitconfig_str >> ~/.gitconfig
+  if [ ! -e $HOME/.gitconfig ] || [ "$(perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s' $HOME/.gitconfig)" = "" ]; then
+    cat /tmp/brglng/dotfiles/gitconfig >> ~/.gitconfig
   else
-    perl -ip0e "s/(# begin brglng\\/dotfiles.*# end brglng\\/dotfiles)/${gitconfig_str/\//\\\\\/}/g" ~/.gitconfig
+    perl -i -p0e 's/# begin brglng\/dotfiles.*# end brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/gitconfig`/gse' $HOME/.gitconfig
   fi
 
   mkdir -p ~/.local/bin
@@ -42,17 +40,17 @@ link_linux() {
 link_mac() {
   link
 
-  bash_profile_str=$(cat << EOF
+  mkdir -p /tmp/brglng/dotfiles
+  cat << EOF > /tmp/brglng/dotfiles/bash_profile
 # begin brglng/dotfiles
 [[ -r ~/.bashrc ]] && . ~/.bashrc
 # end brglng/dotfiles
 EOF
-)
 
-  if [ "$(perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s')" = "" ]; then
-    cat $bash_profile_str >> ~/.bash_profile
+  if [ ! -e $HOME/.bash_profile ] || [ "$(perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s' $HOME/.bash_profile)" = "" ]; then
+    cat /tmp/brglng/dotfiles/bash_profile >> ~/.bash_profile
   else
-    perl -ip0e "s/(# begin brglng\\/dotfiles.*# end brglng\\/dotfiles)/${bash_profile_str/\//\\\\\/}/g" ~/.bash_profile
+    perl -i p0e 's/# begin brglng\/dotfiles.*# end brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/bash_profile`/gse' $HOME/.bash_profile
   fi
 }
 
