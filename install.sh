@@ -7,6 +7,8 @@ install_yum() {
 }
 
 install_apt() {
+  distver=$1
+
   sudo add-apt-repository ppa:neovim-ppa/unstable
 
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -14,7 +16,15 @@ install_apt() {
 
   sudo apt-get update
 
-  sudo apt-get install -y build-essential g++ gdb clang automake autoconf libtool pkg-config make cmake git global python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev
+  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git global python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev
+
+  if [ "$distver" = "16.04" ]; then
+    # Install a newer CMake version
+    mkdir ~/.cache/brglng/dotfiles/cmake
+    wget -c https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh -O ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh
+    sh ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh --prefix=$HOME/.local/bin --exclude-subdir
+  fi
+
   git config --global http.postBuffer 524288000
 }
 
@@ -24,8 +34,8 @@ install_linux() {
   machine=$(uname -m)
 
   case $distname in
-    Ubuntu) install_apt ;;
-    Debian) install_apt ;;
+    Ubuntu) install_apt $distver ;;
+    Debian) install_apt $distver ;;
     Fedora) install_yum ;;
     CentOS) install_yum ;;
   esac
