@@ -12,9 +12,7 @@ install_apt() {
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
-  if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
-    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  fi
+  sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
 
   sudo apt-get update
 
@@ -66,30 +64,21 @@ install_linux() {
     rm -rf ccls
     git clone --depth 1 --recursive https://github.com/MaskRay/ccls
 
-    if [ "$distname" = "Ubuntu" ]; then
-      wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver.tar.xz
-      tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver.tar.xz
-    else
-      wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-      tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-    fi
+    wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 
     echo $(date +%s) > download.timestamp
   fi
 
   cd ccls
-
+  mkdir build
   if [ "$distname" = "Ubuntu" ]; then
-    if [ "$distver" = "16.04" ]; then
-      CC=gcc-8 CXX=gcc-8 cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver -DCMAKE_INSTALL_PREFIX=$HOME/.local
-    else
-      cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-$distver -DCMAKE_INSTALL_PREFIX=$HOME/.local
-    fi
+    CC=gcc-8 CXX=gcc-8 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_CXX_FLAGS=-fno-gnu-unique -DCMAKE_INSTALL_PREFIX=$HOME/.local ..
   else
-    cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04 -DCMAKE_INSTALL_PREFIX=$HOME/.local
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_INSTALL_PREFIX=$HOME/.local ..
   fi
 
-  cmake --build Release
+  make -j 8
   make install
 
   popd
