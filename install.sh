@@ -52,7 +52,7 @@ install_linux() {
   cd ctags
   ./autogen.sh
   ./configure --prefix=$HOME/.local
-  make
+  make -j 8
   make install
   popd
 
@@ -72,6 +72,7 @@ install_linux() {
 
   cd ccls
   mkdir build
+  cd build
   if [ "$distname" = "Ubuntu" ]; then
     CC=gcc-8 CXX=gcc-8 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_CXX_FLAGS=-fno-gnu-unique -DCMAKE_INSTALL_PREFIX=$HOME/.local ..
   else
