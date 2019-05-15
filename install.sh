@@ -56,6 +56,7 @@ install_linux() {
   # install CCLS
   mkdir -p ~/.cache/brglng/dotfiles/ccls
   pushd ~/.cache/brglng/dotfiles/ccls
+
   if [ ! -e download.timestamp ]; then
     rm -rf ccls
     git clone --depth 1 --recursive https://github.com/MaskRay/ccls
@@ -70,6 +71,7 @@ install_linux() {
 
     echo $(date +%s) > download.timestamp
   fi
+
   cd ccls
 
   if [ "$distname" = "Ubuntu" ]; then
@@ -80,6 +82,7 @@ install_linux() {
 
   cmake --build Release
   make install
+
   popd
 }
 
