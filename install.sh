@@ -87,12 +87,12 @@ install_mac() {
   brew install --HEAD universal-ctags
 }
 
+export PATH=$HOME/.local/bin:$PATH
+
 case $(uname -s) in
   Linux) install_linux ;;
   Darwin) install_mac ;;
 esac
-
-export PATH=$HOME/.local/bin:$PATH
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup update
