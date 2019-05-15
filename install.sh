@@ -149,6 +149,7 @@ if [ -e ~/.tmux/tpm ]; then
 else
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
+ln -fs $(pwd)/tmux.conf ~/.tmux.conf
 ~/.tmux/plugins/tpm/bin/install_plugins
 
 mkdir -p ~/.local/share/zsh
