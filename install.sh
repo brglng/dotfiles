@@ -7,10 +7,14 @@ install_yum() {
 }
 
 install_apt() {
-  sudo add-apt-repository ppa:neovim-ppa/unstable
+  sudo add-apt-repository -y ppa:neovim-ppa/unstable
 
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
+  if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  fi
 
   sudo apt-get update
 
