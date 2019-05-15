@@ -1,3 +1,7 @@
+if has('nvim') && system('python3 --version | grep 3.5') != ''
+  let g:python3_host_prog = 'python3.6'
+endif
+
 let g:dein#install_process_timeout = 3600 * 24      " internet is too slow in China...
 let g:dein#types#git#clone_depth = 1
 if &compatible

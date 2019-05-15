@@ -144,7 +144,11 @@ nvm install node npm
 nvm use node
 nvm alias default node
 
-sudo -H pip3 install pynvim
+if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
+  python3.6 -m pip install pynvim
+else
+  pip3 install pynvim
+fi
 sudo -H gem install neovim
 yarn global add neovim
 
