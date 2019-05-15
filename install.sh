@@ -142,7 +142,7 @@ sudo -H gem install neovim
 yarn global add neovim
 
 mkdir -p ~/.tmux/plugins
-if [ -e ~/.tmux/tpm ]; then
+if [ -e ~/.tmux/plugins/tpm ]; then
   pushd ~/.tmux/plugins/tpm
   git pull
   popd
