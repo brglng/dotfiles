@@ -18,11 +18,13 @@ inoremap <silent><expr> <TAB>
       \ <SID>pumselected() ?
       \ coc#_select_confirm() :
       \ coc#expandable() ?
-      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>" :
-      \ delimitMate#ShouldJump() ? delimitMate#JumpAny() :
+      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-jump',''])\<CR>" :
+      \ delimitMate#ShouldJump() ?
+      \ delimitMate#JumpAny() :
       \ coc#jumpable() ?
       \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ <SID>check_back_space() ?
+      \ "\<TAB>" :
       \ coc#refresh()
 
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()
