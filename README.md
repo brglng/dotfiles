@@ -19,12 +19,12 @@ LGTM, but issues are not guaranteed to get fixed.
 
 1. Clone and switch into the repository
 
-    $ git clone --recursive --depth 1 https://github.com/brglng/dotfiles.git
-    $ cd dotfiles
+       $ git clone --recursive --depth 1 https://github.com/brglng/dotfiles.git
+       $ cd dotfiles
 
 2. For full installation, run
 
-    $ ./install.sh
+       $ ./install.sh
 
    This will use the proper package manager on your system to install the
    necessary packages. On Ubuntu/Debian, `apt-get` is used. On macOS,
@@ -34,7 +34,7 @@ LGTM, but issues are not guaranteed to get fixed.
    If you want to setup your environment manually and only want to link the
    configuration files, run
 
-    $ ./link.sh
+       $ ./link.sh
 
    This will overwrite your existing configuration files. The original files
    will be renamed with a `.orig` suffix.
