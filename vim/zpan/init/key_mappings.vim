@@ -5,9 +5,9 @@ function! s:pumselected()
   return pumvisible() && !empty(v:completed_item)
 endfunction
 
-function! s:pre_complete_cr()
-  return substitute(complete_parameter#pre_complete("\<C-y>"), '(', "\<C-v>(", 'g')
-endfunction
+" function! s:pre_complete_cr()
+"   return substitute(complete_parameter#pre_complete("\<C-y>"), '(', "\<C-v>(", 'g')
+" endfunction
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -17,10 +17,12 @@ endfunction
 inoremap <silent><expr> <TAB>
       \ <SID>pumselected() ?
       \ coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ?
-      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#expandable() ?
+      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>" :
       \ delimitMate#ShouldJump() ? delimitMate#JumpAny() :
+      \ coc#jumpable() ?
+      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()

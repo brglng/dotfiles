@@ -16,6 +16,7 @@ install_apt() {
 
   if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
     sudo add-apt-repository -y ppa:deadsnakes/ppa
+    sudo add-apt-repository ppa:jonathonf/vim
   fi
 
   sudo apt-get update

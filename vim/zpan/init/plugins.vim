@@ -107,6 +107,7 @@ if dein#load_state('~/.cache/dein')
   " call dein#add('majutsushi/tagbar')
   " call dein#add('lvht/tagbar-markdown')
   call dein#add('liuchengxu/vista.vim')
+  call dein#add('sbdchd/neoformat')
 
   " Debuggig Plugins
   " call dein#add('cpiger/NeoDebug')
@@ -125,14 +126,14 @@ if dein#load_state('~/.cache/dein')
   call dein#add('soft-aesthetic/soft-era-vim')
 
   call dein#end()
-  call dein#save_state()
+  " call dein#save_state()
 endif
 filetype plugin indent on
 syntax enable
 if dein#check_install()
   call dein#install()
   if has('nvim')
-    UpdateRemotePlugins
+    autocmd VimEnter * UpdateRemotePlugins
   endif
 endif
 
@@ -145,6 +146,7 @@ runtime zpan/init/plugins/denite.vim
 runtime zpan/init/plugins/endwise.vim
 runtime zpan/init/plugins/git_p.vim
 runtime zpan/init/plugins/lightline.vim
+runtime zpan/init/plugins/neoformat.vim
 " runtime zpan/init/plugins/tagbar.vim
 " runtime zpan/init/plugins/ultisnips.vim
 runtime zpan/init/plugins/undotree.vim

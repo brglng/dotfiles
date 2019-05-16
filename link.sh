@@ -25,7 +25,7 @@ link() {
   if [ -L ~/.vim ]; then
     rm -f ~/.vim
   else
-    mv ~/.vim ~/.vim.orig
+    mv -f ~/.vim ~/.vim.orig
   fi
   ln -s $(pwd)/vim ~/.vim
 
