@@ -25,13 +25,15 @@ install_apt() {
 
   if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
     # Install Python 3.6
-    sudo apt-get install -y python3.6
+    sudo apt-get install -y python3.6 clang-format-6.0
 
     # Install a newer CMake version
     mkdir -p ~/.cache/brglng/dotfiles/cmake
     wget -c https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh -O ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh
     mkdir -p ~/.local
     sh ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh --prefix=$HOME/.local --exclude-subdir
+  else
+    sudo apt-get install -y clang-format-7.0
   fi
 
   git config --global http.postBuffer 524288000
@@ -126,7 +128,7 @@ esac
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source $HOME/.cargo/env
 rustup update
-rustup component add rls rust-analysis rust-src
+rustup component add rls rust-analysis rust-src rustfmt
 
 if [ "$(which rg)" = "" ]; then
   cargo install ripgrep
@@ -146,9 +148,9 @@ nvm use node
 nvm alias default node
 
 if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
-  python3.6 -m pip install pynvim
+  python3.6 -m pip install -U pynvim autopep8 pylint
 else
-  pip3 install pynvim
+  pip3 install pynvim autopep8 pylint
 fi
 sudo -H gem install neovim
 yarn global add neovim
