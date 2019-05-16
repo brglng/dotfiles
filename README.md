@@ -28,8 +28,8 @@ LGTM, but issues are not guaranteed to get fixed.
 
    This will use the proper package manager on your system to install the
    necessary packages. On Ubuntu/Debian, `apt-get` is used. On macOS,
-   [Homebrew](https://brew.sh/) is used, or installed if there is no existing
-   one.
+   [Homebrew](https://brew.sh/) is used, or installed if there is not an
+   existing one.
 
    If you want to setup your environment manually and only want to link the
    configuration files, run
