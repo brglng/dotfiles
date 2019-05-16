@@ -37,4 +37,4 @@ LGTM, but issues are not guaranteed to get fixed.
        $ ./link.sh
 
    This will overwrite your existing configuration files. The original files
-   will be renamed with a `.orig` suffix.
+   will be suffixed with `.orig`.
