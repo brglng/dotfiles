@@ -110,7 +110,7 @@ install_mac() {
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   git config --global http.postBuffer 524288000
-  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake global python python3 tmux luajit reattach-to-user-namespace yarn ccls
+  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake global python python3 tmux luajit reattach-to-user-namespace yarn ccls sk ripgrep
   brew install vim --with-override-system-vi --with-gettext --with-python3 --with-luajit
   brew install neovim --HEAD
   brew cask install macvim
@@ -130,12 +130,9 @@ source $HOME/.cargo/env
 rustup update
 rustup component add rls rust-analysis rust-src rustfmt
 
-if [ "$(which rg)" = "" ]; then
-  cargo install ripgrep
-fi
-
-if [ "$(which sk)" = "" ]; then
-  cargo install skim
+if [ ! $(uname -s) = Darwin ]; then
+  cargo install -f ripgrep
+  cargo install -f skim
 fi
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
@@ -150,7 +147,7 @@ nvm alias default node
 if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
   python3.6 -m pip install -U pynvim autopep8 pylint
 else
-  pip3 install pynvim autopep8 pylint
+  pip3 install -U pynvim autopep8 pylint
 fi
 sudo -H gem install neovim
 yarn global add neovim
