@@ -4,33 +4,37 @@ My dotfiles
 
 ## Prerequisites
 
-Currently only macOS and Ubuntu (16.04+) is supported.
+The configurations and installation scripts are only tested on:
+
+- Ubuntu 16.04
+- Ubuntu 18.04
+- macOS Mojave
+
+If you found they work on your system, please report to me and I will add it
+to the support list. If you found they do not work on your system, please feel
+free to file an issue or PR to me. PRs are welcomed and will be merged if they
+LGTM, but issues are not guaranteed to get fixed.
 
 ## Installation
 
 1. Clone and switch into the repository
 
-    ```sh
-    $ git clone --recursive https://github.com/brglng/dotfiles.git
+    $ git clone --recursive --depth 1 https://github.com/brglng/dotfiles.git
     $ cd dotfiles
-    ```
 
-2. If you want only to link the configuration files, run
+2. For full installation, run
 
-    ```sh
-    $ ./link.sh
-    ```
-
-   This assumes you have already setup the necessary environment manually.
-
-   If you want to setup a basic environment by installing necessary packages
-   automatically, run
-
-    ```sh
     $ ./install.sh
-    ```
 
-   The script will use the proper package manager on your system to install the
-   packages (`apt` on Ubuntu/Debian. On macOS, it uses
-   [Homebrew](https://brew.sh/)).  If Homebrew is not installed, it will be
-   installed automatically.
+   This will use the proper package manager on your system to install the
+   necessary packages. On Ubuntu/Debian, `apt-get` is used. On macOS,
+   [Homebrew](https://brew.sh/)) is used or installed if there is not one
+   existed.
+
+   If you want to setup your environment manually and only want to link the
+   configuration files, run
+
+    $ ./link.sh
+
+   This will overwrite your existing configuration files. The original files
+   will be renamed with a `.orig` suffix.

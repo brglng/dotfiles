@@ -38,6 +38,9 @@ antigen bundle zsh-users/zsh-completions
 antigen bundle zdharma/fast-syntax-highlighting
 
 ZLUA_EXEC=$(which luajit)
+export _ZL_MATCH_MODE=1
+export _ZL_FZF=sk
+export _ZL_ADD_ONCE=1
 antigen bundle skywind3000/z.lua
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable virtualenv anaconda rbenv vcs)
@@ -194,6 +197,7 @@ alias zh='z -I -t .'
 alias zc='z -c'      # restrict matches to subdirs of $PWD
 alias zz='z -i'      # cd with interactive selection
 alias zf='z -I'      # use fzf to select in multiple matches
+alias zs='z -I .'
 alias zb='z -b'      # quickly cd to the parent directory
 
 setopt BANG_HIST                # Treat the '!' character specially during expansion.
