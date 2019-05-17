@@ -113,7 +113,7 @@ install_mac() {
   brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake global python python3 tmux luajit reattach-to-user-namespace yarn ccls sk ripgrep
   brew install vim --with-override-system-vi --with-gettext --with-python3 --with-luajit
   brew install neovim --HEAD
-  brew cask install macvim
+  brew cask install macvim alacritty
   brew tap universal-ctags/universal-ctags
   brew install --HEAD universal-ctags
 }
