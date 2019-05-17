@@ -74,7 +74,7 @@ EOF
   if [ ! -e $HOME/.bash_profile ] || [ "$(perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s' $HOME/.bash_profile)" = "" ]; then
     cat /tmp/brglng/dotfiles/bash_profile >> ~/.bash_profile
   else
-    perl -i p0e 's/# begin brglng\/dotfiles.*# end brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/bash_profile`/gse' $HOME/.bash_profile
+    perl -i -p0e 's/# begin brglng\/dotfiles.*# end brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/bash_profile`/gse' $HOME/.bash_profile
   fi
 }
 
