@@ -21,7 +21,7 @@ install_apt() {
 
   sudo apt-get update
 
-  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git global python3-setuptools python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev
+  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git python3-setuptools python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev
 
   if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
     # Install Python 3.6
@@ -110,9 +110,9 @@ install_mac() {
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   git config --global http.postBuffer 524288000
-  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake global python python3 tmux luajit reattach-to-user-namespace yarn ccls sk ripgrep
-  brew install vim --with-override-system-vi --with-gettext --with-python3 --with-luajit
-  brew install neovim --HEAD
+  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit reattach-to-user-namespace yarn ccls sk ripgrep clang-format
+  brew install vim
+  brew install --HEAD neovim
   brew cask install macvim alacritty
   brew tap universal-ctags/universal-ctags
   brew install --HEAD universal-ctags
@@ -145,9 +145,9 @@ nvm use node
 nvm alias default node
 
 if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
-  python3.6 -m pip install -U pynvim autopep8 pylint
+  python3.6 -m pip install -U pynvim neovim autopep8 pylint
 else
-  pip3 install -U pynvim autopep8 pylint
+  pip3 install -U pynvim neovim autopep8 pylint
 fi
 sudo -H gem install neovim
 yarn global add neovim
