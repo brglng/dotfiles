@@ -1,8 +1,34 @@
 # dotfiles
 
-My dotfiles
+My dotfiles.
+
+Included software configrations:
+
+- Alacritty
+- Bash
+- CGDB
+- Git
+- Neovim
+- Tmux
+- Vim
+- Zsh
 
 ## Prerequisites
+
+### Font
+
+One of [Nerd Fonts](https://nerdfonts.com/) is required. In
+config/alacritty/alacritty.yml, "FuraCode Nerd Font" is used. You can change
+it to the font you like. If you use other terminal, please set the font by
+yourself.
+
+### Color
+
+The [Nord](https://www.nordtheme.com/) color theme is used in Alacritty,
+Neovim, Tmux, Vim and Zsh. You can change to other color themes if you are
+familiar with the configration files.
+
+### Operating System
 
 The configurations and installation scripts are only tested on:
 
