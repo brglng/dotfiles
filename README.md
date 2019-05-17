@@ -39,7 +39,8 @@ The configurations and installation scripts are only tested on:
 If you found they work on your system, please report to me and I will add it
 to the support list. If you found they do not work on your system, please feel
 free to file an issue or PR to me. PRs are welcome and will be merged if they
-LGTM, but issues are not guaranteed to get fixed.
+LGTM, but issues are not guaranteed to get fixed if I don't get chance to test
+on your environment.
 
 ## Installation
 
