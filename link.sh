@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 link() {
+  mkdir -p ~/.config/alacritty
+  [ ! -L ~/.config/alacritty/alacritty.yml ] && mv -f ~/.config/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml.orig
+  ln -fs $(pwd)/config/alacritty/alacritty.yml ~/.config/alacritty/
+
   [ ! -L ~/.bashrc ] && mv -f ~/.bashrc ~/.bashrc.orig
   ln -fs $(pwd)/bashrc ~/.bashrc
 
