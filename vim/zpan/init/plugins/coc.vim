@@ -74,7 +74,9 @@ call coc#add_extension(
       \ 'coc-yaml',
       \ 'coc-python',
       \ 'coc-highlight',
-      \ 'coc-snippets'
+      \ 'coc-snippets',
+      \ 'coc-pairs',
+      \ 'coc-vimlsp'
       \ )
 
 let g:coc_snippet_next = '<tab>'

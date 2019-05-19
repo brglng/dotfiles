@@ -18,9 +18,7 @@ inoremap <silent><expr> <TAB>
       \ <SID>pumselected() ?
       \ coc#_select_confirm() :
       \ coc#expandable() ?
-      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-jump',''])\<CR>" :
-      \ delimitMate#ShouldJump() ?
-      \ delimitMate#JumpAny() :
+      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>" :
       \ coc#jumpable() ?
       \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-jump',''])\<CR>" :
       \ <SID>check_back_space() ?
@@ -29,10 +27,15 @@ inoremap <silent><expr> <TAB>
 
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()
 
-imap <silent> <expr> <CR>
+" imap <expr> <CR>
+"       \ <SID>pumselected() ?
+"       \ "\<C-y>" :
+"       \ "\<Plug>DiscretionaryEnd"
+
+inoremap <expr> <CR>
       \ <SID>pumselected() ?
       \ "\<C-y>" :
-      \ "\<C-g>u\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+      \ "\<CR>"
 
 " inoremap <silent> <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
 " imap <silent> <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
