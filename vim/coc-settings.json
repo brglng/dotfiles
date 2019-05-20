@@ -21,8 +21,5 @@
     "javascriptreact": ["javascript"],
     "typescript": ["javascript"]
   },
-  "list.insertMappings": {
-    "<C-j>": "normal:j",
-    "<C-k>": "normal:k"
-  }
+  "list.maxHeight": 20
 }
