@@ -50,19 +50,29 @@ command! -nargs=? CocFold :call CocAction('fold', <f-args>)
 " Show all diagnostics
 if 0
 " Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Do default action for next item.
 nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 endif
-nnoremap <silent> <Leader>fo :<C-u>CocList outline<CR>
-nnoremap <silent> <Leader>fq :<C-u>CocList diagnostics<CR>
-nnoremap <silent> <Leader>fs :<C-u>CocList -I symbols<CR>
+
+nnoremap <silent> <Leader>f; :<C-u>CocList      vimcommands<CR>
+nnoremap <silent> <Leader>fc :<C-u>CocList      commands<cr>
+nnoremap <silent> <Leader>fe :<C-u>CocList      extensions<cr>
+nnoremap <silent> <Leader>ff :<C-u>CocList      files<CR>
+nnoremap <silent> <Leader>fg :<C-u>CocList      grep<CR>
+nnoremap <silent> <Leader>fw :<C-u>CocList      words<CR>
+nnoremap <silent> <Leader>fm :<C-u>CocList      marks<CR>
+nnoremap <silent> <Leader>fb :<C-u>CocList      buffers<CR>
+nnoremap <silent> <Leader>fr :<C-u>CocList      mru<CR>
+nnoremap <silent> <Leader>fo :<C-u>CocList      outline<CR>
+nnoremap <silent> <Leader>fh :<C-u>CocList      helptags<CR>
+nnoremap <silent> <Leader>fq :<C-u>CocList      diagnostics<CR>
+nnoremap <silent> <Leader>fC :<C-u>CocList      colors<CR>
+nnoremap <silent> <Leader>fs :<C-u>CocList -I   symbols<CR>
+nnoremap <silent> <Leader>fp :<C-u>CocListResume<CR>
 
 call coc#add_extension(
       \ 'coc-json',
@@ -76,7 +86,14 @@ call coc#add_extension(
       \ 'coc-highlight',
       \ 'coc-snippets',
       \ 'coc-pairs',
-      \ 'coc-vimlsp'
+      \ 'coc-vimlsp',
+      \ 'coc-solargraph',
+      \ 'coc-lists'
       \ )
 
 let g:coc_snippet_next = '<tab>'
+
+if executable('bfind')
+  call coc#config('list.source.files.command', 'bfind')
+  call coc#config('list.source.files.args', [])
+endif

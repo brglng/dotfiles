@@ -75,8 +75,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('iamcco/git-p.nvim')
 
   " Searching plugin: denite.vim and plugins
-  call dein#add('Shougo/denite.nvim')
-  call dein#add('Shougo/neomru.vim')
+  " call dein#add('Shougo/denite.nvim')
+  " call dein#add('Shougo/neomru.vim')
 
   " Project management
   call dein#add('Shougo/defx.nvim')
@@ -142,7 +142,7 @@ runtime zpan/init/plugins/coc.vim
 runtime zpan/init/plugins/defx.vim
 runtime zpan/init/plugins/dein_ui.vim
 runtime zpan/init/plugins/delimit_mate.vim
-runtime zpan/init/plugins/denite.vim
+" runtime zpan/init/plugins/denite.vim
 runtime zpan/init/plugins/endwise.vim
 runtime zpan/init/plugins/git_p.vim
 runtime zpan/init/plugins/lightline.vim

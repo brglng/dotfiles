@@ -137,7 +137,7 @@ set backspace=indent,eol,start  " backspace can delete newlines in insert mode
 
 if !has('gui_running') && !(has('win32') && !has('win32unix')) && !has('nvim')
   " fix meta-keys under terminal
-  let chars = ['s', 'z', 'Z', 'c', 'x', 'v', 'a', '{', '}', 'b', 'f', 'k', '0', '1', '6', '7']
+  let chars = ['s', 'z', 'Z', 'c', 'x', 'v', 'a', '{', '}', 'b', 'f', 'k', '`', '1', '2', '3', '6', '^']
   for c in chars
     exec "set <M-" . c . ">=\e" . c
   endfor

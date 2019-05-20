@@ -261,6 +261,52 @@ function! s:toggle_undotree()
   UndotreeToggle
 endfunction
 
+function! s:toggle_terminal()
+  let found_winnr = 0
+  for winnr in range(1, winnr('$'))
+    if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
+      let found_winnr = winnr
+    endif
+  endfor
+
+  if found_winnr > 0
+    execute found_winnr . 'wincmd q'
+  else
+    let found_bufnr = 0
+    for bufnr in filter(range(1, bufnr('$')), 'bufexists(v:val)')
+      if getbufvar(bufnr, '&buftype') == 'terminal'
+        let found_bufnr = bufnr
+      endif
+    endfor
+    if found_bufnr > 0
+      if &lines > 30
+        botright 15split
+        execute 'buffer ' . found_bufnr
+      else
+        botright split
+        execute 'buffer ' . found_bufnr
+      endif
+    else
+      if &lines > 30
+        if has('nvim')
+          execute 'botright 15split term://' . &shell
+        else
+          botright terminal
+          resize 15
+        endif
+      else
+        if has('nvim')
+          execute 'botright split term://' . &shell
+        else
+          botright terminal
+        endif
+      endif
+    endif
+  endif
+endfunction
+
+nnoremap <silent> <M-`> :call <SID>toggle_terminal()<CR>
+
 nnoremap <silent> <M-1> :call <SID>toggle_defx()<CR>
 " nnoremap <silent> <M-2> :call <SID>toggle_tagbar()<CR>
 nnoremap <silent> <M-2> :call <SID>toggle_vista()<CR>

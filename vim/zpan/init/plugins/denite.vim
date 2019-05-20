@@ -62,20 +62,20 @@ call denite#custom#map('normal', '<PageUp>',    '<denite:scroll_page_backwards>'
 call denite#custom#map('normal', '<Home>',      '<denite:move_to_first_line>',      'noremap')
 call denite#custom#map('normal', '<End>',       '<denite:move_to_last_line>',       'noremap')
 
-nnoremap <silent> <Leader>f;    :Denite -buffer-name=command        -resume command<CR>
-nnoremap <silent> <Leader>f:    :Denite -buffer-name=command                command<CR>
-nnoremap <silent> <Leader>ff    :Denite -buffer-name=file_rec       -resume file/rec<CR>
-nnoremap <silent> <Leader>fF    :Denite -buffer-name=file_rec               file/rec<CR>
-nnoremap <silent> <Leader>ft    :Denite -buffer-name=file           -resume file<CR>
-nnoremap <silent> <Leader>fT    :Denite -buffer-name=file                   file<CR>
-nnoremap <silent> <Leader>fg    :Denite -buffer-name=grep           -resume grep<CR>
-nnoremap <silent> <Leader>fG    :Denite -buffer-name=grep                   grep<CR>
-nnoremap <silent> <Leader>fl    :Denite -buffer-name=line_<C-r>%    -resume line<CR>
-nnoremap <silent> <Leader>fL    :Denite -buffer-name=line_<C-r>%            line<CR>
-nnoremap <silent> <Leader>fb    :Denite -buffer-name=buffer                 buffer<CR>
-nnoremap <silent> <Leader>fr    :Denite -buffer-name=file_mru       -resume file_mru<CR>
-nnoremap <silent> <Leader>fR    :Denite -buffer-name=file_mru               file_mru<CR>
-nnoremap <silent> <Leader>fh    :Denite -buffer-name=help           -resume help<CR>
-nnoremap <silent> <Leader>fH    :Denite -buffer-name=help                   help<CR>
-nnoremap <silent> <Leader>fc    :Denite -buffer-name=colorscheme    -resume colorscheme<CR>
-nnoremap <silent> <Leader>fC    :Denite -buffer-name=colorscheme            colorscheme<CR>
+" nnoremap <silent> <Leader>f;    :Denite -buffer-name=command        -resume command<CR>
+" nnoremap <silent> <Leader>f:    :Denite -buffer-name=command                command<CR>
+" nnoremap <silent> <Leader>ff    :Denite -buffer-name=file_rec       -resume file/rec<CR>
+" nnoremap <silent> <Leader>fF    :Denite -buffer-name=file_rec               file/rec<CR>
+" nnoremap <silent> <Leader>ft    :Denite -buffer-name=file           -resume file<CR>
+" nnoremap <silent> <Leader>fT    :Denite -buffer-name=file                   file<CR>
+" nnoremap <silent> <Leader>fg    :Denite -buffer-name=grep           -resume grep<CR>
+" nnoremap <silent> <Leader>fG    :Denite -buffer-name=grep                   grep<CR>
+" nnoremap <silent> <Leader>fl    :Denite -buffer-name=line_<C-r>%    -resume line<CR>
+" nnoremap <silent> <Leader>fL    :Denite -buffer-name=line_<C-r>%            line<CR>
+" nnoremap <silent> <Leader>fb    :Denite -buffer-name=buffer                 buffer<CR>
+" nnoremap <silent> <Leader>fr    :Denite -buffer-name=file_mru       -resume file_mru<CR>
+" nnoremap <silent> <Leader>fR    :Denite -buffer-name=file_mru               file_mru<CR>
+" nnoremap <silent> <Leader>fh    :Denite -buffer-name=help           -resume help<CR>
+" nnoremap <silent> <Leader>fH    :Denite -buffer-name=help                   help<CR>
+" nnoremap <silent> <Leader>fc    :Denite -buffer-name=colorscheme    -resume colorscheme<CR>
+" nnoremap <silent> <Leader>fC    :Denite -buffer-name=colorscheme            colorscheme<CR>
