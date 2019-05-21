@@ -37,6 +37,9 @@ inoremap <expr> <CR>
       \ "\<C-y>" :
       \ "\<CR>"
 
+inoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<C-o>gj"
+inoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<C-o>gk"
+
 " inoremap <silent> <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
 " imap <silent> <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
 " imap <silent> <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
@@ -67,8 +70,6 @@ inoremap <expr> <CR>
 " arrows move through screen lines
 noremap  <silent> <Down>      gj
 noremap  <silent> <Up>        gk
-inoremap <silent> <Down> <C-o>gj
-inoremap <silent> <Up>   <C-o>gk
 
 " Some Emacs-like keys in insert mode and command-line mode
 inoremap <silent> <expr>    <Home>      col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
