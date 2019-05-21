@@ -87,7 +87,7 @@ if dein#load_state('~/.cache/dein')
 
   " Language Sementic Plugins
   " call dein#add('neomake/neomake')
-  call dein#add('w0rp/ale')
+  " call dein#add('w0rp/ale')
 
   " if has('win32')
   "   let g:ycm_server_python_interpreter = 'py -3'
@@ -147,6 +147,7 @@ runtime zpan/init/plugins/endwise.vim
 runtime zpan/init/plugins/git_p.vim
 runtime zpan/init/plugins/lightline.vim
 runtime zpan/init/plugins/neoformat.vim
+runtime zpan/init/plugins/netrw.vim
 " runtime zpan/init/plugins/tagbar.vim
 " runtime zpan/init/plugins/ultisnips.vim
 runtime zpan/init/plugins/undotree.vim

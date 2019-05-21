@@ -1,30 +1,81 @@
 nmap ; :
 
+" Fix meta key for Vim
+if !has('gui_running') && !(has('win32') && !has('win32unix')) && !has('nvim')
+  " fix meta-keys under terminal
+  let chars = ['s', 'z', 'Z', 'c', 'x', 'v', 'a', '{', '}', 'b', 'f', 'k', '`', '1', '2', '3', '6', '^', ' ']
+  for c in chars
+    exec "set <M-" . c . ">=\e" . c
+  endfor
+  " set timeout
+  set ttimeout
+  " set timeoutlen=100
+  set ttimeoutlen=1
+endif
+
+" backspace in Visual mode deletes selection
+vnoremap <BS> d
+
+" Don't copy the contents of an overwritten selection.
+vnoremap p "_dP
+
+map   <silent> <S-Insert> "+gP
+cmap  <silent> <S-Insert> <C-r>+
+exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']
+exe 'vnoremap <script> <S-Insert> ' . paste#paste_cmd['v']
+
+if !((has('macunix') || has('mac')) && has('gui_running'))
+  noremap   <silent> <M-s>  :update<CR>
+  vnoremap  <silent> <M-s>  <C-c>:update<CR>
+  inoremap  <silent> <M-s>  <C-o>:update<CR>
+
+  noremap   <silent> <M-z>  u
+  inoremap  <silent> <M-z>  <C-o>u
+  noremap   <silent> <M-Z>  <C-r>
+  inoremap  <silent> <M-Z>  <C-o><C-r>
+
+  nnoremap  <silent> <M-c>  "+y
+  vnoremap  <silent> <M-c>  "+y
+
+  nnoremap  <silent> <M-x>  "+x
+  vnoremap  <silent> <M-x>  "+x
+
+  map       <silent> <M-v>  "+gP
+  cmap      <silent> <M-v>  <C-r>+
+  inoremap  <silent> <M-v>  <C-o>"+P
+
+  " Pasting blockwise and linewise selections is not possible in Insert and
+  " Visual mode without the +virtualedit feature.  They are pasted as if they
+  " were characterwise instead.
+  " Uses the paste.vim autoload script.
+  exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
+  exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
+
+  noremap   <silent> <M-a> gggH<C-o>G
+  inoremap  <silent> <M-a> <C-o>gg<C-o>gH<C-o>G
+  cnoremap  <silent> <M-a> <C-c>gggH<C-o>G
+  onoremap  <silent> <M-a> <C-c>gggH<C-o>G
+  snoremap  <silent> <M-a> <C-c>gggH<C-o>G
+  xnoremap  <silent> <M-a> <C-c>ggVG
+elseif has('gui_macvim')
+  set macmeta
+endif
+
+inoremap <silent> <C-U> <C-G>u<C-U>
+
 " assume 'noinsert' is in 'completeopt'
 function! s:pumselected()
   return pumvisible() && !empty(v:completed_item)
 endfunction
 
-" function! s:pre_complete_cr()
-"   return substitute(complete_parameter#pre_complete("\<C-y>"), '(', "\<C-v>(", 'g')
-" endfunction
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
 inoremap <silent><expr> <TAB>
-      \ <SID>pumselected() ?
-      \ coc#_select_confirm() :
-      \ coc#expandable() ?
-      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand',''])\<CR>" :
-      \ coc#jumpable() ?
-      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-jump',''])\<CR>" :
-      \ <SID>check_back_space() ?
-      \ "\<TAB>" :
-      \ coc#refresh()
+      \ <SID>pumselected()
+      \ ? coc#_select_confirm()
+      \ : coc#expandableOrJumpable() ?
+      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
+      \ : "\<TAB>"
 
+inoremap <silent> <expr> <C-Space> coc#refresh()
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()
 
 " imap <expr> <CR>
@@ -39,33 +90,8 @@ inoremap <expr> <CR>
 
 inoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<C-o>gj"
 inoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<C-o>gk"
-
-" inoremap <silent> <expr> <Esc> pumvisible() ? !empty(v:completed_item) ? "\<Lt>C-e>" : "\<Lt>Esc>" : "\<Lt>Esc>"
-" imap <silent> <expr> ( <SID>pumselected() ? complete_parameter#pre_complete('(') : "\<Plug>delimitMate("
-" imap <silent> <expr> <CR> <SID>pumselected() ? <SID>pre_complete_cr() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
-
-" https://github.com/Valloric/YouCompleteMe/issues/2696
-" imap <silent> <BS> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
-" imap <silent> <C-h> <C-R>=YcmOnDeleteChar()<CR><Plug>delimitMateBS
-" function! YcmOnDeleteChar()
-"   if pumvisible()
-"     return "\<C-y>"
-"   endif
-"   return "" 
-" endfunction
-
-" autocmd VimEnter * smap <silent> <expr> <TAB> cmp#jumpable(1) ? "\<Lt>Plug>(complete_parameter#goto_next_parameter)" : "\<Lt>C-r>=UltiSnips#ExpandSnippetOrJump()\<Lt>CR>"
-" autocmd VimEnter * imap <silent> <expr> <TAB> delimitMate#ShouldJump() ? delimitMate#JumpAny() : "\<Lt>C-r>=UltiSnips#ExpandSnippetOrJump()\<Lt>CR>"
-" smap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
-" imap <silent> <expr> <S-TAB> cmp#jumpable(0) ? "\<Plug>(complete_parameter#goto_previous_parameter)" : "\<C-R>=UltiSnips#JumpBackwards()\<CR>"
-" imap <silent> <C-j> <Plug>(complete_parameter#goto_next_parameter);
-" smap <silent> <C-j> <Plug>(complete_parameter#goto_next_parameter);
-" imap <silent> <C-k> <Plug>(complete_parameter#goto_previous_parameter);
-" smap <silent> <C-k> <Plug>(complete_parameter#goto_previous_parameter);
-" imap <silent> <M-j> <Plug>(complete_parameter#overload_down)
-" smap <silent> <M-j> <Plug>(complete_parameter#overload_down)
-" imap <silent> <M-k> <Plug>(complete_parameter#overload_up)
-" smap <silent> <M-k> <Plug>(complete_parameter#overload_up)
+cnoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Right>"
+cnoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<Left>"
 
 " arrows move through screen lines
 noremap  <silent> <Down>      gj
