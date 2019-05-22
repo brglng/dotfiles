@@ -115,7 +115,9 @@ if dein#check_install()
 endif
 
 " runtime zpan/init/plugins/complete_parameter.vim
-runtime zpan/init/plugins/coc.vim
+if !zpan#is_sudo()
+  runtime zpan/init/plugins/coc.vim
+endif
 runtime zpan/init/plugins/defx.vim
 runtime zpan/init/plugins/dein_ui.vim
 " runtime zpan/init/plugins/delimit_mate.vim
