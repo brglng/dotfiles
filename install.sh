@@ -33,7 +33,7 @@ install_apt() {
     mkdir -p ~/.local
     sh ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh --prefix=$HOME/.local --exclude-subdir
   else
-    sudo apt-get install -y clang-format-7.0
+    sudo apt-get install -y clang-format-7
   fi
 
   git config --global http.postBuffer 524288000

@@ -52,8 +52,6 @@ if dein#load_state('~/.cache/dein')
   call dein#add('scrooloose/nerdcommenter')
   " call dein#add('godlygeek/tabular')
   call dein#add('junegunn/vim-easy-align')
-  " call dein#add('Raimondi/delimitMate')
-  call dein#add('tpope/vim-endwise')
   call dein#add('tpope/vim-sleuth')
   call dein#add('tpope/vim-repeat')
   call dein#add('mg979/vim-visual-multi')
@@ -74,38 +72,14 @@ if dein#load_state('~/.cache/dein')
   call dein#add('iamcco/sran.nvim', {'merged': 0, 'hook_post_update': { -> sran#util#install() }})
   call dein#add('iamcco/git-p.nvim')
 
-  " Searching plugin: denite.vim and plugins
-  " call dein#add('Shougo/denite.nvim')
-  " call dein#add('Shougo/neomru.vim')
-
   " Project management
   call dein#add('Shougo/defx.nvim')
   call dein#add('kristijanhusak/defx-git')
   call dein#add('kristijanhusak/defx-icons')
   call dein#add('editorconfig/editorconfig-vim')
-  " call dein#add('ludovicchabant/vim-gutentags')
-
-  " Language Sementic Plugins
-  " call dein#add('neomake/neomake')
-  " call dein#add('w0rp/ale')
-
-  " if has('win32')
-  "   let g:ycm_server_python_interpreter = 'py -3'
-  "   let ycm_python_interpreter = 'py -3'
-  " else
-  "   let ycm_python_interpreter = 'python3'
-  " endif
-  " call dein#add('Valloric/YouCompleteMe', {
-  "        \ 'if': !exists('g:gui_oni'),
-  "        \ 'merged': 0,
-  "        \ 'build':  ycm_python_interpreter . ' install.py --clang-completer --racer-completer --tern-completer'
-  "        \ })
-  " call dein#add('tenfyzhong/CompleteParameter.vim')
 
   call dein#add('neoclide/coc.nvim', {'merged': 0, 'rev': '*', 'build': './install.sh'})
   call dein#add('honza/vim-snippets')
-  " call dein#add('majutsushi/tagbar')
-  " call dein#add('lvht/tagbar-markdown')
   call dein#add('liuchengxu/vista.vim')
   call dein#add('sbdchd/neoformat')
 
@@ -117,7 +91,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('iCyMind/NeoSolarized')
   call dein#add('sickill/vim-monokai')
   call dein#add('chriskempson/vim-tomorrow-theme')
-  " call dein#add('chriskempson/base16-vim')
+  call dein#add('chriskempson/base16-vim')
   call dein#add('junegunn/seoul256.vim')
   call dein#add('nanotech/jellybeans.vim')
   call dein#add('NLKNguyen/papercolor-theme')
@@ -141,9 +115,9 @@ endif
 runtime zpan/init/plugins/coc.vim
 runtime zpan/init/plugins/defx.vim
 runtime zpan/init/plugins/dein_ui.vim
-runtime zpan/init/plugins/delimit_mate.vim
+" runtime zpan/init/plugins/delimit_mate.vim
 " runtime zpan/init/plugins/denite.vim
-runtime zpan/init/plugins/endwise.vim
+" runtime zpan/init/plugins/endwise.vim
 runtime zpan/init/plugins/git_p.vim
 runtime zpan/init/plugins/lightline.vim
 runtime zpan/init/plugins/neoformat.vim

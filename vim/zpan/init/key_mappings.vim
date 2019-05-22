@@ -78,11 +78,6 @@ inoremap <silent><expr> <TAB>
 inoremap <silent> <expr> <C-Space> coc#refresh()
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()
 
-" imap <expr> <CR>
-"       \ <SID>pumselected() ?
-"       \ "\<C-y>" :
-"       \ "\<Plug>DiscretionaryEnd"
-
 inoremap <expr> <CR>
       \ <SID>pumselected() ?
       \ "\<C-y>" :
