@@ -164,8 +164,7 @@ fi
 mkdir -p ~/.local/share/zsh
 curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
 
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-installer.sh
-sh /tmp/dein-installer.sh ~/.cache/dein
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | sh -s -- ~/.cache/dein
 
 ./link.sh
 
