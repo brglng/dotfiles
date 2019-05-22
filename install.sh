@@ -145,9 +145,9 @@ nvm use node
 nvm alias default node
 
 if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
-  python3.6 -m pip install -U pynvim neovim autopep8 pylint
+  python3.6 -m pip install -U pynvim neovim autopep8 pylint jedi
 else
-  pip3 install -U pynvim neovim autopep8 pylint
+  pip3 install -U pynvim neovim autopep8 pylint jedi
 fi
 sudo -H gem install neovim
 yarn global add neovim
