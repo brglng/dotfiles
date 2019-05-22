@@ -78,7 +78,10 @@ if dein#load_state('~/.cache/dein')
   call dein#add('kristijanhusak/defx-icons')
   call dein#add('editorconfig/editorconfig-vim')
 
-  call dein#add('neoclide/coc.nvim', {'merged': 0, 'rev': '*', 'build': './install.sh'})
+  " Language Semantic
+  if !zpan#is_sudo()
+    call dein#add('neoclide/coc.nvim', {'merged': 0, 'rev': '*', 'build': './install.sh'})
+  endif
   call dein#add('honza/vim-snippets')
   call dein#add('liuchengxu/vista.vim')
   call dein#add('sbdchd/neoformat')

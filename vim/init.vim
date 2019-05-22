@@ -60,7 +60,7 @@ set nocompatible                " turn of vi compatible mode
 set winaltkeys=no
 "set helplang=cn                 " Chinese help
 "set autoread                    " auto read files modified outside vim
-if has('win32') || system('whoami') != "root\n"
+if has('win32') || !zpan#is_sudo()
   set nobackup                  " do not create backups before editing
   set nowritebackup
 endif
