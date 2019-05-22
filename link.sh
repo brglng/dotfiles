@@ -2,41 +2,45 @@
 
 link() {
   mkdir -p ~/.config/alacritty
-  [ ! -L ~/.config/alacritty/alacritty.yml ] && mv -f ~/.config/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml.orig
+  [ -e ~/.config/alacritty/alacritty.yml ] && [ ! -L ~/.config/alacritty/alacritty.yml ] && mv -f ~/.config/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml.orig
   ln -fs $(pwd)/config/alacritty/alacritty.yml ~/.config/alacritty/
 
-  [ ! -L ~/.bashrc ] && mv -f ~/.bashrc ~/.bashrc.orig
+  [ -e ~/.bashrc ] && [ ! -L ~/.bashrc ] && mv -f ~/.bashrc ~/.bashrc.orig
   ln -fs $(pwd)/bashrc ~/.bashrc
 
   mkdir -p ~/.cgdb
-  [ ! -L ~/.cgdb/cgdbrc ] && mv -f ~/.cgdb/cgdbrc ~/.cgdb/cgdbrc.orig
+  [ -e ~/.cgdb/cgdbrc ] && [ ! -L ~/.cgdb/cgdbrc ] && mv -f ~/.cgdb/cgdbrc ~/.cgdb/cgdbrc.orig
   ln -fs $(pwd)/cgdb/cgdbrc ~/.cgdb/
 
-  [ ! -L ~/.gitignore_global ] && mv -f ~/.gitignore_global ~/.gitignore_global.orig
+  [ -e ~/.gitignore_global ] && [ ! -L ~/.gitignore_global ] && mv -f ~/.gitignore_global ~/.gitignore_global.orig
   ln -fs $(pwd)/gitignore_global ~/.gitignore_global
 
-  [ ! -L ~/.tmux.conf ] && mv -f ~/.tmux.conf ~/.tmux.conf.orig
+  [ -e ~/.tmux.conf ] && [ ! -L ~/.tmux.conf ] && mv -f ~/.tmux.conf ~/.tmux.conf.orig
   ln -fs $(pwd)/tmux.conf ~/.tmux.conf
 
   mkdir -p ~/.config
-  if [ -L ~/.config/nvim ]; then
-    rm -f ~/.config/nvim
-  else
-    mv -f ~/.config/nvim ~/.config/nvim.orig
+  if [ -e ~/.config/nvim ]; then
+    if [ -L ~/.config/nvim ]; then
+      rm -f ~/.config/nvim
+    else
+      mv -f ~/.config/nvim ~/.config/nvim.orig
+    fi
   fi
   ln -s $(pwd)/vim ~/.config/nvim
 
-  if [ -L ~/.vim ]; then
-    rm -f ~/.vim
-  else
-    mv -f ~/.vim ~/.vim.orig
+  if [ -e ~/.vim ]; then
+    if [ -L ~/.vim ]; then
+      rm -f ~/.vim
+    else
+      mv -f ~/.vim ~/.vim.orig
+    fi
   fi
   ln -s $(pwd)/vim ~/.vim
 
-  [ ! -L ~/.vimrc ] && mv -f ~/.vimrc ~/.vimrc.orig
+  [ -e ~/.vimrc ] && [ ! -L ~/.vimrc ] && mv -f ~/.vimrc ~/.vimrc.orig
   ln -fs $(pwd)/vimrc ~/.vimrc
 
-  [ ! -L ~/.zshrc ] && mv -f ~/.zshrc ~/.zshrc.orig
+  [ -e ~/.zshrc ] && [ ! -L ~/.zshrc ] && mv -f ~/.zshrc ~/.zshrc.orig
   ln -fs $(pwd)/zshrc ~/.zshrc
 
   mkdir -p /tmp/brglng/dotfiles
