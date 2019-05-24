@@ -85,8 +85,11 @@ inoremap <expr> <CR>
 
 inoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<C-o>gj"
 inoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<C-o>gk"
-cnoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Right>"
-cnoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<Left>"
+
+if has('nvim')
+  cnoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Down>"
+  cnoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<Up>"
+endif
 
 " arrows move through screen lines
 noremap  <silent> <Down>      gj
