@@ -307,9 +307,11 @@ function! s:toggle_terminal()
       if &lines > 30
         botright 15split
         execute 'buffer ' . found_bufnr
+        set winfixheight
       else
         botright split
         execute 'buffer ' . found_bufnr
+        set winfixheight
       endif
     else
       if &lines > 30
@@ -318,12 +320,14 @@ function! s:toggle_terminal()
         else
           botright terminal
           resize 15
+          set winfixheight
         endif
       else
         if has('nvim')
           execute 'botright split term://' . &shell
         else
           botright terminal
+          set winfixheight
         endif
       endif
     endif
