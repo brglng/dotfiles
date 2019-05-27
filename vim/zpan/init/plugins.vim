@@ -55,7 +55,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('tpope/vim-sleuth')
   call dein#add('tpope/vim-repeat')
   call dein#add('mg979/vim-visual-multi')
-  call dein#add('Shougo/vinarise.vim')
+  call dein#add('Shougo/vinarise.vim', {'hook_post_update': { -> UpdateRemotePlugins }})
   " call dein#add('Shougo/deorise.vim')
 
   " FileType Plugins
@@ -73,7 +73,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('iamcco/git-p.nvim')
 
   " Project management
-  call dein#add('Shougo/defx.nvim')
+  call dein#add('Shougo/defx.nvim', {'hook_post_update': { -> UpdateRemotePlugins }})
   call dein#add('kristijanhusak/defx-git')
   call dein#add('kristijanhusak/defx-icons')
   call dein#add('editorconfig/editorconfig-vim')
@@ -109,9 +109,6 @@ filetype plugin indent on
 syntax enable
 if dein#check_install()
   call dein#install()
-  if has('nvim')
-    autocmd VimEnter * UpdateRemotePlugins
-  endif
 endif
 
 " runtime zpan/init/plugins/complete_parameter.vim
