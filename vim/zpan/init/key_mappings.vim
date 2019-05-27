@@ -286,6 +286,7 @@ function! s:toggle_undotree()
   UndotreeToggle
 endfunction
 
+let s:prev_terminal_height = 0
 function! s:toggle_terminal()
   let found_winnr = 0
   for winnr in range(1, winnr('$'))
@@ -304,14 +305,20 @@ function! s:toggle_terminal()
       endif
     endfor
     if found_bufnr > 0
-      if &lines > 30
-        botright 15split
+      if s:prev_terminal_height > 0
+        execute 'botright ' . s:prev_terminal_height . 'split'
         execute 'buffer ' . found_bufnr
         set winfixheight
       else
-        botright split
-        execute 'buffer ' . found_bufnr
-        set winfixheight
+        if &lines > 30
+          botright 15split
+          execute 'buffer ' . found_bufnr
+          set winfixheight
+        else
+          botright split
+          execute 'buffer ' . found_bufnr
+          set winfixheight
+        endif
       endif
     else
       if &lines > 30
@@ -333,6 +340,7 @@ function! s:toggle_terminal()
     endif
   endif
 endfunction
+au WinLeave * if &buftype == 'terminal' && winnr() > 1 | let s:prev_terminal_height = winheight('%') | endif
 
 if has('nvim')
   nnoremap <silent> <M-0> :call <SID>toggle_terminal()<CR>i
