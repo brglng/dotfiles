@@ -70,7 +70,6 @@ if dein#load_state('~/.cache/dein')
   call dein#add('will133/vim-dirdiff')
   call dein#add('gregsexton/gitv')
   call dein#add('iamcco/sran.nvim', {'merged': 0, 'hook_post_update': { -> sran#util#install() }})
-  " call dein#add('iamcco/git-p.nvim')
 
   " Project management
   call dein#add('Shougo/defx.nvim', {'hook_post_update': { -> UpdateRemotePlugins }})
