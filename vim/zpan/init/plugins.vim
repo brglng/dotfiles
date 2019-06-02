@@ -70,7 +70,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('will133/vim-dirdiff')
   call dein#add('gregsexton/gitv')
   call dein#add('iamcco/sran.nvim', {'merged': 0, 'hook_post_update': { -> sran#util#install() }})
-  call dein#add('iamcco/git-p.nvim')
+  " call dein#add('iamcco/git-p.nvim')
 
   " Project management
   call dein#add('Shougo/defx.nvim', {'hook_post_update': { -> UpdateRemotePlugins }})
@@ -100,7 +100,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('NLKNguyen/papercolor-theme')
   call dein#add('joshdick/onedark.vim', {'merged': 0})
   call dein#add('arcticicestudio/nord-vim')
-  call dein#add('soft-aesthetic/soft-era-vim')
+  call dein#add('soft-aesthetic/soft-era-vim', {'merged': 0})
+  call dein#add('sainnhe/lightline_foobar.vim')
 
   call dein#end()
   " call dein#save_state()
@@ -120,7 +121,7 @@ runtime zpan/init/plugins/dein_ui.vim
 " runtime zpan/init/plugins/delimit_mate.vim
 " runtime zpan/init/plugins/denite.vim
 " runtime zpan/init/plugins/endwise.vim
-runtime zpan/init/plugins/git_p.vim
+" runtime zpan/init/plugins/git_p.vim
 runtime zpan/init/plugins/lightline.vim
 runtime zpan/init/plugins/neoformat.vim
 runtime zpan/init/plugins/netrw.vim

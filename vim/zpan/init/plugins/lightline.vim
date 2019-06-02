@@ -29,16 +29,33 @@ function! LightlineFilename()
         \ &filetype ==# 'undotree' ? '' :
         \ expand('%:t') =~ '__Tagbar__\|__vista__' ? '' :
         \ expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+  let gitstatus = exists('b:coc_git_status') ? b:coc_git_status : ''
   let modified = &modified ? ' ✎' : ''
-  return filename . modified
+  return filename . gitstatus . modified
 endfunction
 
-function! LightlineFugitive()
+function! LightlineFugitive() abort
   if exists('*fugitive#head') && &filetype !~# '\v(defx|denite|help|man|qf|tagbar|undotree|vista)'
     let branch = fugitive#head()
     return branch !=# '' ? ''. branch : ''
   endif
   return ''
+endfunction
+
+function LightlineCocGit() abort
+  if exists('g:coc_git_status')
+    return g:coc_git_status
+  else
+    return ''
+  endif
+endfunction
+
+function LightlineCocStatus() abort
+  if exists('coc#status')
+    return coc#status()
+  else
+    return ''
+  endif
 endfunction
 
 function! LightlineFileFormat()
@@ -92,12 +109,37 @@ function! LightlineTag()
   return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 
+augroup LightlineColorscheme
+  autocmd!
+  autocmd ColorScheme * call s:lightline_update()
+augroup END
+function! s:lightline_update()
+  if !exists('g:loaded_lightline')
+    return
+  endif
+  try
+    if g:colors_name =~# 'solarized'
+      let g:lightline.colorscheme = 'solarized'
+    elseif g:colors_name =~# 'soft-era'
+      let g:lightline.colorscheme = 'softera_alter'
+    else
+      let g:lightline.colorscheme =
+	    \ substitute(substitute(g:colors_name, '-', '_', 'g'), '256.*', '', '')
+    endif
+
+    call lightline#init()
+    call lightline#colorscheme()
+    call lightline#update()
+  catch
+  endtry
+endfunction
+
 let g:lightline = {
       \ 'colorscheme': 'nord',
       \ 'active': {
       \     'left': [
       \         ['mode', 'paste'],
-      \         ['fugitive', 'readonly', 'filename', 'tag'] 
+      \         ['cocgit', 'readonly', 'filename', 'tag'] 
       \     ],
       \     'right': [
       \         ['lineinfo'],
@@ -111,7 +153,8 @@ let g:lightline = {
       \ 'component_function': {
       \     'mode': 'LightlineMode',
       \     'fugitive': 'LightlineFugitive',
-      \     'cocstatus': 'coc#status',
+      \     'cocgit': 'LightlineCocGit',
+      \     'cocstatus': 'LightlineCocStatus',
       \     'readonly': 'LightlineReadonly',
       \     'filename': 'LightlineFilename',
       \     'tag': 'LightlineTag',
@@ -136,3 +179,5 @@ let g:lightline#bufferline#number_map = {
 let g:lightline#bufferline#unnamed = '[No Name]'
 let g:lightline#bufferline#enable_devicons = 1
 let g:lightline#bufferline#unicode_symbols = 1
+
+let g:lightline_foobar_bold = 1

@@ -1,6 +1,6 @@
 " enable virtual text to display blame and neovim support this
 " default is: 1
-let g:gitp_blame_virtual_text = 0
+" let g:gitp_blame_virtual_text = 0
 
 " use custom highlight for blame virtual text
 " change GitPBlameLineHi to your highlight group
@@ -15,7 +15,7 @@ highlight link GitPBlameLine GitPBlameLineHi
 " zone: +xxxx
 " commit: commit message
 " lineNum: line number
-let g:gitp_blame_format = '    %{account} * %{ago}'
+let g:gitp_blame_format = '    %{account}, %{ago} * %{commit}'
 
 " NOTE: use %{hash:8} or %{hash:0:8} to use the first 8 characters
 
@@ -42,11 +42,11 @@ let g:gitp_blame_format = '    %{account} * %{ago}'
 
 " use custom highlight for diff sign
 " change the GitPAddHi GitPModifyHi GitPDeleteHi to your highlight group
-highlight link GitPAdd                GitPAddHi
-highlight link GitPModify             GitPModifyHi
-highlight link GitPDeleteTop          GitPDeleteHi
-highlight link GitPDeleteBottom       GitPDeleteHi
-highlight link GitPDeleteTopAndBottom GitPDeleteHi
+highlight link GitPAdd                  GitPAddHi
+highlight link GitPModify               GitPModifyHi
+highlight link GitPDeleteTop            GitPDeleteHi
+highlight link GitPDeleteBottom         GitPDeleteHi
+highlight link GitPDeleteTopAndBottom   GitPDeleteHi
 
 " use custom diff sign
 let g:gitp_add_sign = '■'

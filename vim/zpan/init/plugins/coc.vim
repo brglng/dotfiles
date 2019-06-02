@@ -9,6 +9,36 @@ nmap <silent> <Leader>gt <Plug>(coc-type-definition)
 nmap <silent> <Leader>gi <Plug>(coc-implementation)
 nmap <silent> <Leader>gf <Plug>(coc-references)
 
+nnoremap <silent> <Leader>jD :call CocLocations('ccls','$ccls/navigate',{'direction':'D'})<cr>
+nnoremap <silent> <Leader>jL :call CocLocations('ccls','$ccls/navigate',{'direction':'L'})<cr>
+nnoremap <silent> <Leader>jR :call CocLocations('ccls','$ccls/navigate',{'direction':'R'})<cr>
+nnoremap <silent> <Leader>jU :call CocLocations('ccls','$ccls/navigate',{'direction':'U'})<cr>
+
+" bases
+nnoremap <silent> <Leader>xb :call CocLocations('ccls','$ccls/inheritance')<cr>
+" bases of up to 3 levels
+nnoremap <silent> <Leader>xb :call CocLocations('ccls','$ccls/inheritance',{'levels':3})<cr>
+" derived
+nnoremap <silent> <Leader>xd :call CocLocations('ccls','$ccls/inheritance',{'derived':v:true})<cr>
+" derived of up to 3 levels
+nnoremap <silent> <Leader>xD :call CocLocations('ccls','$ccls/inheritance',{'derived':v:true,'levels':3})<cr>
+
+" caller
+nnoremap <silent> <Leader>xc :call CocLocations('ccls','$ccls/call')<cr>
+" callee
+nnoremap <silent> <Leader>xC :call CocLocations('ccls','$ccls/call',{'callee':v:true})<cr>
+
+" $ccls/member
+" member variables / variables in a namespace
+nnoremap <silent> <Leader>xm :call CocLocations('ccls','$ccls/member')<cr>
+" member functions / functions in a namespace
+nnoremap <silent> <Leader>xf :call CocLocations('ccls','$ccls/member',{'kind':3})<cr>
+" nested classes / types in a namespace
+nnoremap <silent> <Leader>xs :call CocLocations('ccls','$ccls/member',{'kind':2})<cr>
+
+nnoremap <silent> <Leader>xv :call CocLocations('ccls','$ccls/vars')<cr>
+nnoremap <silent> <Leader>xV :call CocLocations('ccls','$ccls/vars',{'kind':1})<cr>
+
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
@@ -30,6 +60,7 @@ vmap <Leader>=  <Plug>(coc-format-selected)
 nmap <Leader>=  <Plug>(coc-format-selected)
 
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+autocmd CursorHoldI * silent call CocActionAsync('showSignatureHelp')
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 vmap <Leader>a  <Plug>(coc-codeaction-selected)
@@ -45,6 +76,34 @@ command! -nargs=0 CocFormat :call CocAction('format')
 
 " Use `:Fold` to fold current buffer
 command! -nargs=? CocFold :call CocAction('fold', <f-args>)
+
+call coc#add_extension(
+      \ 'coc-css',
+      \ 'coc-git',
+      \ 'coc-highlight',
+      \ 'coc-html',
+      \ 'coc-java',
+      \ 'coc-json',
+      \ 'coc-lists',
+      \ 'coc-pairs',
+      \ 'coc-python',
+      \ 'coc-rls',
+      \ 'coc-snippets',
+      \ 'coc-solargraph',
+      \ 'coc-tsserver',
+      \ 'coc-vimlsp',
+      \ 'coc-yaml',
+      \ )
+
+let g:coc_snippet_next = '<tab>'
+
+" navigate chunks of current buffer
+nmap [g <Plug>(coc-git-prevchunk)
+nmap ]g <Plug>(coc-git-nextchunk)
+" show chunk diff at current position
+nmap <Leader>gD <Plug>(coc-git-chunkinfo)
+" show commit ad current position
+nmap <Leader>gB <Plug>(coc-git-commit)
 
 nnoremap <silent> <Leader>f; :<C-u>CocList          vimcommands<CR>
 nnoremap <silent> <Leader>fc :<C-u>CocList          commands<cr>
@@ -62,25 +121,6 @@ nnoremap <silent> <Leader>fC :<C-u>CocList --normal colors<CR>
 nnoremap <silent> <Leader>fs :<C-u>CocList -I       symbols<CR>
 nnoremap <silent> <Leader>fk :<C-u>CocList snippets<CR>
 nnoremap <silent> <Leader>fp :<C-u>CocListResume<CR>
-
-call coc#add_extension(
-      \ 'coc-json',
-      \ 'coc-tsserver',
-      \ 'coc-html',
-      \ 'coc-css',
-      \ 'coc-java',
-      \ 'coc-rls',
-      \ 'coc-yaml',
-      \ 'coc-python',
-      \ 'coc-highlight',
-      \ 'coc-snippets',
-      \ 'coc-pairs',
-      \ 'coc-vimlsp',
-      \ 'coc-solargraph',
-      \ 'coc-lists'
-      \ )
-
-let g:coc_snippet_next = '<tab>'
 
 if executable('bfind')
   call coc#config('list.source.files.command', 'bfind')

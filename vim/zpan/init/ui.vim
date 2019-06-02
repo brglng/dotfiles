@@ -21,9 +21,21 @@ endif
 
 syntax on
 set background=dark
-" colorscheme solarized8
 colorscheme nord
-" colorscheme onedark
+
+" autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
+" autocmd Syntax,ColorScheme * highlight! link FoldColumn LineNr
+" autocmd Syntax,ColorScheme * highlight! link VertSplit LineNr
+" autocmd Syntax,ColorScheme * highlight! link StatusLine TabLine
+" autocmd Syntax,ColorScheme * highlight! link StatusLineNC TabLineSel
+" autocmd Syntax,ColorScheme * highlight! link MoreMsg TabLineFill
+" autocmd Syntax,ColorScheme * highlight! link ModeMsg TabLineFill
+" autocmd Syntax,ColorScheme * highlight! link SpecialKey Normal
+" autocmd Syntax,ColorScheme * highlight! link WildMenu Pmenu
+" autocmd Syntax,ColorScheme * highlight! link Question NonText
+" autocmd Syntax,ColorScheme * highlight! link WarningMsg DiffChange
+" autocmd Syntax,ColorScheme * highlight! link PmenuSBar Pmenu
+" autocmd Syntax,ColorScheme * highlight! link PmenuThumb PmenuSel
 
 if exists('g:gui_oni') || exists('g:gui_gonvim')
   set laststatus=0

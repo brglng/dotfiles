@@ -50,5 +50,7 @@
     "reference": "\uf87a",
     "typeParameter": "\uf278",
     "default": "\uf29c"
-  }
+  },
+  "git.addGlameToVirtualText": true,
+  "git.addGlameToBufferVar": true
 }

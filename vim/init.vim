@@ -59,7 +59,7 @@ set mouse=a                     " mouse is on
 set nocompatible                " turn of vi compatible mode
 set winaltkeys=no
 "set helplang=cn                 " Chinese help
-"set autoread                    " auto read files modified outside vim
+set autoread                    " auto read files modified outside vim
 if has('win32') || !zpan#is_sudo()
   set nobackup                  " do not create backups before editing
   set nowritebackup
@@ -120,7 +120,7 @@ set history=1000
 set tabpagemax=50
 set sessionoptions-=options
 
-set confirm
+" set confirm
 "set switchbuf=usetab,newtab,useopen
 
 " set nostartofline
@@ -179,7 +179,7 @@ set foldmethod=syntax
 set foldlevel=99
 set foldlevelstart=99
 set foldnestmax=1
-set foldcolumn=2
+" set foldcolumn=2
 autocmd FileType vim setl foldmethod=marker foldnestmax=3
 autocmd FileType c setl foldnestmax=1
 autocmd FileType cpp setl foldnestmax=3
