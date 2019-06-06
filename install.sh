@@ -144,6 +144,8 @@ nvm install node npm
 nvm use node
 nvm alias default node
 
+pip install -U pynvim neovim autopep8 pylint jedi
+
 if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
   python3.6 -m pip install -U pynvim neovim autopep8 pylint jedi
 else

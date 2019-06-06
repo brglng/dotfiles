@@ -21,6 +21,7 @@
     "javascriptreact": ["javascript"],
     "typescript": ["javascript"]
   },
+  "snippets.trace": "verbose",
   "list.maxHeight": 20,
   "list.source.grep.defaultArgs": ["-smartcase", "-regex"],
   "list.source.grep.defaultOptions": ["--interactive", "--no-sort", "--regex"],

@@ -85,6 +85,12 @@ if has('gui_running')
   endif
 endif
 
+if has('nvim')
+  set signcolumn=yes:2
+else
+  set signcolumn=yes
+endif
+
 autocmd FileType help set foldcolumn=0 colorcolumn=
 
 autocmd FileType qf setlocal wrap foldcolumn=0 colorcolumn=

@@ -50,7 +50,7 @@ function! s:show_documentation()
 endfunction
 
 " Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent if index(['defx', 'denite', 'gitv', 'startify', 'undotree'], &filetype) < 0 && expand('%:t') !~ '__Tagbar\|__vista__' | call CocActionAsync('highlight') | endif
+autocmd CursorHold * if index(['defx', 'denite', 'gitv', 'startify', 'undotree'], &filetype) < 0 && expand('%:t') !~ '__Tagbar\|__vista__' | silent! call CocActionAsync('highlight') | endif
 
 " Remap for rename current word
 nmap <Leader>rn <Plug>(coc-rename)
@@ -59,8 +59,8 @@ nmap <Leader>rn <Plug>(coc-rename)
 vmap <Leader>=  <Plug>(coc-format-selected)
 nmap <Leader>=  <Plug>(coc-format-selected)
 
-autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-autocmd CursorHoldI * silent call CocActionAsync('showSignatureHelp')
+autocmd User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
+autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 vmap <Leader>a  <Plug>(coc-codeaction-selected)
@@ -126,3 +126,5 @@ if executable('bfind')
   call coc#config('list.source.files.command', 'bfind')
   call coc#config('list.source.files.args', [])
 endif
+
+" let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']

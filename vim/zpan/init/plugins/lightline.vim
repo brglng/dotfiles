@@ -35,7 +35,7 @@ function! LightlineFilename()
 endfunction
 
 function! LightlineFugitive() abort
-  if exists('*fugitive#head') && &filetype !~# '\v(defx|denite|help|man|qf|tagbar|undotree|vista)'
+  if exists('*fugitive#head') && &filetype !~# '\v(defx|denite|help|man|qf|undotree)' && expand('%:t') !~ ('__Tagbar__\|__vista__')
     let branch = fugitive#head()
     return branch !=# '' ? ''. branch : ''
   endif
@@ -43,7 +43,7 @@ function! LightlineFugitive() abort
 endfunction
 
 function LightlineCocGit() abort
-  if exists('g:coc_git_status')
+  if exists('g:coc_git_status') && &filetype !~# '\v(defx|denite|help|man|qf|undotree)' && expand('%:t') !~ ('__Tagbar__\|__vista__')
     return g:coc_git_status
   else
     return ''
