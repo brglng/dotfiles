@@ -55,7 +55,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('tpope/vim-sleuth')
   call dein#add('tpope/vim-repeat')
   call dein#add('mg979/vim-visual-multi')
-  call dein#add('Shougo/vinarise.vim', {'hook_post_update': { -> UpdateRemotePlugins }})
+  call dein#add('Shougo/vinarise.vim', {'hook_post_update': 'UpdateRemotePlugins'})
   " call dein#add('Shougo/deorise.vim')
 
   " FileType Plugins
@@ -69,17 +69,16 @@ if dein#load_state('~/.cache/dein')
   call dein#add('tpope/vim-fugitive')
   call dein#add('will133/vim-dirdiff')
   call dein#add('gregsexton/gitv')
-  call dein#add('iamcco/sran.nvim', {'merged': 0, 'hook_post_update': { -> sran#util#install() }})
 
   " Project management
-  call dein#add('Shougo/defx.nvim', {'hook_post_update': { -> UpdateRemotePlugins }})
+  call dein#add('Shougo/defx.nvim', {'hook_post_update': 'UpdateRemotePlugins'})
   call dein#add('kristijanhusak/defx-git')
   call dein#add('kristijanhusak/defx-icons')
   call dein#add('editorconfig/editorconfig-vim')
 
   " Language Semantic
   if !zpan#is_sudo()
-    call dein#add('neoclide/coc.nvim', {'merged': 0, 'rev': '*', 'build': './install.sh'})
+    call dein#add('neoclide/coc.nvim', {'merged': 0, 'rev': '*', 'build': './install.sh', 'hook_post_update': 'UpdateRemotePlugins'})
   endif
   call dein#add('honza/vim-snippets')
   call dein#add('liuchengxu/vista.vim')

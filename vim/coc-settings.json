@@ -1,4 +1,5 @@
 {
+  "diagnostic.virtualText": true,
   "languageserver": {
     "ccls": {
       "command": "ccls",
