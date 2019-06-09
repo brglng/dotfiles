@@ -21,7 +21,7 @@ install_apt() {
 
   sudo apt-get update
 
-  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git python3-setuptools python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev xsel xclip
+  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git python3-setuptools python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev xsel xclip fzf
 
   if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
     # Install Python 3.6
@@ -110,7 +110,7 @@ install_mac() {
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   git config --global http.postBuffer 524288000
-  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit reattach-to-user-namespace yarn ccls sk ripgrep clang-format
+  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit reattach-to-user-namespace yarn ccls fzf ripgrep clang-format
   brew install vim
   brew install --HEAD neovim
   brew cask install macvim alacritty
@@ -132,7 +132,6 @@ rustup component add rls rust-analysis rust-src rustfmt
 
 if [ ! $(uname -s) = Darwin ]; then
   cargo install -f ripgrep
-  cargo install -f skim
 fi
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash

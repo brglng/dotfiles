@@ -39,7 +39,6 @@ antigen bundle zdharma/fast-syntax-highlighting
 
 ZLUA_EXEC=$(which luajit)
 export _ZL_MATCH_MODE=1
-export _ZL_FZF=sk
 export _ZL_ADD_ONCE=1
 antigen bundle skywind3000/z.lua
 
