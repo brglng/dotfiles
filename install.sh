@@ -107,18 +107,25 @@ install_linux() {
 }
 
 install_mac() {
-  if which brew; then
+  if which brew > /dev/null; then
     brew update
   else
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   git config --global http.postBuffer 524288000
-  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit reattach-to-user-namespace yarn ccls fzf ripgrep clang-format
-  brew install vim
-  brew install --HEAD neovim
+
+  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit reattach-to-user-namespace yarn ccls fzf ripgrep clang-format fd vim
+
+  if ! brew ls --versions neovim > /dev/null; then
+    brew install --HEAD neovim
+  fi
+
   brew cask install macvim alacritty
-  brew tap universal-ctags/universal-ctags
-  brew install --HEAD universal-ctags
+
+  if ! brew ls --versions universal-ctags; then
+    brew tap universal-ctags/universal-ctags
+    brew install --HEAD universal-ctags
+  fi
 }
 
 export PATH=$HOME/.local/bin:$PATH
@@ -134,7 +141,7 @@ rustup update
 rustup component add rls rust-analysis rust-src rustfmt
 
 if [ ! $(uname -s) = Darwin ]; then
-  cargo install -f ripgrep
+  cargo install -f ripgrep fd-find
 fi
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
