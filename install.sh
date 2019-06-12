@@ -21,7 +21,7 @@ install_apt() {
 
   sudo apt-get update
 
-  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git python3-setuptools python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev xsel xclip fzf
+  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git python3-setuptools python3-pip python3-dev vim-gtk3 zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev xsel xclip
 
   if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
     # Install Python 3.6
@@ -35,8 +35,6 @@ install_apt() {
   else
     sudo apt-get install -y clang-format-7
   fi
-
-  git config --global http.postBuffer 524288000
 }
 
 install_linux() {
@@ -50,6 +48,11 @@ install_linux() {
     Fedora) install_yum ;;
     CentOS) install_yum ;;
   esac
+
+  git config --global http.postBuffer 524288000
+
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install
 
   # install Universal Ctags
   mkdir -p ~/.cache/brglng/dotfiles/universal-ctags
