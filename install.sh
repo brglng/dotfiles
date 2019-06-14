@@ -54,13 +54,14 @@ install_linux() {
   git config --global http.postBuffer 524288000
 
   if [ -e ~/.fzf ]; then
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install
-  else
     pushd ~/.fzf
     git pull
     popd
+  else
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
   fi
+
+  ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh
 
   # install Universal Ctags
   mkdir -p ~/.cache/brglng/dotfiles/universal-ctags
