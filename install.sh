@@ -53,15 +53,18 @@ install_linux() {
 
   git config --global http.postBuffer 524288000
 
-  if [ -e ~/.fzf ]; then
+  mkdir -p ~/.cache/brglng/dotfiles/fzf
+  pushd ~/.cache/brglng/dotfiles/fzf
+  if [ ! -e download.timestamp ]; then
+    rm -rf ~/.fzf
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  else
     pushd ~/.fzf
     git pull
     popd
-  else
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
   fi
-
-  ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh
+  ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh --no-fish
+  popd
 
   # install Universal Ctags
   mkdir -p ~/.cache/brglng/dotfiles/universal-ctags
@@ -162,12 +165,12 @@ nvm install node npm
 nvm use node
 nvm alias default node
 
-pip install -U pynvim neovim autopep8 pylint jedi
+pip install --user -U pynvim neovim autopep8 pylint jedi
 
 if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
   python3.6 -m pip install -U pynvim neovim autopep8 pylint jedi
 else
-  pip3 install -U pynvim neovim autopep8 pylint jedi
+  pip3 install --user -U pynvim neovim autopep8 pylint jedi
 fi
 sudo -H gem install neovim
 yarn global add neovim
