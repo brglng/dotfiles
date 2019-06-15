@@ -27,6 +27,8 @@ install_apt() {
     # Install Python 3.6
     sudo apt-get install -y python3.6 clang-format-6.0
 
+    python3.6 -m pip install --user -U pip
+
     # Install a newer CMake version
     if [ ! -e ~/.local/bin/cmake ]; then
       mkdir -p ~/.cache/brglng/dotfiles/cmake
@@ -37,6 +39,9 @@ install_apt() {
   else
     sudo apt-get install -y clang-format-7
   fi
+
+  python3 -m pip install --user -U pip
+  python -m pip install --user -U pip
 }
 
 install_linux() {
@@ -166,13 +171,13 @@ nvm install node npm
 nvm use node
 nvm alias default node
 
-pip install --user -U pynvim neovim autopep8 pylint jedi
+python -m pip install --user -U pynvim neovim autopep8 pylint jedi
+python3 -m pip install --user -U pynvim neovim autopep8 pylint jedi
 
-if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
-  python3.6 -m pip install -U pynvim neovim autopep8 pylint jedi
-else
-  pip3 install --user -U pynvim neovim autopep8 pylint jedi
+if which python3.6 > /dev/null; then
+  python3.6 -m pip install --user -U pynvim neovim autopep8 pylint jedi
 fi
+
 sudo -H gem install neovim
 yarn global add neovim
 

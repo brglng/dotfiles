@@ -45,16 +45,16 @@ link() {
 
   mkdir -p /tmp/brglng/dotfiles
   cat << EOF > /tmp/brglng/dotfiles/gitconfig
-# begin brglng/dotfiles
+# BEGIN brglng/dotfiles
 [include]
 	path = $(pwd)/gitconfig
-# end brglng/dotfiles
+# END brglng/dotfiles
 EOF
 
-  if [ ! -e $HOME/.gitconfig ] || [ "$(perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s' $HOME/.gitconfig)" = "" ]; then
+  if [ ! -e $HOME/.gitconfig ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $HOME/.gitconfig)" = "" ]; then
     cat /tmp/brglng/dotfiles/gitconfig >> ~/.gitconfig
   else
-    perl -i -p0e 's/# begin brglng\/dotfiles.*# end brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/gitconfig`/gse' $HOME/.gitconfig
+    perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/gitconfig`/gse' $HOME/.gitconfig
   fi
 
   mkdir -p ~/.local/bin
@@ -70,15 +70,15 @@ link_mac() {
 
   mkdir -p /tmp/brglng/dotfiles
   cat << EOF > /tmp/brglng/dotfiles/bash_profile
-# begin brglng/dotfiles
+# BEGIN brglng/dotfiles
 [ -r ~/.bashrc ] && . ~/.bashrc
-# end brglng/dotfiles
+# END brglng/dotfiles
 EOF
 
-  if [ ! -e $HOME/.bash_profile ] || [ "$(perl -n0e 'print $1 if /(# begin brglng\/dotfiles.*# end brglng\/dotfiles)/s' $HOME/.bash_profile)" = "" ]; then
+  if [ ! -e $HOME/.bash_profile ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $HOME/.bash_profile)" = "" ]; then
     cat /tmp/brglng/dotfiles/bash_profile >> ~/.bash_profile
   else
-    perl -i -p0e 's/# begin brglng\/dotfiles.*# end brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/bash_profile`/gse' $HOME/.bash_profile
+    perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/bash_profile`/gse' $HOME/.bash_profile
   fi
 }
 

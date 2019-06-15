@@ -42,8 +42,12 @@ export _ZL_MATCH_MODE=1
 export _ZL_ADD_ONCE=1
 antigen bundle skywind3000/z.lua
 
+POWERLEVEL9K_MODE='nerdfont-complete'
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable virtualenv anaconda rbenv vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history)
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+POWERLEVEL9K_SHORTEN_DELIMITER="…"
+POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_unique"
 
 if [ "$(uname -s)" = "Linux" ]; then
   distname=$(cat /etc/*release | sed -ne 's/DISTRIB_ID=\(.*\)/\1/gp')
