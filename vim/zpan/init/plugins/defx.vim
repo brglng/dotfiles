@@ -1,4 +1,4 @@
-call defx#custom#option('_', {
+silent! call defx#custom#option('_', {
       \ 'columns': 'mark:git:indent:icons:filename',
       \ 'winwidth': 40,
       \ 'split': 'vertical',
@@ -9,13 +9,13 @@ call defx#custom#option('_', {
       \ 'resume': 1
       \ })
 
-call defx#custom#column('icon', {
+silent! call defx#custom#column('icon', {
       \ 'directory_icon': '',
       \ 'opened_icon': '',
       \ 'root_icon': ""
       \ })
 
-call defx#custom#column('mark', {
+silent! call defx#custom#column('mark', {
       \ 'readonly_icon': "",
       \ 'selected_icon': "",
       \ })

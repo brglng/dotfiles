@@ -21,7 +21,7 @@ endif
 
 syntax on
 set background=dark
-colorscheme nord
+silent! colorscheme nord
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
 " autocmd Syntax,ColorScheme * highlight! link FoldColumn LineNr

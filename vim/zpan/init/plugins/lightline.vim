@@ -111,7 +111,7 @@ endfunction
 
 augroup LightlineColorscheme
   autocmd!
-  autocmd ColorScheme * call s:lightline_update()
+  autocmd ColorScheme * silent! call s:lightline_update()
 augroup END
 function! s:lightline_update()
   if !exists('g:loaded_lightline')

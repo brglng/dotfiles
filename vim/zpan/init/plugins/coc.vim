@@ -43,9 +43,12 @@ nnoremap <silent> <Leader>xV :call CocLocations('ccls','$ccls/vars',{'kind':1})<
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
+    execute 'h '. expand('<cword>')
   else
-    call CocAction('doHover')
+    if exists('*CocAction')
+      call CocAction('doHover')
+      execute 'h ' . expand('<cword>')
+    endif
   endif
 endfunction
 
@@ -77,7 +80,7 @@ command! -nargs=0 CocFormat :call CocAction('format')
 " Use `:Fold` to fold current buffer
 command! -nargs=? CocFold :call CocAction('fold', <f-args>)
 
-call coc#add_extension(
+silent! call coc#add_extension(
       \ 'coc-css',
       \ 'coc-git',
       \ 'coc-highlight',
@@ -123,8 +126,8 @@ nnoremap <silent> <Leader>fk :<C-u>CocList snippets<CR>
 nnoremap <silent> <Leader>fp :<C-u>CocListResume<CR>
 
 if executable('bfind')
-  call coc#config('list.source.files.command', 'bfind')
-  call coc#config('list.source.files.args', [])
+  silent! call coc#config('list.source.files.command', 'bfind')
+  silent! call coc#config('list.source.files.args', [])
 endif
 
 " let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']
