@@ -36,7 +36,7 @@ update_vimrc() {
   cat << EOF > /tmp/brglng/dotfiles/vimrc
 " BEGIN brglng/dotfiles
 let &runtimepath = '$(pwd)/vim,' . &runtimepath . ',$(pwd)/vim/after'
-source /$(pwd)/dotfiles/vim/init.vim
+source $(pwd)/dotfiles/vim/init.vim
 " END brglng/dotfiles
 EOF
 
