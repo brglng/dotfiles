@@ -111,14 +111,6 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern root line)
 
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=24'
 
-# User configuration
-
-export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
@@ -214,12 +206,5 @@ setopt HIST_IGNORE_SPACE        # Don't record an entry starting with a space.
 setopt HIST_SAVE_NO_DUPS        # Don't write duplicate entries in the history file.
 setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY              # Don't execute immediately upon history expansion.
-
-export GOPATH=$HOME/.local/gopath
-export PATH=$GOPATH/bin:$PATH
-source $HOME/.cargo/env
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

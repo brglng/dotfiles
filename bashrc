@@ -8,8 +8,6 @@ case $- in
       *) return;;
 esac
 
-export PATH=~/.local/bin:$PATH
-
 set -o notify
 
 shopt -s nocaseglob
@@ -141,12 +139,5 @@ fi
 if [ -e ~/.local/share/z.lua ]; then
   eval "$(luajit ~/.local/share/z.lua --init bash)"
 fi
-
-export GOPATH=$HOME/.local/gopath
-export PATH=$GOPATH/bin:$PATH
-source $HOME/.cargo/env
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
