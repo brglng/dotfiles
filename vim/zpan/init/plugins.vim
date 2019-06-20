@@ -56,7 +56,7 @@ try
     call dein#add('tpope/vim-sleuth')
     call dein#add('tpope/vim-repeat')
     call dein#add('mg979/vim-visual-multi')
-    call dein#add('Shougo/vinarise.vim', {'hook_post_update': "silent! UpdateRemotePlugins"})
+    call dein#add('Shougo/vinarise.vim', {'hook_post_update': 'silent! UpdateRemotePlugins'})
     " call dein#add('Shougo/deorise.vim')
 
     " FileType Plugins
@@ -72,7 +72,7 @@ try
     call dein#add('gregsexton/gitv')
 
     " Project management
-    call dein#add('Shougo/defx.nvim', {'hook_post_update': "silent! UpdateRemotePlugins"})
+    call dein#add('Shougo/defx.nvim', {'hook_post_update': 'silent! UpdateRemotePlugins'})
     call dein#add('kristijanhusak/defx-git')
     call dein#add('kristijanhusak/defx-icons')
     call dein#add('editorconfig/editorconfig-vim')
@@ -81,9 +81,10 @@ try
     if !zpan#is_sudo()
       call dein#add('neoclide/coc.nvim', {
             \ 'merged': 0,
+            \ 'trusted': 0,
             \ 'rev': '*',
             \ 'build': './install.sh',
-            \ 'hook_post_update': "silent! UpdateRemotePlugins | CocUpdate"
+            \ 'hook_post_update': 'silent! UpdateRemotePlugins | CocUpdate'
             \ })
     endif
     call dein#add('honza/vim-snippets')
