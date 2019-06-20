@@ -69,7 +69,7 @@ install_linux() {
     git pull
     popd
   fi
-  ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh --no-fish
+  ~/.fzf/install --key-bindings --completion --no-update-rc
   popd
 
   # install Universal Ctags
@@ -134,7 +134,7 @@ install_mac() {
 
   brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit reattach-to-user-namespace yarn ccls fzf ripgrep clang-format fd vim
 
-  $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh --no-fish
+  $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 
   if ! brew ls --versions neovim > /dev/null; then
     brew install --HEAD neovim
