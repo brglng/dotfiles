@@ -31,22 +31,6 @@ EOF
   fi
 }
 
-update_vimrc() {
-  mkdir -p /tmp/brglng/dotfiles
-  cat << EOF > /tmp/brglng/dotfiles/vimrc
-" BEGIN brglng/dotfiles
-let &runtimepath = '$(pwd)/vim,' . &runtimepath . ',$(pwd)/vim/after'
-source $(pwd)/dotfiles/vim/init.vim
-" END brglng/dotfiles
-EOF
-
-  if [ ! -e $1 ] || [ "$(perl -n0e 'print $1 if /(" BEGIN brglng\/dotfiles.*" END brglng\/dotfiles)/s' $1)" = "" ]; then
-    cat /tmp/brglng/dotfiles/vimrc >> $1
-  else
-    perl -i -p0e 's/" BEGIN brglng\/dotfiles.*" END brglng\/dotfiles/`cat \/tmp\/brglng\/dotfiles\/vimrc`/gse' $1
-  fi
-}
-
 update_zshrc() {
   mkdir -p /tmp/brglng/dotfiles
   cat << EOF > /tmp/brglng/dotfiles/zshrc
@@ -79,9 +63,16 @@ link() {
   [ -e ~/.tmux.conf ] && [ ! -L ~/.tmux.conf ] && mv -f ~/.tmux.conf ~/.tmux.conf.orig
   ln -fs $(pwd)/tmux.conf ~/.tmux.conf
 
+  [ -e ~/.vimrc ] && [ ! -L ~/.vimrc ] && mv -f ~/.vimrc ~/.vimrc.orig
+  ln -fs $(pwd)/vimrc ~/.vimrc
+
+  [ -e ~/.vim ] && [ ! -L ~/.vim ] && mv -f ~/.vim ~/.vim.orig
+  ln -fs $(pwd)/vim ~/.vim
+
   mkdir -p ~/.config/nvim
-  update_vimrc $HOME/.config/nvim/init.vim
-  update_vimrc $HOME/.vimrc
+  [ -e ~/.config/nvim ] && [ ! -L ~/.config/nvim ] && mv -f ~/.config/nvim ~/.config/nvim.orig
+  ln -fs $(pwd)/vim ~/.config/nvim
+
   update_gitconfig
   update_zshrc
 
