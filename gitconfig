@@ -21,19 +21,28 @@
 [diff]
 	tool = nvim-dirdiff
 	guitool = bc3
-[merge]
-	tool = bc3
-	guitool = bc3
 [difftool]
-	prompt = No
+	prompt = false
+[difftool "nvimdiff"]
+	cmd = "nvim -R -d -c \"wincmd l\" -d \"$LOCAL\" \"$REMOTE\""
 [difftool "vim-dirdiff"]
 	cmd = ~/.local/bin/vimdirdiff.py \"$LOCAL\" \"$REMOTE\"
+	trustExitCode = true
 [difftool "nvim-dirdiff"]
 	cmd = ~/.local/bin/nvimdirdiff.py \"$LOCAL\" \"$REMOTE\"
-[difftool "gvim-dirdiff"]
-	cmd = ~/.local/bin/gvimdirdiff.py \"$LOCAL\" \"$REMOTE\"
+	trustExitCode = true
+[merge]
+	tool = nvimdiff
+	guitool = bc3
+[mergetool]
+	conflictstyle = diff3
+	prompt = false
+[mergetool "nvimdiff"]
+	cmd = "nvim -d -c \"4wincmd w | wincmd J\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"  \"$MERGED\""
+	trustExitCode = true
 [mergetool "kdiff3-noauto"]
 	cmd = kdiff3 --L1 \"$MERGED (Base)\" --L2 \"$MERGED (Local)\" --L3 \"$MERGED (Remote)\" -o \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+	trustExitCode = true
 [alias]
 	lg = log --pretty=format:'%C(yellow)%h %Cgreen%ad %Cblue%an<%ae> %Creset%s' --abbrev-commit --date=local --color --graph --decorate --all
 	ci = commit
