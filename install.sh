@@ -125,7 +125,7 @@ install_linux() {
 }
 
 install_mac() {
-  if which brew > /dev/null; then
+  if [ -x "$(which brew)" ]; then
     brew update
   else
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -176,7 +176,7 @@ nvm alias default node
 python -m pip install --user -U pynvim neovim autopep8 pylint jedi
 python3 -m pip install --user -U pynvim neovim autopep8 pylint jedi
 
-if which python3.6 > /dev/null; then
+if [ -x "$(which python3.6)" ]; then
   python3.6 -m pip install --user -U pynvim neovim autopep8 pylint jedi
 fi
 

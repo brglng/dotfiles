@@ -112,10 +112,12 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern root line)
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=24'
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
+if [ -x "$(which nvim)" ]; then
   export EDITOR='nvim'
+elif [ -x "$(which vim)" ]; then
+  export EDITOR='vim'
+elif [ -x "$(which nano)" ]; then
+  export EDITOR='nano'
 fi
 
 # Compilation flags

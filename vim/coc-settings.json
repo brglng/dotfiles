@@ -57,6 +57,6 @@
   "git.addGlameToBufferVar": true,
   "git.changedDecorator": " *",
   "git.stagedDecorator": " ●",
-  "git.untrackedDecorator": " +",
+  "git.untrackedDecorator": " …",
   "git.conflictedDecorator": " x"
 }
