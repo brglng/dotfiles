@@ -78,15 +78,12 @@ try
     call dein#add('editorconfig/editorconfig-vim')
 
     " Language Semantic
-    if !zpan#is_sudo()
-      call dein#add('neoclide/coc.nvim', {
-            \ 'merged': 0,
-            \ 'trusted': 0,
-            \ 'rev': '*',
-            \ 'build': './install.sh',
-            \ 'hook_post_update': 'silent! UpdateRemotePlugins | CocUpdate'
-            \ })
-    endif
+    call dein#add('neoclide/coc.nvim', {
+          \ 'merged': 0,
+          \ 'trusted': 0,
+          \ 'rev': 'release',
+          \ 'hook_post_update': 'silent! UpdateRemotePlugins | CocUpdate'
+          \ })
     call dein#add('honza/vim-snippets')
     call dein#add('liuchengxu/vista.vim')
     call dein#add('sbdchd/neoformat')
