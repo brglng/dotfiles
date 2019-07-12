@@ -82,7 +82,7 @@ try
           \ 'merged': 0,
           \ 'trusted': 0,
           \ 'rev': 'release',
-          \ 'hook_post_update': 'silent! UpdateRemotePlugins | CocUpdate'
+          \ 'hook_post_update': 'silent! UpdateRemotePlugins | silent! CocUpdate'
           \ })
     call dein#add('honza/vim-snippets')
     call dein#add('liuchengxu/vista.vim')

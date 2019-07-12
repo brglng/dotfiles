@@ -21,7 +21,7 @@ install_apt() {
 
   sudo apt-get update
 
-  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git python3-setuptools python3-pip python3-dev zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev xsel xclip
+  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git python3-setuptools python3-pip python3-dev zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev xsel xclip colordiff
 
   if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
     # Install Python 3.6
@@ -132,7 +132,8 @@ install_mac() {
   fi
   git config --global http.postBuffer 524288000
 
-  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit reattach-to-user-namespace yarn ccls fzf ripgrep clang-format fd vim
+  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit yarn ccls fzf ripgrep clang-format fd vim colordiff
+  # brew install reattach-to-user-namespace
 
   $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 

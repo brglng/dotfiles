@@ -82,19 +82,32 @@ command! -nargs=? CocFold :call CocAction('fold', <f-args>)
 
 silent! call coc#add_extension(
       \ 'coc-css',
+      \ 'coc-dictionary',
+      \ 'coc-docker',
+      \ 'coc-emoji',
       \ 'coc-git',
+      \ 'coc-gocode',
       \ 'coc-highlight',
       \ 'coc-html',
+      \ 'coc-imselect',
       \ 'coc-java',
       \ 'coc-json',
-      \ 'coc-lists',
+      \ 'coc-lists'
+      \ )
+
+silent! call coc#add_extension(
+      \ 'coc-omni',
       \ 'coc-pairs',
       \ 'coc-python',
       \ 'coc-rls',
       \ 'coc-snippets',
       \ 'coc-solargraph',
+      \ 'coc-syntax',
+      \ 'coc-tabnine',
+      \ 'coc-tag',
       \ 'coc-tsserver',
       \ 'coc-vimlsp',
+      \ 'coc-word',
       \ 'coc-yaml',
       \ )
 
