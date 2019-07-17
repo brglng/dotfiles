@@ -31,7 +31,7 @@ install = [["pip", "install", "python-language-server"]]
 
 [language.cpp]
 command = "ccls"
-args = ["--init={\"cacheDirectory\": \"${project_root}/.ccls-cache\"}"]
+args = ["--init={\"cacheDirectory\": \"$HOME/.cache/.ccls-cache\"}"]
 synchronous_triggers = [".", "::", "->"]
 synchronous_timeout_ms = 200
 num_server_instances = 2
