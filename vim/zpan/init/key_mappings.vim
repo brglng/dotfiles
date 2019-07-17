@@ -131,25 +131,5 @@ nnoremap <silent> <M-Right>     <C-i>
 nnoremap <silent> <C-Tab>       :bp<CR>
 nnoremap <silent> <C-S-Tab>     :bn<CR>
 
-if has('nvim')
-  nnoremap <silent> <M-0> :call <SID>toggle_terminal()<CR>i
-  inoremap <silent> <M-0> <Esc>:call <SID>toggle_terminal()<CR>i
-else
-  nnoremap <silent> <M-0> :call <SID>toggle_terminal()<CR>
-  inoremap <silent> <M-0> <Esc>:call <SID>toggle_terminal()<CR>
-endif
-tnoremap <silent> <M-0> <C-\><C-n>:call <SID>toggle_terminal()<CR>
-
-nnoremap <silent> <M-1> :call <SID>toggle_defx()<CR>
-inoremap <silent> <M-1> <Esc>:call <SID>toggle_defx()<CR>
-nnoremap <silent> <M-2> :call <SID>toggle_vista()<CR>
-inoremap <silent> <M-2> <Esc>:call <SID>toggle_vista()<CR>
-nnoremap <silent> <M-3> :call <SID>toggle_undotree()<CR>
-inoremap <silent> <M-3> <Esc>:call <SID>toggle_undotree()<CR>
-
 " QuickFix and Location windows
 autocmd FileType qf,help,man,tagbar nnoremap <silent> <buffer> q <C-w>q
-nnoremap <silent> <M-6> :call <SID>toggle_quickfix()<CR>
-inoremap <silent> <M-6> <Esc>:call <SID>toggle_quickfix()<CR>
-nnoremap <silent> <M-^> :call <SID>toggle_loclist()<CR>
-inoremap <silent> <M-^> <Esc>:call <SID>toggle_loclist()<CR>
