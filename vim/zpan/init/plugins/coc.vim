@@ -3,7 +3,7 @@ nmap <silent> [q <Plug>(coc-diagnostic-prev)
 nmap <silent> ]q <Plug>(coc-diagnostic-next)
 
 " Highlight symbol under cursor on CursorHold
-autocmd CursorHold * if index(['defx', 'denite', 'gitv', 'startify', 'undotree'], &filetype) < 0 && expand('%:t') !~ '__Tagbar\|__vista__' | silent! call CocActionAsync('highlight') | endif
+autocmd CursorHold * if !zpan#is_tool_window() | silent! call CocActionAsync('highlight') | endif
 
 autocmd User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
 autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
@@ -54,3 +54,5 @@ if executable('bfind')
 endif
 
 " let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']
+
+autocmd User CocOpenFloat silent! setlocal winblend=15
