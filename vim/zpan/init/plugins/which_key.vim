@@ -154,7 +154,7 @@ let g:which_key_map.c = {
       \ 'name': '+comments',
       \ 'c': 'comment out the selected lines',
       \ 'n': 'comment out the selected lines (force nesting)',
-      \ '<Space>': 'toggle comment of the selected lines',
+      \ ' ': 'toggle comment of the selected lines',
       \ 'm': 'comment out the selected lines using multiline comment',
       \ 'i': 'toggles the comment of the selected lines individually',
       \ 's': 'comment out the selected lines using documentation style',
