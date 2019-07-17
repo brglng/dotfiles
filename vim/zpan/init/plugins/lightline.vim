@@ -35,7 +35,7 @@ function! LightlineFilename()
 endfunction
 
 function! LightlineFugitive() abort
-  if exists('*fugitive#head') && &filetype !~# '\v(defx|denite|help|man|qf|undotree)' && expand('%:t') !~ ('__Tagbar__\|__vista__')
+  if exists('*fugitive#head') && !zpan#is_tool_window()
     let branch = fugitive#head()
     return branch !=# '' ? ''. branch : ''
   endif
@@ -43,7 +43,7 @@ function! LightlineFugitive() abort
 endfunction
 
 function LightlineCocGit() abort
-  if exists('g:coc_git_status') && &filetype !~# '\v(defx|denite|help|man|qf|undotree)' && expand('%:t') !~ ('__Tagbar__\|__vista__')
+  if exists('g:coc_git_status') && !zpan#is_tool_window()
     return g:coc_git_status
   else
     return ''
@@ -59,49 +59,19 @@ function LightlineCocStatus() abort
 endfunction
 
 function! LightlineFileFormat()
-  return &filetype !=# 'defx' &&
-        \ &filetype !=# 'denite' &&
-        \ &filetype !=# 'gitv' &&
-        \ &filetype !=# 'help' &&
-        \ &filetype !=# 'man' &&
-        \ &filetype !=# 'qf' &&
-        \ &filetype !=# 'startify' &&
-        \ &filetype != 'undotree' &&
-        \ expand('%:t') !~ '__Tagbar__\|__vista__' &&
-        \ winwidth(0) > 70
-        \ ? &fileformat : ''
+  return !zpan#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &fileformat : ''
 endfunction
 
 function! LightlineFiletype()
-  return &filetype !=# 'defx' &&
-        \ &filetype !=# 'denite' &&
-        \ &filetype !=# 'gitv' &&
-        \ &filetype !=# 'help' &&
-        \ &filetype !=# 'man' &&
-        \ &filetype !=# 'qf' &&
-        \ &filetype !=# 'startify' &&
-        \ &filetype !=# 'undotree' &&
-        \ expand('%:t') !~ '__Tagbar__\|__vista__' &&
-        \ winwidth(0) > 70
-        \ ? &filetype !=# '' ? &filetype : 'no ft' : ''
+  return !zpan#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &filetype !=# '' ? &filetype : 'no ft' : ''
 endfunction
 
 function! LightlineFileEncoding()
-  return &filetype !=# 'defx' &&
-        \ &filetype !=# 'denite' &&
-        \ &filetype !=# 'gitv' &&
-        \ &filetype !=# 'help' &&
-        \ &filetype !=# 'man' &&
-        \ &filetype !=# 'qf' &&
-        \ &filetype !=# 'startify' &&
-        \ &filetype !=# 'undotree' &&
-        \ expand('%:t') !~ '__Tagbar__\|__vista__' &&
-        \ winwidth(0) > 70
-        \ ? &fileencoding : ''
+  return !zpan#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &fileencoding : ''
 endfunction
 
 function! LightlineReadonly()
-  return &readonly && &filetype !~# '\v(defx|denite|help|man|qf|startify)' && expand('%:t') !~ ('__Tagbar__\|__vista__') ? '' : ''
+  return &readonly && !zpan#is_tool_window() ? '' : ''
 endfunction
 
 function! LightlineTag()

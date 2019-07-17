@@ -132,7 +132,7 @@ install_mac() {
   fi
   git config --global http.postBuffer 524288000
 
-  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config make cmake python3 tmux luajit yarn ccls fzf ripgrep clang-format fd vim colordiff
+  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake python3 tmux luajit yarn ccls fzf ripgrep clang-format fd vim colordiff exa fselect fx nnn tig glances
   # brew install reattach-to-user-namespace
 
   $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc

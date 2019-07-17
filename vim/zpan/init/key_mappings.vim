@@ -63,13 +63,8 @@ endif
 
 inoremap <silent> <C-U> <C-G>u<C-U>
 
-" assume 'noinsert' is in 'completeopt'
-function! s:pumselected()
-  return pumvisible() && !empty(v:completed_item)
-endfunction
-
 inoremap <silent><expr> <TAB>
-      \ <SID>pumselected()
+      \ zpan#pumselected()
       \ ? coc#_select_confirm()
       \ : coc#expandableOrJumpable() ?
       \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
@@ -79,7 +74,7 @@ inoremap <silent> <expr> <C-Space> coc#refresh()
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()
 
 inoremap <expr> <CR>
-      \ <SID>pumselected() ?
+      \ zpan#pumselected() ?
       \ "\<C-y>" :
       \ "\<CR>"
 
@@ -108,14 +103,14 @@ cnoremap <silent>           <C-B>       <Left>
 inoremap <silent> <expr>    <C-D>       col('.') > strlen(getline('.')) ? "\<Lt>C-D>":"\<Lt>Del>"
 cnoremap <silent> <expr>    <C-D>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-D>":"\<Lt>Del>"
 
-" inoremap <silent> <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> <SID>pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
+" inoremap <silent> <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> zpan#pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
 inoremap <silent> <expr>    <C-E>       col('.') > strlen(getline('.')) ? "\<Lt>C-E>" : "\<Lt>End>"
 
 inoremap <silent> <expr>    <C-F>       col('.') > strlen(getline('.')) ? "\<Lt>C-F>":"\<Lt>Right>"
 cnoremap <silent> <expr>    <C-F>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
 
-inoremap <silent> <expr>    <C-n>       <SID>pumselected() ? "\<C-N>" : "\<Down>"
-inoremap <silent> <expr>    <C-p>       <SID>pumselected() ? "\<C-P>" : "\<Up>"
+inoremap <silent> <expr>    <C-n>       zpan#pumselected() ? "\<C-N>" : "\<Down>"
+inoremap <silent> <expr>    <C-p>       zpan#pumselected() ? "\<C-P>" : "\<Up>"
 
 inoremap <silent>           <C-BS>      <C-w>
 inoremap <silent>           <M-b>       <C-Left>
@@ -135,213 +130,6 @@ nnoremap <silent> <M-Right>     <C-i>
 " buffer
 nnoremap <silent> <C-Tab>       :bp<CR>
 nnoremap <silent> <C-S-Tab>     :bn<CR>
-nnoremap <silent> <Leader>bp    :bp<CR>
-nnoremap <silent> <Leader>bn    :bn<CR>
-nmap <silent> <Leader>b1 <Plug>lightline#bufferline#go(1)
-nmap <silent> <Leader>b2 <Plug>lightline#bufferline#go(2)
-nmap <silent> <Leader>b3 <Plug>lightline#bufferline#go(3)
-nmap <silent> <Leader>b4 <Plug>lightline#bufferline#go(4)
-nmap <silent> <Leader>b5 <Plug>lightline#bufferline#go(5)
-nmap <silent> <Leader>b6 <Plug>lightline#bufferline#go(6)
-nmap <silent> <Leader>b7 <Plug>lightline#bufferline#go(7)
-nmap <silent> <Leader>b8 <Plug>lightline#bufferline#go(8)
-nmap <silent> <Leader>b9 <Plug>lightline#bufferline#go(9)
-nmap <silent> <Leader>b0 <Plug>lightline#bufferline#go(10)
-
-" window
-nnoremap <silent> <Leader>wp    <C-w>p
-nnoremap <silent> <Leader>wn    <C-w>n
-nnoremap <silent> <Leader>wq    <C-w>q
-nnoremap <silent> <Leader>q     <C-w>q
-nnoremap <silent> <Leader>ww    <C-w>w
-nnoremap <silent> <Leader>wo    <C-w>o
-nnoremap <silent> <Leader>ws    <C-w>s
-nnoremap <silent> <Leader>wv    <C-w>v
-nnoremap <silent> <Leader>w1    1<C-w>w
-nnoremap <silent> <Leader>w2    2<C-w>w
-nnoremap <silent> <Leader>w3    3<C-w>w
-nnoremap <silent> <Leader>w4    4<C-w>w
-nnoremap <silent> <Leader>w5    5<C-w>w
-nnoremap <silent> <Leader>w6    6<C-w>w
-nnoremap <silent> <Leader>w7    7<C-w>w
-nnoremap <silent> <Leader>w8    8<C-w>w
-nnoremap <silent> <Leader>w9    9<C-w>w
-
-nnoremap <silent> <Leader>Q     :qa<CR>
-
-function! s:toggle_quickfix()
-  let found_nr = 0
-  for nr in range(1, winnr('$'))
-    if getbufvar(winbufnr(nr), '&filetype') == 'qf'
-      let found_nr = nr
-      break
-    endif
-  endfor
-
-  if found_nr > 0
-    if getwininfo(win_getid(nr))[0]['loclist']
-      lclose
-      copen
-    else
-      cclose
-    endif
-  else
-    copen
-  endif
-endfunction
-
-function! s:toggle_loclist()
-  let found_nr = 0
-  for nr in range(1, winnr('$'))
-    if getbufvar(winbufnr(nr), '&filetype') == 'qf'
-      let found_nr = nr
-      break
-    endif
-  endfor
-
-  if found_nr > 0
-    if getwininfo(win_getid(nr))[0]['loclist']
-      lclose
-    else
-      cclose
-      lopen
-    endif
-  else
-    lopen
-  endif
-endfunction
-
-function! s:toggle_defx()
-  let found_nr = 0
-  let found_type = ''
-  for nr in range(1, winnr('$'))
-    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
-      let found_nr = nr
-      let found_type = win_filetype
-      break
-    endif
-  endfor
-
-  if found_nr > 0 && found_type != 'defx'
-    execute found_nr . 'wincmd q'
-  endif
-
-  Defx
-endfunction
-
-function! s:toggle_tagbar()
-  let found_nr = 0
-  let found_type = ''
-  for nr in range(1, winnr('$'))
-    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
-      let found_nr = nr
-      let found_type = win_filetype
-      break
-    endif
-  endfor
-
-  if found_nr > 0 && bufname(winbufnr(found_nr)) =~ '__Tagbar__'
-    execute found_nr . 'wincmd q'
-  endif
-
-  TagbarToggle
-endfunction
-
-function! s:toggle_vista()
-  let found_nr = 0
-  let found_type = ''
-  for nr in range(1, winnr('$'))
-    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
-      let found_nr = nr
-      let found_type = win_filetype
-      break
-    endif
-  endfor
-
-  if found_nr > 0 && bufname(winbufnr(found_nr)) !~ '__vista__'
-      execute found_nr . 'wincmd q'
-  endif
-
-  Vista!!
-endfunction
-
-function! s:toggle_undotree()
-  let found_nr = 0
-  let found_type = ''
-  for nr in range(1, winnr('$'))
-    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
-      let found_nr = nr
-      let found_type = win_filetype
-      break
-    endif
-  endfor
-
-  if found_nr > 0 && found_type != 'undotree'
-    execute found_nr . 'wincmd q'
-  endif
-
-  UndotreeToggle
-endfunction
-
-let s:prev_terminal_height = 0
-function! s:toggle_terminal()
-  let found_winnr = 0
-  for winnr in range(1, winnr('$'))
-    if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
-      let found_winnr = winnr
-    endif
-  endfor
-
-  if found_winnr > 0
-    execute found_winnr . 'wincmd q'
-  else
-    let found_bufnr = 0
-    for bufnr in filter(range(1, bufnr('$')), 'bufexists(v:val)')
-      if getbufvar(bufnr, '&buftype') == 'terminal'
-        let found_bufnr = bufnr
-      endif
-    endfor
-    if found_bufnr > 0
-      if s:prev_terminal_height > 0
-        execute 'botright ' . s:prev_terminal_height . 'split'
-        execute 'buffer ' . found_bufnr
-        set winfixheight
-      else
-        if &lines > 30
-          botright 15split
-          execute 'buffer ' . found_bufnr
-          set winfixheight
-        else
-          botright split
-          execute 'buffer ' . found_bufnr
-          set winfixheight
-        endif
-      endif
-    else
-      if &lines > 30
-        if has('nvim')
-          execute 'botright 15split term://' . &shell
-        else
-          botright terminal
-          resize 15
-          set winfixheight
-        endif
-      else
-        if has('nvim')
-          execute 'botright split term://' . &shell
-        else
-          botright terminal
-          set winfixheight
-        endif
-      endif
-    endif
-  endif
-endfunction
-au WinLeave * if &buftype == 'terminal' && winnr() > 1 | let s:prev_terminal_height = winheight('%') | endif
 
 if has('nvim')
   nnoremap <silent> <M-0> :call <SID>toggle_terminal()<CR>i
@@ -365,11 +153,3 @@ nnoremap <silent> <M-6> :call <SID>toggle_quickfix()<CR>
 inoremap <silent> <M-6> <Esc>:call <SID>toggle_quickfix()<CR>
 nnoremap <silent> <M-^> :call <SID>toggle_loclist()<CR>
 inoremap <silent> <M-^> <Esc>:call <SID>toggle_loclist()<CR>
-
-" search and replace
-nnoremap <Leader>gs    :%s/\<<C-r><C-w>\>/
-nnoremap <Leader>gr    :%s/\<<C-r><C-w>\>//g<Left><Left>
-nnoremap <Leader>gR    :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
-nnoremap <Leader>s     :.,$s/\<<C-r><C-w>\>/
-nnoremap <Leader>r     :.,$s/\<<C-r><C-w>\>//g<Left><Left>
-nnoremap <Leader>R     :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>

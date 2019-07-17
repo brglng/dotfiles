@@ -57,7 +57,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr>   <C-o>           defx#do_action('cd', ['..'])
   nnoremap <silent><buffer><expr>   <C-i>           defx#do_action('open')
   nnoremap <silent><buffer><expr>   q               defx#do_action('quit')
-  nnoremap <silent><buffer><expr>   <Space>         defx#do_action('toggle_select') . 'j'
+  nnoremap <silent><buffer><expr>   v               defx#do_action('toggle_select') . 'j'
   nnoremap <silent><buffer><expr>   *               defx#do_action('toggle_select_all')
   " nnoremap <silent><buffer><expr>   j               line('.') == line('$') ? 'gg' : 'j'
   " nnoremap <silent><buffer><expr>   k               line('.') == 1 ? 'G' : 'k'

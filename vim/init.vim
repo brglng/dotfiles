@@ -284,7 +284,6 @@ runtime zpan/init/ui.vim
 let g:indentLine_first_char = ''
 let g:indentLine_faster = 1
 let g:indentLine_enabled = 0
-nnoremap <silent> <Leader>il :IndentLinesToggle<CR>
 
 " match-up
 let g:matchup_matchparen_status_offscreen = 0

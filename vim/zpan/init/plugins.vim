@@ -1,5 +1,17 @@
-if has('nvim') && system('python3 --version | grep 3.5') != ''
-  let g:python3_host_prog = 'python3.6'
+if has('nvim')
+  let has_python_exe = 0
+  if executable('python3')
+    let python3_version_major = str2nr(zpan#rstrip(system('python3 -c "import sys; print(sys.version_info[0])"'), "\r\n"))
+    let python3_version_minor = str2nr(zpan#rstrip(system('python3 -c "import sys; print(sys.version_info[1])"'), "\r\n"))
+    let has_python_exe = 1
+  elseif executable('python')
+    let python3_version_major = str2nr(zpan#rstrip(system('python -c "import sys; print(sys.version_info[0])"'), "\r\n"))
+    let python3_version_minor = str2nr(zpan#rstrip(system('python -c "import sys; print(sys.version_info[1])"'), "\r\n"))
+    let has_python_exe = 1
+  endif
+  if has_python_exe && python3_version_major == 3 && python3_version_minor < 6
+    let g:python3_host_prog = 'python3.6'
+  endif
 endif
 
 try
@@ -34,6 +46,7 @@ try
     call dein#add('mbbill/fencview')
     call dein#add('mbbill/undotree')
     call dein#add('mhinz/vim-startify')
+    call dein#add('liuchengxu/vim-which-key')
 
     " Moving Plugins
     call dein#add('tpope/vim-unimpaired')
@@ -86,7 +99,7 @@ try
           \ })
     call dein#add('honza/vim-snippets')
     call dein#add('liuchengxu/vista.vim')
-    call dein#add('sbdchd/neoformat')
+    " call dein#add('sbdchd/neoformat')
 
     " Debuggig Plugins
     " call dein#add('cpiger/NeoDebug')
@@ -135,3 +148,4 @@ runtime zpan/init/plugins/undotree.vim
 runtime zpan/init/plugins/vim_visual_multi.vim
 runtime zpan/init/plugins/vista.vim
 " runtime zpan/init/plugins/you_complete_me.vim
+runtime zpan/init/plugins/which_key.vim
