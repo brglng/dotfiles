@@ -5,8 +5,8 @@ call which_key#register('<Space>', "g:which_key_map")
 nnoremap <silent> <leader> :<C-u>WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :<C-u>WhichKeyVisual '<Space>'<CR>
 
-autocmd! FileType which_key
-autocmd  FileType which_key silent! setlocal winblend=15
+" autocmd! FileType which_key
+" autocmd  FileType which_key silent! setlocal winblend=15
 
 let g:which_key_map =  {}
 
