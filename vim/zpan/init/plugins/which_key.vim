@@ -49,24 +49,40 @@ let g:which_key_map.q = ['<C-w>q', 'close current window']
 
 let g:which_key_map.Q = [':qa', 'quit vim']
 
-let g:which_key_map.f = {
+let g:which_key_map.l = {
       \ 'name': '+lists',
-      \ ';': [':CocList vimcommands', 'search vim commands'],
-      \ 'c': [':CocList commands', 'search coc commands'],
-      \ 'e': [':CocList extensions', 'manage coc extensions'],
-      \ 'f': [':CocList files', 'search project for a file'],
-      \ 'g': [':CocList grep', 'grep project files'],
-      \ 'w': [':CocList words', 'search words in current file'],
-      \ 'm': [':CocList marks', 'list marks'],
-      \ 'b': [':CocList buffers', 'list buffers'],
-      \ 'r': [':CocList mru', 'list recent files'],
-      \ 'o': [':CocList outline', 'show outline'],
-      \ 'h': [':CocList helptags', 'search vim help'],
-      \ 'q': [':CocList diagnostics', 'list diagnostics'],
+      \ ';': [':CocList vimcommands', 'list vim commands'],
+      \ 'a': [':CocList actions', 'list actions of selected region'],
+      \ 'b': [':CocList --normal buffers', 'list buffers'],
       \ 'C': [':CocList --normal colors', 'list colorschemes'],
+      \ 'c': [':CocList commands', 'list coc commands'],
+      \ 'd': [':CocList diagnostics', 'list diagnostics'],
+      \ 'e': [':CocList extensions', 'list coc extensions'],
+      \ 'f': [':CocList files', 'list files under cwd recursively'],
+      \ 'F': [':CocList folders', 'list current workspace folders'],
+      \ 'g': [':CocList grep', 'grep files under cwd'],
+      \ 'k': [':CocList links', 'list links of current buffer'],
+      \ 'L': [':CocList locationlist', 'list location list'],
+      \ 'l': [':CocList lines', 'search lines by regex'],
+      \ 'm': [':CocList marks', 'list marks'],
+      \ 'M': [':CocList maps', 'list key mappings'],
+      \ 'H': {
+      \     'name': '+history',
+      \     'c': [':CocList cmdhistory', 'list history of commands'],
+      \     'l': [':CocList location', 'list history jump locations'],
+      \     's': [':CocList searchhistory', 'list history of search'],
+      \     't': [':CocList translation', 'list history of translation']
+      \ },
+      \ 'h': [':CocList helptags', 'list vim help tags'],
+      \ 'o': [':CocList outline', 'list outline'],
+      \ 'q': [':CocList quickfix', 'list quickfix'],
+      \ 'r': [':CocList mru', 'list recent files'],
+      \ 'p': [':CocListResume', 'resume previous list'],
+      \ 'P': [':CocList snippets', 'list snippets'],
       \ 's': [':CocList -I symbols', 'list symbols'],
-      \ 'k': [':CocList snippets', 'manage snippets'],
-      \ 'p': [':CocListResume', 'resume previous list']
+      \ 'S': [':CocList sessions', 'list sessions'],
+      \ 'w': [':CocList words', 'search words in current file'],
+      \ 'W': [':CocList windows', 'list windows'],
       \ }
 
 nnoremap <Leader>sr     :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
@@ -88,12 +104,18 @@ let g:which_key_map.T = {
       \ 'r': ['<Plug>(coc-translator-r)', 'translate and replace the word under cursor']
       \ }
 
-let g:which_key_map.v = {
-      \ 'name': '+version-control',
+let g:which_key_map.g = {
+      \ 'name': '+git',
+      \ 'b': [':CocList --normal branches', 'list git branches'],
       \ 'd': ['<Plug>(coc-git-chunkinfo)', 'show chunk diff at current position'],
-      \ 'b': ['<Plug>(coc-git-commit)', 'show blame at current position'],
-      \ 'p': ['<Plug>(coc-git-prevchunk)', 'previous chunk'],
+      \ 'c': ['<Plug>(coc-git-commit)', 'show detailed commit log of current file'],
+      \ 'f': [':CocList gfiles', 'list git files'],
+      \ 'l': [':CocList --normal commits', 'list git log'],
+      \ 'L': [':CocList --normal bcommits', 'list git log of current file'],
+      \ 'i': [':CocList --normal issues', 'list GitHub issues'],
       \ 'n': ['<Plug>(coc-git-nextchunk)', 'next chunk'],
+      \ 'p': ['<Plug>(coc-git-prevchunk)', 'previous chunk'],
+      \ 's': [':CocList --normal gstatus', 'list git status'],
       \ }
 
 vmap <Leader>x= <Plug>(coc-format-selected)
