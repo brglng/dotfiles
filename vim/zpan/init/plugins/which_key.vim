@@ -1,7 +1,7 @@
 set timeoutlen=300
 let g:mapleader = "\<Space>"
 
-call which_key#register('<Space>', "g:which_key_map")
+silent! call which_key#register('<Space>', "g:which_key_map")
 nnoremap <silent> <leader> :<C-u>WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :<C-u>WhichKeyVisual '<Space>'<CR>
 
@@ -53,8 +53,8 @@ let g:which_key_map.l = {
       \ 'name': '+lists',
       \ ';': [':CocList vimcommands', 'list vim commands'],
       \ 'a': [':CocList actions', 'list actions of selected region'],
-      \ 'b': [':CocList --normal buffers', 'list buffers'],
-      \ 'C': [':CocList --normal colors', 'list colorschemes'],
+      \ 'b': [':CocList buffers', 'list buffers'],
+      \ 'C': [':CocList colors', 'list colorschemes'],
       \ 'c': [':CocList commands', 'list coc commands'],
       \ 'd': [':CocList diagnostics', 'list diagnostics'],
       \ 'e': [':CocList extensions', 'list coc extensions'],
@@ -110,12 +110,12 @@ let g:which_key_map.g = {
       \ 'd': ['<Plug>(coc-git-chunkinfo)', 'show chunk diff at current position'],
       \ 'c': ['<Plug>(coc-git-commit)', 'show detailed commit log of current file'],
       \ 'f': [':CocList gfiles', 'list git files'],
-      \ 'l': [':CocList --normal commits', 'list git log'],
-      \ 'L': [':CocList --normal bcommits', 'list git log of current file'],
+      \ 'l': [':CocList --normal commits', 'git log'],
+      \ 'L': [':CocList --normal bcommits', 'git log of current file'],
       \ 'i': [':CocList --normal issues', 'list GitHub issues'],
       \ 'n': ['<Plug>(coc-git-nextchunk)', 'next chunk'],
       \ 'p': ['<Plug>(coc-git-prevchunk)', 'previous chunk'],
-      \ 's': [':CocList --normal gstatus', 'list git status'],
+      \ 's': [':CocList --normal gstatus', 'git status'],
       \ }
 
 vmap <Leader>x= <Plug>(coc-format-selected)

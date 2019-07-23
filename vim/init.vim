@@ -189,7 +189,7 @@ autocmd FileType * let &l:foldcolumn = &l:foldnestmax + 1
 " omni complete settings
 set completeopt=menuone,noinsert,noselect
 set pumheight=15
-set pumblend=15
+silent! set pumblend=15
 
 " Always show the complete popup under the cursor,
 " except when the cursor is at the last 3 lines on the screen.

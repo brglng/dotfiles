@@ -45,7 +45,7 @@ silent! call coc#add_extension(
 
 let g:coc_snippet_next = '<tab>'
 
-call mkdir($HOME . '/.cache/ccls', 'p')
+silent! call mkdir($HOME . '/.cache/ccls', 'p')
 silent! call coc#config('languageserver.ccls.initializationOptions.cache.directory', $HOME . '/.cache/ccls')
 
 if executable('bfind')
