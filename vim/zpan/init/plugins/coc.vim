@@ -31,6 +31,7 @@ silent! call coc#add_extension(
       \ 'coc-pairs',
       \ 'coc-python',
       \ 'coc-rls',
+      \ 'coc-smartf',
       \ 'coc-snippets',
       \ 'coc-solargraph',
       \ 'coc-syntax',

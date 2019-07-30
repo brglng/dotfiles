@@ -189,4 +189,8 @@ let g:which_key_map.c = {
       \ 'u': 'uncomment the selected lines'
       \ }
 
+let g:which_key_map.a = {
+      \ 'a': 'easy-align'
+      \ }
+
 " vim: sw=2 sts=4 ts=8 et

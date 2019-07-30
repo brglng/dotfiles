@@ -52,8 +52,6 @@ try
     call dein#add('tpope/vim-unimpaired')
     call dein#add('tpope/vim-surround')
     call dein#add('wellle/targets.vim')
-    call dein#add('easymotion/vim-easymotion')
-    call dein#add('rhysd/clever-f.vim')
     call dein#add('andymass/vim-matchup')
     call dein#add('kana/vim-textobj-user')
     call dein#add('kana/vim-textobj-indent')
@@ -64,7 +62,6 @@ try
     " Editing Plugins
     " call dein#add('tpope/vim-commentary')
     call dein#add('scrooloose/nerdcommenter')
-    " call dein#add('godlygeek/tabular')
     call dein#add('junegunn/vim-easy-align')
     call dein#add('tpope/vim-sleuth')
     call dein#add('tpope/vim-repeat')
@@ -129,23 +126,23 @@ try
 catch
 endtry
 
-" runtime zpan/init/plugins/complete_parameter.vim
 if !zpan#is_sudo()
   runtime zpan/init/plugins/coc.vim
+  runtime zpan/init/plugins/coc_smartf.vim
 endif
 runtime zpan/init/plugins/defx.vim
 runtime zpan/init/plugins/dein_ui.vim
-" runtime zpan/init/plugins/delimit_mate.vim
 " runtime zpan/init/plugins/denite.vim
-" runtime zpan/init/plugins/endwise.vim
-" runtime zpan/init/plugins/git_p.vim
+runtime zpan/init/plugins/devicons.vim
+runtime zpan/init/plugins/easy_align.vim
+runtime zpan/init/plugins/indent_line.vim
 runtime zpan/init/plugins/lightline.vim
+runtime zpan/init/plugins/matchup.vim
+runtime zpan/init/plugins/nerd_commenter.vim
 runtime zpan/init/plugins/neoformat.vim
 runtime zpan/init/plugins/netrw.vim
-" runtime zpan/init/plugins/tagbar.vim
-" runtime zpan/init/plugins/ultisnips.vim
+runtime zpan/init/plugins/startify.vim
 runtime zpan/init/plugins/undotree.vim
 runtime zpan/init/plugins/vim_visual_multi.vim
 runtime zpan/init/plugins/vista.vim
-" runtime zpan/init/plugins/you_complete_me.vim
 runtime zpan/init/plugins/which_key.vim

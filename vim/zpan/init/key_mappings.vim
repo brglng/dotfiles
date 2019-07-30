@@ -1,5 +1,3 @@
-nmap ; :
-
 " Fix meta key for Vim
 if !has('gui_running') && !(has('win32') && !has('win32unix')) && !has('nvim')
   " fix meta-keys under terminal
