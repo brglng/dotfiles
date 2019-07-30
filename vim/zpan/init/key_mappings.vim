@@ -22,6 +22,13 @@ cmap  <silent> <S-Insert> <C-r>+
 exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <S-Insert> ' . paste#paste_cmd['v']
 
+noremap   <silent> <C-s>  :update<CR>
+vnoremap  <silent> <C-s>  <C-c>:update<CR>
+inoremap  <silent> <C-s>  <C-o>:update<CR>
+
+noremap   <silent> <C-z>  u
+inoremap  <silent> <C-z>  <C-o>u
+
 if !((has('macunix') || has('mac')) && has('gui_running'))
   noremap   <silent> <M-s>  :update<CR>
   vnoremap  <silent> <M-s>  <C-c>:update<CR>
