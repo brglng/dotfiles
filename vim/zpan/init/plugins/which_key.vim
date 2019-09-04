@@ -193,4 +193,9 @@ let g:which_key_map.a = {
       \ 'a': 'easy-align'
       \ }
 
+let g:which_key_map.f = ['<Plug>(coc-smartf-forward)', 'coc-smartf-forward']
+let g:which_key_map.F = ['<Plug>(coc-smartf-backward)', 'coc-smartf-forward']
+let g:which_key_map[';'] = ['<Plug>(coc-smartf-repeat)', 'coc-smartf-repeat']
+let g:which_key_map[','] = ['<Plug>(coc-smartf-repeat-opposite)', 'coc-smartf-repeat-opposite']
+
 " vim: sw=2 sts=4 ts=8 et
