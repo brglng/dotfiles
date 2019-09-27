@@ -54,6 +54,10 @@ if executable('bfind')
   silent! call coc#config('list.source.files.args', [])
 endif
 
+if exists('g:python3_host_prog') && g:python3_host_prog != ''
+  silent! call coc#config('python.pythonPath', g:python3_host_prog)
+endif
+
 " let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']
 
 autocmd User CocOpenFloat silent! setlocal winblend=15

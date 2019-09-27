@@ -224,54 +224,11 @@ if executable('gtags-cscope')
 endif
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 
-" disabled because of some side effects
-" if has('unix') && !has('mac') && !has('macunix') && has('timers')
-"   let s:prevIbusEngine = ''
-"
-"   function s:imInsertEnterTimerCallback(timer)
-"     " dirty hack: InsertEnter is raised before entering insert mode,
-"     "             so start a timer until mode is switched to insert.
-"     if mode()[0] != 'i'
-"       call timer_start(1, function("<SID>imInsertEnterTimerCallback"))
-"     else
-"       " echomsg 'imInsertEnter: mode: ' . mode() . ', prevIbusEngine: ' . s:prevIbusEngine
-"       if s:prevIbusEngine != ''
-"         silent! exe '!ibus engine ' . s:prevIbusEngine . ' &'
-"       endif
-"     endif
-"   endfunction
-"
-"   function s:imInsertEnter()
-"     call timer_start(1, function("<SID>imInsertEnterTimerCallback"))
-"   endfunction
-"   autocmd InsertEnter * call s:imInsertEnter()
-"
-"   function s:imInsertLeave()
-"     let s:prevIbusEngine = system('ibus engine')[:-2]
-"     " echomsg 'imInsertLeave: mode: ' . mode() . ', prevIbusEngine: ' . s:prevIbusEngine
-"     silent! !ibus engine xkb:us::eng &
-"   endfunction
-"   autocmd InsertLeave * call s:imInsertLeave()
-"
-"   function s:imFocusGained()
-"     " echomsg 'imFocusGained: mode: ' . mode() . ', prevIbusEngine: ' . s:prevIbusEngine . ', prevIbusEngine: ' . s:prevIbusEngine
-"     let s:prevIbusEngine = system('ibus engine')[:-2]
-"     if mode()[0] != 'i'
-"       silent! !ibus engine xkb:us::eng &
-"     endif
-"   endfunction
-"   autocmd FocusGained * call s:imFocusGained()
-"
-"   function s:imFocusLost()
-"     " echomsg 'imFocusLost: mode: ' . mode() . ', prevIbusEngine: ' . s:prevIbusEngine . ', prevIbusEngine: ' . s:prevIbusEngine
-"     if mode()[0] != 'i'
-"       if s:prevIbusEngine != ''
-"         silent! exe '!ibus engine ' . s:prevIbusEngine . ' &'
-"       endif
-"     endif
-"   endfunction
-"   autocmd FocusLost * call s:imFocusLost()
-" endif
+" Auto swith input methods
+autocmd InsertEnter * call zpan#im_restore()
+autocmd InsertLeave * if mode()[0] == 'n' | call zpan#im_off() | endif
+autocmd FocusGained * if mode()[0] == 'n' | call zpan#im_off() | endif
+autocmd VimLeavePre * if mode()[0] == 'n' | call zpan#im_restore() | endif
 
 let mapleader = "\<Space>"
 runtime zpan/init/plugins.vim
