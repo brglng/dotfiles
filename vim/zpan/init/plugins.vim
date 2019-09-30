@@ -141,6 +141,8 @@ syntax enable
 if dein#check_install()
   call dein#install()
 endif
+call dein#local($HOME . '/.vim/dein-local', {}, ['vim-im-select'])
+call dein#source(['vim-im-select'])
 
 if !zpan#is_sudo()
   runtime zpan/init/plugins/coc.vim

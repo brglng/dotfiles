@@ -21,6 +21,29 @@ function! zpan#rstrip(str, chars) abort
   endif
 endfunction
 
+function! zpan#get_os() abort
+  if (has('win32') || has('win64')) && !has('win32unix') && !has('unix')
+    return 'Windows'
+  elseif executable('uname')
+    let uname_s = im_select#rstrip(system('uname -s'))
+    if uname_s == 'Linux' && match(system('uname -r'), 'Microsoft') >= 0
+      return 'WSL'
+    elseif uname_r == 'Linux'
+      return 'Linux'
+    elseif uname_s == 'Darwin'
+      return 'macOS'
+    elseif match(uname_s, '\cCYGWIN') >= 0
+      return 'Cygwin'
+    elseif match(uname_s, '\cMINGW') >= 0
+      return 'MinGW'
+    else
+      return ''
+    endif
+  else
+    return ''
+  endif
+endfunction
+
 function! zpan#pumselected() abort
   return pumvisible() && !empty(v:completed_item)
 endfunction
@@ -212,35 +235,3 @@ function! zpan#toggle_terminal() abort
   endif
 endfunction
 au WinLeave * if &buftype == 'terminal' && winnr() > 1 | let s:prev_terminal_height = winheight('%') | endif
-
-let s:default_im = '0'
-let s:prev_im = '0'
-
-function! zpan#im_get() abort
-  if exists('$GTK_IM_MODULE') && $GTK_IM_MODULE == 'ibus'
-    silent let out_tuple = system('gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval "imports.ui.status.keyboard.getInputSourceManager()._mruSources[0].index"')
-    let i = stridx(out_tuple, ',') + 3
-    let j = stridx(out_tuple, ')') - 1
-    return strpart(out_tuple, i, j - i)
-  endif
-endfunction
-
-function! zpan#im_select(im) abort
-  if exists('$GTK_IM_MODULE') && $GTK_IM_MODULE == 'ibus'
-    silent call system('gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval "imports.ui.status.keyboard.getInputSourceManager().inputSources[' . a:im . '].activate()"')
-  endif
-endfunction
-
-function! zpan#im_off() abort
-  let current_im = zpan#im_get()
-  if current_im != s:default_im
-    let s:prev_im = current_im
-    call zpan#im_select(s:default_im)
-  endif
-endfunction
-
-function! zpan#im_restore() abort
-  if s:prev_im != s:default_im
-    call zpan#im_select(s:prev_im)
-  endif
-endfunction

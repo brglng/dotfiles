@@ -20,7 +20,6 @@ silent! call coc#add_extension(
       \ 'coc-gocode',
       \ 'coc-highlight',
       \ 'coc-html',
-      \ 'coc-imselect',
       \ 'coc-java',
       \ 'coc-json',
       \ 'coc-lists'
@@ -49,7 +48,10 @@ let g:coc_snippet_next = '<tab>'
 silent! call mkdir($HOME . '/.cache/ccls', 'p')
 silent! call coc#config('languageserver.ccls.initializationOptions.cache.directory', $HOME . '/.cache/ccls')
 
-if executable('bfind')
+if executable('fd')
+  silent! call coc#config('list.source.files.command', 'fd')
+  silent! call coc#config('list.source.files.args', [])
+elseif executable('bfind')
   silent! call coc#config('list.source.files.command', 'bfind')
   silent! call coc#config('list.source.files.args', [])
 endif

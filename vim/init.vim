@@ -224,12 +224,6 @@ if executable('gtags-cscope')
 endif
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 
-" Auto swith input methods
-autocmd InsertEnter * call zpan#im_restore()
-autocmd InsertLeave * if mode()[0] == 'n' | call zpan#im_off() | endif
-autocmd FocusGained * if mode()[0] == 'n' | call zpan#im_off() | endif
-autocmd VimLeavePre * if mode()[0] == 'n' | call zpan#im_restore() | endif
-
 let mapleader = "\<Space>"
 runtime zpan/init/plugins.vim
 runtime zpan/init/key_mappings.vim

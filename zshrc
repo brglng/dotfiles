@@ -170,6 +170,7 @@ else
   alias chmod='chmod --preserve-root'
   alias chgrp='chgrp --preserve-root'
 fi
+unalias fd
 
 alias more='less'
 alias ping='ping -c 5'
