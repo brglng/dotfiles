@@ -100,9 +100,6 @@ if dein#load_state('~/.cache/dein')
   call dein#add('gregsexton/gitv')
 
   " Project management
-  call dein#add('Shougo/defx.nvim', {'hook_post_update': 'silent! UpdateRemotePlugins'})
-  call dein#add('kristijanhusak/defx-git')
-  call dein#add('kristijanhusak/defx-icons')
   call dein#add('editorconfig/editorconfig-vim')
 
   " Language Semantic
@@ -144,10 +141,11 @@ endif
 call dein#local($HOME . '/.vim/dein-local', {}, ['vim-im-select'])
 call dein#source(['vim-im-select'])
 
-if !zpan#is_sudo()
-  runtime zpan/init/plugins/coc.vim
-  runtime zpan/init/plugins/coc_smartf.vim
-endif
+" if !zpan#is_sudo()
+runtime zpan/init/plugins/coc.vim
+runtime zpan/init/plugins/coc_explorer.vim
+runtime zpan/init/plugins/coc_smartf.vim
+" endif
 runtime zpan/init/plugins/defx.vim
 runtime zpan/init/plugins/dein_ui.vim
 " runtime zpan/init/plugins/denite.vim

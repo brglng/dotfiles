@@ -114,6 +114,8 @@ inoremap <expr> <CR>
       \ "\<C-y>" :
       \ "\<CR>"
 
+inoremap <expr> <Esc> pumvisible() ? "\<C-e>\<Esc>" : "\<Esc>"
+
 inoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<C-o>gj"
 inoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<C-o>gk"
 

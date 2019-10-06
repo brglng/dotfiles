@@ -11,37 +11,53 @@ autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
 " Use `:Fold` to fold current buffer
 command! -nargs=? CocFold :call CocAction('fold', <f-args>)
 
-silent! call coc#add_extension(
+let s:coc_extensions = [
+      \ 'coc-bookmark',
       \ 'coc-css',
       \ 'coc-dictionary',
       \ 'coc-docker',
       \ 'coc-emoji',
+      \ 'coc-eslint',
+      \ 'coc-explorer',
       \ 'coc-git',
+      \ 'coc-github',
+      \ 'coc-gitignore',
       \ 'coc-gocode',
       \ 'coc-highlight',
       \ 'coc-html',
       \ 'coc-java',
       \ 'coc-json',
-      \ 'coc-lists'
-      \ )
-
-silent! call coc#add_extension(
+      \ 'coc-lists',
+      \ 'coc-lua',
+      \ 'coc-marketplace',
+      \ 'coc-neosnippet',
       \ 'coc-omni',
       \ 'coc-pairs',
+      \ 'coc-powershell',
+      \ 'coc-prettier',
       \ 'coc-python',
+      \ 'coc-pyright',
       \ 'coc-rls',
       \ 'coc-smartf',
       \ 'coc-snippets',
       \ 'coc-solargraph',
+      \ 'coc-sql',
       \ 'coc-syntax',
       \ 'coc-tabnine',
       \ 'coc-tag',
       \ 'coc-translator',
       \ 'coc-tsserver',
+      \ 'coc-ultisnips',
+      \ 'coc-vetur',
       \ 'coc-vimlsp',
       \ 'coc-word',
       \ 'coc-yaml',
-      \ )
+      \ 'coc-yank',
+      \ ]
+
+for e in s:coc_extensions
+  silent! call coc#add_extension(e)
+endfor
 
 let g:coc_snippet_next = '<tab>'
 

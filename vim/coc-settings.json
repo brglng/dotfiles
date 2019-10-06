@@ -55,5 +55,21 @@
   "git.changedDecorator": " *",
   "git.stagedDecorator": " ●",
   "git.untrackedDecorator": " …",
-  "git.conflictedDecorator": " x"
+  "git.conflictedDecorator": " x",
+  "explorer.sources": [
+    {
+      "name": "buffer",
+      "expand": true
+    },
+    {
+      "name": "file",
+      "expand": true
+    }
+  ],
+  "explorer.icon.enableNerdfont": true,
+  "explorer.file.column.indent.indentLine": true,
+  "explorer.keyMappings": {
+    "<Space>": "toggleSelection",
+    "<CR>": "expand"
+  }
 }

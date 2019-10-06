@@ -5,7 +5,8 @@ function! TagbarStatusFunc(current, sort, fname, ...) abort
 endfunction
 
 function! LightlineMode()
-  return &filetype ==# 'defx' ? 'Defx' :
+  return &filetype ==# 'coc-explorer' ? 'Explorer' :
+        \ &filetype ==# 'defx' ? 'Defx' :
         \ &filetype ==# 'denite' ? 'Denite' :
         \ &filetype ==# 'gitv' ? 'GitV' :
         \ &filetype ==# 'help' ? 'Help' :
@@ -20,7 +21,8 @@ function! LightlineMode()
 endfunction
 
 function! LightlineFilename()
-  let filename = &filetype ==# 'defx' ? '' :
+  let filename = &filetype ==# 'coc-explorer' ? '' :
+        \ &filetype ==# 'defx' ? '' :
         \ &filetype ==# 'denite' ? '' :
         \ &filetype ==# 'gitv' ? '' :
         \ &filetype ==# 'help' ? '' :

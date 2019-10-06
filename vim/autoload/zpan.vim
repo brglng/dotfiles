@@ -25,17 +25,17 @@ function! zpan#get_os() abort
   if (has('win32') || has('win64')) && !has('win32unix') && !has('unix')
     return 'Windows'
   elseif executable('uname')
-    let uname_s = im_select#rstrip(system('uname -s'))
-    if uname_s == 'Linux' && match(system('uname -r'), 'Microsoft') >= 0
-      return 'WSL'
-    elseif uname_r == 'Linux'
+    let uname_s = im_select#rstrip(system('uname -s'), " \r\n")
+    if uname_s ==# 'Linux' && match(system('uname -r'), 'Microsoft') >= 0
+      return 'Windows'
+    elseif uname_s ==# 'Linux'
       return 'Linux'
-    elseif uname_s == 'Darwin'
+    elseif uname_s ==# 'Darwin'
       return 'macOS'
     elseif match(uname_s, '\cCYGWIN') >= 0
-      return 'Cygwin'
+      return 'Windows'
     elseif match(uname_s, '\cMINGW') >= 0
-      return 'MinGW'
+      return 'Windows'
     else
       return ''
     endif
@@ -50,7 +50,7 @@ endfunction
 
 function! zpan#is_tool_window(...) abort
   if len(a:000) == 0
-    return index(['defx', 'denite', 'gitv', 'help', 'man', 'qf', 'undotree'], &filetype) >= 0 || expand('%:t') =~ '__Tagbar__\|__vista__'
+    return index(['coc-explorer', 'defx', 'denite', 'gitv', 'help', 'man', 'qf', 'undotree'], &filetype) >= 0 || expand('%:t') =~ '__Tagbar__\|__vista__'
   elseif len(a:000) == 1
     let winnr = a:1
     let bufnr = winbufnr(winnr)
@@ -109,7 +109,7 @@ function! zpan#toggle_defx() abort
   let found_type = ''
   for nr in range(1, winnr('$'))
     let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
+    if index(['coc-explorer', 'defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
       let found_nr = nr
       let found_type = win_filetype
       break
@@ -128,7 +128,7 @@ function! zpan#toggle_tagbar() abort
   let found_type = ''
   for nr in range(1, winnr('$'))
     let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
+    if index(['coc-explorer', 'defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
       let found_nr = nr
       let found_type = win_filetype
       break
@@ -147,7 +147,7 @@ function! zpan#toggle_vista() abort
   let found_type = ''
   for nr in range(1, winnr('$'))
     let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
+    if index(['coc-explorer', 'defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
       let found_nr = nr
       let found_type = win_filetype
       break
@@ -166,7 +166,7 @@ function! zpan#toggle_undotree() abort
   let found_type = ''
   for nr in range(1, winnr('$'))
     let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
+    if index(['coc-explorer', 'defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
       let found_nr = nr
       let found_type = win_filetype
       break
