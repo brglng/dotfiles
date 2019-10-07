@@ -197,6 +197,8 @@ function! zpan#toggle_undotree() abort
   endif
 
   UndotreeToggle
+  UndotreeToggle
+  UndotreeToggle
 endfunction
 
 let s:prev_terminal_height = 0
