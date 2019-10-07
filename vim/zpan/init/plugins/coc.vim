@@ -66,7 +66,7 @@ silent! call coc#config('languageserver.ccls.initializationOptions.cache.directo
 
 if executable('fd')
   silent! call coc#config('list.source.files.command', 'fd')
-  silent! call coc#config('list.source.files.args', [])
+  silent! call coc#config('list.source.files.args', ['-I'])
 elseif executable('bfind')
   silent! call coc#config('list.source.files.command', 'bfind')
   silent! call coc#config('list.source.files.args', [])
@@ -78,4 +78,4 @@ endif
 
 " let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']
 
-autocmd User CocOpenFloat silent! setlocal winblend=15
+" autocmd User CocOpenFloat silent! setlocal winblend=15
