@@ -163,7 +163,7 @@ let g:which_key_map.x = {
 
 let g:which_key_map.t = {
       \ 'name': '+ui-toggles',
-      \ 'f': [':CocCommand explorer', 'toggle file tree'],
+      \ 'f': ['zpan#toggle_coc_explorer()', 'toggle file tree'],
       \ 'i': [':IndentLinesToggle', 'toggle indent line'],
       \ 'l': ['zpan#toggle_loclist()', 'toggle location list'],
       \ 'o': ['zpan#toggle_vista()', 'toggle outline'],

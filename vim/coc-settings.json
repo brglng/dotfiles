@@ -69,7 +69,6 @@
   "explorer.icon.enableNerdfont": true,
   "explorer.file.column.indent.indentLine": true,
   "explorer.keyMappings": {
-    "<Space>": "toggleSelection",
-    "<CR>": "expand"
+    "<cr>": "expand"
   }
 }

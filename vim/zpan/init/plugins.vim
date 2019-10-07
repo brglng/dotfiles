@@ -141,12 +141,12 @@ endif
 call dein#local($HOME . '/.vim/dein-local', {}, ['vim-im-select'])
 call dein#source(['vim-im-select'])
 
-" if !zpan#is_sudo()
+if !zpan#is_sudo()
 runtime zpan/init/plugins/coc.vim
 runtime zpan/init/plugins/coc_explorer.vim
 runtime zpan/init/plugins/coc_smartf.vim
-" endif
-runtime zpan/init/plugins/defx.vim
+endif
+" runtime zpan/init/plugins/defx.vim
 runtime zpan/init/plugins/dein_ui.vim
 " runtime zpan/init/plugins/denite.vim
 runtime zpan/init/plugins/devicons.vim
@@ -155,7 +155,7 @@ runtime zpan/init/plugins/indent_line.vim
 runtime zpan/init/plugins/lightline.vim
 runtime zpan/init/plugins/matchup.vim
 runtime zpan/init/plugins/nerd_commenter.vim
-runtime zpan/init/plugins/neoformat.vim
+" runtime zpan/init/plugins/neoformat.vim
 runtime zpan/init/plugins/netrw.vim
 runtime zpan/init/plugins/startify.vim
 runtime zpan/init/plugins/undotree.vim

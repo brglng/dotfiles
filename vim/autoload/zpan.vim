@@ -104,6 +104,25 @@ function! zpan#toggle_loclist() abort
   endif
 endfunction
 
+function! zpan#toggle_coc_explorer() abort
+  let found_nr = 0
+  let found_type = ''
+  for nr in range(1, winnr('$'))
+    let win_filetype = getbufvar(winbufnr(nr), '&filetype')
+    if index(['coc-explorer', 'defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
+      let found_nr = nr
+      let found_type = win_filetype
+      break
+    endif
+  endfor
+
+  if found_nr > 0 && found_type != 'coc_explorer'
+    execute found_nr . 'wincmd q'
+  endif
+
+  CocCommand explorer
+endfunction
+
 function! zpan#toggle_defx() abort
   let found_nr = 0
   let found_type = ''
