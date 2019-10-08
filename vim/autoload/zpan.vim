@@ -109,7 +109,7 @@ function! zpan#toggle_coc_explorer() abort
   let found_type = ''
   for nr in range(1, winnr('$'))
     let win_filetype = getbufvar(winbufnr(nr), '&filetype')
-    if index(['coc-explorer', 'defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
+    if index(['defx', 'nerdtree', 'undotree'], win_filetype) >= 0 || bufname(winbufnr(nr)) =~ '__Tagbar__\|__vista__'
       let found_nr = nr
       let found_type = win_filetype
       break
