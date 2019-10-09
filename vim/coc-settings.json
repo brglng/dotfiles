@@ -69,6 +69,8 @@
   "explorer.icon.enableNerdfont": true,
   "explorer.file.column.indent.indentLine": true,
   "explorer.keyMappings": {
-    "<cr>": "expand"
-  }
+    "<cr>": "expand",
+    "<2-LeftMouse>": "expand"
+  },
+  "python.jediEnabled": false
 }
