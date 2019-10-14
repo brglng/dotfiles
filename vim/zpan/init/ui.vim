@@ -13,12 +13,6 @@ else
   let g:onedark_termcolors = 256
 endif
 
-if exists('g:GuiLoaded') || exists('g:nyaovim_version') || exists('g:gui_oni')
-  call rpcnotify(1, 'Gui', 'Font', 'Fura Code Nerd Font:h11')
-  call rpcnotify(1, 'Gui', 'Linespace', '0')
-  " call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
-endif
-
 syntax on
 set background=dark
 silent! colorscheme nord

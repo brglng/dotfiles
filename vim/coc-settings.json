@@ -50,12 +50,21 @@
     "typeParameter": "\uf278",
     "default": "\uf29c"
   },
+  "diagnostic.warningSign": "\uf071",
+  "diagnostic.errorSign": "\ufaac",
+  "diagnostic.infoSign": "\uf129",
+  "diagnostic.hintSign": "\ufbe6",
   "git.addGlameToVirtualText": true,
   "git.addGlameToBufferVar": true,
   "git.changedDecorator": " *",
   "git.stagedDecorator": " ●",
   "git.untrackedDecorator": " …",
   "git.conflictedDecorator": " x",
+  "git.addedSign.text": "█",
+  "git.changedSign.text": "█",
+  "git.removedSign.text": "█",
+  "git.topRemovedSign.text": "█",
+  "git.changeRemovedSign.text": "█",
   "explorer.sources": [
     {
       "name": "buffer",
