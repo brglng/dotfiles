@@ -21,3 +21,5 @@ readline_history.txt
 /vim/sessions
 doc/tags
 *.pyc
+
+.mypy_cache/

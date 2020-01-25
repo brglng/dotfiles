@@ -1,169 +1,121 @@
 #!/usr/bin/env bash
 set -e
 
-install_yum() {
-  echo "Not implemented yet!"
-  exit -1
+function linux_brew() {
+    PATH="/home/linuxbrew/.linuxbrew/bin:$PATH" /home/linuxbrew/.linuxbrew/bin/brew "$@"
 }
 
-install_apt() {
-  sudo add-apt-repository -y ppa:neovim-ppa/unstable
+function install_yum() {
+    echo "Not implemented yet!"
+    exit -1
+}
 
-  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+function install_apt() {
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    sudo apt-get update
+    sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make git luajit libluajit-5.1-dev ruby-dev zlib1g-dev libncurses-dev xsel
+}
 
-  sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+function install_linux() {
+    distname=$(cat /etc/*release | sed -ne 's/DISTRIB_ID=\(.*\)/\1/gp')
+    distver=$(cat /etc/*release | sed -ne 's/DISTRIB_RELEASE=\(.*\)/\1/gp')
+    machine=$(uname -m)
 
-  if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
-    sudo add-apt-repository -y ppa:deadsnakes/ppa
-    sudo add-apt-repository -y ppa:jonathonf/vim
-  fi
+    case $distname in
+      	Ubuntu) install_apt ;;
+      	Debian) install_apt ;;
+      	Fedora) install_yum ;;
+      	CentOS) install_yum ;;
+    esac
 
-  sudo apt-get update
+    git config --global http.postBuffer 524288000
 
-  sudo apt-get install -y build-essential g++ gcc-8 g++-8 gdb clang automake autoconf libtool pkg-config make cmake git python3-setuptools python3-pip python3-dev zsh tmux neovim luajit libluajit-5.1-dev ruby-dev yarn zlib1g-dev libncurses-dev xsel xclip colordiff
-
-  if [ "$distname" = "Ubuntu" ] && [ "$distver" = "16.04" ]; then
-    # Install Python 3.6
-    sudo apt-get install -y python3.6 clang-format-6.0
-
-    python3.6 -m pip install --user -U pip
-
-    # Install a newer CMake version
-    if [ ! -e ~/.local/bin/cmake ]; then
-      mkdir -p ~/.cache/brglng/dotfiles/cmake
-      wget -c https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh -O ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh
-      mkdir -p ~/.local
-      sh ~/.cache/brglng/dotfiles/cmake/cmake-3.14.4-Linux-x86_64.sh --prefix=$HOME/.local --exclude-subdir
+    # Install Homebrew for Linux
+    if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+      	linux_brew update
+    else
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
     fi
-  else
-    sudo apt-get install -y clang-format-7
-  fi
 
-  python3 -m pip install --user -U pip
-  python -m pip install --user -U pip
+    linux_brew install cmake tmux ccls fzf repgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
+
+    if ! linux_brew ls --versions neovim > /dev/null; then
+      	linux_brew install --HEAD neovim
+    fi
+
+    if ! linux_brew ls --versions universal-ctags; then
+      	linux_brew tap universal-ctags/universal-ctags
+      	linux_brew install --HEAD universal-ctags
+    fi
+
+    $(linux_brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
+
+    mkdir -p $HOME/.local/bin
+    ln -fs $(linux_brew --prefix)/bin/cmake	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/tmux	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/ccls	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/rg	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/clang-format  $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/fd	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/vim	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/colordiff	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/exa	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/fselect	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/fx	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/nnn	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/tig	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/glances	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/nvim	    $HOME/.local/bin/
+    ln -fs $(linux_brew --prefix)/bin/ctags	    $HOME/.local/bin/
 }
 
-install_linux() {
-  distname=$(cat /etc/*release | sed -ne 's/DISTRIB_ID=\(.*\)/\1/gp')
-  distver=$(cat /etc/*release | sed -ne 's/DISTRIB_RELEASE=\(.*\)/\1/gp')
-  machine=$(uname -m)
+function install_mac() {
+    if which brew > /dev/null; then
+      	brew update
+    else
+      	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    fi
+    git config --global http.postBuffer 524288000
 
-  case $distname in
-    Ubuntu) install_apt ;;
-    Debian) install_apt ;;
-    Fedora) install_yum ;;
-    CentOS) install_yum ;;
-  esac
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake tmux luajit ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
+    # brew install reattach-to-user-namespace
 
-  git config --global http.postBuffer 524288000
+    if ! brew ls --versions neovim > /dev/null; then
+      	brew install --HEAD neovim
+    fi
 
-  mkdir -p ~/.cache/brglng/dotfiles/fzf
-  pushd ~/.cache/brglng/dotfiles/fzf
-  if [ ! -e download.timestamp ]; then
-    rm -rf ~/.fzf
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    echo $(date +%s) > download.timestamp
-  else
-    pushd ~/.fzf
-    git pull
-    popd
-  fi
-  ~/.fzf/install --key-bindings --completion --no-update-rc
-  popd
+    if ! brew ls --versions universal-ctags; then
+      	brew tap universal-ctags/universal-ctags
+      	brew install --HEAD universal-ctags
+    fi
 
-  # install Universal Ctags
-  mkdir -p ~/.cache/brglng/dotfiles/universal-ctags
-  pushd ~/.cache/brglng/dotfiles/universal-ctags
-  if [ ! -e download.timestamp ]; then
-    rm -rf ctags
-    git clone --depth 1 --recursive https://github.com/universal-ctags/ctags.git
-    echo $(date +%s) > download.timestamp
-  else
-    pushd ctags
-    git pull
-    popd
-  fi
-  cd ctags
-  ./autogen.sh
-  ./configure --prefix=$HOME/.local
-  make -j 8
-  make install
-  popd
+    $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 
-  # install CCLS
-  mkdir -p ~/.cache/brglng/dotfiles/ccls
-  pushd ~/.cache/brglng/dotfiles/ccls
-
-  if [ ! -e download.timestamp ]; then
-    rm -rf ccls
-    git clone --depth 1 --recursive https://github.com/MaskRay/ccls
-
-    wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-    tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-
-    echo $(date +%s) > download.timestamp
-  else
-    pushd ccls
-    git pull
-    popd
-  fi
-
-  cd ccls
-  mkdir -p build
-  cd build
-  if [ "$distname" = "Ubuntu" ]; then
-    CC=gcc-8 CXX=g++-8 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_CXX_FLAGS=-fno-gnu-unique -DCMAKE_INSTALL_PREFIX=$HOME/.local ..
-  else
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04 -DCMAKE_INSTALL_PREFIX=$HOME/.local ..
-  fi
-
-  make -j 8
-  make install
-
-  popd
+    brew cask install macvim alacritty
 }
 
-install_mac() {
-  if [ -x "$(which brew)" ]; then
-    brew update
-  else
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  fi
-  git config --global http.postBuffer 524288000
-
-  brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake python3 tmux luajit yarn ccls fzf ripgrep clang-format fd vim colordiff exa fselect fx nnn tig glances
-  # brew install reattach-to-user-namespace
-
-  $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
-
-  if ! brew ls --versions neovim > /dev/null; then
-    brew install --HEAD neovim
-  fi
-
-  brew cask install macvim alacritty
-
-  if ! brew ls --versions universal-ctags; then
-    brew tap universal-ctags/universal-ctags
-    brew install --HEAD universal-ctags
-  fi
-}
+while true; do
+    read -p "Have you set up your Python 3 environment yet? (y/n) " yn
+    case $yn in
+        [Yy]* )
+	    echo "OK, let's go on...";
+	    break
+	    ;;
+        [Nn]* )
+	    echo "Please set up your Python 3 environment before running this script."
+	    exit -1
+	    ;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
 
 export PATH=$HOME/.local/bin:$PATH
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 case $(uname -s) in
-  Linux) install_linux ;;
-  Darwin) install_mac ;;
+    Linux) install_linux ;;
+    Darwin) install_mac ;;
 esac
-
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-source $HOME/.cargo/env
-rustup update
-rustup component add rls rust-analysis rust-src rustfmt
-
-if [ ! $(uname -s) = Darwin ]; then
-  cargo install -f ripgrep fd-find
-fi
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 
@@ -174,23 +126,18 @@ nvm install node npm
 nvm use node
 nvm alias default node
 
-python -m pip install --user -U pynvim neovim autopep8 pylint jedi
 python3 -m pip install --user -U pynvim neovim autopep8 pylint jedi
 
-if [ -x "$(which python3.6)" ]; then
-  python3.6 -m pip install --user -U pynvim neovim autopep8 pylint jedi
-fi
-
 sudo -H gem install neovim
-yarn global add neovim
+npm install -g neovim
 
 mkdir -p ~/.tmux/plugins
 if [ -e ~/.tmux/plugins/tpm ]; then
-  pushd ~/.tmux/plugins/tpm
-  git pull
-  popd
+    pushd ~/.tmux/plugins/tpm
+    git pull
+    popd
 else
-  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
 mkdir -p ~/.local/share/zsh

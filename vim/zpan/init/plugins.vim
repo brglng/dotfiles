@@ -2,33 +2,6 @@ if has('nvim')
   if exists('$CONDA_PYTHON_EXE') && executable('python') && system('which python')[:-2] == $CONDA_PYTHON_EXE
     " We are in Conda environment
     let g:python3_host_prog = $CONDA_PYTHON_EXE
-  else
-    " search for the python 3 binary in the system with the highest version
-    let found_python3_exe = 0
-    for minor in range(20, 0, -1)
-      if executable('python3' . string(minor))
-        let python3_version_major = str2nr(zpan#rstrip(system('python3 -c "import sys; print(sys.version_info[0])"'), "\r\n"))
-        let python3_version_minor = str2nr(zpan#rstrip(system('python3 -c "import sys; print(sys.version_info[1])"'), "\r\n"))
-        if python3_version_major == 3
-          let found_python3_exe = 1
-        endif
-      endif
-    endfor
-    if !found_python3_exe
-      if executable('python3')
-        let python3_version_major = str2nr(zpan#rstrip(system('python3 -c "import sys; print(sys.version_info[0])"'), "\r\n"))
-        let python3_version_minor = str2nr(zpan#rstrip(system('python3 -c "import sys; print(sys.version_info[1])"'), "\r\n"))
-        if python3_version_major == 3
-          let found_python3_exe = 1
-        endif
-      elseif executable('python')
-        let python3_version_major = str2nr(zpan#rstrip(system('python -c "import sys; print(sys.version_info[0])"'), "\r\n"))
-        let python3_version_minor = str2nr(zpan#rstrip(system('python -c "import sys; print(sys.version_info[1])"'), "\r\n"))
-        if python3_version_major == 3
-          let found_python3_exe = 1
-        endif
-      endif
-    endif
   endif
 endif
 

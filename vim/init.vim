@@ -80,7 +80,7 @@ set incsearch                   " search while inputting
 set smartcase
 nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
 set number                      " show line number
-set relativenumber
+" set relativenumber
 
 set laststatus=2
 set shortmess+=c

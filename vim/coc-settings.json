@@ -1,5 +1,36 @@
 {
+  "diagnostic.errorSign": "\ufaac",
+  "diagnostic.hintSign": "\ufbe6",
+  "diagnostic.infoSign": "\uf129",
   "diagnostic.virtualText": true,
+  "diagnostic.warningSign": "\uf071",
+  "explorer.file.column.indent.indentLine": true,
+  "explorer.icon.enableNerdfont": true,
+  "explorer.keyMappings": {
+    "<cr>": "expand",
+    "<2-LeftMouse>": "expand"
+  },
+  "explorer.sources": [
+    {
+      "name": "buffer",
+      "expand": true
+    },
+    {
+      "name": "file",
+      "expand": true
+    }
+  ],
+  "git.addGBlameToVirtualText": true,
+  "git.addGBlameToBufferVar": true,
+  "git.changedDecorator": " *",
+  "git.stagedDecorator": " ●",
+  "git.untrackedDecorator": " …",
+  "git.conflictedDecorator": " x",
+  "git.addedSign.text": "█",
+  "git.changedSign.text": "█",
+  "git.removedSign.text": "█",
+  "git.topRemovedSign.text": "█",
+  "git.changeRemovedSign.text": "█",
   "languageserver": {
     "ccls": {
       "command": "ccls",
@@ -14,15 +45,15 @@
       }
     }
   },
+  "list.maxHeight": 20,
+  "list.source.grep.defaultArgs": ["-smartcase", "-regex"],
+  "list.source.grep.defaultOptions": ["--interactive", "--no-sort", "--regex"],
   "snippets.extends": {
     "cpp": ["c"],
     "javascriptreact": ["javascript"],
     "typescript": ["javascript"]
   },
   "snippets.trace": "verbose",
-  "list.maxHeight": 20,
-  "list.source.grep.defaultArgs": ["-smartcase", "-regex"],
-  "list.source.grep.defaultOptions": ["--interactive", "--no-sort", "--regex"],
   "suggest.completionItemKindLabels": {
     "function": "\uf794",
     "method": "\uf6a6",
@@ -50,36 +81,6 @@
     "typeParameter": "\uf278",
     "default": "\uf29c"
   },
-  "diagnostic.warningSign": "\uf071",
-  "diagnostic.errorSign": "\ufaac",
-  "diagnostic.infoSign": "\uf129",
-  "diagnostic.hintSign": "\ufbe6",
-  "git.addGlameToVirtualText": true,
-  "git.addGlameToBufferVar": true,
-  "git.changedDecorator": " *",
-  "git.stagedDecorator": " ●",
-  "git.untrackedDecorator": " …",
-  "git.conflictedDecorator": " x",
-  "git.addedSign.text": "█",
-  "git.changedSign.text": "█",
-  "git.removedSign.text": "█",
-  "git.topRemovedSign.text": "█",
-  "git.changeRemovedSign.text": "█",
-  "explorer.sources": [
-    {
-      "name": "buffer",
-      "expand": true
-    },
-    {
-      "name": "file",
-      "expand": true
-    }
-  ],
-  "explorer.icon.enableNerdfont": true,
-  "explorer.file.column.indent.indentLine": true,
-  "explorer.keyMappings": {
-    "<cr>": "expand",
-    "<2-LeftMouse>": "expand"
-  },
-  "python.jediEnabled": false
+  "python.jediEnabled": true,
+  "python.linting.mypyEnabled": true
 }
