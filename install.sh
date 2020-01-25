@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
-function linux_brew() {
-    PATH="/home/linuxbrew/.linuxbrew/bin:$PATH" /home/linuxbrew/.linuxbrew/bin/brew "$@"
+function linuxbrew_disable() {
+    export PATH=${PATH##*"/.linuxbrew/bin:"}
+    export PATH=${PATH##*"/.linuxbrew/sbin:"}
+    export MANPATH=${MANPATH##*"/.linuxbrew/share/man:"}
+    export INFOPATH=${INFOPATH##*"/.linuxbrew/share/info:"}
+}
+
+function linuxbrew_enable() {
+    BREW='/home/linuxbrew/.linuxbrew'
+    brew_disable
+    export PATH="$BREW/bin:$BREW/sbin:$PATH"
+    export MANPATH="$BREW/share/man:$MANPATH"
+    export INFOPATH="$BREW/share/info:$INFOPATH"
+    export HOMEBREW_NO_AUTO_UPDATE=1
 }
 
 function install_yum() {
@@ -37,36 +49,38 @@ function install_linux() {
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
     fi
 
-    linux_brew install cmake tmux ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
+    linuxbrew_enable
 
-    if ! linux_brew ls --versions neovim > /dev/null; then
-      	linux_brew install --HEAD neovim
+    brew install cmake tmux ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
+
+    if ! brew ls --versions neovim > /dev/null; then
+      	brew install --HEAD neovim
     fi
 
-    if ! linux_brew ls --versions universal-ctags; then
-      	linux_brew tap universal-ctags/universal-ctags
-      	linux_brew install --HEAD universal-ctags
+    if ! brew ls --versions universal-ctags; then
+      	brew tap universal-ctags/universal-ctags
+      	brew install --HEAD universal-ctags
     fi
 
-    $(linux_brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
+    $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 
     mkdir -p $HOME/.local/bin
-    ln -fs $(linux_brew --prefix)/bin/cmake	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/tmux	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/ccls	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/rg	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/clang-format  $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/fd	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/vim	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/colordiff	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/exa	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/fselect	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/fx	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/nnn	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/tig	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/glances	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/nvim	    $HOME/.local/bin/
-    ln -fs $(linux_brew --prefix)/bin/ctags	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/cmake	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/tmux	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/ccls	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/rg	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/clang-format  $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/fd	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/vim	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/colordiff	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/exa	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/fselect	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/fx	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/nnn	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/tig	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/glances	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/nvim	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/ctags	    $HOME/.local/bin/
 }
 
 function install_mac() {
