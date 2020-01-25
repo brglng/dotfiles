@@ -42,14 +42,14 @@ function install_linux() {
 
     git config --global http.postBuffer 524288000
 
+    linuxbrew_enable
+
     # Install Homebrew for Linux
     if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-      	linux_brew update
+      	brew update
     else
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
     fi
-
-    linuxbrew_enable
 
     brew install cmake tmux ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
 
