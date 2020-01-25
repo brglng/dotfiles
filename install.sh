@@ -10,7 +10,7 @@ function linuxbrew_disable() {
 
 function linuxbrew_enable() {
     BREW='/home/linuxbrew/.linuxbrew'
-    brew_disable
+    linuxbrew_disable
     export PATH="$BREW/bin:$BREW/sbin:$PATH"
     export MANPATH="$BREW/share/man:$MANPATH"
     export INFOPATH="$BREW/share/info:$INFOPATH"
