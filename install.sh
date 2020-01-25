@@ -81,6 +81,8 @@ function install_linux() {
     ln -fs $(brew --prefix)/bin/glances	    $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/nvim	    $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/ctags	    $HOME/.local/bin/
+
+    linuxbrew_disable
 }
 
 function install_mac() {
