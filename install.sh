@@ -37,7 +37,7 @@ function install_linux() {
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
     fi
 
-    linux_brew install cmake tmux ccls fzf repgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
+    linux_brew install cmake tmux ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
 
     if ! linux_brew ls --versions neovim > /dev/null; then
       	linux_brew install --HEAD neovim
