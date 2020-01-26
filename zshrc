@@ -1,3 +1,10 @@
+_readlinkf() { perl -MCwd -le 'print Cwd::abs_path shift' "$1";}
+
+source "$(dirname $(_readlinkf ${(%):-%N}))/init.sh"
+
+if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+fi
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
@@ -132,9 +139,5 @@ setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks before recording ent
 setopt HIST_VERIFY              # Don't execute immediately upon history expansion.
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-_readlinkf() { perl -MCwd -le 'print Cwd::abs_path shift' "$1";}
-
-source "$(dirname $(_readlinkf ${(%):-%N}))/init.sh"
 
 # vim: ts=8 sts=4 sw=4 et

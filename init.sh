@@ -1,3 +1,33 @@
+path_append() {
+    for ARG in "$@"
+    do
+        if [[ ":$PATH:" != *":$ARG:"* ]]; then
+            PATH="${PATH:+"$PATH:"}$ARG"
+        fi
+    done
+}
+
+path_prepend() {
+    for ((i=$#; i>0; i--)); do
+        ARG=${!i}
+        if [[ ":$PATH:" != *":$ARG:"* ]]; then
+            PATH="$ARG${PATH:+":$PATH"}"
+        fi
+    done
+}
+
+path_prepend "$HOME/.cargo/bin" "$HOME/.local/bin"
+
+if [ "$NVM_DIR" = "" ]; then
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"  # This loads nvm
+fi
+
+if [ "$GOPATH" = "" ]; then
+    export GOPATH="$HOME/go"
+    path_prepend "$GOPATH/bin"
+fi
+
 # Preferred editor for local and remote sessions
 if which nvim > /dev/null; then
     export EDITOR='nvim'

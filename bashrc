@@ -8,6 +8,21 @@ case $- in
       *) return;;
 esac
 
+function _get_script_dir () {
+    SOURCE="${BASH_SOURCE[0]}"
+    # While $SOURCE is a symlink, resolve it
+    while [ -h "$SOURCE" ]; do
+        DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+        SOURCE="$( readlink "$SOURCE" )"
+        # If $SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
+        [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+    done
+    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+    echo "$DIR"
+}
+
+source "$(_get_script_dir)/init.sh"
+
 set -o notify
 
 shopt -s nocaseglob
@@ -51,6 +66,17 @@ fi
 
 PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\] \[\e[1;93m\]$(__git_ps1 "(%s) ")\[\e[0m\]\$ '
 
+if type brew &>/dev/null; then
+    HOMEBREW_PREFIX="$(brew --prefix)"
+    if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
+        source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+    else
+        for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+            [[ -r "$COMPLETION" ]] && source "$COMPLETION"
+        done
+    fi
+fi
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -78,20 +104,5 @@ if [ -e ~/.local/share/z.lua ]; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-function _get_script_dir () {
-    SOURCE="${BASH_SOURCE[0]}"
-    # While $SOURCE is a symlink, resolve it
-    while [ -h "$SOURCE" ]; do
-        DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-        SOURCE="$( readlink "$SOURCE" )"
-        # If $SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
-        [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-    done
-    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-    echo "$DIR"
-}
-
-source "$(_get_script_dir)/init.sh"
 
 # vim: ts=8 sts=4 sw=4 et
