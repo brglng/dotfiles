@@ -81,7 +81,7 @@ function install_mac() {
     fi
     git config --global http.postBuffer 524288000
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config llvm cmake tmux luajit ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake tmux luajit ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm clang-format
     # brew install reattach-to-user-namespace
 
     if ! brew ls --versions neovim > /dev/null; then

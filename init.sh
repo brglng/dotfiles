@@ -23,6 +23,8 @@ if [ "$GOPATH" = "" ]; then
     path_append 
 fi
 
+export HOMEBREW_NO_AUTO_UPDATE=1
+
 # Preferred editor for local and remote sessions
 if which nvim > /dev/null; then
     export EDITOR='nvim'
