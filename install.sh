@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -x -e
+set -e
 
 function install_yum() {
     echo "Not implemented yet!"
