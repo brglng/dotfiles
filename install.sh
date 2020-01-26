@@ -146,7 +146,7 @@ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh |
 ./link.sh
 
 echo "Congratulations! The installation is finished."
-echo "Please run setup_python3.sh in every Python 3 environment that you use."
+echo "It is strongly recommended that you run setup_python3.sh in every Python 3 environment that you use."
 echo "It is strongly recommended that you log out from your current shell and log in again now immediately."
 
 # vim: ts=8 sts=4 sw=4 et
