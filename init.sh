@@ -1,22 +1,17 @@
 path_append() {
-    for ARG in "$@"
-    do
-        if [[ ":$PATH:" != *":$ARG:"* ]]; then
-            PATH="${PATH:+"$PATH:"}$ARG"
-        fi
-    done
+    if [[ ":$PATH:" != *":$ARG:"* ]]; then
+        PATH="${PATH:+"$PATH:"}$ARG"
+    fi
 }
 
 path_prepend() {
-    for ((i=$#; i>0; i--)); do
-        ARG=${!i}
-        if [[ ":$PATH:" != *":$ARG:"* ]]; then
-            PATH="$ARG${PATH:+":$PATH"}"
-        fi
-    done
+    if [[ ":$PATH:" != *":$ARG:"* ]]; then
+        PATH="$1${PATH:+":$PATH"}"
+    fi
 }
 
-path_prepend "$HOME/.cargo/bin" "$HOME/.local/bin"
+path_prepend "$HOME/.local/bin"
+path_prepend "$HOME/.cargo/bin"
 
 if [ "$NVM_DIR" = "" ]; then
     export NVM_DIR="$HOME/.nvm"
@@ -25,7 +20,7 @@ fi
 
 if [ "$GOPATH" = "" ]; then
     export GOPATH="$HOME/go"
-    path_prepend "$GOPATH/bin"
+    path_append 
 fi
 
 # Preferred editor for local and remote sessions
