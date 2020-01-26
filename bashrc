@@ -21,7 +21,7 @@ function _get_script_dir () {
     echo "$DIR"
 }
 
-source "$(_get_script_dir)/init.sh"
+source "$(_get_script_dir)/init-pre.sh"
 
 set -o notify
 
@@ -104,5 +104,7 @@ if [ -e ~/.local/share/z.lua ]; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+source "$(_get_script_dir)/init-post.sh"
 
 # vim: ts=8 sts=4 sw=4 et
