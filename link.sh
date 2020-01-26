@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -xe
 
 update_bashrc() {
     mkdir -p /tmp/$USER/brglng/dotfiles
@@ -9,10 +9,10 @@ update_bashrc() {
 # END brglng/dotfiles
 EOF
 
-    if [ ! -e $1 ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $1)" = "" ]; then
-      	cat /tmp/$USER/brglng/dotfiles/bashrc >> $1
+    if [ ! -e $HOME/.bashrc ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $HOME/.bashrc)" = "" ]; then
+      	cat /tmp/$USER/brglng/dotfiles/bashrc >> $HOME/.bashrc
     else
-      	perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/bashrc`/gse' $1
+      	perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/bashrc`/gse' $HOME/.bashrc
     fi
 }
 
@@ -40,10 +40,10 @@ update_zshrc() {
 # END brglng/dotfiles
 EOF
 
-    if [ ! -e $HOME/.zshrc ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $1)" = "" ]; then
+    if [ ! -e $HOME/.zshrc ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $HOME/.zshrc)" = "" ]; then
         cat /tmp/$USER/brglng/dotfiles/zshrc >> $HOME/.zshrc
     else
-        perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/zshrc`/gse' $1
+        perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/zshrc`/gse' $HOME/.zshrc
     fi
 }
 
