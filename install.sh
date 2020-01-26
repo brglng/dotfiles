@@ -33,7 +33,7 @@ function install_linux() {
       	brew update
     else
 	git clone https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
-	mkdir ~/.linuxbrew/bin
+	mkdir -p ~/.linuxbrew/bin
 	ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
     fi
 
@@ -50,7 +50,6 @@ function install_linux() {
 
     $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 
-    mkdir -p $HOME/.local/bin
     ln -fs $(brew --prefix)/bin/cmake           $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/tmux            $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/ccls            $HOME/.local/bin/
@@ -109,6 +108,7 @@ while true; do
     esac
 done
 
+mkdir -p $HOME/.local/bin
 export PATH=$HOME/.local/bin:$PATH
 export HOMEBREW_NO_AUTO_UPDATE=1
 
