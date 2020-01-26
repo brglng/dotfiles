@@ -70,7 +70,6 @@ link() {
     [ -e ~/.vim ] && [ ! -L ~/.vim ] && mv -f ~/.vim ~/.vim.orig
     ln -fs $(pwd)/vim ~/.vim
 
-    mkdir -p ~/.config/nvim
     [ -e ~/.config/nvim ] && [ ! -L ~/.config/nvim ] && mv -f ~/.config/nvim ~/.config/nvim.orig
     ln -fs $(pwd)/vim ~/.config/nvim
 

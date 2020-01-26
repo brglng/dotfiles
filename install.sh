@@ -51,7 +51,7 @@ function install_linux() {
       	brew install --HEAD universal-ctags
     fi
 
-    $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --all --no-fish
+    $(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
 
     ln -fs $(brew --prefix)/bin/cmake           $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/tmux            $HOME/.local/bin/
@@ -93,7 +93,7 @@ function install_mac() {
       	brew install --HEAD universal-ctags
     fi
 
-    $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --all --no-fish
+    $(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
 
     brew cask install macvim alacritty
 }
