@@ -123,7 +123,7 @@ case $(uname -s) in
 esac
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm.sh"  # This loads nvm
+[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"  # This loads nvm
 
 nvm install node npm
 nvm use node
