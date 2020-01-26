@@ -1,11 +1,11 @@
 path_append() {
-    if [[ ":$PATH:" != *":$ARG:"* ]]; then
-        PATH="${PATH:+"$PATH:"}$ARG"
+    if [[ ":$PATH:" != *":$1:"* ]]; then
+        PATH="${PATH:+"$PATH:"}$1"
     fi
 }
 
 path_prepend() {
-    if [[ ":$PATH:" != *":$ARG:"* ]]; then
+    if [[ ":$PATH:" != *":$1:"* ]]; then
         PATH="$1${PATH:+":$PATH"}"
     fi
 }
