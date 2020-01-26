@@ -10,6 +10,9 @@ function install_apt() {
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
     sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make git luajit libluajit-5.1-dev ruby-dev zlib1g-dev libncurses-dev xsel
+
+    # Fix for vim
+    sudo chown $USER:$USER ~/.viminfo
 }
 
 function install_linux() {
