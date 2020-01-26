@@ -67,6 +67,7 @@ function install_linux() {
     ln -fs $(brew --prefix)/bin/nvim            $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/ctags           $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/nvm             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/zsh             $HOME/.local/bin/
 }
 
 function install_mac() {
