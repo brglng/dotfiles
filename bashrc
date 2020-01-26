@@ -43,43 +43,43 @@ HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
 GIT_PS1_SHOWDIRTYSTATE=true
 
 if [ "$(uname -s)" = "Darwin" ]; then
-  source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
-  source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
+    source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
+    source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
 elif [ "$(uname -s)" = "Linux" ]; then
-  source /etc/bash_completion.d/git-prompt
+    source /etc/bash_completion.d/git-prompt
 fi
 
 PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\] \[\e[1;93m\]$(__git_ps1 "(%s) ")\[\e[0m\]\$ '
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
 fi
 
 if [ -f /etc/bash_completion.d/git ]; then
-  source /etc/bash_completion.d/git
+    source /etc/bash_completion.d/git
 fi
 
 set show-all-if-ambiguous on
 
 if [ -e ~/.local/share/z.lua ]; then
-  eval "$(luajit ~/.local/share/z.lua --init bash)"
+    eval "$(luajit ~/.local/share/z.lua --init bash)"
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-function get_script_dir () {
+function _get_script_dir () {
     SOURCE="${BASH_SOURCE[0]}"
     # While $SOURCE is a symlink, resolve it
     while [ -h "$SOURCE" ]; do
@@ -92,6 +92,6 @@ function get_script_dir () {
     echo "$DIR"
 }
 
-source "$(get_script_dir)/init.sh"
+source "$(_get_script_dir)/init.sh"
 
 # vim: ts=8 sts=4 sw=4 et

@@ -228,3 +228,5 @@ let mapleader = "\<Space>"
 runtime zpan/init/plugins.vim
 runtime zpan/init/key_mappings.vim
 runtime zpan/init/ui.vim
+
+" vim: ts=8 sts=4 sw=4 et

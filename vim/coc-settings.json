@@ -1,86 +1,86 @@
 {
-  "diagnostic.errorSign": "\ufaac",
-  "diagnostic.hintSign": "\ufbe6",
-  "diagnostic.infoSign": "\uf129",
-  "diagnostic.virtualText": true,
-  "diagnostic.warningSign": "\uf071",
-  "explorer.file.column.indent.indentLine": true,
-  "explorer.icon.enableNerdfont": true,
-  "explorer.keyMappings": {
-    "<cr>": "expand",
-    "<2-LeftMouse>": "expand"
-  },
-  "explorer.sources": [
-    {
-      "name": "buffer",
-      "expand": true
+    "diagnostic.errorSign": "\ufaac",
+    "diagnostic.hintSign": "\ufbe6",
+    "diagnostic.infoSign": "\uf129",
+    "diagnostic.virtualText": true,
+    "diagnostic.warningSign": "\uf071",
+    "explorer.file.column.indent.indentLine": true,
+    "explorer.icon.enableNerdfont": true,
+    "explorer.keyMappings": {
+        "<cr>": "expand",
+        "<2-LeftMouse>": "expand"
     },
-    {
-      "name": "file",
-      "expand": true
-    }
-  ],
-  "git.addGBlameToVirtualText": true,
-  "git.addGBlameToBufferVar": true,
-  "git.changedDecorator": " *",
-  "git.stagedDecorator": " ●",
-  "git.untrackedDecorator": " …",
-  "git.conflictedDecorator": " x",
-  "git.addedSign.text": "█",
-  "git.changedSign.text": "█",
-  "git.removedSign.text": "█",
-  "git.topRemovedSign.text": "█",
-  "git.changeRemovedSign.text": "█",
-  "languageserver": {
-    "ccls": {
-      "command": "ccls",
-      "filetypes": ["c", "cpp", "objc", "objcpp"],
-      "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-      "initializationOptions": {
-        "index": {
-          "initialBlacklist": ["build/", "cmake-build-.*/"],
-          "onChange": true,
-          "trackDependency": 2
+    "explorer.sources": [
+        {
+            "name": "buffer",
+            "expand": true
+        },
+        {
+            "name": "file",
+            "expand": true
         }
-      }
-    }
-  },
-  "list.maxHeight": 20,
-  "list.source.grep.defaultArgs": ["-smartcase", "-regex"],
-  "list.source.grep.defaultOptions": ["--interactive", "--no-sort", "--regex"],
-  "snippets.extends": {
-    "cpp": ["c"],
-    "javascriptreact": ["javascript"],
-    "typescript": ["javascript"]
-  },
-  "snippets.trace": "verbose",
-  "suggest.completionItemKindLabels": {
-    "function": "\uf794",
-    "method": "\uf6a6",
-    "variable": "\uf71b",
-    "constant": "\uf8ff",
-    "struct": "\ufb44",
-    "class": "\uf0e8",
-    "interface": "\ufa52",
-    "text": "\ue612",
-    "enum": "\uf435",
-    "enumMember": "\uf02b",
-    "module": "\uf668",
-    "color": "\ue22b",
-    "property": "\ufab6",
-    "field": "\uf93d",
-    "unit": "\uf475",
-    "file": "\uf471",
-    "value": "\uf8a3",
-    "event": "\ufacd",
-    "folder": "\uf115",
-    "keyword": "\uf893",
-    "snippet": "\uf64d",
-    "operator": "\uf915",
-    "reference": "\uf87a",
-    "typeParameter": "\uf278",
-    "default": "\uf29c"
-  },
-  "python.jediEnabled": true,
-  "python.linting.mypyEnabled": true
+    ],
+    "git.addGBlameToVirtualText": true,
+    "git.addGBlameToBufferVar": true,
+    "git.changedDecorator": " *",
+    "git.stagedDecorator": " ●",
+    "git.untrackedDecorator": " …",
+    "git.conflictedDecorator": " x",
+    "git.addedSign.text": "█",
+    "git.changedSign.text": "█",
+    "git.removedSign.text": "█",
+    "git.topRemovedSign.text": "█",
+    "git.changeRemovedSign.text": "█",
+    "languageserver": {
+        "ccls": {
+            "command": "ccls",
+            "filetypes": ["c", "cpp", "objc", "objcpp"],
+            "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+            "initializationOptions": {
+                "index": {
+                    "initialBlacklist": ["build/", "cmake-build-.*/"],
+                    "onChange": true,
+                    "trackDependency": 2
+                }
+            }
+        }
+    },
+    "list.maxHeight": 20,
+    "list.source.grep.defaultArgs": ["-smartcase", "-regex"],
+    "list.source.grep.defaultOptions": ["--interactive", "--no-sort", "--regex"],
+    "snippets.extends": {
+        "cpp": ["c"],
+        "javascriptreact": ["javascript"],
+        "typescript": ["javascript"]
+    },
+    "snippets.trace": "verbose",
+    "suggest.completionItemKindLabels": {
+        "function": "\uf794",
+        "method": "\uf6a6",
+        "variable": "\uf71b",
+        "constant": "\uf8ff",
+        "struct": "\ufb44",
+        "class": "\uf0e8",
+        "interface": "\ufa52",
+        "text": "\ue612",
+        "enum": "\uf435",
+        "enumMember": "\uf02b",
+        "module": "\uf668",
+        "color": "\ue22b",
+        "property": "\ufab6",
+        "field": "\uf93d",
+        "unit": "\uf475",
+        "file": "\uf471",
+        "value": "\uf8a3",
+        "event": "\ufacd",
+        "folder": "\uf115",
+        "keyword": "\uf893",
+        "snippet": "\uf64d",
+        "operator": "\uf915",
+        "reference": "\uf87a",
+        "typeParameter": "\uf278",
+        "default": "\uf29c"
+    },
+    "python.jediEnabled": true,
+    "python.linting.mypyEnabled": true
 }

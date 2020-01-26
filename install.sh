@@ -37,7 +37,7 @@ function install_linux() {
 	ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
     fi
 
-    brew install cmake tmux ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
+    brew install cmake tmux ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances nvm
 
     if ! brew ls --versions neovim > /dev/null; then
       	brew install --HEAD neovim
@@ -51,22 +51,23 @@ function install_linux() {
     $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 
     mkdir -p $HOME/.local/bin
-    ln -fs $(brew --prefix)/bin/cmake		$HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/tmux		$HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/ccls	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/rg	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/clang-format  $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/fd	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/vim	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/colordiff	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/exa	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/fselect	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/fx	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/nnn	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/tig	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/glances	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/nvim	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/ctags	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/cmake           $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/tmux            $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/ccls            $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/rg              $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/clang-format    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/fd              $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/vim             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/colordiff       $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/exa             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/fselect         $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/fx              $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/nnn             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/tig             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/glances         $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/nvim            $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/ctags           $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/nvm             $HOME/.local/bin/
 }
 
 function install_mac() {
@@ -77,7 +78,7 @@ function install_mac() {
     fi
     git config --global http.postBuffer 524288000
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake tmux luajit ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake tmux luajit ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances nvm
     # brew install reattach-to-user-namespace
 
     if ! brew ls --versions neovim > /dev/null; then
@@ -99,13 +100,12 @@ while true; do
     case $yn in
         [Yy]* )
 	    echo "OK, let's go on...";
-	    break
-	    ;;
+	    break;;
         [Nn]* )
 	    echo "Please set up your Python 3 environment before running this script."
-	    exit -1
-	    ;;
-        * ) echo "Please answer yes or no.";;
+	    exit -1;;
+        * )
+            echo "Please answer yes or no.";;
     esac
 done
 
@@ -116,8 +116,6 @@ case $(uname -s) in
     Linux) install_linux ;;
     Darwin) install_mac ;;
 esac
-
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -147,6 +145,8 @@ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh |
 
 ./link.sh
 
-echo "Congratulations! Installation is finished. It is strongly recommended that you log out from your current shell and log in again now immediately."
+echo "Congratulations! The installation is finished."
+echo "Please run setup_python3.sh in every Python 3 environment that you use."
+echo "It is strongly recommended that you log out from your current shell and log in again now immediately."
 
 # vim: ts=8 sts=4 sw=4 et

@@ -20,3 +20,5 @@ if exists('g:fvim_loaded')
     FVimFontLcdRender v:true
     FVimFontHintLevel 'none'
 endif
+
+" vim: ts=8 sts=4 sw=4 et

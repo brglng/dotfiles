@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 
 update_bashrc() {
-    mkdir -p /tmp/brglng/dotfiles
-    cat << EOF > /tmp/brglng/dotfiles/bashrc
+    mkdir -p /tmp/$USER/brglng/dotfiles
+    cat << EOF > /tmp/$USER/brglng/dotfiles/bashrc
 # BEGIN brglng/dotfiles
 [ -r $(pwd)/bashrc ] && . $(pwd)/bashrc
 # END brglng/dotfiles
 EOF
 
     if [ ! -e $1 ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $1)" = "" ]; then
-      	cat /tmp/brglng/dotfiles/bashrc >> $1
+      	cat /tmp/$USER/brglng/dotfiles/bashrc >> $1
     else
-      	perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/brglng\/dotfiles\/bashrc`/gse' $1
+      	perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/bashrc`/gse' $1
     fi
 }
 
 update_gitconfig() {
-    mkdir -p /tmp/brglng/dotfiles
-    cat << EOF > /tmp/brglng/dotfiles/gitconfig
+    mkdir -p /tmp/$USER/brglng/dotfiles
+    cat << EOF > /tmp/$USER/brglng/dotfiles/gitconfig
 # BEGIN brglng/dotfiles
 [include]
 	path = $(pwd)/gitconfig
@@ -25,24 +25,24 @@ update_gitconfig() {
 EOF
 
     if [ ! -e $HOME/.gitconfig ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $HOME/.gitconfig)" = "" ]; then
-        cat /tmp/brglng/dotfiles/gitconfig >> ~/.gitconfig
+        cat /tmp/$USER/brglng/dotfiles/gitconfig >> ~/.gitconfig
     else
-        perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/brglng\/dotfiles\/gitconfig`/gse' $HOME/.gitconfig
+        perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/gitconfig`/gse' $HOME/.gitconfig
     fi
 }
 
 update_zshrc() {
-    mkdir -p /tmp/brglng/dotfiles
-    cat << EOF > /tmp/brglng/dotfiles/zshrc
+    mkdir -p /tmp/$USER/brglng/dotfiles
+    cat << EOF > /tmp/$USER/brglng/dotfiles/zshrc
 # BEGIN brglng/dotfiles
 [ -r $(pwd)/zshrc ] && . $(pwd)/zshrc
 # END brglng/dotfiles
 EOF
 
     if [ ! -e $HOME/.zshrc ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $1)" = "" ]; then
-        cat /tmp/brglng/dotfiles/zshrc >> $HOME/.zshrc
+        cat /tmp/$USER/brglng/dotfiles/zshrc >> $HOME/.zshrc
     else
-        perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/brglng\/dotfiles\/zshrc`/gse' $1
+        perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/zshrc`/gse' $1
     fi
 }
 
