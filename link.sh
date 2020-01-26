@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x -e
 
 update_bashrc() {
     mkdir -p /tmp/$USER/brglng/dotfiles

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -x -e
 
 function install_yum() {
     echo "Not implemented yet!"
@@ -37,7 +37,7 @@ function install_linux() {
 	ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
     fi
 
-    brew install cmake tmux ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances nvm
+    brew install llvm cmake tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
 
     if ! brew ls --versions neovim > /dev/null; then
       	brew install --HEAD neovim
@@ -77,7 +77,7 @@ function install_mac() {
     fi
     git config --global http.postBuffer 524288000
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake tmux luajit ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances nvm
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config llvm cmake tmux luajit ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
     # brew install reattach-to-user-namespace
 
     if ! brew ls --versions neovim > /dev/null; then
@@ -100,7 +100,7 @@ if ! which python3 > /dev/null; then
 fi
 
 while true; do
-    read -p "The current Python 3 is: $(which python3). Is that OK? (y/n) " yn
+    read -p "Your current Python 3 is: $(which python3). Is that OK? (y/n) " yn
     case $yn in
         [Yy]* )
 	    echo "OK. Let's go on...";
