@@ -26,7 +26,7 @@ function install_linux() {
 
     git config --global http.postBuffer 524288000
 
-    ln -sf local/bin/brew $HOME/.local/bin
+    ln -sf $PWD/local/bin/brew $HOME/.local/bin
 
     # Install Homebrew for Linux
     if [ -x $HOME/.linuxbrew/bin/brew ]; then
