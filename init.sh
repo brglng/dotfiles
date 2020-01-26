@@ -1,15 +1,15 @@
 # Preferred editor for local and remote sessions
-if [ -x "$(which nvim)" ]; then
+if which nvim > /dev/null; then
     export EDITOR='nvim'
     alias vi=nvim
-elif [ -x "$(which vim)" ]; then
+elif which vim > /dev/null; then
     export EDITOR='vim'
     alias vi=vim
-elif [ -x "$(which nano)" ]; then
+elif which nano > /dev/null; then
     export EDITOR='nano'
 fi
 
-if [ $(uname -s) = Darwin ]; then
+if [ `uname -s` = Darwin ]; then
     alias ls="/usr/local/bin/gls -hF --color=auto"
 else
     alias ls="ls --group-directories-first -hF --color=auto"
@@ -29,7 +29,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias t='tmux attach || tmux new'
 
-if [ $(uname -s) = Darwin ]; then
+if [ `uname -s` = Darwin ]; then
     alias ll='/usr/local/bin/gls -ahlF --color=auto'
     alias la='/usr/local/bin/gls -AhF --color=auto'
     alias l='/usr/local/bin/gls -hF --color=auto'
@@ -71,26 +71,4 @@ alias zi='z -i'      # cd with interactive selection
 alias zf='z -I'      # use fzf to select in multiple matches
 alias zb='z -b'      # quickly cd to the parent directory
 
-if [ `uname -s` = 'Linux' ]; then
-    function brew_disable() {
-      	export PATH=${PATH##*"/.linuxbrew/bin:"}
-      	export PATH=${PATH##*"/.linuxbrew/sbin:"}
-      	export MANPATH=${MANPATH##*"/.linuxbrew/share/man:"}
-      	export INFOPATH=${INFOPATH##*"/.linuxbrew/share/info:"}
-    }
-
-    function brew_enable() {
-      	BREW='/home/linuxbrew/.linuxbrew'
-      	brew_disable
-      	export PATH="$BREW/bin:$BREW/sbin:$PATH"
-      	export MANPATH="$BREW/share/man:$MANPATH"
-      	export INFOPATH="$BREW/share/info:$INFOPATH"
-      	export HOMEBREW_NO_AUTO_UPDATE=1
-    }
-
-    function brew() {
-      	brew_enable
-      	/home/linuxbrew/.linuxbrew/bin/brew "$@"
-      	brew_disable
-    }
-fi
+# vim: ts=8 sts=4 sw=4 et

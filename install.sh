@@ -1,22 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-function linuxbrew_disable() {
-    export PATH=${PATH##*"/.linuxbrew/bin:"}
-    export PATH=${PATH##*"/.linuxbrew/sbin:"}
-    export MANPATH=${MANPATH##*"/.linuxbrew/share/man:"}
-    export INFOPATH=${INFOPATH##*"/.linuxbrew/share/info:"}
-}
-
-function linuxbrew_enable() {
-    BREW='/home/linuxbrew/.linuxbrew'
-    linuxbrew_disable
-    export PATH="$BREW/bin:$BREW/sbin:$PATH"
-    export MANPATH="$BREW/share/man:$MANPATH"
-    export INFOPATH="$BREW/share/info:$INFOPATH"
-    export HOMEBREW_NO_AUTO_UPDATE=1
-}
-
 function install_yum() {
     echo "Not implemented yet!"
     exit -1
@@ -42,13 +26,15 @@ function install_linux() {
 
     git config --global http.postBuffer 524288000
 
-    linuxbrew_enable
+    ln -sf local/bin/brew $HOME/.local/bin
 
     # Install Homebrew for Linux
-    if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    if [ -x $HOME/.linuxbrew/bin/brew ]; then
       	brew update
     else
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+	git clone https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
+	mkdir ~/.linuxbrew/bin
+	ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
     fi
 
     brew install cmake tmux ccls fzf ripgrep-all clang-format fd vim colordiff exa fselect fx nnn tig glances
@@ -65,8 +51,8 @@ function install_linux() {
     $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 
     mkdir -p $HOME/.local/bin
-    ln -fs $(brew --prefix)/bin/cmake	    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/tmux	    $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/cmake		$HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/tmux		$HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/ccls	    $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/rg	    $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/clang-format  $HOME/.local/bin/
@@ -81,8 +67,6 @@ function install_linux() {
     ln -fs $(brew --prefix)/bin/glances	    $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/nvim	    $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/ctags	    $HOME/.local/bin/
-
-    linuxbrew_disable
 }
 
 function install_mac() {
@@ -164,3 +148,5 @@ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh |
 ./link.sh
 
 echo "Congratulations! Installation is finished. It is strongly recommended that you log out from your current shell and log in again now immediately."
+
+# vim: ts=8 sts=4 sw=4 et

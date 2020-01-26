@@ -136,3 +136,5 @@ setopt HIST_VERIFY              # Don't execute immediately upon history expansi
 _readlinkf() { perl -MCwd -le 'print Cwd::abs_path shift' "$1";}
 
 source "$(dirname $(_readlinkf ${(%):-%N}))/init.sh"
+
+# vim: ts=8 sts=4 sw=4 et

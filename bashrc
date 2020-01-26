@@ -93,3 +93,5 @@ function get_script_dir () {
 }
 
 source "$(get_script_dir)/init.sh"
+
+# vim: ts=8 sts=4 sw=4 et
