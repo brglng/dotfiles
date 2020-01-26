@@ -94,6 +94,11 @@ function install_mac() {
     brew cask install macvim alacritty
 }
 
+if ! which python3 > /dev/null; then
+    echo "Python 3 is not found!"
+    exit -1
+fi
+
 while true; do
     read -p "The current Python 3 is: $(which python3). Is that OK? (y/n) " yn
     case $yn in
