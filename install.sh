@@ -37,7 +37,7 @@ function install_linux() {
 	ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
     fi
 
-    brew install llvm cmake tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
+    brew install llvm cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
 
     if ! brew ls --versions neovim > /dev/null; then
       	brew install --HEAD neovim
