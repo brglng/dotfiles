@@ -96,13 +96,13 @@ function install_mac() {
 }
 
 while true; do
-    read -p "Have you set up your Python 3 environment yet? (y/n) " yn
+    read -p "The current Python 3 is: $(which python3). Is that OK? (y/n) " yn
     case $yn in
         [Yy]* )
-	    echo "OK, let's go on...";
+	    echo "OK. Let's go on...";
 	    break;;
         [Nn]* )
-	    echo "Please set up your Python 3 environment before running this script."
+	    echo "Stopped."
 	    exit -1;;
         * )
             echo "Please answer yes or no.";;
@@ -146,7 +146,7 @@ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh |
 ./link.sh
 
 echo "Congratulations! The installation is finished."
-echo "It is strongly recommended that you run setup_python3.sh in every Python 3 environment that you use."
+echo "If you want to set up another Python 3 environment, please run setup_python3.sh in that environment."
 echo "It is strongly recommended that you log out from your current shell and log in again now immediately."
 
 # vim: ts=8 sts=4 sw=4 et
