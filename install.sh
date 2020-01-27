@@ -53,23 +53,36 @@ function install_linux() {
 
     $(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
 
-    ln -fs $(brew --prefix)/bin/cmake           $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/tmux            $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/ccls            $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/rg              $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/ccmake          $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/clangd          $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/clang-format    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/fd              $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/vim             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/clang-tidy      $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/cmake           $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/colordiff       $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/cpack           $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/ctags           $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/ctest           $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/exa             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/fd              $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/fselect         $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/fx              $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/nnn             $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/tig             $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/glances         $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/lua             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/luac            $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/luajit          $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/luarocks        $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/luarocks-admin  $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/nnn             $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/nvim            $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/ctags           $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/nvm             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/rg              $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/scan-build      $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/scan-view       $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/tig             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/tmux            $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/vim             $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/vimdiff         $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/zsh             $HOME/.local/bin/
 }
 
