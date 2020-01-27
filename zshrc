@@ -6,7 +6,7 @@ esac
 
 _readlinkf() { perl -MCwd -le 'print Cwd::abs_path shift' "$1";}
 
-source "$(dirname $(_readlinkf ${(%):-%N}))/init-pre.sh"
+source "$(dirname $(_readlinkf ${(%):-%N}))/init_pre.sh"
 
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
@@ -146,6 +146,6 @@ setopt HIST_VERIFY              # Don't execute immediately upon history expansi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-source "$(dirname $(_readlinkf ${(%):-%N}))/init-post.sh"
+source "$(dirname $(_readlinkf ${(%):-%N}))/init_post.sh"
 
 # vim: ts=8 sts=4 sw=4 et
