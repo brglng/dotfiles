@@ -12,77 +12,77 @@ let g:which_key_map =  {}
 
 let g:which_key_map.b = {
       \ 'name': '+buffer',
-      \ '1': ["<Plug>lightline#bufferline#go(1)", "switch to buffer 1"],
-      \ '2': ["<Plug>lightline#bufferline#go(2)", "switch to buffer 2"],
-      \ '3': ["<Plug>lightline#bufferline#go(3)", "switch to buffer 3"],
-      \ '4': ["<Plug>lightline#bufferline#go(4)", "switch to buffer 4"],
-      \ '5': ["<Plug>lightline#bufferline#go(5)", "switch to buffer 5"],
-      \ '6': ["<Plug>lightline#bufferline#go(6)", "switch to buffer 6"],
-      \ '7': ["<Plug>lightline#bufferline#go(7)", "switch to buffer 7"],
-      \ '8': ["<Plug>lightline#bufferline#go(8)", "switch to buffer 8"],
-      \ '9': ["<Plug>lightline#bufferline#go(9)", "switch to buffer 9"],
-      \ '0': ["<Plug>lightline#bufferline#go(10)", "switch to buffer 10"],
-      \ 'p': [':bp', 'switch to previous buffer'],
-      \ 'n': [':bn', 'switch to next buffer']
+      \ '1': ["<Plug>lightline#bufferline#go(1)", "buffer-1"],
+      \ '2': ["<Plug>lightline#bufferline#go(2)", "buffer-2"],
+      \ '3': ["<Plug>lightline#bufferline#go(3)", "buffer-3"],
+      \ '4': ["<Plug>lightline#bufferline#go(4)", "buffer-4"],
+      \ '5': ["<Plug>lightline#bufferline#go(5)", "buffer-5"],
+      \ '6': ["<Plug>lightline#bufferline#go(6)", "buffer-6"],
+      \ '7': ["<Plug>lightline#bufferline#go(7)", "buffer-7"],
+      \ '8': ["<Plug>lightline#bufferline#go(8)", "buffer-8"],
+      \ '9': ["<Plug>lightline#bufferline#go(9)", "buffer-9"],
+      \ '0': ["<Plug>lightline#bufferline#go(10)", "buffer-10"],
+      \ 'p': [':bp', 'previous-buffer'],
+      \ 'n': [':bn', 'next-buffer']
       \ }
 
 let g:which_key_map.w = {
       \ 'name': '+window',
-      \ 'p': ['<C-w>p', 'move to previous window'],
-      \ 'h': ['<C-w>h', 'move to left window'],
-      \ 'j': ['<C-w>j', 'move to below window'],
-      \ 'k': ['<C-w>k', 'move to above window'],
-      \ 'l': ['<C-w>l', 'move to right window'],
-      \ 'H': ['<C-w>H', 'move current window to the left'],
-      \ 'J': ['<C-w>J', 'move current window to the bottom'],
-      \ 'K': ['<C-w>K', 'move current window to the top'],
-      \ 'L': ['<C-w>L', 'move current window to the right'],
-      \ 'n': ['<C-w>n', 'create new window'],
-      \ 'q': ['<C-w>q', 'close current window'],
-      \ 'w': ['<C-w>w', 'move to next window'],
-      \ 'o': ['<C-w>o', 'close all other windows'],
-      \ 'v': ['<C-w>v', 'vertically split window'],
-      \ 's': ['<C-w>s', 'horizontally split window']
+      \ 'p': ['<C-w>p', 'jump-previous-window'],
+      \ 'h': ['<C-w>h', 'jump-left-window-left'],
+      \ 'j': ['<C-w>j', 'jump-belowing-window'],
+      \ 'k': ['<C-w>k', 'jump-aboving-window'],
+      \ 'l': ['<C-w>l', 'jump-right-window'],
+      \ 'H': ['<C-w>H', 'move-window-to-left'],
+      \ 'J': ['<C-w>J', 'move-window-to-bottom'],
+      \ 'K': ['<C-w>K', 'move-window-to-top'],
+      \ 'L': ['<C-w>L', 'move-window-to-right'],
+      \ 'n': ['<C-w>n', 'new-window'],
+      \ 'q': ['<C-w>q', 'close-window'],
+      \ 'w': ['<C-w>w', 'jump-next-window'],
+      \ 'o': ['<C-w>o', 'close-all-other-windows'],
+      \ 'v': ['<C-w>v', 'vertically-split-window'],
+      \ 's': ['<C-w>s', 'split-window']
       \ }
 
-let g:which_key_map.q = ['<C-w>q', 'close current window']
+let g:which_key_map.q = ['<C-w>q', 'close-window']
 
-let g:which_key_map.Q = [':qa', 'quit vim']
+let g:which_key_map.Q = [':qa', 'quit-vim']
 
 let g:which_key_map.l = {
       \ 'name': '+lists',
-      \ ';': [':CocList vimcommands', 'list vim commands'],
-      \ 'a': [':CocList actions', 'list actions of selected region'],
-      \ 'b': [':CocList buffers', 'list buffers'],
-      \ 'C': [':CocList colors', 'list colorschemes'],
-      \ 'c': [':CocList commands', 'list coc commands'],
-      \ 'd': [':CocList diagnostics', 'list diagnostics'],
-      \ 'e': [':CocList extensions', 'list coc extensions'],
-      \ 'f': [':CocList files', 'list files under cwd recursively'],
-      \ 'F': [':CocList folders', 'list current workspace folders'],
-      \ 'g': [':CocList grep', 'grep files under cwd'],
-      \ 'k': [':CocList links', 'list links of current buffer'],
-      \ 'L': [':CocList locationlist', 'list location list'],
-      \ 'l': [':CocList lines', 'search lines by regex'],
-      \ 'm': [':CocList marks', 'list marks'],
-      \ 'M': [':CocList maps', 'list key mappings'],
+      \ ';': [':Leaderf command', 'list-vim-commands'],
+      \ 'a': [':CocList actions', 'list-code-actions-of-region'],
+      \ 'b': [':Leaderf buffer', 'list-buffers'],
+      \ 'C': [':Leaderf colorscheme', 'list-colorschemes'],
+      \ 'c': [':CocList commands', 'list-coc-commands'],
+      \ 'd': [':CocList diagnostics', 'list-diagnostics'],
+      \ 'e': [':CocList extensions', 'list-coc-extensions'],
+      \ 'f': [':Leaderf file', 'list-files'],
+      \ 'F': [':CocList folders', 'list-folders'],
+      \ 'g': [':Leaderf rg', 'grep'],
+      \ 'k': [':CocList links', 'list-links'],
+      \ 'L': [':CocList locationlist', 'list-loclist'],
+      \ 'l': [':Leaderf line', 'search-lines'],
+      \ 'm': [':CocList marks', 'list-marks'],
+      \ 'M': [':CocList maps', 'list-mappings'],
       \ 'H': {
       \     'name': '+history',
-      \     'c': [':CocList cmdhistory', 'list history of commands'],
-      \     'l': [':CocList location', 'list history jump locations'],
-      \     's': [':CocList searchhistory', 'list history of search'],
-      \     't': [':CocList translation', 'list history of translation']
+      \     'c': [':Leaderf cmdHistory ', 'list-command-history'],
+      \     'j': [':CocList location', 'list-jump-history'],
+      \     's': [':Leaderf searchHistory', 'list-search-history'],
+      \     't': [':CocList translation', 'list-tranlation-history']
       \ },
-      \ 'h': [':CocList helptags', 'list vim help tags'],
-      \ 'o': [':CocList outline', 'list outline'],
-      \ 'q': [':CocList quickfix', 'list quickfix'],
-      \ 'r': [':CocList mru', 'list recent files'],
-      \ 'p': [':CocListResume', 'resume previous list'],
+      \ 'h': [':Leaderf help', 'list-help-tags'],
+      \ 'o': [':Leaderf bufTag', 'list-outline'],
+      \ 'q': [':CocList quickfix', 'list-quickfix'],
+      \ 'r': [':Leaderf mru', 'list-recent-files'],
+      \ 'p': [':CocListResume', 'resume-previous-list'],
       \ 'P': [':CocList snippets', 'list snippets'],
-      \ 's': [':CocList -I symbols', 'list symbols'],
-      \ 'S': [':CocList sessions', 'list sessions'],
-      \ 'w': [':CocList words', 'search words in current file'],
-      \ 'W': [':CocList windows', 'list windows'],
+      \ 's': [':CocList -I symbols', 'list-symbols'],
+      \ 'S': [':CocList sessions', 'list-sessions'],
+      \ 't': [':Leaderf function', 'list-buffer-functions'],
+      \ 'w': [':CocList windows', 'list-windows'],
       \ }
 
 nnoremap <Leader>sr     :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
@@ -91,102 +91,102 @@ nnoremap <Leader>sR     :.,$s/\<<C-r><C-w>\>//g<Left><Left>
 nnoremap <Leader>sG     :%s/\<<C-r><C-w>\>//g<Left><Left>
 let g:which_key_map.s = {
       \ 'name': '+search-replace',
-      \ 'r': 'search to the end for current word and replace',
-      \ 'g': 'search whole file for current word and replace',
-      \ 'R': 'search to the end for current word and replace without prompt',
-      \ 'G': 'search whole file for current word and replace without prompt'
+      \ 'r': 'search-replace-to-the-end',
+      \ 'g': 'search-replace-whole-file',
+      \ 'R': 'search-replace-to-the-end-no-prompt',
+      \ 'G': 'search-replace-whole-file-no-prompt'
       \ }
 
 let g:which_key_map.T = {
       \ 'name': '+translate',
-      \ 'p': ['<Plug>(coc-translator-p)', 'translate the word under cursor and popup'],
-      \ 'e': ['<Plug>(coc-translator-e)', 'translate the word under cursor and echo'],
-      \ 'r': ['<Plug>(coc-translator-r)', 'translate and replace the word under cursor']
+      \ 'p': ['<Plug>(coc-translator-p)', 'translate-and-popup'],
+      \ 'e': ['<Plug>(coc-translator-e)', 'translate-and-echo'],
+      \ 'r': ['<Plug>(coc-translator-r)', 'translate-and-replace']
       \ }
 
 let g:which_key_map.g = {
       \ 'name': '+git',
-      \ 'b': [':CocList --normal branches', 'list git branches'],
-      \ 'd': ['<Plug>(coc-git-chunkinfo)', 'show chunk diff at current position'],
-      \ 'c': ['<Plug>(coc-git-commit)', 'show detailed commit log of current file'],
-      \ 'f': [':CocList gfiles', 'list git files'],
-      \ 'l': [':CocList --normal commits', 'git log'],
-      \ 'L': [':CocList --normal bcommits', 'git log of current file'],
-      \ 'i': [':CocList --normal issues', 'list GitHub issues'],
-      \ 'n': ['<Plug>(coc-git-nextchunk)', 'next chunk'],
-      \ 'p': ['<Plug>(coc-git-prevchunk)', 'previous chunk'],
-      \ 's': [':CocList --normal gstatus', 'git status'],
+      \ 'b': [':CocList --normal branches', 'list-git-branches'],
+      \ 'd': ['<Plug>(coc-git-chunkinfo)', 'show-chunk-diff'],
+      \ 'c': ['<Plug>(coc-git-commit)', 'show-commit-log'],
+      \ 'f': [':CocList gfiles', 'list-git-files'],
+      \ 'l': [':CocList --normal commits', 'list-git-log'],
+      \ 'L': [':CocList --normal bcommits', 'list-git-log-of-file'],
+      \ 'i': [':CocList --normal issues', 'list-github-issues'],
+      \ 'n': ['<Plug>(coc-git-nextchunk)', 'jump-next-chunk'],
+      \ 'p': ['<Plug>(coc-git-prevchunk)', 'jump-previous-chunk'],
+      \ 's': [':CocList --normal gstatus', 'show-git-status'],
       \ }
 
 vmap <Leader>x= <Plug>(coc-format-selected)
 vmap <Leader>xa <Plug>(coc-codeaction-selected)
 let g:which_key_map.x = {
       \ 'name': '+language-semantic',
-      \ 'a': ['<Plug>(coc-codeaction-selected)', 'do code action on selected region'],
-      \ 'A': ['<Plug>(coc-codeaction)', 'do code action on current line'],
-      \ 'd': ['<Plug>(coc-definition)', 'go to definition'],
-      \ 'k': ['<Plug>(coc-declaration)', 'go to declaration'],
-      \ 't': ['<Plug>(coc-type-definition)', 'go to type definition'],
-      \ 'i': ['<Plug>(coc-implementation)', 'go to implementation'],
-      \ 'r': ['<Plug>(coc-references)', 'find references'],
-      \ 'R': ['<Plug>(coc-rename)', 'rename current symbol'],
-      \ 'f': ['CocAction("format")', 'format current buffer'],
-      \ '=': ['<Plug>(coc-format-selected)', 'format selected region'],
-      \ 'K': ["CocAction('doHover')", 'show documentation of current symbol'],
-      \ 'q': ['<Plug>(coc-fix-current)', 'fix current line'],
+      \ 'a': ['<Plug>(coc-codeaction-selected)', 'do-code-action-on-region'],
+      \ 'A': ['<Plug>(coc-codeaction)', 'do-code-action-on-line'],
+      \ 'd': ['<Plug>(coc-definition)', 'jump-definition'],
+      \ 'k': ['<Plug>(coc-declaration)', 'jump-declaration'],
+      \ 't': ['<Plug>(coc-type-definition)', 'jump-type-definition'],
+      \ 'i': ['<Plug>(coc-implementation)', 'jump-implementation'],
+      \ 'r': ['<Plug>(coc-references)', 'find-references'],
+      \ 'R': ['<Plug>(coc-rename)', 'rename-current-symbol'],
+      \ 'f': ['CocAction("format")', 'format-buffer'],
+      \ '=': ['<Plug>(coc-format-selected)', 'format-region'],
+      \ 'K': ["CocAction('doHover')", 'show-documentation'],
+      \ 'q': ['<Plug>(coc-fix-current)', 'fix-line'],
       \ 'n': {
       \     'name': '+navigate-declarations',
-      \     'd': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''D''})', 'first child declaration'],
-      \     'l': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''L''})', 'previous declaration'],
-      \     'r': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''R''})', 'next declaration'],
-      \     'u': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''U''})', 'parent declaration'],
+      \     'd': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''D''})', 'first-child-declaration'],
+      \     'l': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''L''})', 'previous-declaration'],
+      \     'r': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''R''})', 'next-declaration'],
+      \     'u': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''U''})', 'parent-declaration'],
       \ },
       \ 'I': {
       \     'name': '+inheritance-hierarchy',
-      \     'b': ['CocLocations(''ccls'', ''$ccls/inheritance'')', 'show base classes'],
-      \     'd': ['CocLocations(''ccls'', ''$ccls/inheritance'', {''derived'': v:true})', 'show derived classes'],
+      \     'b': ['CocLocations(''ccls'', ''$ccls/inheritance'')', 'show-base-types'],
+      \     'd': ['CocLocations(''ccls'', ''$ccls/inheritance'', {''derived'': v:true})', 'show-derived-types'],
       \ },
       \ 'c': {
       \     'name': '+call-hierarchy',
-      \     'r': ['CocLocations(''ccls'', ''$ccls/call'')', 'show callers'],
-      \     'e': ['CocLocations(''ccls'', ''$ccls/call'', {''callee'': v:true})', 'show callees'],
+      \     'r': ['CocLocations(''ccls'', ''$ccls/call'')', 'show-callers'],
+      \     'e': ['CocLocations(''ccls'', ''$ccls/call'', {''callee'': v:true})', 'show-callees'],
       \ },
       \ 'm': {
       \     'name': '+members',
-      \     'v': ['CocLocations(''ccls'', ''$ccls/member'')', 'member vairables'],
-      \     'f': ['CocLocations(''ccls'', ''$ccls/member'', {''kind'': 3})', 'member functions'],
-      \     'm': ['CocLocations(''ccls'', ''$ccls/member'', {''kind'': 2})', 'member types'],
+      \     'v': ['CocLocations(''ccls'', ''$ccls/member'')', 'member-vairables'],
+      \     'f': ['CocLocations(''ccls'', ''$ccls/member'', {''kind'': 3})', 'member-functions'],
+      \     'm': ['CocLocations(''ccls'', ''$ccls/member'', {''kind'': 2})', 'member-types'],
       \ },
-      \ 'v': ['CocLocations(''ccls'', ''$ccls/var'')', 'find all instances of this type'],
-      \ 'V': ['CocLocations(''ccls'', ''$ccls/var'', {''kind'': 1})', 'find all instances of the type of current symbol'],
+      \ 'v': ['CocLocations(''ccls'', ''$ccls/var'')', 'find-all-instances-of-type'],
+      \ 'V': ['CocLocations(''ccls'', ''$ccls/var'', {''kind'': 1})', 'find-all-instances-of-the-type-of-symbol'],
       \ }
 
 let g:which_key_map.t = {
       \ 'name': '+ui-toggles',
-      \ 'f': ['zpan#toggle_coc_explorer()', 'toggle file tree'],
-      \ 'i': [':IndentLinesToggle', 'toggle indent line'],
-      \ 'l': ['zpan#toggle_loclist()', 'toggle location list'],
-      \ 'o': ['zpan#toggle_vista()', 'toggle outline'],
-      \ 'q': ['zpan#toggle_quickfix()', 'toggle quickfix'],
-      \ 't': ['zpan#toggle_terminal()', 'toggle terminal'],
-      \ 'u': ['zpan#toggle_undotree()', 'toggle undo tree']
+      \ 'f': ['zpan#toggle_coc_explorer()', 'toggle-file-tree'],
+      \ 'i': [':IndentLinesToggle', 'toggle-indent-line'],
+      \ 'l': ['zpan#toggle_loclist()', 'toggle-location-list'],
+      \ 'o': ['zpan#toggle_vista()', 'toggle-outline'],
+      \ 'q': ['zpan#toggle_quickfix()', 'toggle-quickfix'],
+      \ 't': ['zpan#toggle_terminal()', 'toggle-terminal'],
+      \ 'u': ['zpan#toggle_undotree()', 'toggle-undo-tree']
       \ }
 
 let g:which_key_map.c = {
       \ 'name': '+comments',
-      \ 'c': 'comment out the selected lines',
-      \ 'n': 'comment out the selected lines (force nesting)',
-      \ ' ': 'toggle comment of the selected lines',
-      \ 'm': 'comment out the selected lines using multiline comment',
-      \ 'i': 'toggles the comment of the selected lines individually',
-      \ 's': 'comment out the selected lines using documentation style',
-      \ 'y': 'yank and comment out the selected lines',
-      \ '$': 'comment out from cursor to the end of line',
-      \ 'A': 'add comment to the end of line and insert',
-      \ 'a': 'switch to the alternative set of delimiters',
-      \ 'l': 'comment out the current line or selection (left aligned)',
-      \ 'b': 'comment out the current line or selection (both side aligned)',
-      \ 'u': 'uncomment the selected lines'
+      \ 'c': 'comment-lines',
+      \ 'n': 'comment-lines-force-nesting',
+      \ ' ': 'toggle-comment',
+      \ 'm': 'comment-lines-with-block-comment',
+      \ 'i': 'toggle-individual-line-comment',
+      \ 's': 'comment-lines-documentation-style',
+      \ 'y': 'yank-and-comment-lines',
+      \ '$': 'comment-to-the-end',
+      \ 'A': 'add-comment-to-end-of-line',
+      \ 'a': 'switch-comment-delimiters',
+      \ 'l': 'comment-left-aligned',
+      \ 'b': 'comment-both-side-aligned',
+      \ 'u': 'uncomment-lines'
       \ }
 
 let g:which_key_map.a = {

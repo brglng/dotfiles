@@ -37,6 +37,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('mbbill/undotree')
   call dein#add('mhinz/vim-startify')
   call dein#add('liuchengxu/vim-which-key')
+  call dein#add('Yggdroot/LeaderF', {'build': './install.sh'})
 
   " Moving Plugins
   call dein#add('rhysd/clever-f.vim')
@@ -125,6 +126,7 @@ runtime zpan/init/plugins/dein_ui.vim
 runtime zpan/init/plugins/devicons.vim
 runtime zpan/init/plugins/easy_align.vim
 runtime zpan/init/plugins/indent_line.vim
+runtime zpan/init/plugins/leaderf.vim
 runtime zpan/init/plugins/lightline.vim
 runtime zpan/init/plugins/matchup.vim
 runtime zpan/init/plugins/nerd_commenter.vim
