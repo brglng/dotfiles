@@ -103,11 +103,6 @@ set matchtime=0
 autocmd FileType html,xml setlocal matchpairs+=<:>
 set updatetime=300
 
-" set notimeout
-" set timeoutlen=4000
-" set ttimeout
-" set ttimeoutlen=100
-
 set hidden
 
 if v:version > 703 || v:version == 703 && has("patch541")
