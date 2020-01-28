@@ -1,4 +1,5 @@
 set timeoutlen=300
+let g:which_key_use_floating_win = 1
 let g:mapleader = "\<Space>"
 
 silent! call which_key#register('<Space>', "g:which_key_map")
@@ -29,7 +30,7 @@ let g:which_key_map.b = {
 let g:which_key_map.w = {
       \ 'name': '+window',
       \ 'p': ['<C-w>p', 'jump-previous-window'],
-      \ 'h': ['<C-w>h', 'jump-left-window-left'],
+      \ 'h': ['<C-w>h', 'jump-left-window'],
       \ 'j': ['<C-w>j', 'jump-belowing-window'],
       \ 'k': ['<C-w>k', 'jump-aboving-window'],
       \ 'l': ['<C-w>l', 'jump-right-window'],
@@ -198,4 +199,4 @@ let g:which_key_map.F = ['<Plug>(coc-smartf-backward)', 'coc-smartf-forward']
 let g:which_key_map[';'] = ['<Plug>(coc-smartf-repeat)', 'coc-smartf-repeat']
 let g:which_key_map[','] = ['<Plug>(coc-smartf-repeat-opposite)', 'coc-smartf-repeat-opposite']
 
-" vim: sw=2 sts=4 ts=8 et
+" vim: sw=4 sts=4 ts=8 et
