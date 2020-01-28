@@ -1,92 +1,109 @@
 #!/usr/bin/env bash
 set -e
 
-update_bashrc() {
-    mkdir -p /tmp/$USER/brglng/dotfiles
-    cat << EOF > /tmp/$USER/brglng/dotfiles/bashrc
-# BEGIN brglng/dotfiles
-[ -r $(pwd)/bashrc ] && . $(pwd)/bashrc
-# END brglng/dotfiles
-EOF
+function update_file {
+    local file=$1
+    local begin_regex=$2
+    local end_regex=$3
+    local content=$4
 
-    if [ ! -e $HOME/.bashrc ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $HOME/.bashrc)" = "" ]; then
-      	cat /tmp/$USER/brglng/dotfiles/bashrc >> $HOME/.bashrc
+    echo "Updating $file."
+    if [[ ! -e $1 || $(perl -n0e "print \$1 if /($begin_regex.*$end_regex)/s" $file) = "" ]]; then
+        echo "$content" >> $file
     else
-      	perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/bashrc`/gse' $HOME/.bashrc
+        echo "$content" | perl -i -p0e "s/$begin_regex.*$end_regex[ \t]*$/<STDIN>/gse" $file
     fi
 }
 
-update_gitconfig() {
-    mkdir -p /tmp/$USER/brglng/dotfiles
-    cat << EOF > /tmp/$USER/brglng/dotfiles/gitconfig
+function update_bashrc {
+    update_file "$1" \
+        '#[ \t]*BEGIN[ \t]*brglng\/dotfiles' \
+        '#[ \t]*END[ \t]*brglng\/dotfiles' \
+        "$(cat << EOF
+# BEGIN brglng/dotfiles
+[ -r \"$PWD/bashrc\" ] && . \"$PWD/bashrc\"
+# END brglng/dotfiles
+EOF
+)"
+}
+
+function update_zshrc {
+    update_file "$HOME/.zshrc" \
+        '#[ \t]*BEGIN[ \t]*brglng\/dotfiles' \
+        '#[ \t]*END[ \t]*brglng\/dotfiles' \
+        "$(cat << EOF
+# BEGIN brglng/dotfiles
+[ -r \"$PWD/zshrc\" ] && . \"$PWD/zshrc\"
+# END brglng/dotfiles
+EOF
+)"
+}
+
+function update_gitconfig {
+    update_file "$HOME/.gitconfig" \
+        '#[ \t]*BEGIN[ \t]*brglng\/dotfiles' \
+        '#[ \t]*END[ \t]*brglng\/dotfiles' \
+        "$(cat << EOF
 # BEGIN brglng/dotfiles
 [include]
-	path = $(pwd)/gitconfig
+	path = $PWD/gitconfig
 # END brglng/dotfiles
 EOF
+)"
+}
 
-    if [ ! -e $HOME/.gitconfig ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $HOME/.gitconfig)" = "" ]; then
-        cat /tmp/$USER/brglng/dotfiles/gitconfig >> ~/.gitconfig
+if [[ $(uname -s) = Darwin ]]; then
+    function readlinkf() { echo $(greadlink -f "$1"); }
+else
+    function readlinkf() { echo $(readlink -f "$1"); }
+fi
+
+function link {
+    local src=$1
+    local dst=$2
+
+    if [[ -e "$dst" ]]; then
+        if [[ $(readlinkf "$dst") = "$src" ]]; then
+            echo "$dst is already linked, ignored."
+        else
+            echo "Original $dst is renamed to $dst.orig."
+            mv "$dst" "$dst.orig"
+            echo "Linking $dst."
+            mkdir -p $(dirname "$dst")
+            ln -s "$src" "$dst"
+        fi
     else
-        perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/gitconfig`/gse' $HOME/.gitconfig
+        echo "Linking $dst."
+        mkdir -p $(dirname "$dst")
+        ln -s "$src" "$dst"
     fi
 }
 
-update_zshrc() {
-    mkdir -p /tmp/$USER/brglng/dotfiles
-    cat << EOF > /tmp/$USER/brglng/dotfiles/zshrc
-# BEGIN brglng/dotfiles
-[ -r $(pwd)/zshrc ] && . $(pwd)/zshrc
-# END brglng/dotfiles
-EOF
-
-    if [ ! -e $HOME/.zshrc ] || [ "$(perl -n0e 'print $1 if /(# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles)/s' $HOME/.zshrc)" = "" ]; then
-        cat /tmp/$USER/brglng/dotfiles/zshrc >> $HOME/.zshrc
-    else
-        perl -i -p0e 's/# BEGIN brglng\/dotfiles.*# END brglng\/dotfiles.*$/`cat \/tmp\/$ENV{USER}\/brglng\/dotfiles\/zshrc`/gse' $HOME/.zshrc
-    fi
-}
-
-link() {
-    mkdir -p ~/.config/alacritty
-    [ -e ~/.config/alacritty/alacritty.yml ] && [ ! -L ~/.config/alacritty/alacritty.yml ] && mv -f ~/.config/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml.orig
-    ln -fs $(pwd)/config/alacritty/alacritty.yml ~/.config/alacritty/
-
-    update_bashrc $HOME/.bashrc
-
-    mkdir -p ~/.cgdb
-    [ -e ~/.cgdb/cgdbrc ] && [ ! -L ~/.cgdb/cgdbrc ] && mv -f ~/.cgdb/cgdbrc ~/.cgdb/cgdbrc.orig
-    ln -fs $(pwd)/cgdb/cgdbrc ~/.cgdb/
-
-    [ -e ~/.gitignore_global ] && [ ! -L ~/.gitignore_global ] && mv -f ~/.gitignore_global ~/.gitignore_global.orig
-    ln -fs $(pwd)/gitignore_global ~/.gitignore_global
-
-    [ -e ~/.tmux.conf ] && [ ! -L ~/.tmux.conf ] && mv -f ~/.tmux.conf ~/.tmux.conf.orig
-    ln -fs $(pwd)/tmux.conf ~/.tmux.conf
-
-    [ -e ~/.vimrc ] && [ ! -L ~/.vimrc ] && mv -f ~/.vimrc ~/.vimrc.orig
-    ln -fs $(pwd)/vimrc ~/.vimrc
-
-    [ -e ~/.vim ] && [ ! -L ~/.vim ] && mv -f ~/.vim ~/.vim.orig
-    ln -fs $(pwd)/vim ~/.vim
-
-    [ -e ~/.config/nvim ] && [ ! -L ~/.config/nvim ] && mv -f ~/.config/nvim ~/.config/nvim.orig
-    ln -fs $(pwd)/vim ~/.config/nvim
-
+function link_common() {
+    link "$PWD/config/alacritty/alacritty.yml"     ~/.config/alacritty/alacritty.yml
+    link "$PWD/config/TabNine/TabNine.toml"        ~/.config/TabNine/TabNine.toml
+    link "$PWD/cgdb/cgdbrc"                        ~/.cgdb/cgdbrc
+    link "$PWD/gitignore_global"                   ~/.gitignore_global
+    link "$PWD/tmux.conf"                          ~/.tmux.conf
+    link "$PWD/vimrc"                              ~/.vimrc
+    link "$PWD/vim"                                ~/.vim
+    link "$PWD/vim"                                ~/.config/nvim
     update_gitconfig
     update_zshrc
 
-    mkdir -p ~/.local/bin
-    ln -fs $(pwd)/local/bin/* ~/.local/bin/
+    for f in "$PWD/local/bin/"*; do
+        link "$f" "~/.local/bin/$(basename $f)"
+    done
 }
 
 link_linux() {
-    link
+    link_common
+    update_bashrc "$HOME/.bashrc"
 }
 
 link_mac() {
-    link
-    update_bashrc $HOME/.bash_profile
+    link_common
+    update_bashrc "$HOME/.bash_profile"
 }
 
 case $(uname -s) in
