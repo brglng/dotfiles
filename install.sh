@@ -131,7 +131,7 @@ while true; do
 done
 
 while true; do
-    read -p "Your current Python 3 is: $(which python3). Is that OK? (y/n): " yn
+    read -p "Your current Python 3 is: $(which python3) ($(python3 --version)). Is that OK? (y/n): " yn
     case $yn in
         [Yy]* )
 	    break;;
