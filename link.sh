@@ -80,28 +80,28 @@ function link {
 }
 
 function link_common() {
-    link "$PWD/config/alacritty/alacritty.yml"     ~/.config/alacritty/alacritty.yml
-    link "$PWD/config/TabNine/TabNine.toml"        ~/.config/TabNine/TabNine.toml
-    link "$PWD/cgdb/cgdbrc"                        ~/.cgdb/cgdbrc
-    link "$PWD/gitignore_global"                   ~/.gitignore_global
-    link "$PWD/tmux.conf"                          ~/.tmux.conf
-    link "$PWD/vimrc"                              ~/.vimrc
-    link "$PWD/vim"                                ~/.vim
-    link "$PWD/vim"                                ~/.config/nvim
+    link "$PWD/config/alacritty/alacritty.yml"     "$HOME/.config/alacritty/alacritty.yml"
+    link "$PWD/config/TabNine/TabNine.toml"        "$HOME/.config/TabNine/TabNine.toml"
+    link "$PWD/cgdb/cgdbrc"                        "$HOME/.cgdb/cgdbrc"
+    link "$PWD/gitignore_global"                   "$HOME/.gitignore_global"
+    link "$PWD/tmux.conf"                          "$HOME/.tmux.conf"
+    link "$PWD/vimrc"                              "$HOME/.vimrc"
+    link "$PWD/vim"                                "$HOME/.vim"
+    link "$PWD/vim"                                "$HOME/.config/nvim"
     update_gitconfig
     update_zshrc
 
     for f in "$PWD/local/bin/"*; do
-        link "$f" "~/.local/bin/$(basename $f)"
+        link "$f" "$HOME/.local/bin/$(basename $f)"
     done
 }
 
-link_linux() {
+function link_linux() {
     link_common
     update_bashrc "$HOME/.bashrc"
 }
 
-link_mac() {
+function link_mac() {
     link_common
     update_bashrc "$HOME/.bash_profile"
 }

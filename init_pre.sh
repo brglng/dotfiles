@@ -10,12 +10,18 @@ path_prepend() {
     fi
 }
 
+if [[ `uname -s` = Darwin ]]; then
+    readlinkf() { echo `greadlink -f "$1"`; }
+else
+    readlinkf() { echo `readlink -f "$1"`; }
+fi
+
 path_prepend "$HOME/.local/bin"
 path_prepend "$HOME/.cargo/bin"
 
 if [ "$NVM_DIR" = "" ]; then
     export NVM_DIR="$HOME/.nvm"
-    [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"  # This loads nvm
+    [ -s "`brew --prefix`/opt/nvm/nvm.sh" ] && . "`brew --prefix`/opt/nvm/nvm.sh"  # This loads nvm
 fi
 
 if [ "$GOPATH" = "" ]; then
