@@ -4,6 +4,12 @@ case $- in
       *) return;;
 esac
 
+if [[ `uname -s` = Darwin ]]; then
+    readlinkf() { echo `greadlink -f "$1"`; }
+else
+    readlinkf() { echo `readlink -f "$1"`; }
+fi
+
 source "$(dirname $(readlinkf ${(%):-%N}))/init_pre.sh"
 
 if type brew &>/dev/null; then

@@ -10,12 +10,6 @@ path_prepend() {
     fi
 }
 
-if [[ `uname -s` = Darwin ]]; then
-    readlinkf() { echo `greadlink -f "$1"`; }
-else
-    readlinkf() { echo `readlink -f "$1"`; }
-fi
-
 path_prepend "$HOME/.local/bin"
 path_prepend "$HOME/.cargo/bin"
 
