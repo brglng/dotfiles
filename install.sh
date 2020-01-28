@@ -117,18 +117,34 @@ if ! which python3 > /dev/null; then
 fi
 
 while true; do
-    read -p "Your current Python 3 is: $(which python3). Is that OK? (y/n) " yn
+    echo "If your Internet is slow, it is recommended that you setup a proxy before continuing."
+    read -p "Do you want to continue? (y/n): " yn
     case $yn in
         [Yy]* )
-	    echo "OK. Let's go on...";
 	    break;;
         [Nn]* )
 	    echo "Stopped."
 	    exit -1;;
-        * )
-            echo "Please answer yes or no.";;
+	* )
+	    ;;
     esac
 done
+
+while true; do
+    read -p "Your current Python 3 is: $(which python3). Is that OK? (y/n): " yn
+    case $yn in
+        [Yy]* )
+	    break;;
+        [Nn]* )
+	    echo "Stopped."
+	    exit -1;;
+	* )
+	    ;;
+    esac
+done
+
+echo "If you want to set up another Python 3 environment, please run setup_python3.sh in that environment."
+read -p "Press ENTER to continue..."
 
 mkdir -p $HOME/.local/bin
 export PATH=$HOME/.local/bin:$PATH
