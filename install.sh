@@ -12,7 +12,7 @@ function install_apt() {
     sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make git luajit libluajit-5.1-dev ruby-dev zlib1g-dev libncurses-dev xsel
 
     # Fix for vim
-    sudo chown $USER:$USER ~/.viminfo
+    [[ -e ~/.viminfo ]] && sudo chown $USER:$USER ~/.viminfo
 }
 
 function install_linux() {
@@ -111,44 +111,11 @@ function install_mac() {
     brew cask install macvim alacritty
 }
 
-if ! which python3 > /dev/null; then
-    echo "Python 3 is not found!"
-    exit -1
-fi
-
-while true; do
-    echo "If your Internet is slow, it is recommended that you setup a proxy before continuing."
-    read -p "Do you want to continue? (y/n): " yn
-    case $yn in
-        [Yy]* )
-	    break;;
-        [Nn]* )
-	    echo "Stopped."
-	    exit -1;;
-	* )
-	    ;;
-    esac
-done
-
-while true; do
-    read -p "Your current Python 3 is: $(which python3) ($(python3 --version)). Is that OK? (y/n): " yn
-    case $yn in
-        [Yy]* )
-	    break;;
-        [Nn]* )
-	    echo "Stopped."
-	    exit -1;;
-	* )
-	    ;;
-    esac
-done
-
-echo "If you want to set up another Python 3 environment, please run setup_python3.sh in that environment."
-read -p "Press ENTER to continue..."
-
 mkdir -p $HOME/.local/bin
 export PATH=$HOME/.local/bin:$PATH
 export HOMEBREW_NO_AUTO_UPDATE=1
+
+source "$PWD/setup_python3.sh"
 
 case $(uname -s) in
     Linux) install_linux ;;
@@ -190,7 +157,6 @@ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh |
 ./link.sh
 
 echo "Congratulations! The installation is finished."
-echo "If you want to set up another Python 3 environment, please run setup_python3.sh in that environment."
 echo "It is strongly recommended that you log out from your current shell and log in again now immediately."
 
 # vim: ts=8 sts=4 sw=4 et
