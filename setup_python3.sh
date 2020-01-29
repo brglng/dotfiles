@@ -3,6 +3,11 @@ set -e
 
 source "$PWD/util.sh"
 
+function do_pip_install {
+    "$1" -m pip install --user -U pynvim autopep8 pylint jedi
+    echo
+}
+
 while true; do
     echo "If your Internet is slow, it is recommended that you setup a proxy before continuing."
     read -p "Do you want to continue? (y/n): " yn
@@ -14,6 +19,28 @@ while true; do
 	    exit -1;;
 	* )
 	    ;;
+    esac
+done
+echo
+
+PS3="Enter your option: "
+select opt in ( \
+    1 "Change your user's default Python" \
+    2 "Only install necessary packages for Vim and Neovim" \
+    ); do
+    case $opt in
+        1)
+            if which python3 > /dev/null; then
+                do_pip_install python3
+            else
+                "You are not in an environment where python3 binary is in your PATH."
+                exit -1
+            fi
+            break;;
+        2)
+            exit;;
+        *)
+            echo "Please choose 1 or 2"
     esac
 done
 echo
@@ -90,8 +117,7 @@ while true; do
 done
 echo
 
-"$selected_py" -m pip install --user -U pynvim autopep8 pylint jedi
-echo
+do_pip_install "$selected_py"
 
 for py in ${all_pythons[@]}; do
     if [[ $py == *"miniconda"* || $py == *"anaconda"* ]]; then
