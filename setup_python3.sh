@@ -23,21 +23,22 @@ while true; do
 done
 echo
 
-PS3="Enter your option: "
-select opt in ( \
-    1 "Change your user's default Python" \
-    2 "Only install necessary packages for Vim and Neovim" \
-    ); do
-    case $opt in
+echo "Please select what you want to do:"
+PS3=">>> "
+select opt in \
+    "Change your user's default Python and install necessary packages for Vim and Neovim" \
+    "Only install necessary packages for Vim and Neovim"; do
+    case $REPLY in
         1)
-            if which python3 > /dev/null; then
+            break;;
+        2)
+            if type python3 &>/dev/null; then
+                type python3
                 do_pip_install python3
             else
                 "You are not in an environment where python3 binary is in your PATH."
                 exit -1
             fi
-            break;;
-        2)
             exit;;
         *)
             echo "Please choose 1 or 2"
@@ -78,7 +79,8 @@ if [[ ${#all_pythons[@]} == 0 ]]; then
     exit -1
 fi
 
-PS3="Which Python do you want to use by default? "
+echo "Which Python do you want to use by default?"
+PS3=">>> "
 select selected_py in "${all_pythons[@]}"; do
     if [[ $selected_py = "" ]]; then
         echo "Please enter number between 1 and ${#all_pythons[@]}"
