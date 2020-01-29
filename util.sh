@@ -24,7 +24,7 @@ function link {
     local src=$1
     local dst=$2
 
-    if [[ -e "$dst" ]]; then
+    if [[ -e "$dst" || -L "$dst" ]]; then
         if [[ $(readlinkf "$dst") = $(readlinkf "$src") ]]; then
             echo "$dst is already linked, ignored."
         else
