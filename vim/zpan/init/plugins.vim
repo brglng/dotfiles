@@ -85,10 +85,9 @@ if dein#load_state('~/.cache/dein')
         \ })
   call dein#add('honza/vim-snippets')
   call dein#add('liuchengxu/vista.vim')
-  " call dein#add('sbdchd/neoformat')
 
   " Debuggig Plugins
-  " call dein#add('cpiger/NeoDebug')
+  call dein#add('puremourning/vimspector')
 
   " ColorSchemes
   call dein#add('lifepillar/vim-solarized8')

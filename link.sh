@@ -7,7 +7,7 @@ function update_file {
     local end_regex=$3
     local content=$4
 
-    echo "Updating $file."
+    echo "Updating $file"
     if [[ ! -e $1 || $(perl -n0e "print \$1 if /($begin_regex.*$end_regex)/s" $file) = "" ]]; then
         echo "$content" >> $file
     else
@@ -66,14 +66,14 @@ function link {
         if [[ $(readlinkf "$dst") = "$src" ]]; then
             echo "$dst is already linked, ignored."
         else
-            echo "Original $dst is renamed to $dst.orig."
+            echo "Original $dst is renamed to $dst.orig"
             mv "$dst" "$dst.orig"
-            echo "Linking $dst."
+            echo "Linking $dst"
             mkdir -p $(dirname "$dst")
             ln -s "$src" "$dst"
         fi
     else
-        echo "Linking $dst."
+        echo "Linking $dst"
         mkdir -p $(dirname "$dst")
         ln -s "$src" "$dst"
     fi

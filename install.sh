@@ -103,7 +103,7 @@ function install_mac() {
 
     if ! brew ls --versions universal-ctags; then
       	brew tap universal-ctags/universal-ctags
-      	brew install --HEAD universal-ctags
+      	brew install --HEAD universal-ctags --with-jansson
     fi
 
     $(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
@@ -154,6 +154,12 @@ case $(uname -s) in
     Linux) install_linux ;;
     Darwin) install_mac ;;
 esac
+
+brew install rustup-init
+rustup-init -y
+source $HOME/.cargo/env
+rustup update
+rustup component add rls rust-analysis rust-src rustfmt
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"  # This loads nvm

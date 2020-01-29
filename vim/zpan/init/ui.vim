@@ -108,18 +108,18 @@ endfunction
 " autocmd QuickFixCmdPost l*    nested botright lwindow
 
 function! s:move_help_window()
-  if winwidth('%') >= 160
+  if winwidth('%') >= 180
     wincmd L
-    vertical resize 85
+    vertical resize 90
   endif
 endfunction
 autocmd BufEnter * if &filetype == 'help' | call s:move_help_window() | endif
 
 function! s:init_man_buffer()
   setlocal bufhidden
-  if winwidth('%') >= 160
+  if winwidth('%') >= 180
     wincmd L
-    vertical resize 85
+    vertical resize 90
   endif
 endfunction
 autocmd BufEnter * if &buftype == 'man' | call s:init_man_buffer() | endif
