@@ -101,7 +101,7 @@ echo "~/.local/bin/python3 and ~/.local/bin/pip3 has been linked to your selecti
 echo
 
 while true; do
-    read -p "Do you want also to link ~/.local/bin/python and ~/.local/bin/pip ? (y/n): " yn
+    read -p "Do you want also to link ~/.local/bin/python and ~/.local/bin/pip (not recommended) ? (y/n): " yn
     case $yn in
         [Yy]* )
             echo
