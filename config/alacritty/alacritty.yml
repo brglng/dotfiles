@@ -647,4 +647,11 @@ key_bindings:
   - { key: Semicolon, mods: Alt,       chars: "\x1b;"                       } # Alt + ;
   - { key: Semicolon, mods: Alt|Shift, chars: "\x1b:"                       } # Alt + :
   - { key: Space,     mods: Control,   chars: "\x1b "                       } # Alt + Space
-  - { key: N, mods: Command, action: SpawnNewInstance }
+
+  - { key: N,   mods: Command,  action: SpawnNewInstance }
+  - { key: V,   mods: Command,  action: Paste            }
+  - { key: C,   mods: Command,  action: Copy             }
+  - { key: H,   mods: Command,  action: Hide             }
+  - { key: M,   mods: Command,  action: Minimize         }
+  - { key: Q,   mods: Command,  action: Quit             }
+  - { key: W,   mods: Command,  action: Quit             }
