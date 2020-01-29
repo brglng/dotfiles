@@ -104,6 +104,7 @@ while true; do
     read -p "Do you want also to link ~/.local/bin/python and ~/.local/bin/pip ? (y/n): " yn
     case $yn in
         [Yy]* )
+            echo
             link "$selected_py" "$HOME/.local/bin/python"
             if [[ -x "$(dirname $selected_py)/pip3" ]]; then
                 link "$(dirname $selected_py)/pip3" "$HOME/.local/bin/pip"
