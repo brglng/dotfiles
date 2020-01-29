@@ -83,6 +83,7 @@ function link_common() {
     link "$PWD/config/alacritty/alacritty.yml"  "$HOME/.config/alacritty/alacritty.yml"
     link "$PWD/config/TabNine/TabNine.toml"     "$HOME/.config/TabNine/TabNine.toml"
     link "$PWD/cgdb/cgdbrc"                     "$HOME/.cgdb/cgdbrc"
+    update_gitconfig
     link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
     link "$PWD/local/bin/gvimdirdiff.py"        "$HOME/.local/bin/gvimdirdiff.py"
     link "$PWD/local/bin/nvimdirdiff.py"        "$HOME/.local/bin/nvimdirdiff.py"
@@ -91,18 +92,17 @@ function link_common() {
     link "$PWD/vimrc"                           "$HOME/.vimrc"
     link "$PWD/vim"                             "$HOME/.vim"
     link "$PWD/vim"                             "$HOME/.config/nvim"
-    update_gitconfig
     update_zshrc
 }
 
 function link_linux() {
-    link_common
     update_bashrc "$HOME/.bashrc"
+    link_common
 }
 
 function link_mac() {
-    link_common
     update_bashrc "$HOME/.bash_profile"
+    link_common
 }
 
 case $(uname -s) in
