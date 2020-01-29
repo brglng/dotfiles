@@ -135,8 +135,6 @@ nvm install node npm
 nvm use node
 nvm alias default node
 
-python3 -m pip install --user -U pynvim autopep8 pylint jedi
-
 sudo -H gem install neovim
 npm install -g neovim
 
