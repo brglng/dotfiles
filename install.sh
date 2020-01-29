@@ -115,7 +115,7 @@ mkdir -p $HOME/.local/bin
 export PATH=$HOME/.local/bin:$PATH
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-source "$PWD/setup_python3.sh"
+"$PWD/setup_python3.sh"
 
 case $(uname -s) in
     Linux) install_linux ;;
