@@ -80,20 +80,19 @@ function link {
 }
 
 function link_common() {
-    link "$PWD/config/alacritty/alacritty.yml"     "$HOME/.config/alacritty/alacritty.yml"
-    link "$PWD/config/TabNine/TabNine.toml"        "$HOME/.config/TabNine/TabNine.toml"
-    link "$PWD/cgdb/cgdbrc"                        "$HOME/.cgdb/cgdbrc"
-    link "$PWD/gitignore_global"                   "$HOME/.gitignore_global"
-    link "$PWD/tmux.conf"                          "$HOME/.tmux.conf"
-    link "$PWD/vimrc"                              "$HOME/.vimrc"
-    link "$PWD/vim"                                "$HOME/.vim"
-    link "$PWD/vim"                                "$HOME/.config/nvim"
+    link "$PWD/config/alacritty/alacritty.yml"  "$HOME/.config/alacritty/alacritty.yml"
+    link "$PWD/config/TabNine/TabNine.toml"     "$HOME/.config/TabNine/TabNine.toml"
+    link "$PWD/cgdb/cgdbrc"                     "$HOME/.cgdb/cgdbrc"
+    link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
+    link "$PWD/local/bin/gvimdirdiff.py"        "$HOME/.local/bin/gvimdirdiff.py"
+    link "$PWD/local/bin/nvimdirdiff.py"        "$HOME/.local/bin/nvimdirdiff.py"
+    link "$PWD/local/bin/vimdirdiff.py"         "$HOME/.local/bin/vimdirdiff.py"
+    link "$PWD/tmux.conf"                       "$HOME/.tmux.conf"
+    link "$PWD/vimrc"                           "$HOME/.vimrc"
+    link "$PWD/vim"                             "$HOME/.vim"
+    link "$PWD/vim"                             "$HOME/.config/nvim"
     update_gitconfig
     update_zshrc
-
-    for f in "$PWD/local/bin/"*; do
-        link "$f" "$HOME/.local/bin/$(basename $f)"
-    done
 }
 
 function link_linux() {
