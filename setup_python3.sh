@@ -49,6 +49,8 @@ echo
 echo "Searching for Python 3 in your system..."
 for py in python3 python; do
     for d in \
+        $HOME/opt/miniconda3/bin \
+        $HOME/opt/anaconda3/bin \
         $HOME/miniconda3/bin \
         $HOME/anaconda3/bin \
         /miniconda3/bin \
