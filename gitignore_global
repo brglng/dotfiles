@@ -30,3 +30,6 @@ Thumbs.db
 .ccls_cache
 .cquery-cache
 .cquery_cache
+
+*.pyc
+.mypy_cache
