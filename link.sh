@@ -48,6 +48,7 @@ function link_common() {
     link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
     link "$PWD/local/bin/gvimdirdiff.py"        "$HOME/.local/bin/gvimdirdiff.py"
     link "$PWD/local/bin/nvimdirdiff.py"        "$HOME/.local/bin/nvimdirdiff.py"
+    link "$PWD/local/bin/tabnine-ccls-launcher" "$HOME/.local/bin/tabnine-ccls-launcher"
     link "$PWD/local/bin/vimdirdiff.py"         "$HOME/.local/bin/vimdirdiff.py"
     link "$PWD/tmux.conf"                       "$HOME/.tmux.conf"
     link "$PWD/vimrc"                           "$HOME/.vimrc"

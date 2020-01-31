@@ -1,0 +1,2 @@
+#!/bin/sh
+exec ccls --init="{\"cache\": {\"directory\": \"$HOME/.cache/ccls\"}"

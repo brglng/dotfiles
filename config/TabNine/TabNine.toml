@@ -30,8 +30,7 @@ command = "pyls"
 install = [["pip", "install", "python-language-server"]]
 
 [language.cpp]
-command = "ccls"
-args = ["--init={\"cache\": {\"directory\": \"/tmp/ccls-cache\"}}"]
+command = "tabnine-ccls-launcher"
 synchronous_triggers = [".", "::", "->"]
 synchronous_timeout_ms = 200
 num_server_instances = 2

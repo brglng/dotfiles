@@ -12,7 +12,9 @@ function install_apt() {
     sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make git luajit libluajit-5.1-dev ruby-dev zlib1g-dev libncurses-dev xsel
 
     # Fix for vim
-    [[ -e ~/.viminfo ]] && sudo chown $USER:$USER ~/.viminfo
+    if [[ -e ~/.viminfo ]]; then
+        sudo chown $USER:$USER ~/.viminfo
+    fi
 }
 
 function install_linux() {
@@ -27,12 +29,12 @@ function install_linux() {
       	CentOS) install_yum ;;
     esac
 
-    git config --global http.postBuffer 524288000
-
     ln -sf $PWD/local/bin/brew $HOME/.local/bin
 
+    git config --global http.postBuffer 524288000
+
     # Install Homebrew for Linux
-    if [ -x $HOME/.linuxbrew/bin/brew ]; then
+    if [[ -x $HOME/.linuxbrew/bin/brew ]]; then
       	brew update
     else
 	git clone https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
@@ -40,19 +42,10 @@ function install_linux() {
 	ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
     fi
 
-    brew install llvm cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
+    brew install llvm
+}
 
-    if ! brew ls --versions neovim > /dev/null; then
-      	brew install --HEAD neovim
-    fi
-
-    if ! brew ls --versions universal-ctags; then
-      	brew tap universal-ctags/universal-ctags
-      	brew install --HEAD universal-ctags
-    fi
-
-    $(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
-
+function linuxbrew_post_install {
     ln -fs $(brew --prefix)/bin/ccls            $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/ccmake          $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/clangd          $HOME/.local/bin/
@@ -94,7 +87,7 @@ function install_mac() {
     fi
     git config --global http.postBuffer 524288000
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake tmux luajit ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm clang-format
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake luajit clang-format
     # brew install reattach-to-user-namespace
 
     if ! brew ls --versions neovim > /dev/null; then
@@ -122,11 +115,27 @@ case $(uname -s) in
     Darwin) install_mac ;;
 esac
 
-brew install rustup-init
+brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
+
 rustup-init -y
 source $HOME/.cargo/env
 rustup update
 rustup component add rls rust-analysis rust-src rustfmt
+
+if ! brew ls --versions universal-ctags; then
+    brew tap universal-ctags/universal-ctags
+    brew install --HEAD universal-ctags
+fi
+
+if ! brew ls --versions neovim > /dev/null; then
+    brew install --HEAD neovim
+fi
+
+$(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
+
+if [[ $(uname -s) = "Linux" ]]; then
+    linuxbrew_post_install
+fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"  # This loads nvm
