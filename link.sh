@@ -41,7 +41,7 @@ EOF
 }
 
 function update_tabnine_config {
-    echo "Updating $0"
+    echo "Updating $1"
     perl -i -pe 's/"ignore_all_lsp":.*,/"ignore_all_lsp": true,/g' "$1"
 }
 
