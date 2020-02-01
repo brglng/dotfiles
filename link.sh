@@ -40,9 +40,13 @@ EOF
 )"
 }
 
+function update_tabnine_config {
+    echo "Updating $0"
+    perl -i -pe 's/"ignore_all_lsp":.*,/"ignore_all_lsp": true,/g' "$1"
+}
+
 function link_common() {
     link "$PWD/config/alacritty/alacritty.yml"  "$HOME/.config/alacritty/alacritty.yml"
-    link "$PWD/config/TabNine/TabNine.toml"     "$HOME/.config/TabNine/TabNine.toml"
     link "$PWD/cgdb/cgdbrc"                     "$HOME/.cgdb/cgdbrc"
     update_gitconfig
     link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
@@ -59,11 +63,15 @@ function link_common() {
 
 function link_linux() {
     update_bashrc "$HOME/.bashrc"
+    link "$PWD/config/TabNine/TabNine.toml"     "$HOME/.config/TabNine/TabNine.toml"
+    update_tabnine_config                       "$HOME/.config/TabNine/tabnine_config.json"
     link_common
 }
 
 function link_mac() {
     update_bashrc "$HOME/.bash_profile"
+    link "$PWD/config/TabNine/TabNine.toml"     "$HOME/Library/Preferences/TabNine/TabNine.toml"
+    update_tabnine_config                       "$HOME/Library/Preferences/TabNine/tabnine_config.json"
     link_common
 }
 

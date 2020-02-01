@@ -31,6 +31,7 @@ install = [["pip", "install", "python-language-server"]]
 
 [language.cpp]
 command = "tabnine-ccls-launcher"
+args = []
 synchronous_triggers = [".", "::", "->"]
 synchronous_timeout_ms = 200
 num_server_instances = 2

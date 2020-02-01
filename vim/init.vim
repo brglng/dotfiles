@@ -1,11 +1,11 @@
 " The default runtimepath on windows is $USERPROFILE/vimfiles, but I am not going to use it
 if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
-  let &runtimepath = $HOME . '/.vim,' . &runtimepath . ',' . $HOME . '/.vim/after'
+    let &runtimepath = $HOME . '/.vim,' . &runtimepath . ',' . $HOME . '/.vim/after'
 endif
 
 let &viewdir = $HOME . '/.cache/vim/view'
 if !isdirectory(&viewdir)
-  silent! call mkdir($HOME . '/.cache/vim/view', 'p')
+    silent! call mkdir($HOME . '/.cache/vim/view', 'p')
 endif
 
 if has("patch-8.1.0360")
@@ -16,24 +16,24 @@ endif
 " *MUST* be put at the very beginning, in order to prevent potential problems
 set fileencodings=ucs-bom,utf-8,gb18030,big5,euc-jp,shift-jis,euc-kr,latin1
 if &encoding != 'utf-8'
-  if &termencoding == ''
-    let &termencoding = &encoding
-  endif
-  set encoding=utf-8
-  let &langmenu = strpart($LANG, 0, 5) . '.UTF-8'
-  exe 'language messages ' . strpart($LANG, 0, 5) . '.UTF-8'
-  source $VIMRUNTIME/delmenu.vim
-  source $VIMRUNTIME/menu.vim
-  if has('iconv')
-    function s:QfMakeConv()
-      let qflist = getqflist()
-      for i in qflist
-        let i.text = iconv(i.text, &termencoding, &encoding)
-      endfor
-      call setqflist(qflist)
-    endfunction
-    au QuickFixCmdPost * call s:QfMakeConv()
-  endif
+    if &termencoding == ''
+        let &termencoding = &encoding
+    endif
+    set encoding=utf-8
+    let &langmenu = strpart($LANG, 0, 5) . '.UTF-8'
+    exe 'language messages ' . strpart($LANG, 0, 5) . '.UTF-8'
+    source $VIMRUNTIME/delmenu.vim
+    source $VIMRUNTIME/menu.vim
+    if has('iconv')
+        function s:QfMakeConv()
+            let qflist = getqflist()
+            for i in qflist
+                let i.text = iconv(i.text, &termencoding, &encoding)
+            endfor
+            call setqflist(qflist)
+        endfunction
+        au QuickFixCmdPost * call s:QfMakeConv()
+    endif
 endif
 set fileencoding=utf-8
 set fileformats=unix,dos,mac
@@ -46,10 +46,10 @@ command! -nargs=+ GB exe iconv("<args>", 'utf-8', 'cp936')
 " Also don't do it when the mark is in the first line, that is the default
 " position when opening a file.
 autocmd BufReadPost *
-  \ if line("'\"") > 1 && line("'\"") <= line("$") |
-  \   exe "normal! g`\"" |
-  \   exe "normal! zz" |
-  \ endif
+            \ if line("'\"") > 1 && line("'\"") <= line("$") |
+            \   exe "normal! g`\"" |
+            \   exe "normal! zz" |
+            \ endif
 "autocmd BufWinLeave ?* if &buflisted && &modifiable && !(&bufhidden) && &buftype == '' | mkview | endif
 "autocmd BufWinEnter ?* if &buflisted && &modifiable && !(&bufhidden) && &buftype == '' | silent loadview | endif
 
@@ -61,8 +61,8 @@ set winaltkeys=no
 "set helplang=cn                 " Chinese help
 set autoread                    " auto read files modified outside vim
 if has('win32') || !zpan#is_sudo()
-  set nobackup                  " do not create backups before editing
-  set nowritebackup
+    set nobackup                  " do not create backups before editing
+    set nowritebackup
 endif
 set backupcopy=yes
 "set noswapfile
@@ -86,7 +86,7 @@ set laststatus=2
 set shortmess+=c
 set wildmenu
 if has('nvim')
-  set wildoptions=pum
+    set wildoptions=pum
 endif
 "if has('unnamedplus')
 "    set clipboard+=unnamedplus
@@ -106,10 +106,10 @@ set updatetime=300
 set hidden
 
 if v:version > 703 || v:version == 703 && has("patch541")
-  set formatoptions+=j " Delete comment character when joining commented lines
+    set formatoptions+=j " Delete comment character when joining commented lines
 endif
 if &shell =~# 'fish$'
-  set shell=/bin/bash
+    set shell=/bin/bash
 endif
 set history=1000
 set tabpagemax=50
@@ -148,14 +148,14 @@ set smartindent
 filetype plugin on
 filetype plugin indent on
 if exists('&breakindent')
-  autocmd FileType *
-        \ if &filetype == '' || &filetype == 'markdown' || &filetype == 'txt' |
-        \   setlocal nobreakindent |
-        \   setlocal showbreak= |
-        \ else |
-        \   setlocal breakindent |
-        \   setlocal showbreak=⤷\  |
-        \ endif
+    autocmd FileType *
+                \ if &filetype == '' || &filetype == 'markdown' || &filetype == 'txt' |
+                \   setlocal nobreakindent |
+                \   setlocal showbreak= |
+                \ else |
+                \   setlocal breakindent |
+                \   setlocal showbreak=⤷\  |
+                \ endif
 endif
 set showtabline=2
 
@@ -164,7 +164,7 @@ autocmd BufRead,BufNewFile *.md set filetype=markdown
 
 set undofile
 if !isdirectory($HOME . '/.cache/vim/undo')
-  call mkdir($HOME . '/.cache/vim/undo', 'p')
+    call mkdir($HOME . '/.cache/vim/undo', 'p')
 endif
 set undodir=$HOME/.cache/vim/undo
 
@@ -175,11 +175,12 @@ set foldlevel=99
 set foldlevelstart=99
 set foldnestmax=1
 " set foldcolumn=2
-autocmd FileType vim setl foldmethod=marker foldnestmax=3
-autocmd FileType c setl foldnestmax=1
-autocmd FileType cpp setl foldnestmax=3
-autocmd FileType python setl foldmethod=indent foldnestmax=2
-autocmd FileType * let &l:foldcolumn = &l:foldnestmax + 1
+autocmd FileType vim setl foldmethod=marker foldnestmax=3 foldcolumn=4
+autocmd FileType c setl foldnestmax=1 foldcolumn=2
+autocmd FileType cpp setl foldnestmax=3 foldcolumn=4
+autocmd FileType python setl foldmethod=indent foldnestmax=2 foldcolumn=3
+autocmd FileType rust setl foldnestmax=2 foldcolumn=3
+" autocmd FileType * let &l:foldcolumn = &l:foldnestmax + 1
 
 " omni complete settings
 set completeopt=menuone,noinsert,noselect
@@ -197,25 +198,18 @@ set pumheight=15
       " \   set pumheight=3 |
       " \ endif
 
-if has('win32')
-  if executable('vim-rg.cmd')
-    let &grepprg = 'vim-rg.cmd --vimgrep'
-  elseif executable('vim-ag.cmd')
-    let &grepprg = 'vim-ag.cmd --vimgrep'
-  endif
-else
-  if executable('rg')
+
+if executable('rg')
     let &grepprg = 'rg --vimgrep'
-  elseif executable('ag')
+elseif executable('ag')
     let &grepprg = 'ag --vimgrep'
-  endif
 endif
 
 " Exuberant-ctags and Cscope settings
 set tags=./.tags;,.tags;./tags;tags
 if executable('gtags-cscope')
-  set cscopeprg=gtags-cscope
-  let $CSCOPE_DB = 'GTAGS'
+    set cscopeprg=gtags-cscope
+    let $CSCOPE_DB = 'GTAGS'
 endif
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 
