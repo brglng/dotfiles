@@ -161,6 +161,9 @@ curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
 
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | sh -s -- ~/.cache/dein
 
+nvim "+call dein#install#_update([], 'update', 0)" '+UpdateRemotePlugins' '+qall'
+nvim '+CocUpdateSync' '+qall'
+
 ./link.sh
 
 echo "Congratulations! The installation is finished."
