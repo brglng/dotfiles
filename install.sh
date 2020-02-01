@@ -61,6 +61,9 @@ function linuxbrew_post_install {
     ln -fs $(brew --prefix)/bin/fselect         $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/fx              $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/glances         $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/go              $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/godoc           $HOME/.local/bin/
+    ln -fs $(brew --prefix)/bin/gofmt           $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/lua             $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/luac            $HOME/.local/bin/
     ln -fs $(brew --prefix)/bin/luajit          $HOME/.local/bin/
@@ -117,10 +120,11 @@ esac
 
 brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
 
-rustup-init -y
+"$(brew --prefix)/bin/rustup-init" -y
 source $HOME/.cargo/env
 rustup update
 rustup component add rls rust-analysis rust-src rustfmt
+rustup toolchain install nightly
 
 if ! brew ls --versions universal-ctags; then
     brew tap universal-ctags/universal-ctags
@@ -161,8 +165,7 @@ curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
 
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | sh -s -- ~/.cache/dein
 
-nvim "+call dein#install#_update([], 'update', 0)" '+UpdateRemotePlugins' '+qall'
-nvim '+CocUpdateSync' '+qall'
+nvim "+call dein#install#_update([], 'update', 0)" '+qall'
 
 ./link.sh
 

@@ -39,6 +39,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('mhinz/vim-startify')
   call dein#add('liuchengxu/vim-which-key')
   call dein#add('Yggdroot/LeaderF', {'build': './install.sh'})
+  call dein#add('liuchengxu/vim-clap', {'build': ':Clap install-binary'})
 
   " Moving Plugins
   call dein#add('rhysd/clever-f.vim')
@@ -82,7 +83,7 @@ if dein#load_state('~/.cache/dein')
         \ 'merged': 0,
         \ 'trusted': 0,
         \ 'rev': 'release',
-        \ 'hook_post_update': 'silent! UpdateRemotePlugins | silent! CocUpdate'
+        \ 'hook_post_update': 'silent! UpdateRemotePlugins | silent! CocUpdateSync'
         \ })
   call dein#add('honza/vim-snippets')
   call dein#add('liuchengxu/vista.vim')
@@ -113,10 +114,11 @@ if dein#check_install()
   call dein#install()
 endif
 
+runtime zpan/init/plugins/clap.vim
 if !zpan#is_sudo()
-runtime zpan/init/plugins/coc.vim
-runtime zpan/init/plugins/coc_explorer.vim
-runtime zpan/init/plugins/coc_smartf.vim
+  runtime zpan/init/plugins/coc.vim
+  runtime zpan/init/plugins/coc_explorer.vim
+  runtime zpan/init/plugins/coc_smartf.vim
 endif
 " runtime zpan/init/plugins/defx.vim
 runtime zpan/init/plugins/dein_ui.vim
