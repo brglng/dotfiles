@@ -25,6 +25,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('tpope/vim-eunuch')
   call dein#add('tmux-plugins/vim-tmux-focus-events')
   call dein#add('roxma/vim-tmux-clipboard')
+  call dein#add('brglng/vim-im-select')
 
   " UI Plugins
   call dein#add('ryanoasis/vim-devicons')
@@ -111,8 +112,6 @@ syntax enable
 if dein#check_install()
   call dein#install()
 endif
-call dein#local($HOME . '/.vim/dein-local', {}, ['vim-im-select'])
-call dein#source(['vim-im-select'])
 
 if !zpan#is_sudo()
 runtime zpan/init/plugins/coc.vim
