@@ -38,7 +38,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('mbbill/undotree')
   call dein#add('mhinz/vim-startify')
   call dein#add('liuchengxu/vim-which-key')
-  call dein#add('Yggdroot/LeaderF', {'build': './install.sh'})
+  " call dein#add('Yggdroot/LeaderF', {'build': './install.sh'})
   call dein#add('liuchengxu/vim-clap', {'build': ':Clap install-binary'})
 
   " Moving Plugins

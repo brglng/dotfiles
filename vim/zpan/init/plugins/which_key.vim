@@ -73,8 +73,7 @@ let g:which_key_map[' '] = {
       \ 'H': {
       \     'name': '+history',
       \     'c': [':Clap command_history', 'show-command-history'],
-      \     'j': [':CocList location', 'list-jump-history'],
-      \     's': [':Leaderf searchHistory', 'list-search-history'],
+      \     'j': [':CocList location', 'list-jump-history']
       \ },
       \ 'h': [':Clap help_tags', 'find-help'],
       \ 'o': [':Clap tags', 'search-buffer-tags'],
