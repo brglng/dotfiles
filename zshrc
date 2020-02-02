@@ -148,11 +148,6 @@ setopt HIST_SAVE_NO_DUPS        # Don't write duplicate entries in the history f
 setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY              # Don't execute immediately upon history expansion.
 
-if [[ $(uname -s) == "Linux" ]]; then
-    unsetopt EXTENDED_HISTORY
-    HISTFILE=~/.bash_history
-fi
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source "$(dirname $(readlinkf ${(%):-%N}))/init_post.sh"
