@@ -9,7 +9,7 @@ function install_yum() {
 function install_apt() {
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
-    sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make git luajit libluajit-5.1-dev ruby-dev zlib1g-dev libncurses-dev xsel
+    sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git luajit libluajit-5.1-dev ruby-dev zlib1g-dev libncurses-dev xsel
 
     # Fix for vim
     if [[ -e ~/.viminfo ]]; then
@@ -118,7 +118,7 @@ case $(uname -s) in
     Darwin) install_mac ;;
 esac
 
-brew install rustup-init go svn cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
+brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
 
 "$(brew --prefix)/bin/rustup-init" -y
 source $HOME/.cargo/env
