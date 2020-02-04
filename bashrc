@@ -21,7 +21,7 @@ function _get_script_dir () {
     echo "$DIR"
 }
 
-source "$(_get_script_dir)/init_pre.sh"
+source "$(_get_script_dir)/shell_rc_pre.sh"
 
 set -o notify
 
@@ -105,6 +105,6 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-source "$(_get_script_dir)/init_post.sh"
+source "$(_get_script_dir)/shell_rc_post.sh"
 
 # vim: ts=8 sts=4 sw=4 et
