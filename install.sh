@@ -44,40 +44,40 @@ function install_linux() {
 }
 
 function linuxbrew_post_install {
-    ln -fs $(brew --prefix)/bin/ccls            $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/ccmake          $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/clangd          $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/clang-format    $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/clang-tidy      $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/cmake           $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/colordiff       $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/cpack           $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/ctags           $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/ctest           $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/exa             $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/fd              $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/fselect         $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/fx              $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/glances         $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/go              $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/godoc           $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/gofmt           $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/lua             $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/luac            $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/luajit          $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/luarocks        $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/luarocks-admin  $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/nnn             $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/nvim            $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/nvm             $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/rg              $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/scan-build      $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/scan-view       $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/tig             $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/tmux            $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/vim             $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/vimdiff         $HOME/.local/bin/
-    ln -fs $(brew --prefix)/bin/zsh             $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/ccls            $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/ccmake          $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/clangd          $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/clang-format    $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/clang-tidy      $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/cmake           $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/colordiff       $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/cpack           $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/ctags           $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/ctest           $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/exa             $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/fd              $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/fselect         $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/fx              $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/glances         $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/go              $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/godoc           $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/gofmt           $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/lua             $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/luac            $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/luajit          $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/luarocks        $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/luarocks-admin  $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/nnn             $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/nvim            $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/nvm             $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/rg              $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/scan-build      $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/scan-view       $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/tig             $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/tmux            $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/vim             $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/vimdiff         $HOME/.local/bin/
+    ln -fs $HOMEBREW_PREFIX/bin/zsh             $HOME/.local/bin/
 }
 
 function install_mac() {
@@ -89,17 +89,6 @@ function install_mac() {
 
     brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake luajit clang-format
     # brew install reattach-to-user-namespace
-
-    if ! brew ls --versions neovim > /dev/null; then
-      	brew install --HEAD neovim
-    fi
-
-    if ! brew ls --versions universal-ctags; then
-      	brew tap universal-ctags/universal-ctags
-      	brew install --HEAD universal-ctags --with-jansson
-    fi
-
-    $(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
 
     brew cask install macvim
 }
@@ -114,6 +103,8 @@ case $(uname -s) in
     Linux) install_linux ;;
     Darwin) install_mac ;;
 esac
+
+export HOMEBREW_PREFIX="$(brew --prefix)"
 
 brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
 
@@ -139,7 +130,8 @@ if [[ $(uname -s) = "Linux" ]]; then
 fi
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"  # This loads nvm
+[[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+[[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 nvm install node npm
 nvm use node
