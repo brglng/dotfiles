@@ -41,7 +41,6 @@ zinit snippet OMZ::plugins/cargo/_cargo
 zinit ice wait lucid
 zinit snippet OMZ::plugins/command-not-found/command-not-found.plugin.zsh
 
-zinit ice wait atload"unalias fd" lucid
 zinit snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 
 zinit ice wait lucid
@@ -272,6 +271,7 @@ zinit cdreplay -q
 
 # antigen apply
 
+unalias fd
 alias -s c=$EDITOR
 alias -s h=$EDITOR
 alias -s cc=$EDITOR
