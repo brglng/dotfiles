@@ -4,8 +4,6 @@ case $- in
       *) return;;
 esac
 
-export http_proxy=http://127.0.0.1:1087 https_proxy=http://127.0.0.1:1087;
-
 source ~/.zinit/bin/zinit.zsh
 
 # most themes use this option
