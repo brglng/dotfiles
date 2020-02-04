@@ -4,126 +4,273 @@ case $- in
       *) return;;
 esac
 
+export http_proxy=http://127.0.0.1:1087 https_proxy=http://127.0.0.1:1087;
+
+source ~/.zinit/bin/zinit.zsh
+
+# most themes use this option
+setopt promptsubst
+
+# common OMZ libraries
+zinit snippet OMZ::lib/clipboard.zsh
+zinit snippet OMZ::lib/completion.zsh
+zinit snippet OMZ::lib/history.zsh
+zinit snippet OMZ::lib/key-bindings.zsh
+zinit snippet OMZ::lib/git.zsh
+# zinit snippet OMZ::lib/theme-and-appearance.zsh
+
+# some OMZ themes use this plugin
+zinit ice wait lucid
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+
+zinit atload'!source ~/.p10k.zsh' lucid nocd
+zinit load romkatv/powerlevel10k
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/adb/_adb
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/autopep8/_autopep8
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/brew/brew.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/cargo/_cargo
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/command-not-found/command-not-found.plugin.zsh
+
+zinit ice wait atload"unalias fd" lucid
+zinit snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/colorize/colorize.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/docker/_docker
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/docker-compose/_docker-compose
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/docker-compose/docker-compose.plugin.zsh
+
+zinit ice svn wait lucid
+zinit snippet OMZ::plugins/emoji
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/fd/_fd
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/gem/_gem
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/gem/gem.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
+
+zinit ice svn
+zinit snippet OMZ::plugins/git-prompt
+
+zinit ice svn
+zinit snippet OMZ::plugins/gitfast
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/github/_hub
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/github/github.plugin.zsh
+
+zinit ice wait"2" lucid
+zinit snippet OMZ::plugins/gitignore/gitignore.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/gnu-utils/gnu-utils.plugin.zsh
+
+zinit ice svn wait lucid
+zinit snippet OMZ::plugins/golang
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/gradle/_gradle
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/gradle/_gradlew
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/gradle/gradle.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/mercurial/mercurial.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/mvn/mvn.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/node/node.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/npm/npm.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/nvm/_nvm
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/nvm/nvm.plugin.zsh
+
+zinit ice svn wait lucid
+zinit snippet OMZ::plugins/osx
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/perl/perl.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/pip/_pip
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/pip/pip.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/pipenv/pipenv.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/pylint/_pylint
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/pylint/pylint.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/python/python.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/redis-cli/_redis-cli
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/repo/_repo
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/repo/repo.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/ripgrep/_ripgrep
+
+zinit ice wait lucid wait lucid
+zinit snippet OMZ::plugins/rsync/rsync.plugin.zsh
+
+zinit ice wait lucid wait lucid
+zinit snippet OMZ::plugins/ruby/ruby.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/rust/_rust
+
+zinit ice svn wait lucid
+zinit snippet OMZ::plugins/tmux
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/ubuntu/ubuntu.plugin.zsh
+
+zinit ice as"completion"
+zinit snippet OMZ::plugins/ufw/_ufw
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/virtualenv/virtualenv.plugin.zsh
+
+zinit ice wait lucid
+zinit snippet OMZ::plugins/vscode/vscode.plugin.zsh
+
+zinit ice wait blockf atpull'zinit creinstall -q .' lucid
+zinit light zsh-users/zsh-completions
+
+zinit ice wait atload'_zsh_autosuggest_start' lucid
+zinit light zsh-users/zsh-autosuggestions
+
+zinit ice wait atinit"zpcompinit; zpcdreplay" lucid
+zinit light zdharma/fast-syntax-highlighting
+
+if type luajit &>/dev/null; then
+    ZLUA_EXEC=$(which luajit)
+fi
+export _ZL_MATCH_MODE=1
+export _ZL_ADD_ONCE=1
+zinit light skywind3000/z.lua
+
+zplugin ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" lucid
+zplugin load trapd00r/LS_COLORS
+
 if [[ `uname -s` = Darwin ]]; then
     readlinkf() { echo `greadlink -f "$1"`; }
 else
     readlinkf() { echo `readlink -f "$1"`; }
 fi
 
-source "$(dirname $(readlinkf ${(%):-%N}))/init_pre.sh"
+source "$(dirname $(readlinkf ${(%):-%N}))/shell_rc_pre.sh"
 
-if type brew &>/dev/null; then
-    FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+if [[ $HOMEBREW_PREFIX != "" ]]; then
+    FPATH=$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH
 fi
-autoload -U +X compinit && compinit
-autoload -U +X bashcompinit && bashcompinit
 
-alias shopt=':'
+autoload -Uz compinit
+compinit
 
-source $HOME/.local/share/zsh/antigen.zsh
+autoload -Uz bashcompinit
+bashcompinit
 
-antigen use oh-my-zsh
+zinit cdreplay -q
 
-antigen bundle brew
-antigen bundle command-not-found
-antigen bundle common-aliases
-antigen bundle colorize
-antigen bundle docker
-antigen bundle gem
-antigen bundle git
-antigen bundle git-extras
-antigen bundle git-flow
-antigen bundle github
-antigen bundle gradle
-antigen bundle mercurial
-antigen bundle node
-antigen bundle npm
-antigen bundle perl
-antigen bundle pip
-antigen bundle pyenv
-antigen bundle pylint
-antigen bundle python
-antigen bundle redis-cli
-antigen bundle repo
-antigen bundle ruby
-antigen bundle osx
-antigen bundle tmux
+# source $HOME/.local/share/zsh/antigen.zsh
 
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-completions
-#antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zdharma/fast-syntax-highlighting
+# antigen use oh-my-zsh
 
-ZLUA_EXEC=$(which luajit)
-export _ZL_MATCH_MODE=1
-export _ZL_ADD_ONCE=1
-antigen bundle skywind3000/z.lua
+# antigen bundle brew
+# antigen bundle command-not-found
+# antigen bundle common-aliases
+# antigen bundle colorize
+# antigen bundle docker
+# antigen bundle gem
+# antigen bundle git
+# antigen bundle git-extras
+# antigen bundle git-flow
+# antigen bundle github
+# antigen bundle gradle
+# antigen bundle mercurial
+# antigen bundle node
+# antigen bundle npm
+# antigen bundle perl
+# antigen bundle pip
+# antigen bundle pyenv
+# antigen bundle pylint
+# antigen bundle python
+# antigen bundle redis-cli
+# antigen bundle repo
+# antigen bundle ruby
+# antigen bundle osx
+# antigen bundle tmux
 
-POWERLEVEL9K_MODE='nerdfont-complete'
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable virtualenv anaconda rbenv vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history)
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
-POWERLEVEL9K_SHORTEN_DELIMITER="…"
-POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_first_and_last"
-antigen theme romkatv/powerlevel10k
+# antigen bundle zsh-users/zsh-autosuggestions
+# antigen bundle zsh-users/zsh-completions
+# antigen bundle zdharma/fast-syntax-highlighting
 
-antigen apply
+# ZLUA_EXEC=$(which luajit)
+# export _ZL_MATCH_MODE=1
+# export _ZL_ADD_ONCE=1
+# antigen bundle skywind3000/z.lua
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-#ZSH_THEME="agnoster"
+# POWERLEVEL9K_MODE='nerdfont-complete'
+# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable virtualenv anaconda rbenv vcs)
+# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history)
+# POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+# POWERLEVEL9K_SHORTEN_DELIMITER="…"
+# POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_first_and_last"
+# antigen theme romkatv/powerlevel10k
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern root line)
-
-# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=24'
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-unalias fd
+# antigen apply
 
 alias -s c=$EDITOR
 alias -s h=$EDITOR
@@ -148,8 +295,8 @@ setopt HIST_SAVE_NO_DUPS        # Don't write duplicate entries in the history f
 setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY              # Don't execute immediately upon history expansion.
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
-source "$(dirname $(readlinkf ${(%):-%N}))/init_post.sh"
+source "$(dirname $(readlinkf ${(%):-%N}))/shell_rc_post.sh"
 
 # vim: ts=8 sts=4 sw=4 et

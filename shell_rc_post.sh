@@ -9,7 +9,7 @@ elif which nano > /dev/null; then
     export EDITOR='nano'
 fi
 
-if [ `uname -s` = Darwin ]; then
+if [[ $(uname -s) = "Darwin" ]]; then
     alias ls="/usr/local/bin/gls -hF --color=auto"
 else
     alias ls="ls --group-directories-first -hF --color=auto"
@@ -27,9 +27,7 @@ alias fgrep='fgrep --color=auto'
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-alias t='tmux attach || tmux new'
-
-if [ `uname -s` = Darwin ]; then
+if [[ $(uname -s) = "Darwin" ]]; then
     alias ll='/usr/local/bin/gls -ahlF --color=auto'
     alias la='/usr/local/bin/gls -AhF --color=auto'
     alias l='/usr/local/bin/gls -hF --color=auto'

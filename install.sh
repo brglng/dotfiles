@@ -104,7 +104,7 @@ function install_mac() {
 
     $(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
 
-    brew cask install macvim alacritty
+    brew cask install macvim
 }
 
 mkdir -p $HOME/.local/bin
@@ -118,7 +118,7 @@ case $(uname -s) in
     Darwin) install_mac ;;
 esac
 
-brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
+brew install rustup-init go svn cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
 
 "$(brew --prefix)/bin/rustup-init" -y
 source $HOME/.cargo/env
@@ -160,8 +160,11 @@ else
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
-mkdir -p ~/.local/share/zsh
-curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
+# mkdir -p ~/.local/share/zsh
+# curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
+
+mkdir ~/.zinit
+git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
 
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | sh -s -- ~/.cache/dein
 
