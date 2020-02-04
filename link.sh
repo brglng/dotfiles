@@ -9,7 +9,7 @@ function update_bashrc {
         '#[ \t]*END[ \t]*brglng\/dotfiles' \
         "$(cat << EOF
 # BEGIN brglng/dotfiles
-[ -r \"$PWD/bashrc\" ] && . \"$PWD/bashrc\"
+[[ -r "$PWD/bashrc" ]] && . "$PWD/bashrc"
 # END brglng/dotfiles
 EOF
 )"
@@ -21,7 +21,7 @@ function update_zshrc {
         '#[ \t]*END[ \t]*brglng\/dotfiles' \
         "$(cat << EOF
 # BEGIN brglng/dotfiles
-[ -r \"$PWD/zshrc\" ] && . \"$PWD/zshrc\"
+[[ -r "$PWD/zshrc" ]] && . "$PWD/zshrc"
 # END brglng/dotfiles
 EOF
 )"
@@ -34,7 +34,7 @@ function update_gitconfig {
         "$(cat << EOF
 # BEGIN brglng/dotfiles
 [include]
-	path = $PWD/gitconfig
+	path = "$PWD/gitconfig"
 # END brglng/dotfiles
 EOF
 )"

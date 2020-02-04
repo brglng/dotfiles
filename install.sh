@@ -31,8 +31,6 @@ function install_linux() {
 
     ln -sf $PWD/local/bin/brew $HOME/.local/bin
 
-    git config --global http.postBuffer 524288000
-
     # Install Homebrew for Linux
     if [[ -x $HOME/.linuxbrew/bin/brew ]]; then
       	brew update
@@ -88,7 +86,6 @@ function install_mac() {
     else
       	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
-    git config --global http.postBuffer 524288000
 
     brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake luajit clang-format
     # brew install reattach-to-user-namespace

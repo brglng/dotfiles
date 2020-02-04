@@ -188,7 +188,9 @@ zinit light zsh-users/zsh-completions
 zinit ice wait atload'_zsh_autosuggest_start' lucid
 zinit light zsh-users/zsh-autosuggestions
 
-zinit ice wait atinit"zpcompinit; zpcdreplay" lucid
+zinit light hlissner/zsh-autopair
+
+zinit ice wait lucid
 zinit light zdharma/fast-syntax-highlighting
 
 if type luajit &>/dev/null; then
