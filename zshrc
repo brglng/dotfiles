@@ -72,9 +72,6 @@ zinit ice wait lucid
 zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
 
 zinit ice svn
-zinit snippet OMZ::plugins/git-prompt
-
-zinit ice svn
 zinit snippet OMZ::plugins/gitfast
 
 zinit ice as"completion"
@@ -222,54 +219,6 @@ autoload -Uz bashcompinit
 bashcompinit
 
 zinit cdreplay -q
-
-# source $HOME/.local/share/zsh/antigen.zsh
-
-# antigen use oh-my-zsh
-
-# antigen bundle brew
-# antigen bundle command-not-found
-# antigen bundle common-aliases
-# antigen bundle colorize
-# antigen bundle docker
-# antigen bundle gem
-# antigen bundle git
-# antigen bundle git-extras
-# antigen bundle git-flow
-# antigen bundle github
-# antigen bundle gradle
-# antigen bundle mercurial
-# antigen bundle node
-# antigen bundle npm
-# antigen bundle perl
-# antigen bundle pip
-# antigen bundle pyenv
-# antigen bundle pylint
-# antigen bundle python
-# antigen bundle redis-cli
-# antigen bundle repo
-# antigen bundle ruby
-# antigen bundle osx
-# antigen bundle tmux
-
-# antigen bundle zsh-users/zsh-autosuggestions
-# antigen bundle zsh-users/zsh-completions
-# antigen bundle zdharma/fast-syntax-highlighting
-
-# ZLUA_EXEC=$(which luajit)
-# export _ZL_MATCH_MODE=1
-# export _ZL_ADD_ONCE=1
-# antigen bundle skywind3000/z.lua
-
-# POWERLEVEL9K_MODE='nerdfont-complete'
-# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir dir_writable virtualenv anaconda rbenv vcs)
-# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history)
-# POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
-# POWERLEVEL9K_SHORTEN_DELIMITER="…"
-# POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_first_and_last"
-# antigen theme romkatv/powerlevel10k
-
-# antigen apply
 
 unalias fd
 alias -s c=$EDITOR

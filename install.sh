@@ -169,8 +169,6 @@ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh |
 
 nvim "+call dein#install#_update([], 'update', 0)" '+qall'
 
-zsh -i -c exit
-
 echo "Congratulations! The installation is finished."
 echo "It is strongly recommended that you log out from your current shell and log in again now immediately."
 
