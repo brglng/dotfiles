@@ -21,7 +21,7 @@ path_prepend "$HOME/.local/bin"
 path_prepend "$HOME/.cargo/bin"
 
 if type brew &>/dev/null; then
-    HOMEBREW_PREFIX="$(brew --prefix)"
+    export HOMEBREW_PREFIX="$(brew --prefix)"
 else
     echo "Homebrew not found!"
     exit -1
