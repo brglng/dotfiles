@@ -201,9 +201,9 @@ zplugin ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c
 zplugin load trapd00r/LS_COLORS
 
 if [[ `uname -s` = Darwin ]]; then
-    readlinkf() { echo `greadlink -f "$1"`; }
+    readlinkf() { greadlink -f "$1"; }
 else
-    readlinkf() { echo `readlink -f "$1"`; }
+    readlinkf() { readlink -f "$1"; }
 fi
 
 source "$(dirname $(readlinkf ${(%):-%N}))/shell_rc_pre.sh"
