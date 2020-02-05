@@ -21,8 +21,8 @@ zinit snippet OMZ::lib/git.zsh
 zinit ice wait lucid
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
-zinit ice depth=1
-zinit light romkatv/powerlevel10k
+zinit atload'!source ~/.p10k.zsh' lucid nocd
+zinit load romkatv/powerlevel10k
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/adb/_adb
