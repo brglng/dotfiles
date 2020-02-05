@@ -69,6 +69,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('hynek/vim-python-pep8-indent')
   call dein#add('sheerun/vim-polyglot', {'merged': 0})
   call dein#add('tmux-plugins/vim-tmux')
+  call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'], 'hook_post_update': 'call mkdp#util#install()'})
 
   " Source Control Plugins
   call dein#add('tpope/vim-fugitive')

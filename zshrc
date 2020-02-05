@@ -190,6 +190,9 @@ zinit light hlissner/zsh-autopair
 zinit ice wait lucid
 zinit light zdharma/fast-syntax-highlighting
 
+zinit ice wait lucid
+zinit load lukechilds/zsh-better-npm-completion
+
 if type luajit &>/dev/null; then
     ZLUA_EXEC=$(which luajit)
 fi

@@ -31,8 +31,6 @@ fi
 if type nvm &>/dev/null; then
     nvm() {
         unset -f nvm
-        unset -f node
-        unset -f npm
         export NVM_DIR=~/.nvm
         [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
         [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
@@ -42,9 +40,7 @@ fi
 
 if type node &>/dev/null; then
     node() {
-        unset -f nvm
         unset -f node
-        unset -f npm
         export NVM_DIR=~/.nvm
         [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
         [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
@@ -54,8 +50,6 @@ fi
 
 if type npm &>/dev/null; then
     npm() {
-        unset -f nvm
-        unset -f node
         unset -f npm
         export NVM_DIR=~/.nvm
         [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
