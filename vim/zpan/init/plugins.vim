@@ -39,7 +39,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('mhinz/vim-startify')
   call dein#add('liuchengxu/vim-which-key')
   " call dein#add('Yggdroot/LeaderF', {'build': './install.sh'})
-  call dein#add('liuchengxu/vim-clap', {'build': ':Clap install-binary'})
+  call dein#add('liuchengxu/vim-clap', {'hook_post_source': ':Clap install-binary'})
 
   " Moving Plugins
   call dein#add('rhysd/clever-f.vim')
@@ -69,7 +69,11 @@ if dein#load_state('~/.cache/dein')
   call dein#add('hynek/vim-python-pep8-indent')
   call dein#add('sheerun/vim-polyglot', {'merged': 0})
   call dein#add('tmux-plugins/vim-tmux')
-  call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'], 'hook_post_update': 'call mkdp#util#install()'})
+  call dein#add('iamcco/markdown-preview.nvim', {
+        \ 'merged': 0,
+        \ 'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
+        \ 'hook_post_source': 'call mkdp#util#install()'
+        \ })
 
   " Source Control Plugins
   call dein#add('tpope/vim-fugitive')
@@ -84,7 +88,7 @@ if dein#load_state('~/.cache/dein')
         \ 'merged': 0,
         \ 'trusted': 0,
         \ 'rev': 'release',
-        \ 'hook_post_update': 'silent! UpdateRemotePlugins | silent! CocUpdateSync'
+        \ 'hook_post_source': 'silent! UpdateRemotePlugins | silent! CocUpdateSync'
         \ })
   call dein#add('honza/vim-snippets')
   call dein#add('liuchengxu/vista.vim')

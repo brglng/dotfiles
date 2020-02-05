@@ -54,7 +54,7 @@ on your environment.
        $ ./install.sh
 
    This will use the proper package manager on your system to install the
-   necessary packages. On Ubuntu/Debian, `apt-get` is used. On macOS,
+   necessary packages. On Ubuntu/Debian, `apt` is used. On macOS,
    [Homebrew](https://brew.sh/) is used, or installed if there is not an
    existing one.
 
@@ -65,3 +65,11 @@ on your environment.
 
    This will overwrite your existing configuration files. The original files
    will be suffixed with `.orig`.
+
+## Utility Scripts
+
+There are some utility scripts in this repo:
+
+- `linuxbrew_post_install.sh`: Do some post installation work after linuxbrew in installed. This can be useful if you installed required packages manually without `install.sh`.
+
+- `setup_python3.sh`: Fix your Python environment.
