@@ -43,43 +43,6 @@ function install_linux() {
     brew install llvm
 }
 
-function linuxbrew_post_install {
-    ln -fs $HOMEBREW_PREFIX/bin/ccls            $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/ccmake          $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/clangd          $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/clang-format    $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/clang-tidy      $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/cmake           $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/colordiff       $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/cpack           $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/ctags           $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/ctest           $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/exa             $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/fd              $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/fselect         $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/fx              $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/glances         $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/go              $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/godoc           $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/gofmt           $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/lua             $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/luac            $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/luajit          $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/luarocks        $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/luarocks-admin  $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/nnn             $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/nvim            $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/nvm             $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/rg              $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/scan-build      $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/scan-view       $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/tig             $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/tmux            $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/vim             $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/vimdiff         $HOME/.local/bin/
-    ln -fs $HOMEBREW_PREFIX/bin/zsh             $HOME/.local/bin/
-}
-
 function install_mac() {
     if which brew > /dev/null; then
       	brew update
@@ -97,9 +60,38 @@ mkdir -p $HOME/.local/bin
 export PATH=$HOME/.local/bin:$PATH
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-./setup_python3.sh
+UNAME_S=$(uname -s)
 
-case $(uname -s) in
+while true; do
+    read -p "Do you want to setup a proxy? (y/n): " yn
+    echo
+    case $yn in
+        [Yy]*)
+            while true; do
+                read -p "Please input your proxy address (e.g. http://127.0.0.1:8118): " proxy_address
+                echo
+                if [[ "$proxy_address" =~ ^http:// ]]; then
+                    break
+                else
+                    echo "Your proxy address must start with http://"
+                    echo
+                fi
+            done
+            proxy_command="export http_proxy='$proxy_address' https_proxy='$proxy_address'"
+            echo "$proxy_command"
+            echo
+            eval "$proxy_command"
+            break;;
+        [Nn]*)
+            break;;
+        *)
+            echo "Please answer yes or no";;
+    esac
+done
+
+./setup_python3.sh --no-setup-proxy
+
+case $UNAME_S in
     Linux) install_linux ;;
     Darwin) install_mac ;;
 esac
@@ -108,7 +100,7 @@ export HOMEBREW_PREFIX="$(brew --prefix)"
 
 brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm
 
-"$(brew --prefix)/bin/rustup-init" -y
+"$HOMEBREW_PREFIX/bin/rustup-init" -y
 source $HOME/.cargo/env
 rustup update
 rustup component add rls rust-analysis rust-src rustfmt
@@ -123,10 +115,10 @@ if ! brew ls --versions neovim > /dev/null; then
     brew install --HEAD neovim
 fi
 
-$(brew --prefix)/opt/fzf/install --all --no-update-rc --no-fish
+$HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish
 
-if [[ $(uname -s) = "Linux" ]]; then
-    linuxbrew_post_install
+if [[ $UNAME_S = "Linux" ]]; then
+    ./linuxbrew_post_install
 fi
 
 export NVM_DIR="$HOME/.nvm"
@@ -149,9 +141,6 @@ else
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
-# mkdir -p ~/.local/share/zsh
-# curl -L git.io/antigen > ~/.local/share/zsh/antigen.zsh
-
 mkdir ~/.zinit
 git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
 
@@ -159,9 +148,29 @@ curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh |
 
 ./link.sh
 
-nvim "+call dein#install#_update([], 'update', 0)" '+qall'
+echo 'Now Neovim will be launched to install plugins.'
+echo 'Please type `:qa` to quit from Neovim after all plugins have been installed.'
+read -p "Press ENTER to continue..."
+
+nvim '+call dein#clear_state()' \
+    '+call dein#recache_runtimepath' \
+    "+call dein#install#_update([], 'update', 0)"
+
+echo "Now Vim will be launched to install plugins."
+echo 'Please type `:qa` to quit from Vim after all plugins have been installed.'
+read -p "Press ENTER to continue..."
+
+vim '+call dein#clear_state()' \
+    '+call dein#recache_runtimepath' \
+    "+call dein#install#_update([], 'update', 0)"
+
+echo 'Now Zsh will be launched to install plugins.'
+echo 'Please type `exit` to quit from Zsh after all plugins have been installed.'
+read -p "Press ENTER to continue..."
+
+zsh -i
 
 echo "Congratulations! The installation is finished."
-echo "It is strongly recommended that you log out from your current shell and log in again now immediately."
+echo "It is $(tput bold)strongly recommended$(tput sgr0) that you log out from your current shell and log in again $(tput bold)now$(tput sgr0)."
 
 # vim: ts=8 sts=4 sw=4 et

@@ -8,26 +8,47 @@ function do_pip_install {
     echo
 }
 
-while true; do
-    echo "If your Internet is slow, it is recommended that you setup a proxy before continuing."
-    read -p "Do you want to continue? (y/n): " yn
-    case $yn in
-        [Yy]* )
-	    break;;
-        [Nn]* )
-	    echo "Stopped."
-	    exit -1;;
-	* )
-	    ;;
-    esac
+no_setup_proxy=0
+for arg in "$@"; do
+    if [[ $arg == "--no-setup-proxy" ]]; then
+        no_setup_proxy=1
+    fi
 done
-echo
+
+if [[ $no_setup_proxy == 0 ]]; then
+    while true; do
+        read -p "Do you want to setup a proxy? (y/n): " yn
+        echo
+        case $yn in
+            [Yy]*)
+                while true; do
+                    read -p "Please input your proxy address (e.g. http://127.0.0.1:8118): " proxy_address
+                    echo
+                    if [[ "$proxy_address" =~ ^http:// ]]; then
+                        break
+                    else
+                        echo "Your proxy address must start with http://"
+                        echo
+                    fi
+                done
+                proxy_command="export http_proxy='$proxy_address' https_proxy='$proxy_address'"
+                echo "$proxy_command"
+                echo
+                eval "$proxy_command"
+                break;;
+            [Nn]*)
+                break;;
+            *)
+                echo "Please answer yes or no";;
+        esac
+    done
+fi
 
 echo "Please select what you want to do:"
 PS3=">>> "
 select opt in \
-    "Change your user's default Python and install necessary packages for Vim and Neovim" \
-    "Only install necessary packages for Vim and Neovim"; do
+    "Change your user's default Python and install necessary packages" \
+    "Only install necessary packages"; do
     case $REPLY in
         1)
             break;;
