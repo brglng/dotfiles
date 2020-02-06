@@ -1,6 +1,5 @@
 set timeoutlen=300
-" let g:which_key_use_floating_win = 0
-" let g:which_key_floating_opts = {'col': '-4'}
+let g:which_key_use_floating_win = 0
 let g:mapleader = "\<Space>"
 let g:maplocalleader = ','
 
