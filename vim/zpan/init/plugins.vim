@@ -17,6 +17,7 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
 Plug 'sunaku/vim-dasht'
+Plug 'skywind3000/vim-cppman'
 
 " UI Plugins
 Plug 'ryanoasis/vim-devicons'
@@ -106,6 +107,7 @@ if !zpan#is_sudo()
     runtime zpan/init/plugins/coc_explorer.vim
     runtime zpan/init/plugins/coc_smartf.vim
 endif
+runtime zpan/init/plugins/cppman.vim
 runtime zpan/init/plugins/dasht.vim
 " runtime zpan/init/plugins/defx.vim
 " runtime zpan/init/plugins/dein_ui.vim

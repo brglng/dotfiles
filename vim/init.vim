@@ -114,6 +114,8 @@ endif
 set history=1000
 set tabpagemax=50
 set sessionoptions-=options
+set sessionoptions-=tabpages
+set sessionoptions-=help
 
 " set confirm
 "set switchbuf=usetab,newtab,useopen
