@@ -256,3 +256,37 @@ function! zpan#toggle_terminal() abort
   endif
 endfunction
 au WinLeave * if &buftype == 'terminal' && winnr() > 1 | let s:prev_terminal_height = winheight('%') | endif
+
+function! zpan#install_missing_plugins(sync) abort
+    let all_installed_plugins = {}
+    if has('win32')
+        let os_sep = '\\'
+    else
+        let os_sep = '/'
+    endif
+    for d in glob(g:plug_home . '/*', v:false, v:true)
+        if isdirectory(d)
+            if has('win32')
+                let all_installed_plugins[split(d, os_sep)[-1]] = v:null
+            else
+                let all_installed_plugins[split(d, os_sep)[-1]] = v:null
+            endif
+        endif
+    endfor
+
+    let have_uninstalled_plugins = v:false
+    for [name, info] in items(g:plugs)
+        if !has_key(all_installed_plugins, name)
+            let have_uninstalled_plugins = v:true
+            break
+        endif
+    endfor
+
+    if have_uninstalled_plugins
+        if a:sync
+            PlugInstall --sync
+        else
+            PlugInstall
+        endif
+    endif
+endfunction

@@ -16,6 +16,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
+Plug 'sunaku/vim-dasht'
 
 " UI Plugins
 Plug 'ryanoasis/vim-devicons'
@@ -59,7 +60,7 @@ Plug 'aklt/plantuml-syntax'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'sheerun/vim-polyglot'
 Plug 'tmux-plugins/vim-tmux'
-Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install()}}
+Plug 'iamcco/markdown-preview.nvim', {'do': {-> mkdp#util#install()}}
 
 " Source Control Plugins
 Plug 'tpope/vim-fugitive'
@@ -95,6 +96,8 @@ Plug 'soft-aesthetic/soft-era-vim'
 Plug 'sainnhe/lightline_foobar.vim'
 
 call plug#end()
+
+autocmd VimEnter * call zpan#install_missing_plugins(v:false)
 
 runtime zpan/init/plugins/clap.vim
 if !zpan#is_sudo()
