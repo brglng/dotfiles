@@ -158,6 +158,7 @@ if exists('&breakindent')
                 \ endif
 endif
 set showtabline=2
+let g:vim_indent_cont = 2
 
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 " autocmd BufRead,BufNewFile *.md set spell

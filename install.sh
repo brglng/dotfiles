@@ -144,25 +144,19 @@ fi
 mkdir ~/.zinit
 git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
 
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | sh -s -- ~/.cache/dein
-
 ./link.sh
 
 echo 'Now Neovim will be launched to install plugins.'
 echo 'Please type `:qa` to quit from Neovim after all plugins have been installed.'
 read -p "Press ENTER to continue..."
 
-nvim '+call dein#clear_state()' \
-    '+call dein#recache_runtimepath' \
-    "+call dein#install#_update([], 'update', 0)"
+nvim '+PlugUpdate'
 
 echo "Now Vim will be launched to install plugins."
 echo 'Please type `:qa` to quit from Vim after all plugins have been installed.'
 read -p "Press ENTER to continue..."
 
-vim '+call dein#clear_state()' \
-    '+call dein#recache_runtimepath' \
-    "+call dein#install#_update([], 'update', 0)"
+vim '+PlugUpdate'
 
 echo 'Now Zsh will be launched to install plugins.'
 echo 'Please type `exit` to quit from Zsh after all plugins have been installed.'
