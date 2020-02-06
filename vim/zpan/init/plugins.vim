@@ -99,14 +99,16 @@ call plug#end()
 
 autocmd VimEnter * call zpan#install_missing_plugins(v:false)
 
+runtime zpan/init/plugins/which_key.vim
 runtime zpan/init/plugins/clap.vim
 if !zpan#is_sudo()
     runtime zpan/init/plugins/coc.vim
     runtime zpan/init/plugins/coc_explorer.vim
     runtime zpan/init/plugins/coc_smartf.vim
 endif
+runtime zpan/init/plugins/dasht.vim
 " runtime zpan/init/plugins/defx.vim
-runtime zpan/init/plugins/dein_ui.vim
+" runtime zpan/init/plugins/dein_ui.vim
 " runtime zpan/init/plugins/denite.vim
 runtime zpan/init/plugins/devicons.vim
 runtime zpan/init/plugins/easy_align.vim
@@ -121,6 +123,5 @@ runtime zpan/init/plugins/startify.vim
 runtime zpan/init/plugins/undotree.vim
 runtime zpan/init/plugins/vim_visual_multi.vim
 runtime zpan/init/plugins/vista.vim
-runtime zpan/init/plugins/which_key.vim
 
 " vim: sw=4 sts=4 ts=8 et
