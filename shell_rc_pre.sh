@@ -27,34 +27,9 @@ else
     exit -1
 fi
 
-_lazy_nvm() {
-    unset -f nvm node npm &>/dev/null
-    export NVM_DIR=~/.nvm
-    [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-    [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-}
-
-# lazy load nvm, node and npm
-if ! type nvm &>/dev/null; then
-    nvm() {
-        _lazy_nvm
-        nvm "$@"
-    }
-fi
-
-if ! type node &>/dev/null; then
-    node() {
-        _lazy_nvm
-        node "$@"
-    }
-fi
-
-if ! type npm &>/dev/null; then
-    npm() {
-        _lazy_nvm
-        npm "$@"
-    }
-fi
+export NVM_DIR=~/.nvm
+[[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+[[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 if [[ "$GOPATH" = "" ]]; then
     export GOPATH="$HOME/go"
