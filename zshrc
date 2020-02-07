@@ -74,7 +74,7 @@ zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
 zinit ice svn
 zinit snippet OMZ::plugins/gitfast
 
-zinit ice as"completion" wait lucid
+zinit ice as"completion"
 zinit snippet OMZ::plugins/github/_hub
 
 zinit ice wait lucid
@@ -89,10 +89,10 @@ zinit snippet OMZ::plugins/gnu-utils/gnu-utils.plugin.zsh
 zinit ice svn wait lucid
 zinit snippet OMZ::plugins/golang
 
-zinit ice as"completion" wait=3 lucid
+zinit ice as"completion"
 zinit snippet OMZ::plugins/gradle/_gradle
 
-zinit ice as"completion" wait=3 lucid
+zinit ice as"completion"
 zinit snippet OMZ::plugins/gradle/_gradlew
 
 zinit ice wait lucid wait=3 lucid
@@ -110,7 +110,7 @@ zinit snippet OMZ::plugins/node/node.plugin.zsh
 zinit ice wait=1 lucid
 zinit snippet OMZ::plugins/npm/npm.plugin.zsh
 
-zinit ice as"completion" wait=1 lucid
+zinit ice as"completion"
 zinit snippet OMZ::plugins/nvm/_nvm
 
 zinit ice wait=1 lucid
@@ -143,10 +143,10 @@ zinit snippet OMZ::plugins/pylint/pylint.plugin.zsh
 zinit ice wait lucid
 zinit snippet OMZ::plugins/python/python.plugin.zsh
 
-zinit ice as"completion" wait=2 lucid
+zinit ice as"completion"
 zinit snippet OMZ::plugins/redis-cli/_redis-cli
 
-zinit ice as"completion" wait=3 lucid
+zinit ice as"completion"
 zinit snippet OMZ::plugins/repo/_repo
 
 zinit ice wait lucid wait=3 lucid
@@ -179,9 +179,6 @@ zinit snippet OMZ::plugins/virtualenv/virtualenv.plugin.zsh
 zinit ice wait lucid
 zinit snippet OMZ::plugins/vscode/vscode.plugin.zsh
 
-zinit ice wait blockf atpull'zinit creinstall -q .' lucid
-zinit light zsh-users/zsh-completions
-
 zinit ice wait=1 atload'_zsh_autosuggest_start' lucid
 zinit light zsh-users/zsh-autosuggestions
 
@@ -203,6 +200,8 @@ zinit light skywind3000/z.lua
 zplugin ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" lucid
 zplugin load trapd00r/LS_COLORS
 
+zinit wait lucid atload"zicompinit; zicdreplay" blockf for zsh-users/zsh-completions
+
 if [[ `uname -s` = Darwin ]]; then
     readlinkf() { greadlink -f "$1"; }
 else
@@ -214,14 +213,6 @@ source "$(dirname $(readlinkf ${(%):-%N}))/shell_rc_pre.sh"
 if [[ $HOMEBREW_PREFIX != "" ]]; then
     FPATH=$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH
 fi
-
-autoload -Uz compinit
-compinit
-
-autoload -Uz bashcompinit
-bashcompinit
-
-zinit cdreplay -q
 
 unalias fd
 alias -s c=$EDITOR
