@@ -17,9 +17,6 @@ if [[ "`uname -s`" = Darwin ]]; then
     [[ -d ~/Library/Python/3.8/bin ]] && path_prepend ~/Library/Python/3.8/bin
 fi
 
-path_prepend "$HOME/.local/bin"
-path_prepend "$HOME/.cargo/bin"
-
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
 else
@@ -28,8 +25,22 @@ else
 fi
 
 export NVM_DIR=~/.nvm
-[[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-[[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# make node and npm avalailable in the PATH
+path_prepend "$NVM_DIR/versions/node/$(<$NVM_DIR/alias/default)/bin"
+
+# lazy load nvm
+if ! type nvm &>/dev/null; then
+    nvm() {
+        unset -f nvm
+        [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+        [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+        nvm "$@"
+    }
+fi
+
+path_prepend "$HOME/.local/bin"
+path_prepend "$HOME/.cargo/bin"
 
 if [[ "$GOPATH" = "" ]]; then
     export GOPATH="$HOME/go"

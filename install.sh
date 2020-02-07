@@ -129,7 +129,7 @@ export NVM_DIR="$HOME/.nvm"
 
 nvm install node npm
 nvm use node
-nvm alias default node
+nvm alias default $(nvm current)
 
 sudo -H gem install neovim
 npm install -g neovim
