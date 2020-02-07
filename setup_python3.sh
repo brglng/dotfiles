@@ -20,7 +20,7 @@ if [[ $CONDA_PREFIX != "" ]]; then
     exit -1
 fi
 
-if [[ $no_setup_proxy == 0 && ($http_proxy == "" || $https_proxy == "" || $HTTP_PROXY == "" || $HTTPS_PROXY == "") ]]; then
+if [[ $no_setup_proxy == 0 && ($http_proxy == "" || $https_proxy == "") ]]; then
     while true; do
         read -p "Do you want to setup a proxy? (y/n): " yn
         echo

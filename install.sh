@@ -62,7 +62,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 
 UNAME_S=$(uname -s)
 
-if [[ $http_proxy == "" || $https_proxy == "" || $HTTP_PROXY == "" || $HTTPS_PROXY == "" ]]; then
+if [[ $http_proxy == "" || $https_proxy == "" ]]; then
     while true; do
         read -p "Do you want to setup a proxy? (y/n): " yn
         echo
