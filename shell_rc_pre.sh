@@ -27,33 +27,31 @@ else
     exit -1
 fi
 
+_lazy_nvm() {
+    unset -f nvm node npm
+    export NVM_DIR=~/.nvm
+    [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+    [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+}
+
 # lazy load nvm, node and npm
-if type nvm &>/dev/null; then
+if ! type nvm &>/dev/null; then
     nvm() {
-        unset -f nvm
-        export NVM_DIR=~/.nvm
-        [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-        [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+        _lazy_nvm
         nvm "$@"
     }
 fi
 
-if type node &>/dev/null; then
+if ! type node &>/dev/null; then
     node() {
-        unset -f node
-        export NVM_DIR=~/.nvm
-        [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-        [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+        _lazy_nvm
         node "$@"
     }
 fi
 
-if type npm &>/dev/null; then
+if ! type npm &>/dev/null; then
     npm() {
-        unset -f npm
-        export NVM_DIR=~/.nvm
-        [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-        [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+        _lazy_nvm
         npm "$@"
     }
 fi
