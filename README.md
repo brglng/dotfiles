@@ -70,6 +70,10 @@ on your environment.
 
 There are some utility scripts in this repo:
 
-- `linuxbrew_post_install.sh`: Do some post installation work after linuxbrew in installed. This can be useful if you installed required packages manually without `install.sh`.
+- `linuxbrew_post_install.sh`: Do some post installation work after installing
+  linuxbrew. This can be useful if you installed required packages manually
+  without the help of `install.sh`.
 
 - `setup_python3.sh`: Fix your Python environment.
+
+<!-- vim: cc=79 sw=4 sts=4 ts=8 et -->
