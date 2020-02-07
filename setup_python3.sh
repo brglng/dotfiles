@@ -15,6 +15,12 @@ for arg in "$@"; do
     fi
 done
 
+if [[ $CONDA_PREFIX != "" ]]; then
+    echo "Your are in a conda environment. It will be deactivated now."
+    read -p "Press ENTER to continue..."
+    conda deactivate
+fi
+
 if [[ $no_setup_proxy == 0 ]]; then
     while true; do
         read -p "Do you want to setup a proxy? (y/n): " yn
