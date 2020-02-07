@@ -16,9 +16,8 @@ for arg in "$@"; do
 done
 
 if [[ $CONDA_PREFIX != "" ]]; then
-    echo "Your are in a conda environment. It will be deactivated now."
-    read -p "Press ENTER to continue..."
-    conda deactivate
+    echo "Your are in a conda environment. Please deactivate it before running this script."
+    exit -1
 fi
 
 if [[ $no_setup_proxy == 0 ]]; then
