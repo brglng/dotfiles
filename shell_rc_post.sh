@@ -1,11 +1,13 @@
 # Preferred editor for local and remote sessions
-if which nvim > /dev/null; then
+if type nvim &> /dev/null; then
     export EDITOR='nvim'
     alias vi=nvim
-elif which vim > /dev/null; then
+elif type vim &> /dev/null; then
     export EDITOR='vim'
     alias vi=vim
-elif which nano > /dev/null; then
+elif type vi &> /dev/null; then
+    export EDITOR='vi'
+elif type nano &> /dev/null; then
     export EDITOR='nano'
 fi
 

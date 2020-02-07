@@ -22,9 +22,9 @@ zinit ice wait lucid
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 zinit atload'!source ~/.p10k.zsh' lucid nocd
-zinit load romkatv/powerlevel10k
+zinit light romkatv/powerlevel10k
 
-zinit ice as"completion"
+zinit ice as"completion" wait=3 lucid
 zinit snippet OMZ::plugins/adb/_adb
 
 zinit ice as"completion"
@@ -47,10 +47,10 @@ zinit snippet OMZ::plugins/colorize/colorize.plugin.zsh
 zinit ice wait lucid
 zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 
-zinit ice as"completion"
+zinit ice as"completion" wait=1 lucid
 zinit snippet OMZ::plugins/docker/_docker
 
-zinit ice as"completion"
+zinit ice as"completion" wait=1 lucid
 zinit snippet OMZ::plugins/docker-compose/_docker-compose
 
 zinit ice wait lucid
@@ -65,7 +65,7 @@ zinit snippet OMZ::plugins/fd/_fd
 zinit ice as"completion"
 zinit snippet OMZ::plugins/gem/_gem
 
-zinit ice wait lucid
+zinit ice wait=2 lucid
 zinit snippet OMZ::plugins/gem/gem.plugin.zsh
 
 zinit ice wait lucid
@@ -74,13 +74,13 @@ zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
 zinit ice svn
 zinit snippet OMZ::plugins/gitfast
 
-zinit ice as"completion"
+zinit ice as"completion" wait lucid
 zinit snippet OMZ::plugins/github/_hub
 
 zinit ice wait lucid
 zinit snippet OMZ::plugins/github/github.plugin.zsh
 
-zinit ice wait"2" lucid
+zinit ice wait=2 lucid
 zinit snippet OMZ::plugins/gitignore/gitignore.plugin.zsh
 
 zinit ice wait lucid
@@ -89,31 +89,31 @@ zinit snippet OMZ::plugins/gnu-utils/gnu-utils.plugin.zsh
 zinit ice svn wait lucid
 zinit snippet OMZ::plugins/golang
 
-zinit ice as"completion"
+zinit ice as"completion" wait=3 lucid
 zinit snippet OMZ::plugins/gradle/_gradle
 
-zinit ice as"completion"
+zinit ice as"completion" wait=3 lucid
 zinit snippet OMZ::plugins/gradle/_gradlew
 
-zinit ice wait lucid
+zinit ice wait lucid wait=3 lucid
 zinit snippet OMZ::plugins/gradle/gradle.plugin.zsh
 
-zinit ice wait lucid
+zinit ice wait=1 lucid
 zinit snippet OMZ::plugins/mercurial/mercurial.plugin.zsh
 
-zinit ice wait lucid
+zinit ice wait=3 lucid
 zinit snippet OMZ::plugins/mvn/mvn.plugin.zsh
 
-zinit ice wait lucid
+zinit ice wait=1 lucid
 zinit snippet OMZ::plugins/node/node.plugin.zsh
 
-zinit ice wait lucid
+zinit ice wait=1 lucid
 zinit snippet OMZ::plugins/npm/npm.plugin.zsh
 
-zinit ice as"completion"
+zinit ice as"completion" wait=1 lucid
 zinit snippet OMZ::plugins/nvm/_nvm
 
-zinit ice wait lucid
+zinit ice wait=1 lucid
 zinit snippet OMZ::plugins/nvm/nvm.plugin.zsh
 
 zinit ice svn wait lucid
@@ -143,13 +143,13 @@ zinit snippet OMZ::plugins/pylint/pylint.plugin.zsh
 zinit ice wait lucid
 zinit snippet OMZ::plugins/python/python.plugin.zsh
 
-zinit ice as"completion"
+zinit ice as"completion" wait=2 lucid
 zinit snippet OMZ::plugins/redis-cli/_redis-cli
 
-zinit ice as"completion"
+zinit ice as"completion" wait=3 lucid
 zinit snippet OMZ::plugins/repo/_repo
 
-zinit ice wait lucid
+zinit ice wait lucid wait=3 lucid
 zinit snippet OMZ::plugins/repo/repo.plugin.zsh
 
 zinit ice as"completion"
@@ -158,7 +158,7 @@ zinit snippet OMZ::plugins/ripgrep/_ripgrep
 zinit ice wait lucid wait lucid
 zinit snippet OMZ::plugins/rsync/rsync.plugin.zsh
 
-zinit ice wait lucid wait lucid
+zinit ice wait lucid wait=2 lucid
 zinit snippet OMZ::plugins/ruby/ruby.plugin.zsh
 
 zinit ice as"completion"
@@ -182,16 +182,26 @@ zinit snippet OMZ::plugins/vscode/vscode.plugin.zsh
 zinit ice wait blockf atpull'zinit creinstall -q .' lucid
 zinit light zsh-users/zsh-completions
 
-zinit ice wait atload'_zsh_autosuggest_start' lucid
+zinit ice wait=1 atload'_zsh_autosuggest_start' lucid
 zinit light zsh-users/zsh-autosuggestions
 
 zinit light hlissner/zsh-autopair
 
-zinit ice wait lucid
+zinit ice wait=1 lucid
 zinit light zdharma/fast-syntax-highlighting
 
-zinit ice wait lucid
-zinit load lukechilds/zsh-better-npm-completion
+zinit ice wait=1 lucid
+zinit light lukechilds/zsh-better-npm-completion
+
+if [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]]; then
+    zinit ice wait lucid
+    zinit snippet "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+fi
+
+if [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]]; then
+    zinit ice wait lucid
+    zinit snippet "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+fi
 
 if type luajit &>/dev/null; then
     ZLUA_EXEC=$(which luajit)
