@@ -16,6 +16,7 @@ ln -fs $HOMEBREW_PREFIX/bin/colordiff       ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/cpack           ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/ctags           ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/ctest           ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/dasht           ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/exa             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/fd              ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/fselect         ~/.local/bin/
@@ -31,7 +32,6 @@ ln -fs $HOMEBREW_PREFIX/bin/luarocks        ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/luarocks-admin  ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/nnn             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/nvim            ~/.local/bin/
-ln -fs $HOMEBREW_PREFIX/bin/nvm             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/rg              ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/scan-build      ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/scan-view       ~/.local/bin/
