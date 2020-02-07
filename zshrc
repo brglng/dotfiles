@@ -193,16 +193,6 @@ zinit light zdharma/fast-syntax-highlighting
 zinit ice wait=1 lucid
 zinit light lukechilds/zsh-better-npm-completion
 
-if [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]]; then
-    zinit ice wait lucid
-    zinit snippet "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
-fi
-
-if [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]]; then
-    zinit ice wait lucid
-    zinit snippet "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
-fi
-
 if type luajit &>/dev/null; then
     ZLUA_EXEC=$(which luajit)
 fi
