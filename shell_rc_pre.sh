@@ -28,7 +28,7 @@ else
 fi
 
 _lazy_nvm() {
-    unset -f nvm node npm
+    unset -f nvm node npm &>/dev/null
     export NVM_DIR=~/.nvm
     [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
     [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
