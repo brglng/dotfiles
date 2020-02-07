@@ -85,7 +85,8 @@ else
   set signcolumn=yes
 endif
 
-autocmd FileType help set foldcolumn=0 colorcolumn=
+" QuickFix and Location windows
+autocmd FileType qf,tagbar nnoremap <silent> <buffer> q <C-w>q
 
 autocmd FileType qf setlocal wrap foldcolumn=0 colorcolumn=
 autocmd FileType qf wincmd J
@@ -104,22 +105,27 @@ function! Vimrc_adjustQuickFixWindowHeight(minheight, maxheight)
   exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
 endfunction
 
-" autocmd QuickFixCmdPost [^l]* nested botright cwindow
-" autocmd QuickFixCmdPost l*    nested botright lwindow
+autocmd QuickFixCmdPost [^l]* nested botright cwindow
+autocmd QuickFixCmdPost l*    nested botright lwindow
 
-function! s:move_help_window()
+function! s:setup_help_window()
+  setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap nonumber
+  nnoremap <silent> <buffer> q <C-w>q
   if winwidth('%') >= 180
     wincmd L
     vertical resize 90
   endif
 endfunction
-autocmd BufEnter * if &filetype == 'help' | call s:move_help_window() | endif
+autocmd BufWinEnter * if &filetype ==# 'help' | call s:setup_help_window() | endif
+autocmd FileType help call s:setup_help_window()
 
-function! s:init_man_buffer()
-  setlocal bufhidden
+function! s:setup_man_window()
+  setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap bufhidden nobuflisted noswapfile nonumber
+  nnoremap <silent> <buffer> q <C-w>q
   if winwidth('%') >= 180
     wincmd L
     vertical resize 90
   endif
 endfunction
-autocmd BufEnter * if &buftype == 'man' | call s:init_man_buffer() | endif
+autocmd BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
+autocmd FileType man call s:setup_man_window()

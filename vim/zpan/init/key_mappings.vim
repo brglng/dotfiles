@@ -168,6 +168,3 @@ nnoremap <silent> <M-Right>     <C-i>
 " buffer
 nnoremap <silent> <C-Tab>       :bp<CR>
 nnoremap <silent> <C-S-Tab>     :bn<CR>
-
-" QuickFix and Location windows
-autocmd FileType qf,help,man,tagbar nnoremap <silent> <buffer> q <C-w>q
