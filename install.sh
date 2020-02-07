@@ -35,7 +35,7 @@ function install_linux() {
     if [[ -x $HOME/.linuxbrew/bin/brew ]]; then
       	brew update
     else
-	git clone https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
+	git clone --recursive https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
 	mkdir -p ~/.linuxbrew/bin
 	ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
     fi
@@ -138,11 +138,11 @@ if [ -e ~/.tmux/plugins/tpm ]; then
     git pull
     popd
 else
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    git clone --recursive https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
 mkdir ~/.zinit
-git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
+git clone --recursive https://github.com/zdharma/zinit.git ~/.zinit/bin
 
 ./link.sh
 
