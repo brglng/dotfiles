@@ -13,7 +13,8 @@ function install_apt() {
 
     # Fix for vim
     if [[ -e ~/.viminfo ]]; then
-        sudo chown $USER:$USER ~/.viminfo
+        local viminfo_file=~/.viminfo
+        sudo chown $SUDO_USER:$SUDO_USER $viminfo_file
     fi
 }
 
