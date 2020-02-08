@@ -146,6 +146,8 @@ fi
 mkdir ~/.zinit
 git clone --recursive https://github.com/zdharma/zinit.git ~/.zinit/bin
 
+./disable_sudo_secure_path.sh
+
 ./link.sh
 
 echo 'Now Neovim will be launched to install plugins.'
