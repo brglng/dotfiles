@@ -9,7 +9,7 @@ function install_yum() {
 function install_apt() {
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
-    sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git luajit libluajit-5.1-dev ruby-dev zlib1g-dev libncurses-dev xsel
+    sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git xsel
 
     # Fix for vim
     if [[ -e ~/.viminfo ]]; then
