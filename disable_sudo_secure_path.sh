@@ -3,7 +3,7 @@
 set -e
 
 if [[ $(uname -s) != "Linux" ]]; then
-    echo "Your system is not Linux."
+    echo "Your system is not Linux. Ignored sudo fix."
     exit
 fi
 
