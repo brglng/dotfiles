@@ -52,7 +52,7 @@ fi
 echo "Please select what you want to do:"
 PS3=">>> "
 select opt in \
-    "Change your user's default Python and install necessary packages" \
+    "Set your user's default Python and install necessary packages" \
     "Only install necessary packages"; do
     case $REPLY in
         1)
