@@ -155,13 +155,13 @@ echo 'Now Neovim will be launched to install plugins.'
 echo 'Please type `:qa` to quit from Neovim after all plugins have been installed.'
 read -p "Press ENTER to continue..."
 
-nvim
+nvim '+PlugUpdate'
 
 echo "Now Vim will be launched to install plugins."
 echo 'Please type `:qa` to quit from Vim after all plugins have been installed.'
 read -p "Press ENTER to continue..."
 
-vim
+vim '+PlugUpdate'
 
 echo 'Now Zsh will be launched to install plugins.'
 echo 'Please type `exit` to quit from Zsh after all plugins have been installed.'
