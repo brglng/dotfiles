@@ -201,61 +201,62 @@ function! zpan#toggle_undotree() abort
   UndotreeToggle
 endfunction
 
-let s:prev_terminal_height = 0
-function! zpan#toggle_terminal() abort
-  let found_winnr = 0
-  for winnr in range(1, winnr('$'))
-    if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
-      let found_winnr = winnr
-    endif
-  endfor
+" Disabled to prefer vim-terminal-help plugin
+" let s:prev_terminal_height = 0
+" function! zpan#toggle_terminal() abort
+"   let found_winnr = 0
+"   for winnr in range(1, winnr('$'))
+"     if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
+"       let found_winnr = winnr
+"     endif
+"   endfor
 
-  if found_winnr > 0
-    execute found_winnr . 'wincmd q'
-  else
-    let found_bufnr = 0
-    for bufnr in filter(range(1, bufnr('$')), 'bufexists(v:val)')
-      if getbufvar(bufnr, '&buftype') == 'terminal'
-        let found_bufnr = bufnr
-      endif
-    endfor
-    if found_bufnr > 0
-      if s:prev_terminal_height > 0
-        execute 'botright ' . s:prev_terminal_height . 'split'
-        execute 'buffer ' . found_bufnr
-        set winfixheight
-      else
-        if &lines > 30
-          botright 15split
-          execute 'buffer ' . found_bufnr
-          set winfixheight
-        else
-          botright split
-          execute 'buffer ' . found_bufnr
-          set winfixheight
-        endif
-      endif
-    else
-      if &lines > 30
-        if has('nvim')
-          execute 'botright 15split term://' . &shell
-        else
-          botright terminal
-          resize 15
-          set winfixheight
-        endif
-      else
-        if has('nvim')
-          execute 'botright split term://' . &shell
-        else
-          botright terminal
-          set winfixheight
-        endif
-      endif
-    endif
-  endif
-endfunction
-au WinLeave * if &buftype == 'terminal' && winnr() > 1 | let s:prev_terminal_height = winheight('%') | endif
+"   if found_winnr > 0
+"     execute found_winnr . 'wincmd q'
+"   else
+"     let found_bufnr = 0
+"     for bufnr in filter(range(1, bufnr('$')), 'bufexists(v:val)')
+"       if getbufvar(bufnr, '&buftype') == 'terminal'
+"         let found_bufnr = bufnr
+"       endif
+"     endfor
+"     if found_bufnr > 0
+"       if s:prev_terminal_height > 0
+"         execute 'botright ' . s:prev_terminal_height . 'split'
+"         execute 'buffer ' . found_bufnr
+"         set winfixheight
+"       else
+"         if &lines > 30
+"           botright 15split
+"           execute 'buffer ' . found_bufnr
+"           set winfixheight
+"         else
+"           botright split
+"           execute 'buffer ' . found_bufnr
+"           set winfixheight
+"         endif
+"       endif
+"     else
+"       if &lines > 30
+"         if has('nvim')
+"           execute 'botright 15split term://' . &shell
+"         else
+"           botright terminal
+"           resize 15
+"           set winfixheight
+"         endif
+"       else
+"         if has('nvim')
+"           execute 'botright split term://' . &shell
+"         else
+"           botright terminal
+"           set winfixheight
+"         endif
+"       endif
+"     endif
+"   endif
+" endfunction
+" au WinLeave * if &buftype == 'terminal' && winnr() > 1 | let s:prev_terminal_height = winheight('%') | endif
 
 function! zpan#install_missing_plugins(sync) abort
     let all_installed_plugins = {}

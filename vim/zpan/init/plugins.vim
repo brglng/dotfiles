@@ -32,6 +32,7 @@ Plug 'mhinz/vim-startify'
 Plug 'liuchengxu/vim-which-key'
 " 'Yggdroot/LeaderF', {'do': './install.sh'}
 Plug 'liuchengxu/vim-clap', {'do': ':Clap install-binary'}
+Plug 'skywind3000/vim-terminal-help'
 
 " Moving Plugins
 Plug 'rhysd/clever-f.vim'
@@ -122,6 +123,7 @@ runtime zpan/init/plugins/nerd_commenter.vim
 " runtime zpan/init/plugins/neoformat.vim
 runtime zpan/init/plugins/netrw.vim
 runtime zpan/init/plugins/startify.vim
+runtime zpan/init/plugins/terminal_help.vim
 runtime zpan/init/plugins/undotree.vim
 runtime zpan/init/plugins/vim_visual_multi.vim
 runtime zpan/init/plugins/vista.vim
