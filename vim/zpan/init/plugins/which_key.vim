@@ -176,7 +176,6 @@ let g:which_key_map.t = {
       \ 'l': ['zpan#toggle_loclist()', 'toggle-location-list'],
       \ 'o': ['zpan#toggle_vista()', 'toggle-outline'],
       \ 'q': ['zpan#toggle_quickfix()', 'toggle-quickfix'],
-      \ 't': ['zpan#toggle_terminal()', 'toggle-terminal'],
       \ 'u': ['zpan#toggle_undotree()', 'toggle-undo-tree']
       \ }
 
