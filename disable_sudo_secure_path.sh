@@ -25,11 +25,11 @@ disable_sudo_secure_path() {
                     fi
                     mv "/home/$SUDO_USER/.local/tmp/sudoers" /etc/sudoers
                     chown root:root /etc/sudoers
-                    chmod 400 /etc/sudoers
+                    chmod 440 /etc/sudoers
                 else
                     echo 'Defaults	!secure_path' > /etc/sudoers
                     chown root:root /etc/sudoers
-                    chmod 400 /etc/sudoers
+                    chmod 440 /etc/sudoers
                 fi
                 break;;
             [Nn]*)
