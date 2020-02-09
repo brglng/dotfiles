@@ -1,3 +1,4 @@
+let g:terminal_key = '<M-`>'
 let g:terminal_pos = 'botright'
 
 if executable('zsh')

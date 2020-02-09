@@ -168,3 +168,10 @@ nnoremap <silent> <M-Right>     <C-i>
 " buffer
 nnoremap <silent> <C-Tab>       :bp<CR>
 nnoremap <silent> <C-S-Tab>     :bn<CR>
+
+" UI toggles
+noremap <silent> <M-1> :call zpan#toggle_coc_explorer()<CR>
+noremap <silent> <M-2> :call zpan#toggle_vista()<CR>
+noremap <silent> <M-3> :call zpan#toggle_undotree()<CR>
+noremap <silent> <M-6> :call zpan#toggle_quickfix()<CR>
+noremap <silent> <M-7> :call zpan#toggle_loclist()<CR>
