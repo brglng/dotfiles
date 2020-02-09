@@ -45,7 +45,7 @@ function install_linux() {
 }
 
 function install_mac() {
-    if which brew > /dev/null; then
+    if type brew &> /dev/null; then
       	brew update
     else
       	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -109,12 +109,12 @@ rustup update
 rustup component add rls rust-analysis rust-src rustfmt
 rustup toolchain install nightly
 
-if ! brew ls --versions universal-ctags; then
+if ! brew ls --versions universal-ctags &> /dev/null; then
     brew tap universal-ctags/universal-ctags
     brew install --HEAD universal-ctags
 fi
 
-if ! brew ls --versions neovim > /dev/null; then
+if ! brew ls --versions neovim &> /dev/null; then
     brew install --HEAD neovim
 fi
 
@@ -136,7 +136,7 @@ sudo -H gem install neovim
 npm install -g neovim
 
 mkdir -p ~/.tmux/plugins
-if [ -e ~/.tmux/plugins/tpm ]; then
+if [[ -r -d ~/.tmux/plugins/tpm ]]; then
     pushd ~/.tmux/plugins/tpm
     git pull
     popd
@@ -144,8 +144,14 @@ else
     git clone --recursive https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
-mkdir ~/.zinit
-git clone --recursive https://github.com/zdharma/zinit.git ~/.zinit/bin
+mkdir -p ~/.zinit
+if [[ -r -d ~/.zinit/bin ]]; then
+    pushd ~/.zinit/bin
+    git pull
+    popd
+else
+    git clone --recursive https://github.com/zdharma/zinit.git ~/.zinit/bin
+fi
 
 ./disable_sudo_secure_path.sh
 
