@@ -70,7 +70,7 @@ if [[ $http_proxy == "" || $https_proxy == "" ]]; then
         case $yn in
             [Yy]*)
                 while true; do
-                    read -p "Please input your proxy address (e.g. http://127.0.0.1:8118): " proxy_address
+                    read -p "Please input your proxy address (e.g., http://127.0.0.1:8118): " proxy_address
                     echo
                     if [[ "$proxy_address" =~ ^http:// ]]; then
                         break
