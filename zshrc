@@ -4,6 +4,18 @@ case $- in
       *) return;;
 esac
 
+if [[ `uname -s` = Darwin ]]; then
+    readlinkf() { greadlink -f "$1"; }
+else
+    readlinkf() { readlink -f "$1"; }
+fi
+
+source "$(dirname $(readlinkf ${(%):-%N}))/shell_rc_pre.sh"
+
+if [[ $HOMEBREW_PREFIX != "" ]]; then
+    FPATH=$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH
+fi
+
 source ~/.zinit/bin/zinit.zsh
 
 # most themes use this option
@@ -18,7 +30,6 @@ zinit snippet OMZ::lib/git.zsh
 # zinit snippet OMZ::lib/theme-and-appearance.zsh
 
 # some OMZ themes use this plugin
-zinit ice wait lucid
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 zinit atload'!source ~/.p10k.zsh' lucid nocd
@@ -70,9 +81,6 @@ zinit snippet OMZ::plugins/gem/gem.plugin.zsh
 
 zinit ice wait lucid
 zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
-
-zinit ice svn
-zinit snippet OMZ::plugins/gitfast
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/github/_hub
@@ -200,19 +208,7 @@ zinit light skywind3000/z.lua
 zplugin ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" lucid
 zplugin load trapd00r/LS_COLORS
 
-zinit wait lucid atload"zicompinit; zicdreplay" blockf for zsh-users/zsh-completions
-
-if [[ `uname -s` = Darwin ]]; then
-    readlinkf() { greadlink -f "$1"; }
-else
-    readlinkf() { readlink -f "$1"; }
-fi
-
-source "$(dirname $(readlinkf ${(%):-%N}))/shell_rc_pre.sh"
-
-if [[ $HOMEBREW_PREFIX != "" ]]; then
-    FPATH=$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH
-fi
+zinit wait lucid atload"zicompinit; zicdreplay;" blockf for zsh-users/zsh-completions
 
 unalias fd
 alias -s c=$EDITOR

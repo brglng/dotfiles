@@ -57,10 +57,14 @@ HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
 
 GIT_PS1_SHOWDIRTYSTATE=true
 
-if [ "$(uname -s)" = "Darwin" ]; then
-    source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
-    source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
-elif [ "$(uname -s)" = "Linux" ]; then
+if [[ "$(uname -s)" = "Darwin" ]]; then
+    if [[ -s /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.zsh ]]; then
+        source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.zsh
+    fi
+    if [[ -s /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh ]]; then
+        source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
+    fi
+elif [[ "$(uname -s)" = "Linux" ]]; then
     source /etc/bash_completion.d/git-prompt
 fi
 
