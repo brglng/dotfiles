@@ -169,12 +169,7 @@ let g:which_key_map.x = {
 
 let g:which_key_map.t = {
       \ 'name': '+ui-toggles',
-      \ 'f': ['zpan#toggle_coc_explorer()', 'toggle-file-tree'],
       \ 'i': [':IndentLinesToggle', 'toggle-indent-line'],
-      \ 'l': ['zpan#toggle_loclist()', 'toggle-location-list'],
-      \ 'o': ['zpan#toggle_vista()', 'toggle-outline'],
-      \ 'q': ['zpan#toggle_quickfix()', 'toggle-quickfix'],
-      \ 'u': ['zpan#toggle_undotree()', 'toggle-undo-tree']
       \ }
 
 let g:which_key_map.c = {
