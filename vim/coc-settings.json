@@ -82,5 +82,7 @@
         "default": "\uf29c"
     },
     "python.jediEnabled": true,
-    "python.linting.mypyEnabled": true
+    "python.linting.mypyEnabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs": ["--enable=unused-import"]
 }

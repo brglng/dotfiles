@@ -2,6 +2,10 @@ if has('nvim')
     if exists('$CONDA_PYTHON_EXE') && executable('python') && system('which python')[:-2] == $CONDA_PYTHON_EXE
         " We are in Conda environment
         let g:python3_host_prog = $CONDA_PYTHON_EXE
+    elseif executable('python3')
+        let g:python3_host_prog = system('which python3')[:-2]
+    elseif executable('python') && system("python -c 'import sys; print(sys.version_info[0])'")[:-2] == '3'
+        let g:python3_host_prog = system('which python')[:-2]
     endif
 endif
 
