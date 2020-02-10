@@ -24,7 +24,6 @@ if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
 else
     echo "Homebrew not found!"
-    exit -1
 fi
 
 export NVM_DIR=~/.nvm
