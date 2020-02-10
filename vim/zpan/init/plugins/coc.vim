@@ -11,6 +11,12 @@ autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
 " Use `:Fold` to fold current buffer
 command! -nargs=? CocFold :call CocAction('fold', <f-args>)
 
+" Create mappings for function text object, requires document symbols feature of languageserver.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
 let s:coc_extensions = [
       \ 'coc-bookmark',
       \ 'coc-css',
