@@ -100,6 +100,8 @@ Plug 'joshdick/onedark.vim'
 Plug 'arcticicestudio/nord-vim'
 Plug 'soft-aesthetic/soft-era-vim'
 Plug 'sainnhe/lightline_foobar.vim'
+Plug 'ayu-theme/ayu-vim'
+Plug 'nightsense/snow'
 
 call plug#end()
 

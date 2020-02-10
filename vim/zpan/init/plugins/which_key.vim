@@ -49,7 +49,7 @@ let g:which_key_map.w = {
 
 let g:which_key_map.q = ['<C-w>q', 'close-window']
 
-let g:which_key_map[' '] = {
+let g:which_key_map['p'] = {
       \ 'name': '+fuzzy-finder',
       \ ' ': [':Clap providers', 'show-providers'],
       \ ';': [':Clap command', 'find-commands'],

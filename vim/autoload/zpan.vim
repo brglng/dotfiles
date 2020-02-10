@@ -261,6 +261,10 @@ endfunction
 " au WinLeave * if &buftype == 'terminal' && winnr() > 1 | let s:prev_terminal_height = winheight('%') | endif
 
 function! zpan#install_missing_plugins(sync) abort
+    if &diff
+        return
+    endif
+
     let all_installed_plugins = {}
     if has('win32')
         let os_sep = '\\'

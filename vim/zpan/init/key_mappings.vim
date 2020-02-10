@@ -177,3 +177,6 @@ noremap <silent> <M-2> :call zpan#toggle_vista()<CR>
 noremap <silent> <M-3> :call zpan#toggle_undotree()<CR>
 noremap <silent> <M-6> :call zpan#toggle_quickfix()<CR>
 noremap <silent> <M-7> :call zpan#toggle_loclist()<CR>
+
+" Fuzzy finder
+nnoremap <silent> <C-p> :Clap files<CR>
