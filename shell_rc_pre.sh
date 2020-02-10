@@ -17,6 +17,9 @@ if [[ "`uname -s`" = Darwin ]]; then
     [[ -d ~/Library/Python/3.8/bin ]] && path_prepend ~/Library/Python/3.8/bin
 fi
 
+path_prepend "$HOME/.local/bin"
+path_prepend "$HOME/.cargo/bin"
+
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
 else
@@ -38,9 +41,6 @@ if ! type nvm &>/dev/null; then
         nvm "$@"
     }
 fi
-
-path_prepend "$HOME/.local/bin"
-path_prepend "$HOME/.cargo/bin"
 
 if [[ "$GOPATH" = "" ]]; then
     export GOPATH="$HOME/go"
