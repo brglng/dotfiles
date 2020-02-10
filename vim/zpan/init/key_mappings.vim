@@ -165,6 +165,8 @@ cnoremap <silent>           <C-a>       <Home>
 nnoremap <silent> <M-Left>      <C-o>
 nnoremap <silent> <M-Right>     <C-i>
 
+nnoremap <silent> Q :confirm qall<CR>
+
 " buffer
 nnoremap <silent> <C-Tab>       :bp<CR>
 nnoremap <silent> <C-S-Tab>     :bn<CR>

@@ -49,8 +49,6 @@ let g:which_key_map.w = {
 
 let g:which_key_map.q = ['<C-w>q', 'close-window']
 
-let g:which_key_map.Q = [':qa', 'quit-vim']
-
 let g:which_key_map[' '] = {
       \ 'name': '+fuzzy-finder',
       \ ' ': [':Clap providers', 'show-providers'],
