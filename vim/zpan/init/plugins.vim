@@ -12,10 +12,8 @@ endif
 call plug#begin('~/.local/share/vim/plugged')
 
 " Generic Plugins
-if !has('nvim')
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
+Plug 'roxma/vim-hug-neovim-rpc', has('nvim') ? {'on': []} : {}
 Plug 'tpope/vim-eunuch'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'roxma/vim-tmux-clipboard'
@@ -75,6 +73,8 @@ Plug 'gregsexton/gitv'
 
 " Project management
 Plug 'editorconfig/editorconfig-vim'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'skywind3000/asynctasks.vim'
 
 " Language Semantic
 Plug 'neoclide/coc.nvim', {
@@ -108,6 +108,8 @@ call plug#end()
 autocmd VimEnter * call zpan#install_missing_plugins(v:false)
 
 runtime zpan/init/plugins/which_key.vim
+runtime zpan/init/plugins/asyncrun.vim
+runtime zpan/init/plugins/asynctasks.vim
 runtime zpan/init/plugins/clap.vim
 if !zpan#is_sudo()
     runtime zpan/init/plugins/coc.vim

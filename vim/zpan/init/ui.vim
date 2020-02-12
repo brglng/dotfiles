@@ -86,46 +86,51 @@ else
 endif
 
 " QuickFix and Location windows
-autocmd FileType qf,tagbar nnoremap <silent> <buffer> q <C-w>q
+autocmd FileType tagbar nnoremap <silent> <buffer> q <C-w>q
 
-autocmd FileType qf setlocal wrap foldcolumn=0 colorcolumn=
-autocmd FileType qf wincmd J
-autocmd FileType qf call Vimrc_adjustQuickFixWindowHeight(1, 10)
-function! Vimrc_adjustQuickFixWindowHeight(minheight, maxheight)
-  let l = 1
-  let n_lines = 0
-  let w_width = winwidth(0)
-  while l <= line('$')
-    " number to float for division
-    let l_len = strlen(getline(l)) + 0.0
-    let line_width = l_len/w_width
-    let n_lines += float2nr(ceil(line_width))
-    let l += 1
-  endw
-  exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
+autocmd FileType qf call s:setup_quickfix_window(1, 15)
+function! s:setup_quickfix_window(minheight, maxheight)
+  wincmd J
+  if !g:asyncrun_status == 'running'
+    let l = 1
+    let n_lines = 0
+    let w_width = winwidth(0)
+    while l <= line('$')
+      " number to float for division
+      let l_len = strlen(getline(l)) + 0.0
+      let line_width = l_len/w_width
+      let n_lines += float2nr(ceil(line_width))
+      let l += 1
+    endw
+    exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
+    setlocal wrap foldcolumn=0 colorcolumn= signcolumn=no cursorline
+  endif
+  nnoremap <silent> <buffer> q <C-w>q
 endfunction
 
 autocmd QuickFixCmdPost [^l]* nested botright cwindow
 autocmd QuickFixCmdPost l*    nested botright lwindow
 
 function! s:setup_help_window()
-  setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap nonumber
-  nnoremap <silent> <buffer> q <C-w>q
   if winwidth('%') >= 180
     wincmd L
     vertical resize 90
   endif
+  setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap nonumber
+  nnoremap <silent> <buffer> q <C-w>q
 endfunction
 autocmd BufWinEnter * if &filetype ==# 'help' | call s:setup_help_window() | endif
 autocmd FileType help call s:setup_help_window()
 
 function! s:setup_man_window()
-  setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap bufhidden nobuflisted noswapfile nonumber
-  nnoremap <silent> <buffer> q <C-w>q
   if winwidth('%') >= 180
     wincmd L
     vertical resize 90
   endif
+  setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap bufhidden nobuflisted noswapfile nonumber
+  nnoremap <silent> <buffer> q <C-w>q
 endfunction
 autocmd BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
 autocmd FileType man call s:setup_man_window()
+
+" vim: ts=8 sts=4 sw=4 et

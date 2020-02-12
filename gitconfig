@@ -25,11 +25,12 @@
 	prompt = false
 [difftool "nvimdiff"]
 	cmd = "nvim -R -d -c \"wincmd l\" -d \"$LOCAL\" \"$REMOTE\""
+	trustExitCode = true
 [difftool "vim-dirdiff"]
-	cmd = ~/.local/bin/vimdirdiff.py \"$LOCAL\" \"$REMOTE\"
+	cmd = vim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE
 	trustExitCode = true
 [difftool "nvim-dirdiff"]
-	cmd = ~/.local/bin/nvimdirdiff.py \"$LOCAL\" \"$REMOTE\"
+	cmd = nvim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE
 	trustExitCode = true
 [merge]
 	tool = nvimdiff
