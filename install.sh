@@ -55,6 +55,8 @@ function install_mac() {
     # brew install reattach-to-user-namespace
 
     brew cask install macvim
+
+    curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
 }
 
 mkdir -p $HOME/.local/bin
