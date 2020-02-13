@@ -76,4 +76,5 @@ There are some utility scripts in this repo:
 
 - `setup_python3.sh`: Fix your Python environment.
 
-<!-- vim: cc=79 sw=4 sts=4 ts=8 et -->
+<!-- vim: cc=79 sw=4 sts=4 ts=8 et
+-->
