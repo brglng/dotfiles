@@ -261,6 +261,10 @@ endfunction
 " au WinLeave * if &buftype == 'terminal' && winnr() > 1 | let s:prev_terminal_height = winheight('%') | endif
 
 function! zpan#install_missing_plugins(sync) abort
+    if zpan#is_sudo()
+        return
+    endif
+
     if &diff
         return
     endif
