@@ -18,67 +18,68 @@ omap if <Plug>(coc-funcobj-i)
 omap af <Plug>(coc-funcobj-a)
 
 let s:coc_extensions = [
-      \ 'coc-bookmark',
-      \ 'coc-css',
-      \ 'coc-dictionary',
-      \ 'coc-docker',
-      \ 'coc-emoji',
-      \ 'coc-eslint',
-      \ 'coc-explorer',
-      \ 'coc-git',
-      \ 'coc-github',
-      \ 'coc-gitignore',
-      \ 'coc-gocode',
-      \ 'coc-highlight',
-      \ 'coc-html',
-      \ 'coc-java',
-      \ 'coc-json',
-      \ 'coc-lists',
-      \ 'coc-lua',
-      \ 'coc-marketplace',
-      \ 'coc-neosnippet',
-      \ 'coc-omni',
-      \ 'coc-pairs',
-      \ 'coc-powershell',
-      \ 'coc-prettier',
-      \ 'coc-python',
-      \ 'coc-rls',
-      \ 'coc-smartf',
-      \ 'coc-snippets',
-      \ 'coc-solargraph',
-      \ 'coc-sql',
-      \ 'coc-syntax',
-      \ 'coc-tabnine',
-      \ 'coc-tag',
-      \ 'coc-translator',
-      \ 'coc-tsserver',
-      \ 'coc-ultisnips',
-      \ 'coc-vetur',
-      \ 'coc-vimlsp',
-      \ 'coc-word',
-      \ 'coc-yaml',
-      \ 'coc-yank',
-      \ ]
+  \ 'coc-bookmark',
+  \ 'coc-css',
+  \ 'coc-dictionary',
+  \ 'coc-docker',
+  \ 'coc-emoji',
+  \ 'coc-eslint',
+  \ 'coc-explorer',
+  \ 'coc-git',
+  \ 'coc-github',
+  \ 'coc-gitignore',
+  \ 'coc-gocode',
+  \ 'coc-highlight',
+  \ 'coc-html',
+  \ 'coc-java',
+  \ 'coc-json',
+  \ 'coc-lists',
+  \ 'coc-lua',
+  \ 'coc-marketplace',
+  \ 'coc-neosnippet',
+  \ 'coc-omni',
+  \ 'coc-pairs',
+  \ 'coc-powershell',
+  \ 'coc-prettier',
+  \ 'coc-python',
+  \ 'coc-pyright',
+  \ 'coc-rls',
+  \ 'coc-smartf',
+  \ 'coc-snippets',
+  \ 'coc-solargraph',
+  \ 'coc-sql',
+  \ 'coc-syntax',
+  \ 'coc-tabnine',
+  \ 'coc-tag',
+  \ 'coc-translator',
+  \ 'coc-tsserver',
+  \ 'coc-ultisnips',
+  \ 'coc-vetur',
+  \ 'coc-vimlsp',
+  \ 'coc-word',
+  \ 'coc-yaml',
+  \ 'coc-yank',
+  \ ]
 
 for e in s:coc_extensions
-  silent! call coc#add_extension(e)
+    silent! call coc#add_extension(e)
 endfor
 
 let g:coc_snippet_next = '<tab>'
 
 silent! call mkdir($HOME . '/.cache/ccls', 'p')
-silent! call coc#config('languageserver.ccls.initializationOptions.cache.directory', $HOME . '/.cache/ccls')
+silent! call coc#config('languageserver.ccls.initializationOptions.cache.directory', expand('~/.cache/ccls'))
 
 if executable('fd')
-  silent! call coc#config('list.source.files.command', 'fd')
-  silent! call coc#config('list.source.files.args', ['-I'])
+    silent! call coc#config('list.source.files.command', 'fd')
+    silent! call coc#config('list.source.files.args', ['-I'])
 elseif executable('bfind')
-  silent! call coc#config('list.source.files.command', 'bfind')
-  silent! call coc#config('list.source.files.args', [])
+    silent! call coc#config('list.source.files.command', 'bfind')
+    silent! call coc#config('list.source.files.args', [])
 endif
 
 if exists('g:python3_host_prog') && g:python3_host_prog != ''
-  silent! call coc#config('python.pythonPath', g:python3_host_prog)
+    silent! call coc#config('python.pythonPath', g:python3_host_prog)
 endif
 
 " let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']

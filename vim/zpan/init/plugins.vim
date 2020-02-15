@@ -25,14 +25,14 @@ Plug 'skywind3000/vim-cppman'
 Plug 'ryanoasis/vim-devicons'
 Plug 'justinmk/vim-dirvish'
 Plug 'itchyny/lightline.vim'
-Plug 'brglng/lightline-bufferline'
+Plug 'mengelbrecht/lightline-bufferline'
 Plug 'Yggdroot/indentLine'
 " Plug 'nathanaelkane/vim-indent-guides'
 Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
 Plug 'liuchengxu/vim-which-key'
-" 'Yggdroot/LeaderF', {'do': './install.sh'}
+Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
 Plug 'liuchengxu/vim-clap', {'do': ':Clap install-binary'}
 Plug 'skywind3000/vim-terminal-help'
 
@@ -79,7 +79,7 @@ Plug 'skywind3000/asynctasks.vim'
 " Language Semantic
 Plug 'neoclide/coc.nvim', {
   \ 'branch': 'release',
-  \ 'do': {-> execute(['UpdateRemotePlugins', 'CocUpdateSync'], 'silent!')}
+  \ 'do': {-> execute(['UpdateRemotePlugins', 'CocUpdate'], 'silent!')}
   \ }
 Plug 'honza/vim-snippets'
 Plug 'liuchengxu/vista.vim'

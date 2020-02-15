@@ -44,8 +44,8 @@ let g:vista#renderer#icons = {
 let g:vista_sidebar_position = 'vertical topleft'
 let g:vista_sidebar_width = 40
 
-" if exists('*nvim_open_win')
-"   let g:vista_echo_cursor_strategy = 'floating_win'
-" endif
+if exists('*nvim_open_win')
+  let g:vista_echo_cursor_strategy = 'floating_win'
+endif
 
-" let g:vista_floating_delay = 1
+let g:vista_floating_delay = 2000

@@ -21,29 +21,6 @@ function! zpan#rstrip(str, chars) abort
     endif
 endfunction
 
-function! zpan#get_os() abort
-    if (has('win32') || has('win64')) && !has('win32unix') && !has('unix')
-        return 'Windows'
-    elseif executable('uname')
-        let uname_s = im_select#rstrip(system('uname -s'), " \r\n")
-        if uname_s ==# 'Linux' && match(system('uname -r'), 'Microsoft') >= 0
-            return 'Windows'
-        elseif uname_s ==# 'Linux'
-            return 'Linux'
-        elseif uname_s ==# 'Darwin'
-            return 'macOS'
-        elseif match(uname_s, '\cCYGWIN') >= 0
-            return 'Windows'
-        elseif match(uname_s, '\cMINGW') >= 0
-            return 'Windows'
-        else
-            return ''
-        endif
-    else
-        return ''
-    endif
-endfunction
-
 function! zpan#pumselected() abort
     return pumvisible() && !empty(v:completed_item)
 endfunction

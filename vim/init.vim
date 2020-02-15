@@ -3,9 +3,14 @@ if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
     let &runtimepath = $HOME . '/.vim,' . &runtimepath . ',' . $HOME . '/.vim/after'
 endif
 
-let &viewdir = $HOME . '/.cache/vim/view'
-if !isdirectory(&viewdir)
-    silent! call mkdir($HOME . '/.cache/vim/view', 'p')
+let s:viewdir = $HOME . '/.cache/vim/view'
+if !isdirectory(s:viewdir)
+    if !zpan#is_sudo()
+        silent call mkdir(s:viewdir, 'p')
+        let &viewdir = s:viewdir
+    endif
+else
+    let &viewdir = s:viewdir
 endif
 
 if has("patch-8.1.0360")
@@ -64,8 +69,29 @@ if has('win32') || !zpan#is_sudo()
     set nobackup                  " do not create backups before editing
     set nowritebackup
 endif
+set backup
+set writebackup
 set backupcopy=yes
-"set noswapfile
+let s:backupdir = $HOME . '/.cache/vim/backup'
+if !isdirectory(s:backupdir)
+    if !zpan#is_sudo()
+        silent call mkdir(s:backupdir, 'p')
+        let &backupdir = s:backupdir
+    endif
+else
+    let &backupdir = s:backupdir
+endif
+
+set swapfile
+let s:directory = $HOME . '/.cache/vim/swap'
+if !isdirectory(s:directory)
+    if !zpan#is_sudo()
+        silent call mkdir(s:directory, 'p')
+        let &directory = s:directory
+    endif
+else
+    let &directory = s:directory
+endif
 
 set showcmd                   " show commands in normal mode at the right-bottom
 set noshowmode
@@ -107,9 +133,6 @@ set hidden
 
 if v:version > 703 || v:version == 703 && has("patch541")
     set formatoptions+=j " Delete comment character when joining commented lines
-endif
-if &shell =~# 'fish$'
-    set shell=/bin/bash
 endif
 set history=1000
 set tabpagemax=50
@@ -164,10 +187,15 @@ autocmd BufRead,BufNewFile *.md set filetype=markdown
 " autocmd BufRead,BufNewFile *.md set spell
 
 set undofile
-if !isdirectory($HOME . '/.cache/vim/undo')
-    call mkdir($HOME . '/.cache/vim/undo', 'p')
+let s:undodir = $HOME . '/.cache/vim/undo'
+if !isdirectory(s:undodir)
+    if !zpan#is_sudo()
+        silent call mkdir(s:undodir, 'p')
+        let &undodir = s:undodir
+    endif
+else
+    let &undodir = s:undodir
 endif
-set undodir=$HOME/.cache/vim/undo
 
 " fold settings
 set foldmethod=syntax

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ccls --init="{\"cache\": {\"directory\": \"$HOME/.cache/ccls\"}}"
+exec ccls --init="{\"cache\": {\"directory\": \"$HOME/.cache/ccls\"}, \"index\": {\"initialBlacklist\": [\"build/\", \"cmake-build-.*\"], \"onChange\": true, \"trackDependency\": 2}}"
