@@ -128,11 +128,11 @@ nnoremap <silent> <C-Tab>       :bp<CR>
 nnoremap <silent> <C-S-Tab>     :bn<CR>
 
 " UI toggles
-noremap <silent> <M-1> :call zpan#toggle_coc_explorer()<CR>
-noremap <silent> <M-2> :call zpan#toggle_vista()<CR>
-noremap <silent> <M-3> :call zpan#toggle_undotree()<CR>
-noremap <silent> <M-6> :call zpan#toggle_quickfix()<CR>
-noremap <silent> <M-7> :call zpan#toggle_loclist()<CR>
+noremap <silent> <M-1> :call sidebar#toggle('coc-explorer')<CR>
+noremap <silent> <M-2> :call sidebar#toggle('vista')<CR>
+noremap <silent> <M-3> :call sidebar#toggle('undotree')<CR>
+noremap <silent> <M-6> :call sidebar#toggle('quickfix')<CR>
+noremap <silent> <M-7> :call sidebar#toggle('loclist')<CR>
 
 " Fuzzy finder
 nnoremap <silent> <C-p> :Clap files<CR>

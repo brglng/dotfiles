@@ -16,7 +16,7 @@ Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
 Plug 'roxma/vim-hug-neovim-rpc', has('nvim') ? {'on': []} : {}
 Plug 'tpope/vim-eunuch'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'roxma/vim-tmux-clipboard'
+" Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
 Plug 'sunaku/vim-dasht'
 Plug 'skywind3000/vim-cppman'
@@ -35,6 +35,7 @@ Plug 'liuchengxu/vim-which-key'
 Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
 Plug 'liuchengxu/vim-clap', {'do': ':Clap install-binary'}
 Plug 'skywind3000/vim-terminal-help'
+Plug 'brglng/vim-sidebar-manager'
 
 " Moving Plugins
 Plug 'rhysd/clever-f.vim'
@@ -130,6 +131,7 @@ runtime zpan/init/plugins/matchup.vim
 runtime zpan/init/plugins/nerd_commenter.vim
 " runtime zpan/init/plugins/neoformat.vim
 runtime zpan/init/plugins/netrw.vim
+runtime zpan/init/plugins/sidebar-manager.vim
 runtime zpan/init/plugins/startify.vim
 runtime zpan/init/plugins/terminal_help.vim
 runtime zpan/init/plugins/undotree.vim
