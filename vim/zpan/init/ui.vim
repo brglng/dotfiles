@@ -173,6 +173,9 @@ function! s:setup_quickfix_window(minheight, maxheight)
     "     endw
     "     exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
     " endif
+    if &lines >= 30
+        15wincmd _
+    endif
     setlocal wrap foldcolumn=0 colorcolumn= signcolumn=no cursorline
     nnoremap <silent> <buffer> q <C-w>q
 endfunction
