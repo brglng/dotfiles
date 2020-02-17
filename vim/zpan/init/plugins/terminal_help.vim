@@ -1,4 +1,4 @@
-" let g:terminal_key = '<M-=>'
+let g:terminal_key = '<Nop>'
 let g:terminal_height = '15'
 let g:terminal_pos = 'botright'
 

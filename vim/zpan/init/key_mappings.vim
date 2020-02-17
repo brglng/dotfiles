@@ -17,58 +17,55 @@ noremap   <silent> <C-z>  u
 inoremap  <silent> <C-z>  <C-o>u
 
 if !((has('macunix') || has('mac')) && has('gui_running'))
-  noremap   <silent> <M-s>  :update<CR>
-  vnoremap  <silent> <M-s>  <C-c>:update<CR>
-  inoremap  <silent> <M-s>  <C-o>:update<CR>
+    noremap   <silent> <M-s>  :update<CR>
+    vnoremap  <silent> <M-s>  <C-c>:update<CR>
+    inoremap  <silent> <M-s>  <C-o>:update<CR>
 
-  noremap   <silent> <M-z>  u
-  inoremap  <silent> <M-z>  <C-o>u
-  noremap   <silent> <M-Z>  <C-r>
-  inoremap  <silent> <M-Z>  <C-o><C-r>
+    noremap   <silent> <M-z>  u
+    inoremap  <silent> <M-z>  <C-o>u
+    noremap   <silent> <M-Z>  <C-r>
+    inoremap  <silent> <M-Z>  <C-o><C-r>
 
-  nnoremap  <silent> <M-c>  "+y
-  vnoremap  <silent> <M-c>  "+y
+    nnoremap  <silent> <M-c>  "+y
+    vnoremap  <silent> <M-c>  "+y
 
-  nnoremap  <silent> <M-x>  "+x
-  vnoremap  <silent> <M-x>  "+x
+    nnoremap  <silent> <M-x>  "+x
+    vnoremap  <silent> <M-x>  "+x
 
-  map       <silent> <M-v>  "+gP
-  cmap      <silent> <M-v>  <C-r>+
-  inoremap  <silent> <M-v>  <C-o>"+P
+    map       <silent> <M-v>  "+gP
+    cmap      <silent> <M-v>  <C-r>+
+    inoremap  <silent> <M-v>  <C-o>"+P
 
-  " Pasting blockwise and linewise selections is not possible in Insert and
-  " Visual mode without the +virtualedit feature.  They are pasted as if they
-  " were characterwise instead.
-  " Uses the paste.vim autoload script.
-  exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
-  exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
+    " Pasting blockwise and linewise selections is not possible in Insert and
+    " Visual mode without the +virtualedit feature.  They are pasted as if they
+    " were characterwise instead.
+    " Uses the paste.vim autoload script.
+    exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
+    exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
 
-  noremap   <silent> <M-a> gggH<C-o>G
-  inoremap  <silent> <M-a> <C-o>gg<C-o>gH<C-o>G
-  cnoremap  <silent> <M-a> <C-c>gggH<C-o>G
-  onoremap  <silent> <M-a> <C-c>gggH<C-o>G
-  snoremap  <silent> <M-a> <C-c>gggH<C-o>G
-  xnoremap  <silent> <M-a> <C-c>ggVG
+    noremap   <silent> <M-a> gggH<C-o>G
+    inoremap  <silent> <M-a> <C-o>gg<C-o>gH<C-o>G
+    cnoremap  <silent> <M-a> <C-c>gggH<C-o>G
+    onoremap  <silent> <M-a> <C-c>gggH<C-o>G
+    snoremap  <silent> <M-a> <C-c>gggH<C-o>G
+    xnoremap  <silent> <M-a> <C-c>ggVG
 elseif has('gui_macvim')
-  set macmeta
+    set macmeta
 endif
 
 inoremap <silent> <C-U> <C-G>u<C-U>
 
 inoremap <silent><expr> <TAB>
-      \ zpan#pumselected()
-      \ ? coc#_select_confirm()
-      \ : coc#expandableOrJumpable() ?
-      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
-      \ : "\<TAB>"
+  \ zpan#pumselected()
+  \ ? coc#_select_confirm()
+  \ : coc#expandableOrJumpable() ?
+  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
+  \ : "\<TAB>"
 
 inoremap <silent> <expr> <C-Space> coc#refresh()
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()
 
-inoremap <expr> <CR>
-      \ zpan#pumselected() ?
-      \ "\<C-y>" :
-      \ "\<CR>"
+inoremap <expr> <CR> zpan#pumselected() ? "\<C-y>" : "\<CR>"
 
 inoremap <expr> <Esc> pumvisible() ? "\<C-e>\<Esc>" : "\<Esc>"
 
@@ -76,8 +73,8 @@ inoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<C-o>gj"
 inoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<C-o>gk"
 
 if has('nvim')
-  cnoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Down>"
-  cnoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<Up>"
+    cnoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Down>"
+    cnoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<Up>"
 endif
 
 " arrows move through screen lines
@@ -133,6 +130,22 @@ noremap <silent> <M-2> :call sidebar#toggle('vista')<CR>
 noremap <silent> <M-3> :call sidebar#toggle('undotree')<CR>
 noremap <silent> <M-6> :call sidebar#toggle('quickfix')<CR>
 noremap <silent> <M-7> :call sidebar#toggle('loclist')<CR>
+noremap <silent> <M-=> :call sidebar#toggle('terminal')<CR>
+if has('nvim')
+    tnoremap <silent> <M-1> <C-\><C-n>:call sidebar#toggle('coc-explorer')<CR>
+    tnoremap <silent> <M-2> <C-\><C-n>:call sidebar#toggle('vista')<CR>
+    tnoremap <silent> <M-3> <C-\><C-n>:call sidebar#toggle('undotree')<CR>
+    tnoremap <silent> <M-6> <C-\><C-n>:call sidebar#toggle('quickfix')<CR>
+    tnoremap <silent> <M-7> <C-\><C-n>:call sidebar#toggle('loclist')<CR>
+    tnoremap <silent> <M-=> <C-\><C-n>:call sidebar#toggle('terminal')<CR>
+else
+    tnoremap <silent> <M-1> <C-_>:call sidebar#toggle('coc-explorer')<CR>
+    tnoremap <silent> <M-2> <C-_>:call sidebar#toggle('vista')<CR>
+    tnoremap <silent> <M-3> <C-_>:call sidebar#toggle('undotree')<CR>
+    tnoremap <silent> <M-6> <C-_>:call sidebar#toggle('quickfix')<CR>
+    tnoremap <silent> <M-7> <C-_>:call sidebar#toggle('loclist')<CR>
+    tnoremap <silent> <M-=> <C-_>:call sidebar#toggle('terminal')<CR>
+endif
 
 " Fuzzy finder
 nnoremap <silent> <C-p> :Clap files<CR>
