@@ -157,31 +157,26 @@ endif
 " QuickFix and Location windows
 autocmd FileType tagbar nnoremap <silent> <buffer> q <C-w>q
 
-autocmd FileType qf call s:setup_quickfix_window(1, 15)
-function! s:setup_quickfix_window(minheight, maxheight)
+function! s:setup_quickfix_window()
     wincmd J
-    " if !g:asyncrun_status == 'running'
-    "     let l = 1
-    "     let n_lines = 0
-    "     let w_width = winwidth(0)
-    "     while l <= line('$')
-    "         " number to float for division
-    "         let l_len = strlen(getline(l)) + 0.0
-    "         let line_width = l_len/w_width
-    "         let n_lines += float2nr(ceil(line_width))
-    "         let l += 1
-    "     endw
-    "     exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
-    " endif
     if &lines >= 30
         15wincmd _
     endif
     setlocal wrap foldcolumn=0 colorcolumn= signcolumn=no cursorline
     nnoremap <silent> <buffer> q <C-w>q
 endfunction
+autocmd FileType qf call s:setup_quickfix_window()
+autocmd BufWinEnter * if &filetype ==# 'qf' | call s:setup_quickfix_window() | endif
 
 autocmd QuickFixCmdPost [^l]* nested botright cwindow
 autocmd QuickFixCmdPost l*    nested botright lwindow
+
+function! s:setup_coc_explorer()
+    wincmd H
+    40wincmd |
+endfunction
+autocmd FileType coc-explorer call s:setup_coc_explorer()
+autocmd BufWinEnter * if &filetype ==# 'coc-explorer' | call s:setup_coc_explorer() | endif
 
 function! s:setup_help_window()
     if winwidth('%') >= 180
