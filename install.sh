@@ -138,7 +138,7 @@ sudo -H gem install neovim
 npm install -g neovim
 
 mkdir -p ~/.tmux/plugins
-if [[ -r -d ~/.tmux/plugins/tpm ]]; then
+if [[ -r ~/.tmux/plugins/tpm && -d ~/.tmux/plugins/tpm ]]; then
     pushd ~/.tmux/plugins/tpm
     git pull
     popd
@@ -147,7 +147,7 @@ else
 fi
 
 mkdir -p ~/.zinit
-if [[ -r -d ~/.zinit/bin ]]; then
+if [[ -r ~/.zinit/bin && -d ~/.zinit/bin ]]; then
     pushd ~/.zinit/bin
     git pull
     popd
