@@ -159,14 +159,17 @@ fi
 
 ./link.sh
 
+BOLD=$(tput bold)
+SGR0=$(tput sgr0)
+
 echo 'Now Neovim will be launched to install plugins.'
-echo 'Please type `:qa` to quit from Neovim after all plugins have been installed.'
+echo "Please type $(BOLD):qa$(SGR0) to quit from Neovim after all plugins have been installed."
 read -p "Press ENTER to continue..."
 
 nvim '+PlugUpdate'
 
 echo "Now Vim will be launched to install plugins."
-echo 'Please type `:qa` to quit from Vim after all plugins have been installed.'
+echo "Please type $(BOLD):qa$(SGR0) to quit from Vim after all plugins have been installed."
 read -p "Press ENTER to continue..."
 
 vim '+PlugUpdate'
@@ -178,6 +181,6 @@ read -p "Press ENTER to continue..."
 zsh -i
 
 echo "Congratulations! The installation is finished."
-echo "It is $(tput bold)strongly recommended$(tput sgr0) that you log out from your current shell and log in again $(tput bold)now$(tput sgr0)."
+echo "It is $(BOLD)strongly recommended$(SGR0) that you log out from your current shell and log in again $(BOLD)now$(SGR0)."
 
 # vim: ts=8 sts=4 sw=4 et
