@@ -37,4 +37,6 @@ let g:sidebars = {
   \ }
   \ }
 
+let g:sidebar_close_tab_on_closing_last_buffer = 1
+
 " vim: ts=8 sts=4 sw=4 et
