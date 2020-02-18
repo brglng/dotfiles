@@ -123,7 +123,7 @@ fi
 $HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish
 
 if [[ $UNAME_S = "Linux" ]]; then
-    ./linuxbrew_post_install
+    ./linuxbrew_post_install.sh
 fi
 
 export NVM_DIR="$HOME/.nvm"
