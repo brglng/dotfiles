@@ -19,13 +19,13 @@ let g:sidebars = {
   \ },
   \ 'quickfix': {
   \     'position': 'bottom',
-  \     'check_win': {nr -> getwinvar(nr, '&filetype') =~ 'qf' && !getwininfo(win_getid(nr))[0]['loclist']},
+  \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'qf' && !getwininfo(win_getid(nr))[0]['loclist']},
   \     'open': 'copen',
   \     'close': 'cclose'
   \ },
   \ 'loclist': {
   \     'position': 'bottom',
-  \     'check_win': {nr -> getwinvar(nr, '&filetype') =~ 'qf' && getwininfo(win_getid(nr))[0]['loclist']},
+  \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'qf' && getwininfo(win_getid(nr))[0]['loclist']},
   \     'open': 'lopen',
   \     'close': 'lclose'
   \ },
