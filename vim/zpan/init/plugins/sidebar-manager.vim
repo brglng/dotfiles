@@ -26,8 +26,8 @@ let g:sidebars = {
   \ 'loclist': {
   \     'position': 'bottom',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'qf' && getwininfo(win_getid(nr))[0]['loclist']},
-  \     'open': 'lopen',
-  \     'close': 'lclose'
+  \     'open': 'silent! lopen',
+  \     'close': 'silent! lclose'
   \ },
   \ 'terminal': {
   \     'position': 'bottom',
