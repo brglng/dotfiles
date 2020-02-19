@@ -31,7 +31,7 @@ let g:sidebars = {
   \ },
   \ 'terminal': {
   \     'position': 'bottom',
-  \     'check_win': {nr -> exists('t:__terminal_bid__') ? nr == bufwinnr(t:__terminal_bid__) : 0},
+  \     'get_win': {-> exists('t:__terminal_bid__') ? bufwinnr(t:__terminal_bid__) : 0},
   \     'open': 'call TerminalOpen()',
   \     'close': 'call TerminalClose()'
   \ }

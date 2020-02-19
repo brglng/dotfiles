@@ -84,5 +84,6 @@
     "python.jediEnabled": false,
     "python.linting.mypyEnabled": false,
     "python.linting.pylintEnabled": false,
-    "python.linting.pylintArgs": ["--disable=wildcard-import,invalid-name,missing-function-docstring,broad-except,logging-format-interpolation,missing-module-docstring,missing-class-docstring,line-too-long,too-few-public-methods,inconsistent-return-statements,too-many-branches,too-many-locals,too-many-statements,too-many-arguments,too-many-instance-attributes", "--enable=unused-import"]
+    "python.linting.pylintArgs": ["--disable=wildcard-import,invalid-name,missing-function-docstring,broad-except,logging-format-interpolation,missing-module-docstring,missing-class-docstring,line-too-long,too-few-public-methods,inconsistent-return-statements,too-many-branches,too-many-locals,too-many-statements,too-many-arguments,too-many-instance-attributes", "--enable=unused-import"],
+    "pyright.reportMissintTypeStubs": false
 }
