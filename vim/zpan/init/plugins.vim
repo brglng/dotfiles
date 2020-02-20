@@ -16,7 +16,7 @@ Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
 Plug 'roxma/vim-hug-neovim-rpc', has('nvim') ? {'on': []} : {}
 Plug 'tpope/vim-eunuch'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-" Plug 'roxma/vim-tmux-clipboard'
+Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
 Plug 'sunaku/vim-dasht'
 Plug 'skywind3000/vim-cppman'
