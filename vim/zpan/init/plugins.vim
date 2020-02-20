@@ -32,7 +32,7 @@ Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
 Plug 'liuchengxu/vim-which-key'
-Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
+" Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
 Plug 'liuchengxu/vim-clap', {'do': ':Clap install-binary'}
 Plug 'skywind3000/vim-terminal-help'
 Plug 'brglng/vim-sidebar-manager'
@@ -125,12 +125,12 @@ runtime zpan/init/plugins/dasht.vim
 runtime zpan/init/plugins/devicons.vim
 runtime zpan/init/plugins/easy_align.vim
 runtime zpan/init/plugins/indent_line.vim
-runtime zpan/init/plugins/leaderf.vim
+" runtime zpan/init/plugins/leaderf.vim
 runtime zpan/init/plugins/lightline.vim
 runtime zpan/init/plugins/matchup.vim
 runtime zpan/init/plugins/nerd_commenter.vim
 " runtime zpan/init/plugins/neoformat.vim
-runtime zpan/init/plugins/netrw.vim
+" runtime zpan/init/plugins/netrw.vim
 runtime zpan/init/plugins/sidebar-manager.vim
 runtime zpan/init/plugins/startify.vim
 runtime zpan/init/plugins/terminal_help.vim
