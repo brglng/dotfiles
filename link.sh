@@ -47,6 +47,7 @@ function update_tabnine_config {
 
 function link_common() {
     link "$PWD/config/alacritty/alacritty.yml"  "$HOME/.config/alacritty/alacritty.yml"
+    link "$PWD/config/powerline"                "$HOME/.config/powerline"
     link "$PWD/cgdb/cgdbrc"                     "$HOME/.cgdb/cgdbrc"
     update_gitconfig
     link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
