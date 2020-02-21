@@ -82,9 +82,22 @@ if &term =~ '256color' && $TMUX != ''
     set t_ut=
 endif
 
+if has('termguicolors')
+    " fix bug for vim
+    if !has('nvim')
+        if &term =~# '^screen'
+            let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+            let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+        endif
+    endif
+    set termguicolors
+endif
+
+set termguicolors
 syntax on
 set background=dark
-silent! colorscheme nord
+let ayucolor="dark"
+silent! colorscheme ayu
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
 " autocmd Syntax,ColorScheme * highlight! link FoldColumn LineNr

@@ -103,6 +103,7 @@ Plug 'soft-aesthetic/soft-era-vim'
 Plug 'sainnhe/lightline_foobar.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'nightsense/snow'
+Plug 'morhetz/gruvbox'
 
 call plug#end()
 
