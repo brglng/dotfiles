@@ -1,0 +1,20 @@
+{
+    "colors": {
+        "black": [0, "0e1318"],
+        "red": [1, "ff7632"],
+        "green": [2, "b8cc51"],
+        "yellow": [3, "ffb453"],
+        "blue": [4, "36a3d8"],
+        "magenta": [5, "c930c7"],
+        "cyan": [6, "95e6ca"],
+        "white": [7, "c7c7c7"],
+        "brightblack": [8, "676767"],
+        "brightred": [9, "f07078"],
+        "brightgreen": [10, "cbe544"],
+        "brightyellow": [11, "ffee98"],
+        "brightblue": [12, "6871ff"],
+        "brightmagenta": [13, "ff76ff"],
+        "brightcyan": [14, "a6fce1"],
+        "brightwhite": [15, "feffff"]
+    }
+}

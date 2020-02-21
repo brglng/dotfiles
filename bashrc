@@ -55,6 +55,10 @@ HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+if type powerline-daemon &>/dev/null; then
+    powerline-daemon -q
+fi
+
 GIT_PS1_SHOWDIRTYSTATE=true
 
 if [[ "$(uname -s)" = "Darwin" ]]; then
