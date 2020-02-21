@@ -7,8 +7,8 @@
     "explorer.file.column.indent.indentLine": true,
     "explorer.icon.enableNerdfont": true,
     "explorer.keyMappings": {
-        "<cr>": "expand",
-        "<2-LeftMouse>": "expand"
+        "<cr>": ["expandable?", "expand", "open"],
+        "<2-LeftMouse>": ["expandable?", "expand", "open"]
     },
     "explorer.sources": [
         {
@@ -20,34 +20,40 @@
             "expand": true
         }
     ],
+    "explorer.previewAction.onHover": false,
+    "git.addedSign.text": "█",
     "git.addGBlameToVirtualText": false,
     "git.addGBlameToBufferVar": true,
     "git.changedDecorator": " *",
-    "git.stagedDecorator": " ●",
-    "git.untrackedDecorator": " …",
-    "git.conflictedDecorator": " x",
-    "git.addedSign.text": "█",
     "git.changedSign.text": "█",
-    "git.removedSign.text": "█",
-    "git.topRemovedSign.text": "█",
     "git.changeRemovedSign.text": "█",
+    "git.conflictedDecorator": " x",
+    "git.removedSign.text": "█",
+    "git.stagedDecorator": " ●",
+    "git.topRemovedSign.text": "█",
+    "git.untrackedDecorator": " …",
     "languageserver": {
         "ccls": {
             "command": "ccls",
             "filetypes": ["c", "cpp", "objc", "objcpp"],
-            "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
             "initializationOptions": {
                 "index": {
                     "initialBlacklist": ["build/", "cmake-build-.*/"],
                     "onChange": true,
                     "trackDependency": 2
                 }
-            }
+            },
+            "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"]
         }
     },
     "list.maxHeight": 15,
     "list.source.grep.defaultArgs": ["-smartcase", "-regex"],
     "list.source.grep.defaultOptions": ["--interactive", "--no-sort", "--regex"],
+    "python.jediEnabled": false,
+    "python.linting.mypyEnabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.pylintArgs": ["--disable=wildcard-import,invalid-name,missing-function-docstring,broad-except,logging-format-interpolation,missing-module-docstring,missing-class-docstring,line-too-long,too-few-public-methods,inconsistent-return-statements,too-many-branches,too-many-locals,too-many-statements,too-many-arguments,too-many-instance-attributes", "--enable=unused-import"],
+    "pyright.reportMissintTypeStubs": false,
     "snippets.extends": {
         "cpp": ["c"],
         "javascriptreact": ["javascript"],
@@ -55,35 +61,30 @@
     },
     "snippets.trace": "verbose",
     "suggest.completionItemKindLabels": {
-        "function": "\uf794",
-        "method": "\uf6a6",
-        "variable": "\uf71b",
-        "constant": "\uf8ff",
-        "struct": "\ufb44",
         "class": "\uf0e8",
-        "interface": "\ufa52",
-        "text": "\ue612",
+        "color": "\ue22b",
+        "constant": "\uf8ff",
+        "default": "\uf29c",
+        "event": "\ufacd",
         "enum": "\uf435",
         "enumMember": "\uf02b",
-        "module": "\uf668",
-        "color": "\ue22b",
-        "property": "\ufab6",
         "field": "\uf93d",
-        "unit": "\uf475",
         "file": "\uf471",
-        "value": "\uf8a3",
-        "event": "\ufacd",
         "folder": "\uf115",
+        "function": "\uf794",
+        "interface": "\ufa52",
         "keyword": "\uf893",
-        "snippet": "\uf64d",
+        "method": "\uf6a6",
+        "module": "\uf668",
         "operator": "\uf915",
+        "property": "\ufab6",
         "reference": "\uf87a",
+        "snippet": "\uf64d",
+        "struct": "\ufb44",
+        "text": "\ue612",
         "typeParameter": "\uf278",
-        "default": "\uf29c"
-    },
-    "python.jediEnabled": false,
-    "python.linting.mypyEnabled": false,
-    "python.linting.pylintEnabled": false,
-    "python.linting.pylintArgs": ["--disable=wildcard-import,invalid-name,missing-function-docstring,broad-except,logging-format-interpolation,missing-module-docstring,missing-class-docstring,line-too-long,too-few-public-methods,inconsistent-return-statements,too-many-branches,too-many-locals,too-many-statements,too-many-arguments,too-many-instance-attributes", "--enable=unused-import"],
-    "pyright.reportMissintTypeStubs": false
+        "unit": "\uf475",
+        "value": "\uf8a3",
+        "variable": "\uf71b"
+    }
 }
