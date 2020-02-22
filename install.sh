@@ -56,6 +56,9 @@ function install_mac() {
 
     brew cask install macvim
 
+    brew tap homebrew/cask-fonts
+    brew cask install font-firacode-nerd-font font-firacode-nerd-font-mono
+
     curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
 }
 
