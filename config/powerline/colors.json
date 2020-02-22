@@ -15,6 +15,7 @@
         "brightblue": [12, "6871ff"],
         "brightmagenta": [13, "ff76ff"],
         "brightcyan": [14, "a6fce1"],
-        "brightwhite": [15, "feffff"]
+        "brightwhite": [15, "feffff"],
+        "ayu-dark:bg.contrast": [200, "E6B450"]
     }
 }

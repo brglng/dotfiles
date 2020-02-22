@@ -6,9 +6,9 @@
         "bell_status":          {"fg": "red",        "bg": "gray0",    "attrs": []},
         "window":               {"fg": "brightwhite",      "bg": "black",    "attrs": []},
         "window:divider":       {"fg": "brightwhite",      "bg": "black",    "attrs": []},
-        "window:current":       {"fg": "black",     "bg": "yellow", "attrs": []},
-        "window_name":          {"fg": "black",      "bg": "yellow", "attrs": ["bold"]},
-        "session":              {"fg": "black",      "bg": "yellow",   "attrs": ["bold"]},
+        "window:current":       {"fg": "black",     "bg": "ayu-dark:bg.contrast", "attrs": []},
+        "window_name":          {"fg": "black",      "bg": "ayu-dark:bg.contrast", "attrs": ["bold"]},
+        "session":              {"fg": "black",      "bg": "ayu-dark:bg.contrast",   "attrs": ["bold"]},
         "session:prefix":       {"fg": "brightwhite",     "bg": "blue", "attrs": ["bold"]}
     }
 }
