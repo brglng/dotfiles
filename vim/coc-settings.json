@@ -46,6 +46,7 @@
             "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"]
         }
     },
+    "list.autoResize": false,
     "list.maxHeight": 15,
     "list.source.grep.defaultArgs": ["-smartcase", "-regex"],
     "list.source.grep.defaultOptions": ["--interactive", "--no-sort", "--regex"],

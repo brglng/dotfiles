@@ -81,4 +81,24 @@ function! zpan#install_missing_plugins(sync) abort
     endif
 endfunction
 
+function! s:win_save_view()
+    let w:__zpan_win_view__ = winsaveview()
+endfunction
+
+function! s:win_restore_view()
+    if exists('w:__zpan_win_view__')
+        echomsg 'restoring view for ' . winnr()
+        call winrestview(w:__zpan_win_view__)
+        unlet w:__zpan_win_view__
+    endif
+endfunction
+
+function! zpan#save_view()
+    noautocmd windo call s:win_save_view()
+endfunction
+
+function! zpan#restore_view()
+    noautocmd windo call s:win_restore_view()
+endfunction
+
 " vim: ts=8 sts=4 sw=4 et
