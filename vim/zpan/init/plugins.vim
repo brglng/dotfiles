@@ -18,8 +18,11 @@ Plug 'tpope/vim-eunuch'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
+
+" Documentation
 Plug 'sunaku/vim-dasht'
 Plug 'skywind3000/vim-cppman'
+Plug 'kkoomen/vim-doge'
 
 " UI Plugins
 Plug 'ryanoasis/vim-devicons'
