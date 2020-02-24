@@ -57,10 +57,10 @@ function! LightlineCocStatus() abort
     if empty(info) | return '' | endif
     let msgs = []
     if get(info, 'error', 0)
-	call add(msgs, '' . info['error'])
+	call add(msgs, ' ' . info['error'])
     endif
     if get(info, 'warning', 0)
-	call add(msgs, '' . info['warning'])
+	call add(msgs, ' ' . info['warning'])
     endif
     return join(msgs, ' ') . ' ' . get(g:, 'coc_status', '')
 endfunction
