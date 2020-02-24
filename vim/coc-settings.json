@@ -1,9 +1,9 @@
 {
-    "diagnostic.errorSign": "\ufaac",
-    "diagnostic.hintSign": "\ufbe6",
-    "diagnostic.infoSign": "\uf129",
+    "diagnostic.errorSign": "",
+    "diagnostic.hintSign": "",
+    "diagnostic.infoSign": "",
     "diagnostic.virtualText": true,
-    "diagnostic.warningSign": "\uf071",
+    "diagnostic.warningSign": "",
     "explorer.file.column.indent.indentLine": true,
     "explorer.icon.enableNerdfont": true,
     "explorer.keyMappings": {
