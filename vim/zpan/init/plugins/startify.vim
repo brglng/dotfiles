@@ -18,7 +18,8 @@ let g:startify_session_persistence = 0
 
 function! s:save_session()
     if len(v:this_session) > 0
-        execute 'SSave ' . fnamemodify(v:this_session, ':t')
+        call sidebar#close_all()
+        execute 'SSave! ' . fnamemodify(v:this_session, ':t')
     endif
 endfunction
 autocmd VimLeavePre * call s:save_session()
