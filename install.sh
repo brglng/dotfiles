@@ -51,8 +51,7 @@ function install_mac() {
       	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake luajit clang-format git-lfs
-    # brew install reattach-to-user-namespace
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake luajit clang-format git-lfs reattach-to-user-namespace
 
     brew cask install macvim
 
