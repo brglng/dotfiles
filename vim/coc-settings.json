@@ -41,7 +41,7 @@
     "git.removedSign.text": "",
     "git.stagedDecorator": " ",
     "git.topRemovedSign.text": "",
-    "git.untrackedDecorator": "",
+    "git.untrackedDecorator": " ",
     "languageserver": {
         "ccls": {
             "command": "ccls",
