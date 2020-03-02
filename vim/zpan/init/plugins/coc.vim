@@ -61,6 +61,15 @@ let s:coc_extensions = [
   \ 'coc-yank',
   \ ]
 
+function! s:uninstall_unused_coc_extensions() abort
+  for e in keys(json_decode(join(readfile(expand('~/.config/coc/extensions/package.json')), "\n"))['dependencies'])
+      if index(s:coc_extensions, e) < 0
+          execute 'CocUninstall ' . e
+      endif
+  endfor
+endfunction
+autocmd VimEnter * call s:uninstall_unused_coc_extensions()
+
 for e in s:coc_extensions
     silent! call coc#add_extension(e)
 endfor
