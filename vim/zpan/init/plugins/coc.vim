@@ -50,6 +50,7 @@ let s:coc_extensions = [
   \ 'coc-syntax',
   \ 'coc-tabnine',
   \ 'coc-tag',
+  \ 'coc-tasks',
   \ 'coc-translator',
   \ 'coc-tsserver',
   \ 'coc-ultisnips',

@@ -38,6 +38,9 @@
     "git.changedSign.text": "",
     "git.changeRemovedSign.text": "",
     "git.conflictedDecorator": " ",
+    "git.gitlab.hosts": [
+        "gitlab.ximalaya.com"
+    ],
     "git.removedSign.text": "",
     "git.stagedDecorator": " ",
     "git.topRemovedSign.text": "",

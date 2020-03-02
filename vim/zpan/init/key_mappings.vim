@@ -149,3 +149,7 @@ endif
 
 " Fuzzy finder
 nnoremap <silent> <C-p> :Clap files<CR>
+
+" Tasks
+noremap <silent> <F5> :CocList --normal tasks<CR>
+inoremap <silent> <F5> <C-o>:CocList --normal tasks<CR>
