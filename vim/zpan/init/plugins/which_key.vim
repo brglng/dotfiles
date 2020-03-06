@@ -88,6 +88,13 @@ let g:which_key_map['g'] = {
   \ 'V': ['CocLocations(''ccls'', ''$ccls/var'', {''kind'': 1})', 'find-all-instances-of-the-type-of-symbol'],
   \ }
 
+let g:which_key_map['j'] = {
+  \ 'name': '+any-jump',
+  \ 'a': [':AnyJump', 'jump-to-definition'],
+  \ 'b': [':AnyJumpBack', 'jump-back'],
+  \ 'l': [':AnyJumpLastResults', 'retore-previous-search-window']
+  \ }
+
 let g:which_key_map['p'] = {
   \ 'name': '+fuzzy-finder',
   \ ' ': [':Clap providers', 'show-providers'],

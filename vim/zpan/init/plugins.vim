@@ -87,6 +87,7 @@ Plug 'neoclide/coc.nvim', {
   \ }
 Plug 'honza/vim-snippets'
 Plug 'liuchengxu/vista.vim'
+Plug 'pechorin/any-jump.vim'
 
 " Debuggig Plugins
 Plug 'puremourning/vimspector'
@@ -113,6 +114,7 @@ call plug#end()
 autocmd VimEnter * call zpan#install_missing_plugins(v:false)
 
 runtime zpan/init/plugins/which_key.vim
+runtime zpan/init/plugins/any_jump.vim
 runtime zpan/init/plugins/asyncrun.vim
 runtime zpan/init/plugins/asynctasks.vim
 runtime zpan/init/plugins/clap.vim
