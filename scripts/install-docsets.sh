@@ -1,0 +1,42 @@
+#!/bin/sh
+mkdir -p ~/.local/share/dasht/docsets
+dasht-docsets-install \
+    '^Android$' \
+    '^Bash$' \
+    '^Boost$' \
+    '^C$' \
+    '^C\+\+$' \
+    '^CMake$' \
+    '^CSS$' \
+    '^Docker$' \
+    '^Flask$' \
+    '^Font_Awesome$' \
+    '^GLib$' \
+    '^Go$' \
+    '^Haskell$' \
+    '^HTML$' \
+    '^JavaScript$' \
+    '^Java_SE13$' \
+    '^Julia$' \
+    '^LaTeX$' \
+    '^Lua_5.3$' \
+    '^Man_Pages$' \
+    '^Markdown$' \
+    '^MATLAB$' \
+    '^Matplotlib$' \
+    '^MySQL$' \
+    '^Nginx$' \
+    '^NodeJS$' \
+    '^NumPy$' \
+    '^Pandas$' \
+    '^Perl$' \
+    '^Python_3' \
+    '^Qt_5$' \
+    '^Redis$' \
+    '^Rust$' \
+    '^SciPy$' \
+    '^SQLAlchemy$' \
+    '^SQLite$' \
+    '^SVG$' \
+    '^TypeScript$' \
+    '^VueJS$'

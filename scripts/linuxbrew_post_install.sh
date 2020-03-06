@@ -16,7 +16,9 @@ ln -fs $HOMEBREW_PREFIX/bin/colordiff       ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/cpack           ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/ctags           ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/ctest           ~/.local/bin/
-ln -fs $HOMEBREW_PREFIX/bin/dasht           ~/.local/bin/
+for f in $HOMEBREW_PREFIX/bin/dasht*; do
+    ln -fs $f ~/.local/bin
+done
 ln -fs $HOMEBREW_PREFIX/bin/exa             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/fd              ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/fselect         ~/.local/bin/

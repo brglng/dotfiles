@@ -96,7 +96,7 @@ if [[ $http_proxy == "" || $https_proxy == "" ]]; then
     done
 fi
 
-./setup_python3.sh --no-setup-proxy
+scripts/setup_python3.sh --no-setup-proxy
 
 case $UNAME_S in
     Linux) install_linux ;;
@@ -125,7 +125,7 @@ fi
 $HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish
 
 if [[ $UNAME_S = "Linux" ]]; then
-    ./linuxbrew_post_install.sh
+    scripts/linuxbrew_post_install.sh
 fi
 
 export NVM_DIR="$HOME/.nvm"
@@ -157,9 +157,9 @@ else
     git clone --recursive https://github.com/zdharma/zinit.git ~/.zinit/bin
 fi
 
-./disable_sudo_secure_path.sh
+scripts/disable_sudo_secure_path.sh
 
-./link.sh
+scripts/link.sh
 
 BOLD=$(tput bold)
 SGR0=$(tput sgr0)

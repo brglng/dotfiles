@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-source "$PWD/util.sh"
+source "scripts/util.sh"
 
 function update_bashrc {
     update_file "$1" \

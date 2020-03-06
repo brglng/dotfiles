@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-source "$PWD/util.sh"
+source "scripts/util.sh"
 
 function do_pip_install {
     "$1" -m pip install --user -U pynvim autopep8 pylint jedi mypy pygments cppman neovim-remote powerline-status
