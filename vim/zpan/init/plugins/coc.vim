@@ -54,7 +54,6 @@ let s:coc_extensions = [
   \ 'coc-tasks',
   \ 'coc-translator',
   \ 'coc-tsserver',
-  \ 'coc-ultisnips',
   \ 'coc-vetur',
   \ 'coc-vimlsp',
   \ 'coc-word',
@@ -63,13 +62,13 @@ let s:coc_extensions = [
   \ ]
 
 function! s:uninstall_unused_coc_extensions() abort
-  for e in keys(json_decode(join(readfile(expand('~/.config/coc/extensions/package.json')), "\n"))['dependencies'])
-      if index(s:coc_extensions, e) < 0
-          execute 'CocUninstall ' . e
-      endif
-  endfor
+    for e in keys(json_decode(join(readfile(expand('~/.config/coc/extensions/package.json')), "\n"))['dependencies'])
+        if index(s:coc_extensions, e) < 0
+            execute 'CocUninstall ' . e
+        endif
+    endfor
 endfunction
-autocmd VimEnter * call s:uninstall_unused_coc_extensions()
+autocmd User CocNvimInit call s:uninstall_unused_coc_extensions()
 
 for e in s:coc_extensions
     silent! call coc#add_extension(e)
@@ -95,3 +94,4 @@ endif
 " let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']
 
 " autocmd User CocOpenFloat silent! setlocal winblend=15
+" vim: ts=8 sts=4 sw=4 et
