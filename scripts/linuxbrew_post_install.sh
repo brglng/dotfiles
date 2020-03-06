@@ -41,4 +41,6 @@ ln -fs $HOMEBREW_PREFIX/bin/tig             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/tmux            ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/vim             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/vimdiff         ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/w3m             ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/w3mman          ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/zsh             ~/.local/bin/
