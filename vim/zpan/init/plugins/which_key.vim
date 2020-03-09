@@ -88,6 +88,8 @@ let g:which_key_map['g'] = {
   \ 'V': ['CocLocations(''ccls'', ''$ccls/var'', {''kind'': 1})', 'find-all-instances-of-the-type-of-symbol'],
   \ }
 
+let g:which_key_map['i'] = [':IndentLinesToggle', 'toggle-indent-line']
+
 let g:which_key_map['j'] = {
   \ 'name': '+any-jump',
   \ 'a': [':AnyJump', 'jump-to-definition'],
@@ -142,18 +144,9 @@ let g:which_key_map.s = {
   \ 'G': 'search-replace-whole-file-no-prompt'
   \ }
 
-let g:which_key_map.t = {
-  \ 'name': '+ui-toggles',
-  \ 'i': [':IndentLinesToggle', 'toggle-indent-line'],
-  \ }
-
-let g:which_key_map.T = {
-  \ 'name': '+translation',
-  \ 'e': ['<Plug>(coc-translator-e)', 'translate-and-echo'],
-  \ 'p': ['<Plug>(coc-translator-p)', 'translate-and-popup'],
-  \ 'h': [':CocList translation', 'show-translation-history'],
-  \ 'r': ['<Plug>(coc-translator-r)', 'translate-and-replace']
-  \ }
+nmap <silent> <Leader>t <Plug>TranslateW
+vmap <silent> <Leader>t <Plug>TranslateWV
+let g:which_key_map.t = 'translate'
 
 let g:which_key_map.v = {
   \ 'name': '+version-control',

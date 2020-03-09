@@ -23,6 +23,7 @@ Plug 'brglng/vim-im-select'
 Plug 'sunaku/vim-dasht'
 Plug 'skywind3000/vim-cppman'
 Plug 'kkoomen/vim-doge'
+Plug 'voldikss/vim-translator'
 
 " UI Plugins
 Plug 'ryanoasis/vim-devicons'

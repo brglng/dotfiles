@@ -65,7 +65,6 @@ let s:coc_extensions = [
   \ 'coc-tabnine',
   \ 'coc-tag',
   \ 'coc-tasks',
-  \ 'coc-translator',
   \ 'coc-tsserver',
   \ 'coc-vetur',
   \ 'coc-vimlsp',
