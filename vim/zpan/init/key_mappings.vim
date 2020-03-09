@@ -65,7 +65,7 @@ inoremap <silent><expr> <TAB>
 inoremap <silent> <expr> <C-Space> coc#refresh()
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()
 
-inoremap <expr> <CR> zpan#pumselected() ? "\<C-y>" : "\<CR>"
+inoremap <expr> <CR> zpan#pumselected() ? "\<C-y>" : "\<C-o>==\<CR>"
 
 inoremap <expr> <Esc> pumvisible() ? "\<C-e>\<Esc>" : "\<Esc>"
 

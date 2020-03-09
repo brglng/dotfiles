@@ -5,11 +5,25 @@ nmap <silent> ]q <Plug>(coc-diagnostic-next)
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * if !zpan#is_tool_window() | silent! call CocActionAsync('highlight') | endif
 
-autocmd User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
-autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
+augroup zpan_coc
+    autocmd!
+
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType c,cpp,css,html,javascript,json,python,rust,typescript setl formatexpr=CocAction('formatSelected')
+
+    " Update signature help on jump placeholder.
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 CocFormat :call CocAction('format')
 
 " Use `:Fold` to fold current buffer
 command! -nargs=? CocFold :call CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 CocOrgnizeImport   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " Create mappings for function text object, requires document symbols feature of languageserver.
 xmap if <Plug>(coc-funcobj-i)
@@ -37,7 +51,6 @@ let s:coc_extensions = [
   \ 'coc-lists',
   \ 'coc-lua',
   \ 'coc-marketplace',
-  \ 'coc-neosnippet',
   \ 'coc-omni',
   \ 'coc-pairs',
   \ 'coc-powershell',

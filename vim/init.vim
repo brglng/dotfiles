@@ -228,6 +228,8 @@ set pumheight=15
       " \ endif
 
 
+" set formatoptions+=a
+
 if executable('rg')
     let &grepprg = 'rg --vimgrep'
 elseif executable('ag')
