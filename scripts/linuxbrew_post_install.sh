@@ -37,6 +37,7 @@ ln -fs $HOMEBREW_PREFIX/bin/nvim            ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/rg              ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/scan-build      ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/scan-view       ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/sqlite3         ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/tig             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/tmux            ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/vim             ~/.local/bin/

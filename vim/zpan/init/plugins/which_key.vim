@@ -207,13 +207,19 @@ silent! call which_key#register('K', 'g:which_key_map_K')
 nnoremap <silent> K :<C-u>WhichKey 'K'<CR>
 vnoremap <silent> K :<C-u>WhichKeyVisual 'K'<CR>
 
+nnoremap Kc :execute 'Cppman ' . expand('<cword>')<CR>
+vnoremap Kc y:<C-u>execute 'Cppman ' . getreg(0)<CR>
+nnoremap KC :Cppman<Space>
 nnoremap KK :execute 'help ' . expand('<cword>')<CR>
+vnoremap KK y:<C-u>execute 'help ' . getreg(0)<CR>
 nnoremap Km :execute 'Man ' . expand('<cword>')<CR>
+nnoremap Km y:<C-u>execute 'Man ' . getreg(0)<CR>
 nnoremap KR :Dasht<Space>
 nnoremap KA :Dasht!<Space>
 let g:which_key_map_K = {
   \ 'name': '+docsets',
-  \ 'c': [":execute 'Cppman ' . expand('<cword>')", 'cppman']
+  \ 'c': 'search-cppman-for-cursor-word',
+  \ 'C': 'cppman',
   \ 'K': 'vim-help',
   \ 'm': 'man-page',
   \ 'R': 'search-related-docsets',

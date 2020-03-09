@@ -35,7 +35,7 @@ zinit snippet OMZ::lib/theme-and-appearance.zsh
 # some OMZ themes use this plugin
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
-zinit atload'!source ~/.p10k.zsh' lucid nocd
+zinit ice atload'!source ~/.p10k.zsh' lucid nocd
 zinit light romkatv/powerlevel10k
 
 zinit ice as"completion" wait=3 lucid
@@ -210,10 +210,18 @@ export _ZL_MATCH_MODE=1
 export _ZL_ADD_ONCE=1
 zinit light skywind3000/z.lua
 
-zplugin ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" lucid
-zplugin load trapd00r/LS_COLORS
+zinit ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" lucid
+zinit load trapd00r/LS_COLORS
 
-zinit wait lucid atload"zicompinit; zicdreplay;" blockf for zsh-users/zsh-completions
+# if [[ $(uname -s) = 'Darwin' ]]; then
+#     zinit ice cloneonly atclone'ln -fs $PWD/src/dir_colors ~/.dir_colors' atload'test -r ~/.dir_colors && eval $(gdircolors ~/.dir_colors)' lucid
+# else
+#     zinit ice cloneonly atclone'ln -fs $PWD/src/dir_colors ~/.dir_colors' atload'test -r ~/.dir_colors && eval $(dircolors ~/.dir_colors)' lucid
+# fi
+# zinit light arcticicestudio/nord-dircolors
+
+zinit ice wait lucid atload"zicompinit; zicdreplay;" blockf
+zinit light zsh-users/zsh-completions
 
 unalias fd
 alias -s c=$EDITOR

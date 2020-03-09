@@ -93,11 +93,12 @@ if has('termguicolors')
     set termguicolors
 endif
 
-set termguicolors
 syntax on
 set background=dark
-let ayucolor="dark"
-silent! colorscheme ayu
+" let ayucolor="dark"
+" silent! colorscheme ayu
+" let g:gruvbox_italic=1
+silent! colorscheme nord
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
 " autocmd Syntax,ColorScheme * highlight! link FoldColumn LineNr

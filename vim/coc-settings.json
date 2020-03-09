@@ -31,19 +31,19 @@
         }
     ],
     "explorer.previewAction.onHover": false,
-    "git.addedSign.text": "",
+    "git.addedSign.text": "\u00a0",
     "git.addGBlameToVirtualText": false,
     "git.addGBlameToBufferVar": true,
     "git.changedDecorator": " ",
-    "git.changedSign.text": "",
-    "git.changeRemovedSign.text": "",
+    "git.changedSign.text": "\u00a0",
+    "git.changeRemovedSign.text": "\u00a0",
     "git.conflictedDecorator": " ",
     "git.gitlab.hosts": [
         "gitlab.ximalaya.com"
     ],
-    "git.removedSign.text": "",
+    "git.removedSign.text": "\u00a0",
     "git.stagedDecorator": " ",
-    "git.topRemovedSign.text": "",
+    "git.topRemovedSign.text": "\u00a0",
     "git.untrackedDecorator": " ",
     "languageserver": {
         "ccls": {

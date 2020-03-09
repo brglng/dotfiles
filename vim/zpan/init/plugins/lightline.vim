@@ -112,7 +112,7 @@ function! s:lightline_update()
 endfunction
 
 let g:lightline = {
-  \ 'colorscheme': 'ayu',
+  \ 'colorscheme': 'nord',
   \ 'active': {
   \     'left': [
   \         ['mode', 'paste'],
