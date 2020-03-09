@@ -11,5 +11,6 @@ let g:terminal_kill = 'term'
 let g:terminal_list = 0
 let g:terminal_cwd = 2
 let g:terminal_fixheight = 1
+let g:terminal_close = 1
 
 " vim: ts=8 sts=4 sw=4 et
