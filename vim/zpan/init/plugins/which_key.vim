@@ -213,6 +213,7 @@ nnoremap KR :Dasht<Space>
 nnoremap KA :Dasht!<Space>
 let g:which_key_map_K = {
   \ 'name': '+docsets',
+  \ 'c': [":execute 'Cppman ' . expand('<cword>')", 'cppman']
   \ 'K': 'vim-help',
   \ 'm': 'man-page',
   \ 'R': 'search-related-docsets',
