@@ -24,10 +24,13 @@ setopt promptsubst
 # common OMZ libraries
 zinit snippet OMZ::lib/clipboard.zsh
 zinit snippet OMZ::lib/completion.zsh
+zinit snippet OMZ::lib/correction.zsh
+zinit snippet OMZ::lib/directories.zsh
+zinit snippet OMZ::lib/git.zsh
 zinit snippet OMZ::lib/history.zsh
 zinit snippet OMZ::lib/key-bindings.zsh
-zinit snippet OMZ::lib/git.zsh
-# zinit snippet OMZ::lib/theme-and-appearance.zsh
+zinit snippet OMZ::lib/termsupport.zsh
+zinit snippet OMZ::lib/theme-and-appearance.zsh
 
 # some OMZ themes use this plugin
 zinit snippet OMZ::plugins/git/git.plugin.zsh
@@ -197,6 +200,8 @@ zinit light zdharma/fast-syntax-highlighting
 
 zinit ice wait=1 lucid
 zinit light lukechilds/zsh-better-npm-completion
+
+zinit light Aloxaf/fzf-tab
 
 if type luajit &>/dev/null; then
     ZLUA_EXEC=$(which luajit)
