@@ -65,19 +65,7 @@ inoremap <silent><expr> <TAB>
 inoremap <silent> <expr> <C-Space> coc#refresh()
 inoremap <silent> <expr> <C-x><C-x> coc#refresh()
 
-function! ZpanOnEnter()
-    if zpan#pumselected()
-        return "\<C-y>"
-    else
-        let cur_col = getcurpos()[2]
-        if cur_col == len(getline('.')) + 1
-            return "\<C-g>u\<C-o>gqq\<C-o>" . (cur_col + 2) . "|\<CR>\<C-r>=coc#on_enter()\<CR>"
-        else
-            return "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
-        endif
-    endif
-endfunction
-inoremap <expr> <CR> ZpanOnEnter()
+inoremap <expr> <CR> zpan#pumselected() ? coc#_select_confirm() : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
 
 inoremap <expr> <Esc> pumvisible() ? "\<C-e>\<Esc>" : "\<Esc>"
 
