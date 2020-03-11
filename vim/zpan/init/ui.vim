@@ -89,24 +89,9 @@ if has('termguicolors')
     set termguicolors
 endif
 
-if &term =~ '^xterm\\|rxvt'
-  " solid underscore
-  let &t_SI .= "\<Esc>[4 q"
-  " solid block
-  let &t_EI .= "\<Esc>[2 q"
-  " 1 or 0 -> blinking block
-  " 3 -> blinking underscore
-  " Recent versions of xterm (282 or above) also support
-  " 5 -> blinking vertical bar
-  " 6 -> solid vertical bar
-endif
-
-" For GNOME Terminal. Don't know how to check this.
-if !has('win32') && !has('mac') && !has('macunix')
-    let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
-    let &t_SR = "\<esc>[3 q"  " blinking underline in replace mode
-    let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
-endif
+let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
+let &t_SR = "\<esc>[3 q"  " blinking underline in replace mode
+let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
 
 let &t_TI = ''
 let &t_TE = ''
