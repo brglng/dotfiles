@@ -4,47 +4,43 @@ vnoremap <BS> d
 " Don't copy the contents of an overwritten selection.
 vnoremap p "_dP
 
-map   <silent> <S-Insert> "+gP
-cmap  <silent> <S-Insert> <C-r>+
-exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']
+noremap <silent> <C-S> :update<CR>
+vnoremap <silent> <C-S> <C-C>:update<CR>
+inoremap <silent> <C-S> <C-O>:update<CR>
+
+noremap <C-Z> u
+inoremap <C-Z> <C-O>u
+
+noremap <M-z> <C-r>
+inoremap <M-z> <C-o><C-r>
+
+nnoremap <C-C> "+y
+vnoremap <C-C> "+y
+vnoremap <C-Insert> "+y
+
+nnoremap <M-x> "+x
+vnoremap <M-x> "+x
+vnoremap <S-Del> "+x
+
+map <M-v> "+gP
+exe 'inoremap <script> <M-v> <C-G>u' . paste#paste_cmd['i']
+exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
+cmap <M-v> <C-R>+
+
+map <S-Insert> "+gP
+exe 'inoremap <script> <S-Insert> <C-G>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <S-Insert> ' . paste#paste_cmd['v']
+cmap <S-Insert> <C-R>+
 
-noremap   <silent> <C-s>  :update<CR>
-vnoremap  <silent> <C-s>  <C-c>:update<CR>
-inoremap  <silent> <C-s>  <C-o>:update<CR>
+noremap <C-Q> <C-V>
+inoremap <C-Q> <C-O><C-V>
 
-noremap   <silent> <C-z>  u
-inoremap  <silent> <C-z>  <C-o>u
-
-noremap   <silent> <M-z>  <C-r>
-inoremap  <silent> <M-z>  <C-o><C-r>
-
-nnoremap  <silent> <C-c>  "+y
-vnoremap  <silent> <C-c>  "+y
-
-nnoremap  <silent> <M-x>  "+x
-vnoremap  <silent> <M-x>  "+x
-
-noremap   <silent> <C-v>  "+gP
-cnoremap  <silent> <C-v>  <C-r>+
-inoremap  <silent> <C-v>  <C-o>"+P
-
-noremap     <silent> <C-q> <C-v>
-inoremap    <silent> <C-q> <C-o><C-v>
-
-" Pasting blockwise and linewise selections is not possible in Insert and
-" Visual mode without the +virtualedit feature.  They are pasted as if they
-" were characterwise instead.
-" Uses the paste.vim autoload script.
-exe 'inoremap <script> <C-v> <C-g>u' . paste#paste_cmd['i']
-exe 'vnoremap <script> <C-v> ' . paste#paste_cmd['v']
-
-noremap   <silent> <M-a> gggH<C-o>G
-inoremap  <silent> <M-a> <C-o>gg<C-o>gH<C-o>G
-cnoremap  <silent> <M-a> <C-c>gggH<C-o>G
-onoremap  <silent> <M-a> <C-c>gggH<C-o>G
-snoremap  <silent> <M-a> <C-c>gggH<C-o>G
-xnoremap  <silent> <M-a> <C-c>ggVG
+noremap <M-a> gggH<C-o>G
+inoremap <M-a> <C-o>gg<C-o>gH<C-o>G
+cnoremap <M-a> <C-c>gggH<C-o>G
+onoremap <M-a> <C-c>gggH<C-o>G
+snoremap <M-a> <C-c>gggH<C-o>G
+xnoremap <M-a> <C-c>ggVG
 
 if has('gui_macvim')
     set macmeta
