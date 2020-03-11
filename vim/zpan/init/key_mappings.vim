@@ -4,18 +4,19 @@ vnoremap <BS> d
 " Don't copy the contents of an overwritten selection.
 vnoremap p "_dP
 
-noremap <silent> <C-S> :update<CR>
-vnoremap <silent> <C-S> <C-C>:update<CR>
-inoremap <silent> <C-S> <C-O>:update<CR>
+noremap <silent> <C-s> :update<CR>
+vnoremap <silent> <C-s> <C-c>:update<CR>
+inoremap <silent> <C-s> <C-o>:update<CR>
 
-noremap <C-Z> u
-inoremap <C-Z> <C-O>u
+noremap <C-z> u
+inoremap <C-z> <C-o>u
 
 noremap <M-z> <C-r>
 inoremap <M-z> <C-o><C-r>
 
-nnoremap <C-C> "+y
-vnoremap <C-C> "+y
+nnoremap <C-c> "+y
+nnoremap <C-Insert> "+y
+vnoremap <C-c> "+y
 vnoremap <C-Insert> "+y
 
 nnoremap <M-x> "+x
@@ -23,17 +24,17 @@ vnoremap <M-x> "+x
 vnoremap <S-Del> "+x
 
 map <M-v> "+gP
-exe 'inoremap <script> <M-v> <C-G>u' . paste#paste_cmd['i']
+exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
 cmap <M-v> <C-R>+
 
 map <S-Insert> "+gP
-exe 'inoremap <script> <S-Insert> <C-G>u' . paste#paste_cmd['i']
+exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <S-Insert> ' . paste#paste_cmd['v']
-cmap <S-Insert> <C-R>+
+cmap <S-Insert> <C-r>+
 
-noremap <C-Q> <C-V>
-inoremap <C-Q> <C-O><C-V>
+noremap <C-q> <C-v>
+inoremap <C-q> <C-o><C-v>
 
 noremap <M-a> gggH<C-o>G
 inoremap <M-a> <C-o>gg<C-o>gH<C-o>G
@@ -46,9 +47,9 @@ if has('gui_macvim')
     set macmeta
 endif
 
-inoremap <silent> <C-U> <C-G>u<C-U>
+inoremap <silent> <C-u> <C-g>u<C-u>
 
-inoremap <silent><expr> <TAB>
+inoremap <silent> <expr> <TAB>
   \ zpan#pumselected()
   \ ? coc#_select_confirm()
   \ : coc#expandableOrJumpable() ?
@@ -75,26 +76,26 @@ noremap  <silent> <Down>      gj
 noremap  <silent> <Up>        gk
 
 " Some Emacs-like keys in insert mode and command-line mode
-inoremap <silent> <expr>    <Home>      col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
-inoremap <silent> <expr>    <C-A>       col('.') == 1 ? "\<C-O>^" : "\<C-O>0"
-inoremap <silent>           <C-X><C-A>  <C-A>
-cnoremap <silent>           <C-A>       <Home>
-cnoremap <silent>           <C-X><C-A>  <C-A>
+inoremap <silent> <expr>    <Home>      col('.') == 1 ? "\<C-o>^" : "\<C-o>0"
+inoremap <silent> <expr>    <C-a>       col('.') == 1 ? "\<C-o>^" : "\<C-o>0"
+inoremap <silent>           <C-x><C-a>  <C-a>
+cnoremap <silent>           <C-a>       <Home>
+cnoremap <silent>           <C-x><C-a>  <C-a>
 
-inoremap <silent> <expr>    <C-B>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-D>\<Lt>Esc>kJs" : "\<Lt>Left>"
-cnoremap <silent>           <C-B>       <Left>
+inoremap <silent> <expr>    <C-b>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-d>\<Lt>Esc>kJs" : "\<Lt>Left>"
+cnoremap <silent>           <C-b>       <Left>
 
-inoremap <silent> <expr>    <C-D>       col('.') > strlen(getline('.')) ? "\<Lt>C-D>":"\<Lt>Del>"
-cnoremap <silent> <expr>    <C-D>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-D>":"\<Lt>Del>"
+inoremap <silent> <expr>    <C-d>       col('.') > strlen(getline('.')) ? "\<Lt>C-d>":"\<Lt>Del>"
+cnoremap <silent> <expr>    <C-d>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-d>":"\<Lt>Del>"
 
-" inoremap <silent> <expr>    <C-E>       col('.') > strlen(getline('.')) <bar><bar> zpan#pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
-inoremap <silent> <expr>    <C-E>       col('.') > strlen(getline('.')) ? "\<Lt>C-E>" : "\<Lt>End>"
+" inoremap <silent> <expr>    <C-e>       col('.') > strlen(getline('.')) <bar><bar> zpan#pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
+inoremap <silent> <expr>    <C-e>       col('.') > strlen(getline('.')) ? "\<Lt>C-e>" : "\<Lt>End>"
 
-inoremap <silent> <expr>    <C-F>       col('.') > strlen(getline('.')) ? "\<Lt>C-F>":"\<Lt>Right>"
-cnoremap <silent> <expr>    <C-F>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
+inoremap <silent> <expr>    <C-f>       col('.') > strlen(getline('.')) ? "\<Lt>C-f>":"\<Lt>Right>"
+cnoremap <silent> <expr>    <C-f>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
 
-inoremap <silent> <expr>    <C-n>       zpan#pumselected() ? "\<C-N>" : "\<Down>"
-inoremap <silent> <expr>    <C-p>       zpan#pumselected() ? "\<C-P>" : "\<Up>"
+inoremap <silent> <expr>    <C-n>       zpan#pumselected() ? "\<C-n>" : "\<Down>"
+inoremap <silent> <expr>    <C-p>       zpan#pumselected() ? "\<C-p>" : "\<Up>"
 
 inoremap <silent>           <C-BS>      <C-w>
 inoremap <silent>           <M-b>       <C-Left>
