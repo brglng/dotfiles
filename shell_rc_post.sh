@@ -71,4 +71,6 @@ alias zi='z -i'      # cd with interactive selection
 alias zf='z -I'      # use fzf to select in multiple matches
 alias zb='z -b'      # quickly cd to the parent directory
 
+stty -ixon
+
 # vim: ts=8 sts=4 sw=4 et

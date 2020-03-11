@@ -16,40 +16,40 @@ inoremap  <silent> <C-s>  <C-o>:update<CR>
 noremap   <silent> <C-z>  u
 inoremap  <silent> <C-z>  <C-o>u
 
-if !((has('macunix') || has('mac')) && has('gui_running'))
-    noremap   <silent> <M-s>  :update<CR>
-    vnoremap  <silent> <M-s>  <C-c>:update<CR>
-    inoremap  <silent> <M-s>  <C-o>:update<CR>
+noremap   <silent> <M-s>  :update<CR>
+vnoremap  <silent> <M-s>  <C-c>:update<CR>
+inoremap  <silent> <M-s>  <C-o>:update<CR>
 
-    noremap   <silent> <M-z>  u
-    inoremap  <silent> <M-z>  <C-o>u
-    noremap   <silent> <M-Z>  <C-r>
-    inoremap  <silent> <M-Z>  <C-o><C-r>
+noremap   <silent> <M-z>  u
+inoremap  <silent> <M-z>  <C-o>u
+noremap   <silent> <M-Z>  <C-r>
+inoremap  <silent> <M-Z>  <C-o><C-r>
 
-    nnoremap  <silent> <M-c>  "+y
-    vnoremap  <silent> <M-c>  "+y
+nnoremap  <silent> <M-c>  "+y
+vnoremap  <silent> <M-c>  "+y
 
-    nnoremap  <silent> <M-x>  "+x
-    vnoremap  <silent> <M-x>  "+x
+nnoremap  <silent> <M-x>  "+x
+vnoremap  <silent> <M-x>  "+x
 
-    map       <silent> <M-v>  "+gP
-    cmap      <silent> <M-v>  <C-r>+
-    inoremap  <silent> <M-v>  <C-o>"+P
+noremap   <silent> <M-v>  "+gP
+cnoremap  <silent> <M-v>  <C-r>+
+inoremap  <silent> <M-v>  <C-o>"+P
 
-    " Pasting blockwise and linewise selections is not possible in Insert and
-    " Visual mode without the +virtualedit feature.  They are pasted as if they
-    " were characterwise instead.
-    " Uses the paste.vim autoload script.
-    exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
-    exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
+" Pasting blockwise and linewise selections is not possible in Insert and
+" Visual mode without the +virtualedit feature.  They are pasted as if they
+" were characterwise instead.
+" Uses the paste.vim autoload script.
+exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
+exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
 
-    noremap   <silent> <M-a> gggH<C-o>G
-    inoremap  <silent> <M-a> <C-o>gg<C-o>gH<C-o>G
-    cnoremap  <silent> <M-a> <C-c>gggH<C-o>G
-    onoremap  <silent> <M-a> <C-c>gggH<C-o>G
-    snoremap  <silent> <M-a> <C-c>gggH<C-o>G
-    xnoremap  <silent> <M-a> <C-c>ggVG
-elseif has('gui_macvim')
+noremap   <silent> <M-a> gggH<C-o>G
+inoremap  <silent> <M-a> <C-o>gg<C-o>gH<C-o>G
+cnoremap  <silent> <M-a> <C-c>gggH<C-o>G
+onoremap  <silent> <M-a> <C-c>gggH<C-o>G
+snoremap  <silent> <M-a> <C-c>gggH<C-o>G
+xnoremap  <silent> <M-a> <C-c>ggVG
+
+if has('gui_macvim')
     set macmeta
 endif
 
@@ -153,3 +153,5 @@ nnoremap <silent> <C-p> :Clap files<CR>
 " Tasks
 noremap <silent> <F5> :CocList --normal tasks<CR>
 inoremap <silent> <F5> <C-o>:CocList --normal tasks<CR>
+
+" vim: sw=4 ts=8 sts=4 et

@@ -15,7 +15,6 @@ elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
     set ttimeoutlen=80
 endif
 
-
 "----------------------------------------------------------------------
 " 终端下允许 ALT，详见：http://www.skywind.me/blog/archives/2021
 " 记得设置 ttimeout （见 init-basic.vim） 和 ttimeoutlen （上面）
@@ -34,11 +33,10 @@ if has('nvim') == 0 && has('gui_running') == 0
     for c in [',', '.', '/', ';', '{', '}']
         call s:metacode(c)
     endfor
-    for c in ['?', ':', '-', '_', '+', '=', "'"]
+    for c in ['?', ':', '-', '_', '+', '=', "'", '`']
         call s:metacode(c)
     endfor
 endif
-
 
 "----------------------------------------------------------------------
 " 终端下功能键设置
@@ -48,7 +46,6 @@ function! s:key_escape(name, code)
         exec "set ".a:name."=\e".a:code
     endif
 endfunc
-
 
 "----------------------------------------------------------------------
 " 功能键终端码矫正
@@ -69,7 +66,6 @@ call s:key_escape('<S-F9>', '[20;2~')
 call s:key_escape('<S-F10>', '[21;2~')
 call s:key_escape('<S-F11>', '[23;2~')
 call s:key_escape('<S-F12>', '[24;2~')
-
 
 "----------------------------------------------------------------------
 " 防止tmux下vim的背景色显示异常
@@ -92,6 +88,27 @@ if has('termguicolors')
     endif
     set termguicolors
 endif
+
+if &term =~ '^xterm\\|rxvt'
+  " solid underscore
+  let &t_SI .= "\<Esc>[4 q"
+  " solid block
+  let &t_EI .= "\<Esc>[2 q"
+  " 1 or 0 -> blinking block
+  " 3 -> blinking underscore
+  " Recent versions of xterm (282 or above) also support
+  " 5 -> blinking vertical bar
+  " 6 -> solid vertical bar
+endif
+
+" For GNOME Terminal. Don't know how to check this.
+if !has('win32') && !has('mac') && !has('macunix')
+    let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
+    let &t_SR = "\<esc>[3 q"  " blinking underline in replace mode
+    let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
+endif
+
+set guicursor+=i:ver100-iCursor
 
 syntax on
 set background=dark
