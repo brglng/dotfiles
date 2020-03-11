@@ -108,6 +108,9 @@ if !has('win32') && !has('mac') && !has('macunix')
     let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
 endif
 
+let &t_TI = ''
+let &t_TE = ''
+
 set guicursor+=i:ver100-iCursor
 
 syntax on
