@@ -15,7 +15,7 @@ call plug#begin('~/.local/share/vim/plugged')
 Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
 Plug 'roxma/vim-hug-neovim-rpc', has('nvim') ? {'on': []} : {}
 Plug 'tpope/vim-eunuch'
-Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tmux-plugins/vim-tmux-focus-events', has('nvim') ? {} : {'on': []}
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
 
