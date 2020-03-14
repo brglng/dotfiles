@@ -167,11 +167,11 @@ if has('gui_running')
     endif
 endif
 
-if has('nvim')
-    set signcolumn=yes:2
-else
-    set signcolumn=yes
-endif
+" if has('nvim')
+"     set signcolumn=yes:2
+" else
+"     set signcolumn=yes
+" endif
 
 " QuickFix and Location windows
 autocmd FileType tagbar nnoremap <silent> <buffer> q <C-w>q
