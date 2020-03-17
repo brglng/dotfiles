@@ -11,7 +11,7 @@ function update_file {
         echo "$content" >> $file
     else
         echo "Updating $file"
-        echo "$content" | perl -i -p0e "s/$begin_regex.*$end_regex$/<STDIN>/gse" $file
+        echo "$content" | perl -i -p0e "s/$begin_regex.*$end_regex[^\n]*\n/<STDIN>/gse" $file
     fi
 }
 

@@ -9,7 +9,8 @@ function update_bashrc {
         '#[ \t]*END[ \t]*brglng\/dotfiles' \
         "$(cat << EOF
 # BEGIN brglng/dotfiles
-[[ -r "$PWD/bashrc" ]] && . "$PWD/bashrc"
+export BRGLNG_DOTFILES_DIR=$PWD
+[[ -r "\$BRGLNG_DOTFILES_DIR/bashrc" ]] && . "\$BRGLNG_DOTFILES_DIR/bashrc"
 # END brglng/dotfiles
 EOF
 )"
@@ -21,7 +22,8 @@ function update_zshrc {
         '#[ \t]*END[ \t]*brglng\/dotfiles' \
         "$(cat << EOF
 # BEGIN brglng/dotfiles
-[[ -r "$PWD/zshrc" ]] && . "$PWD/zshrc"
+export BRGLNG_DOTFILES_DIR=$PWD
+[[ -r "\$BRGLNG_DOTFILES_DIR/zshrc" ]] && . "\$BRGLNG_DOTFILES_DIR/zshrc"
 # END brglng/dotfiles
 EOF
 )"
@@ -60,14 +62,14 @@ function link_common() {
 }
 
 function link_linux() {
-    update_bashrc "$HOME/.bashrc"
+    update_bashrc                               "$HOME/.bashrc"
     link "$PWD/config/TabNine/TabNine.toml"     "$HOME/.config/TabNine/TabNine.toml"
     update_tabnine_config                       "$HOME/.config/TabNine/tabnine_config.json"
     link_common
 }
 
 function link_mac() {
-    update_bashrc "$HOME/.bash_profile"
+    update_bashrc                               "$HOME/.bash_profile"
     link "$PWD/config/TabNine/TabNine.toml"     "$HOME/Library/Preferences/TabNine/TabNine.toml"
     update_tabnine_config                       "$HOME/Library/Preferences/TabNine/tabnine_config.json"
     link_common

@@ -8,20 +8,7 @@ case $- in
       *) return;;
 esac
 
-function _get_script_dir () {
-    SOURCE="${BASH_SOURCE[0]}"
-    # While $SOURCE is a symlink, resolve it
-    while [ -h "$SOURCE" ]; do
-        DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-        SOURCE="$( readlink "$SOURCE" )"
-        # If $SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
-        [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-    done
-    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-    echo "$DIR"
-}
-
-source "$(_get_script_dir)/shell_rc_pre.sh"
+source "$BRGLNG_DOTFILES_DIR/shell_rc_pre.sh"
 
 set -o notify
 
@@ -113,6 +100,6 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-source "$(_get_script_dir)/shell_rc_post.sh"
+source "$BRGLNG_DOTFILES_DIR/shell_rc_post.sh"
 
 # vim: ts=8 sts=4 sw=4 et

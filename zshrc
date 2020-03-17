@@ -4,13 +4,7 @@ case $- in
       *) return;;
 esac
 
-if [[ `uname -s` = Darwin ]]; then
-    readlinkf() { greadlink -f "$1"; }
-else
-    readlinkf() { readlink -f "$1"; }
-fi
-
-source "$(dirname $(readlinkf ${(%):-%N}))/shell_rc_pre.sh"
+source "$BRGLNG_DOTFILES_DIR/shell_rc_pre.sh"
 
 if [[ $HOMEBREW_PREFIX != "" ]]; then
     FPATH=$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH
@@ -253,6 +247,6 @@ fi
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
-source "$(dirname $(readlinkf ${(%):-%N}))/shell_rc_post.sh"
+source "$BRGLNG_DOTFILES_DIR/shell_rc_post.sh"
 
 # vim: ts=8 sts=4 sw=4 et
