@@ -48,6 +48,7 @@ function update_tabnine_config {
 }
 
 function link_common() {
+    link "$PWD/clang-format"                    "$HOME/.clang-format"
     link "$PWD/config/alacritty/alacritty.yml"  "$HOME/.config/alacritty/alacritty.yml"
     link "$PWD/config/powerline"                "$HOME/.config/powerline"
     link "$PWD/cgdb/cgdbrc"                     "$HOME/.cgdb/cgdbrc"
