@@ -137,7 +137,7 @@ nvm install node npm
 nvm use node
 nvm alias default $(nvm current)
 
-sudo -H gem install neovim
+gem install --user-install neovim
 npm install -g neovim
 
 mkdir -p ~/.tmux/plugins
