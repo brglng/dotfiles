@@ -50,10 +50,8 @@
 	co = checkout
 	st = status
 	br = branch
-	df = difftool
-	dd = difftool --dir-diff
-	dfg = difftool --gui
-	ddg = difftool --gui --dir-diff
+	df = difftool --dir-diff
+	dg = difftool --gui --dir-diff
 [difftool "bc3"]
 	trustExitCode = true
 [mergetool "bc3"]
