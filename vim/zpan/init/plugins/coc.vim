@@ -109,8 +109,6 @@ endif
 " autocmd User CocOpenFloat silent! setlocal winblend=15
 
 autocmd FileType markdown
-  \ omap <silent> w <Plug>(coc-ci-w) |
-  \ omap <silent> b <Plug>(coc-ci-b) |
   \ nmap <silent> w <Plug>(coc-ci-w) |
   \ nmap <silent> b <Plug>(coc-ci-b) |
 
