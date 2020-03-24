@@ -97,9 +97,6 @@ zinit snippet OMZ::plugins/golang
 zinit ice as"completion"
 zinit snippet OMZ::plugins/gradle/_gradle
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/gradle/_gradlew
-
 zinit ice wait lucid wait=3 lucid
 zinit snippet OMZ::plugins/gradle/gradle.plugin.zsh
 
