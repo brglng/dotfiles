@@ -123,8 +123,6 @@ if ! brew ls --versions neovim &> /dev/null; then
     brew install --HEAD neovim
 fi
 
-$HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish
-
 if [[ $UNAME_S = "Linux" ]]; then
     scripts/linuxbrew_post_install.sh
 fi
@@ -182,6 +180,8 @@ echo 'Please type `exit` to quit from Zsh after all plugins have been installed.
 read -p "Press ENTER to continue..."
 
 zsh -i
+
+zsh -c "$HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish"
 
 echo "Congratulations! The installation is finished."
 echo "It is ${BOLD}strongly recommended${SGR0} that you log out from your current shell and log in again ${BOLD}now${SGR0}."
