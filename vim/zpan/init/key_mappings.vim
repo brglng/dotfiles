@@ -23,10 +23,10 @@ nnoremap <M-x> "+x
 vnoremap <M-x> "+x
 vnoremap <S-Del> "+x
 
-map <M-v> "+gP
-exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
-exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
-cmap <M-v> <C-R>+
+map <C-v> "+gP
+exe 'inoremap <script> <C-v> <C-g>u' . paste#paste_cmd['i']
+exe 'vnoremap <script> <C-v> ' . paste#paste_cmd['v']
+cmap <C-v> <C-R>+
 
 map <S-Insert> "+gP
 exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']

@@ -22,6 +22,7 @@ path_prepend "$HOME/.cargo/bin"
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
+    eval $(brew shellenv | grep -v 'export PATH=')
 else
     echo "Homebrew not found!"
 fi
