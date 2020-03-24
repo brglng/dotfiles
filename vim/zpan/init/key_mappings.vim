@@ -7,22 +7,29 @@ vnoremap p "_dP
 noremap <silent> <C-s> :update<CR>
 vnoremap <silent> <C-s> <C-c>:update<CR>
 inoremap <silent> <C-s> <C-o>:update<CR>
+noremap <silent> <M-s> :update<CR>
+vnoremap <silent> <M-s> <C-c>:update<CR>
+inoremap <silent> <M-s> <C-o>:update<CR>
 noremap <silent> <D-s> :update<CR>
 vnoremap <silent> <D-s> <C-c>:update<CR>
 inoremap <silent> <D-s> <C-o>:update<CR>
 
 noremap <C-z> u
 inoremap <C-z> <C-o>u
+noremap <M-z> u
+inoremap <M-z> <C-o>u
 noremap <D-z> u
 inoremap <D-z> <C-o>u
 
-noremap <M-z> <C-r>
-inoremap <M-z> <C-o><C-r>
+noremap <M-Z> <C-r>
+inoremap <M-Z> <C-o><C-r>
 noremap <D-S-z> <C-r>
 inoremap <D-S-z> <C-o><C-r>
 
 nnoremap <C-c> "+y
 vnoremap <C-c> "+y
+nnoremap <M-c> "+y
+vnoremap <M-c> "+y
 nnoremap <C-Insert> "+y
 vnoremap <C-Insert> "+y
 nnoremap <D-c> "+y
@@ -37,11 +44,11 @@ vnoremap <D-x> "+x
 map <M-v> "+gP
 exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
-cmap <M-v> <C-R>+
+cmap <M-v> <C-r>+
 map <D-v> "+gP
 exe 'inoremap <script> <D-v> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <D-v> ' . paste#paste_cmd['v']
-cmap <D-v> <C-R>+
+cmap <D-v> <C-r>+
 
 map <S-Insert> "+gP
 exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']
