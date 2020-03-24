@@ -7,26 +7,41 @@ vnoremap p "_dP
 noremap <silent> <C-s> :update<CR>
 vnoremap <silent> <C-s> <C-c>:update<CR>
 inoremap <silent> <C-s> <C-o>:update<CR>
+noremap <silent> <D-s> :update<CR>
+vnoremap <silent> <D-s> <C-c>:update<CR>
+inoremap <silent> <D-s> <C-o>:update<CR>
 
 noremap <C-z> u
 inoremap <C-z> <C-o>u
+noremap <D-z> u
+inoremap <D-z> <C-o>u
 
 noremap <M-z> <C-r>
 inoremap <M-z> <C-o><C-r>
+noremap <D-S-z> <C-r>
+inoremap <D-S-z> <C-o><C-r>
 
 nnoremap <C-c> "+y
-nnoremap <C-Insert> "+y
 vnoremap <C-c> "+y
+nnoremap <C-Insert> "+y
 vnoremap <C-Insert> "+y
+nnoremap <D-c> "+y
+vnoremap <D-c> "+y
 
 nnoremap <M-x> "+x
 vnoremap <M-x> "+x
 vnoremap <S-Del> "+x
+nnoremap <D-x> "+x
+vnoremap <D-x> "+x
 
 map <M-v> "+gP
 exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
 cmap <M-v> <C-R>+
+map <D-v> "+gP
+exe 'inoremap <script> <D-v> <C-g>u' . paste#paste_cmd['i']
+exe 'vnoremap <script> <D-v> ' . paste#paste_cmd['v']
+cmap <D-v> <C-R>+
 
 map <S-Insert> "+gP
 exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']
@@ -42,6 +57,12 @@ cnoremap <M-a> <C-c>gggH<C-o>G
 onoremap <M-a> <C-c>gggH<C-o>G
 snoremap <M-a> <C-c>gggH<C-o>G
 xnoremap <M-a> <C-c>ggVG
+noremap <D-a> gggH<C-o>G
+inoremap <D-a> <C-o>gg<C-o>gH<C-o>G
+cnoremap <D-a> <C-c>gggH<C-o>G
+onoremap <D-a> <C-c>gggH<C-o>G
+snoremap <D-a> <C-c>gggH<C-o>G
+xnoremap <D-a> <C-c>ggVG
 
 if has('gui_macvim')
     set macmeta
