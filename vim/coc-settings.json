@@ -1,5 +1,5 @@
 {
-    "coc.preferences.formatOnType": true,
+    "coc.preferences.formatOnType": false,
     "diagnostic.errorSign": "",
     "diagnostic.hintSign": "",
     "diagnostic.infoSign": "",
