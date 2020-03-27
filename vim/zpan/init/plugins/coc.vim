@@ -34,7 +34,6 @@ omap af <Plug>(coc-funcobj-a)
 let s:coc_extensions = [
   \ 'coc-bookmark',
   \ 'coc-cmake',
-  \ 'coc-ci',
   \ 'coc-css',
   \ 'coc-dictionary',
   \ 'coc-docker',
@@ -107,9 +106,5 @@ endif
 " let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']
 
 " autocmd User CocOpenFloat silent! setlocal winblend=15
-
-autocmd FileType markdown
-  \ nmap <silent> w <Plug>(coc-ci-w) |
-  \ nmap <silent> b <Plug>(coc-ci-b) |
 
 " vim: ts=8 sts=4 sw=4 et
