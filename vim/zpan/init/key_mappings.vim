@@ -77,17 +77,17 @@ endif
 
 inoremap <silent> <C-u> <C-g>u<C-u>
 
-inoremap <silent> <expr> <TAB>
+inoremap <expr> <TAB>
   \ zpan#pumselected()
   \ ? coc#_select_confirm()
   \ : coc#expandableOrJumpable() ?
   \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
   \ : "\<TAB>"
 
-inoremap <silent> <expr> <C-Space> coc#refresh()
-inoremap <silent> <expr> <C-x><C-x> coc#refresh()
+inoremap <expr> <C-Space> coc#refresh()
+inoremap <expr> <C-x><C-x> coc#refresh()
 
-inoremap <silent> <expr> <CR> zpan#pumselected() ? "\<C-y>" : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
+inoremap <expr> <CR> zpan#pumselected() ? coc#_select_confirm() : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
 
 inoremap <expr> <Esc> pumvisible() ? "\<C-e>\<Esc>" : "\<Esc>"
 
@@ -104,47 +104,47 @@ noremap  <silent> <Down>      gj
 noremap  <silent> <Up>        gk
 
 " Some Emacs-like keys in insert mode and command-line mode
-inoremap <silent> <expr>    <Home>      col('.') == 1 ? "\<C-o>^" : "\<C-o>0"
-inoremap <silent> <expr>    <C-a>       col('.') == 1 ? "\<C-o>^" : "\<C-o>0"
-inoremap <silent>           <C-x><C-a>  <C-a>
-cnoremap <silent>           <C-a>       <Home>
-cnoremap <silent>           <C-x><C-a>  <C-a>
+inoremap <expr>     <Home>      col('.') == 1 ? "\<C-o>^" : "\<C-o>0"
+inoremap <expr>     <C-a>       col('.') == 1 ? "\<C-o>^" : "\<C-o>0"
+inoremap <silent>   <C-x><C-a>  <C-a>
+cnoremap <silent>   <C-a>       <Home>
+cnoremap <silent>   <C-x><C-a>  <C-a>
 
-inoremap <silent> <expr>    <C-b>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-d>\<Lt>Esc>kJs" : "\<Lt>Left>"
-cnoremap <silent>           <C-b>       <Left>
+inoremap <expr>     <C-b>       getline('.') =~ '^\s*$' && col('.') > strlen(getline('.')) ? "0\<Lt>C-d>\<Lt>Esc>kJs" : "\<Lt>Left>"
+cnoremap <silent>   <C-b>       <Left>
 
-inoremap <silent> <expr>    <C-d>       col('.') > strlen(getline('.')) ? "\<Lt>C-d>":"\<Lt>Del>"
-cnoremap <silent> <expr>    <C-d>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-d>":"\<Lt>Del>"
+inoremap <expr>     <C-d>       col('.') > strlen(getline('.')) ? "\<Lt>C-d>":"\<Lt>Del>"
+cnoremap <expr>     <C-d>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-d>":"\<Lt>Del>"
 
-" inoremap <silent> <expr>    <C-e>       col('.') > strlen(getline('.')) <bar><bar> zpan#pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
-inoremap <silent> <expr>    <C-e>       col('.') > strlen(getline('.')) ? "\<Lt>C-e>" : "\<Lt>End>"
+" inoremap <expr>    <C-e>       col('.') > strlen(getline('.')) <bar><bar> zpan#pumselected() ? "\<Lt>C-E>" : "\<Lt>End>"
+inoremap <expr>     <C-e>       col('.') > strlen(getline('.')) ? "\<Lt>C-e>" : "\<Lt>End>"
 
-inoremap <silent> <expr>    <C-f>       col('.') > strlen(getline('.')) ? "\<Lt>C-f>":"\<Lt>Right>"
-cnoremap <silent> <expr>    <C-f>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
+inoremap <expr>     <C-f>       col('.') > strlen(getline('.')) ? "\<Lt>C-f>":"\<Lt>Right>"
+cnoremap <expr>     <C-f>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
 
-inoremap <silent> <expr>    <C-n>       zpan#pumselected() ? "\<C-n>" : "\<Down>"
-inoremap <silent> <expr>    <C-p>       zpan#pumselected() ? "\<C-p>" : "\<Up>"
+inoremap <expr>     <C-n>       zpan#pumselected() ? "\<C-n>" : "\<Down>"
+inoremap <expr>     <C-p>       zpan#pumselected() ? "\<C-p>" : "\<Up>"
 
-inoremap <silent>           <C-BS>      <C-w>
-inoremap <silent>           <M-b>       <C-Left>
-inoremap <silent>           <M-f>       <C-Right>
-inoremap <silent>           <M-k>       <C-Right><C-w>
-inoremap <silent>           <C-x>o      <C-o><C-w>w
+inoremap <silent>   <C-BS>      <C-w>
+inoremap <silent>   <M-b>       <C-Left>
+inoremap <silent>   <M-f>       <C-Right>
+inoremap <silent>   <M-k>       <C-Right><C-w>
+inoremap <silent>   <C-x>o      <C-o><C-w>w
 
-cnoremap <silent>           <C-BS>      <C-w>
-cnoremap <silent>           <M-b>       <C-Left>
-cnoremap <silent>           <M-f>       <C-Right>
-cnoremap <silent>           <M-k>       <C-Right><C-w>
-cnoremap <silent>           <C-a>       <Home>
+cnoremap <silent>   <C-BS>      <C-w>
+cnoremap <silent>   <M-b>       <C-Left>
+cnoremap <silent>   <M-f>       <C-Right>
+cnoremap <silent>   <M-k>       <C-Right><C-w>
+cnoremap <silent>   <C-a>       <Home>
 
-nnoremap <silent> <M-Left>      <C-o>
-nnoremap <silent> <M-Right>     <C-i>
+nnoremap <silent>   <M-Left>    <C-o>
+nnoremap <silent>   <M-Right>   <C-i>
 
-nnoremap <silent> Q :confirm qall<CR>
+nnoremap <silent>   Q           :confirm qall<CR>
 
 " buffer
-nnoremap <silent> <C-Tab>       :bp<CR>
-nnoremap <silent> <C-S-Tab>     :bn<CR>
+nnoremap <silent>   <C-Tab>     :bp<CR>
+nnoremap <silent>   <C-S-Tab>   :bn<CR>
 
 " UI toggles
 noremap <silent> <M-1> :call sidebar#toggle('coc-explorer')<CR>

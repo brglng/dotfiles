@@ -22,11 +22,11 @@ function! zpan#rstrip(str, chars) abort
 endfunction
 
 function! zpan#pumselected() abort
-    if exists('*complete_info')
-        return complete_info()['selected'] >= 0
-    else
+    " if exists('*complete_info')
+    "     return complete_info()['selected'] >= 0
+    " else
         return pumvisible() && !empty(v:completed_item)
-    endif
+    " endif
 endfunction
 
 function! zpan#is_tool_window(...) abort
