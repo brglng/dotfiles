@@ -170,7 +170,7 @@ else
 endif
 
 " Fuzzy finder
-nnoremap <silent> <C-p> :Clap files<CR>
+nnoremap <silent> <C-p> :Leaderf file<CR>
 
 " Tasks
 noremap <silent> <F5> :CocList --normal tasks<CR>

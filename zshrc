@@ -192,7 +192,7 @@ zinit light zdharma/fast-syntax-highlighting
 zinit ice wait=1 lucid
 zinit light lukechilds/zsh-better-npm-completion
 
-zinit light Aloxaf/fzf-tab
+# zinit light Aloxaf/fzf-tab
 
 if type luajit &>/dev/null; then
     ZLUA_EXEC=$(which luajit)

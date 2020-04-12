@@ -31,7 +31,7 @@ let g:which_key_map.b = {
   \ '0': ["<Plug>lightline#bufferline#go(10)", "buffer-10"],
   \ 'p': [':bp', 'previous-buffer'],
   \ 'n': [':bn', 'next-buffer'],
-  \ '/': [':Clap buffers', 'search-for-a-buffer']
+  \ '/': [':Leaderf buffer', 'search-for-a-buffer']
   \ }
 
 let g:which_key_map.c = {
@@ -100,35 +100,31 @@ let g:which_key_map['j'] = {
 
 let g:which_key_map['p'] = {
   \ 'name': '+fuzzy-finder',
-  \ ' ': [':Clap providers', 'show-providers'],
-  \ ';': [':Clap command', 'find-commands'],
-  \ 'C': [':Clap colors', 'find-colors'],
+  \ ';': [':Leaderf command', 'find-commands'],
+  \ 'C': [':Leaderf colorscheme', 'find-colors'],
   \ 'c': [':CocList commands', 'find-coc-commands'],
-  \ 'd': [':Clap filer', 'show-file-tree'],
+  \ 'd': [':Leaderf filer', 'show-file-tree'],
   \ 'e': [':CocList extensions', 'find-coc-extensions'],
-  \ 'f': [':Clap files', 'find-files'],
+  \ 'f': [':Leaderf file', 'find-files'],
   \ 'F': [':CocList folders', 'find-folders'],
-  \ 'g': [':Clap grep', 'grep'],
-  \ 'j': [':Clap jumps', 'show-jumps'],
+  \ 'g': [':Leaderf rg', 'grep'],
   \ 'k': [':CocList links', 'list-links'],
-  \ 'L': [':Clap loclist', 'show-loclist'],
-  \ 'l': [':Clap blines', 'search-buffer-lines'],
-  \ 'm': [':Clap marks', 'show-marks'],
+  \ 'L': [':CocList locationlist', 'show-loclist'],
+  \ 'l': [':Leaderf line', 'search-buffer-lines'],
+  \ 'm': [':Leaderf marks', 'show-marks'],
   \ 'M': [':CocList maps', 'list-mappings'],
   \ 'H': {
   \     'name': '+history',
-  \     'c': [':Clap command_history', 'show-command-history'],
+  \     'c': [':Leaderf cmdHistory', 'show-command-history'],
   \     'j': [':CocList location', 'list-jump-history']
   \ },
-  \ 'h': [':Clap help_tags', 'find-help'],
-  \ 'o': [':Clap tags', 'search-buffer-tags'],
+  \ 'h': [':Leaderf help', 'find-help'],
+  \ 'o': [':Leaderf bufTag', 'search-buffer-tags'],
   \ 'P': [':CocList snippets', 'list snippets'],
-  \ 'q': [':Clap quickfix', 'show-quickfix'],
-  \ 'r': [':Clap history', 'find-recent-files'],
-  \ 'R': [':Clap registers', 'show-registers'],
+  \ 'q': [':CocList quickfix', 'show-quickfix'],
+  \ 'r': [':Leaderf mru', 'find-recent-files'],
   \ 's': [':CocList -I symbols', 'list-symbols'],
-  \ 'S': [':CocList sessions', 'list-sessions'],
-  \ 'y': [':Clap yanks', 'show-yanks']
+  \ 'S': [':CocList sessions', 'list-sessions']
   \ }
 
 let g:which_key_map.q = ['<C-w>q', 'close-window']
@@ -155,7 +151,7 @@ let g:which_key_map.v = {
   \ 'b': [':CocList --normal branches', 'git-branches'],
   \ 'd': ['<Plug>(coc-git-chunkinfo)', 'show-chunk-diff'],
   \ 'c': ['<Plug>(coc-git-commit)', 'show-commit-log'],
-  \ 'f': [':Clap gfiles', 'list-git-files'],
+  \ 'f': [':CocList --normal gfiles', 'list-git-files'],
   \ 'l': [':CocList --normal commits', 'git-log'],
   \ 'L': [':CocList --normal bcommits', 'file-commits'],
   \ 'i': [':CocList --normal issues', 'list-github-issues'],
@@ -182,7 +178,7 @@ let g:which_key_map.w = {
   \ 'o': ['<C-w>o', 'close-all-other-windows'],
   \ 'v': ['<C-w>v', 'vertically-split-window'],
   \ 's': ['<C-w>s', 'split-window'],
-  \ '/': [':Clap windows', 'search-for-a-window'],
+  \ '/': [':Leaderf window', 'search-for-a-window'],
   \ }
 
 vmap <Leader>x= <Plug>(coc-format-selected)
