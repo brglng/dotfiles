@@ -8,7 +8,7 @@ endif
 
 let g:terminal_edit = 'SelectiveDrop'
 let g:terminal_kill = 'term'
-let g:terminal_list = 0
+let g:terminal_list = 1
 let g:terminal_cwd = 2
 let g:terminal_fixheight = 1
 let g:terminal_close = 1
