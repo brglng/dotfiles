@@ -63,6 +63,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-repeat'
+Plug 'bootleq/vim-cycle'
 Plug 'mg979/vim-visual-multi'
 Plug 'Shougo/vinarise.vim', {'do': ':silent! UpdateRemotePlugins'}
 " call dein#add('Shougo/deorise.vim')
@@ -129,6 +130,7 @@ if !zpan#is_sudo()
     runtime zpan/init/plugins/coc_smartf.vim
 endif
 runtime zpan/init/plugins/cppman.vim
+runtime zpan/init/plugins/cycle.vim
 runtime zpan/init/plugins/dasht.vim
 " runtime zpan/init/plugins/defx.vim
 " runtime zpan/init/plugins/dein_ui.vim
