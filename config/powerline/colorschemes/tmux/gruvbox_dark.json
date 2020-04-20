@@ -1,14 +1,14 @@
 {
     "groups": {
-	"active_window_status": {"fg": "gruvbox:bright_yellow",     "bg": "gruvbox:dark0_hard",    "attrs": []},
-	"window_status":        {"fg": "gray70",                    "bg": "gruvbox:dark0_hard",    "attrs": []},
-	"activity_status":      {"fg": "gruvbox:bright_orange",     "bg": "gruvbox:dark0_hard",    "attrs": []},
-	"bell_status":          {"fg": "red",                       "bg": "gruvbox:dark0_hard",    "attrs": []},
-	"window":               {"fg": "gray6",                     "bg": "gruvbox:dark0_hard",    "attrs": []},
-	"window:divider":       {"fg": "gray4",                     "bg": "gruvbox:dark0_hard",    "attrs": []},
-	"window:current":       {"fg": "gruvbox:dark0_hard",        "bg": "gruvbox:bright_yellow", "attrs": []},
-	"window_name":          {"fg": "gruvbox:dark0_hard",        "bg": "gruvbox:bright_yellow", "attrs": ["bold"]},
-	"session":              {"fg": "gruvbox:dark0_hard",        "bg": "gruvbox:light0_hard",   "attrs": ["bold"]},
-	"session:prefix":       {"fg": "gruvbox:dark0_hard",        "bg": "gruvbox:bright_yellow", "attrs": ["bold"]}
+	"active_window_status": {"fg": "gruvbox:bright_yellow",     "bg": "gruvbox:dark1",    "attrs": []},
+	"window_status":        {"fg": "gray70",                    "bg": "gruvbox:dark1",    "attrs": []},
+	"activity_status":      {"fg": "gruvbox:bright_orange",     "bg": "gruvbox:dark1",    "attrs": []},
+	"bell_status":          {"fg": "red",                       "bg": "gruvbox:dark1",    "attrs": []},
+	"window":               {"fg": "gruvbox:light0", "bg": "gruvbox:dark1",    "attrs": []},
+	"window:divider":       {"fg": "gruvbox:light0", "bg": "gruvbox:dark1",    "attrs": []},
+	"window:current":       {"fg": "gruvbox:dark0", "bg": "gruvbox:light4", "attrs": []},
+	"window_name":          {"fg": "gruvbox:dark0", "bg": "gruvbox:light4", "attrs": ["bold"]},
+	"session":              {"fg": "gruvbox:dark0", "bg": "gruvbox:light4",   "attrs": ["bold"]},
+	"session:prefix":       {"fg": "gruvbox:dark0", "bg": "gruvbox:bright_blue", "attrs": ["bold"]}
     }
 }
