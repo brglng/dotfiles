@@ -101,9 +101,8 @@ set guicursor+=i:ver100-iCursor
 syntax on
 set background=dark
 " let ayucolor="dark"
-" silent! colorscheme ayu
-" let g:gruvbox_italic=1
-silent! colorscheme nord
+let g:gruvbox_italic=1
+silent! colorscheme gruvbox
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
 " autocmd Syntax,ColorScheme * highlight! link FoldColumn LineNr

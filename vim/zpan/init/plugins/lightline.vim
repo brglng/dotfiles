@@ -112,7 +112,7 @@ function! s:lightline_update()
 endfunction
 
 let g:lightline = {
-  \ 'colorscheme': 'nord',
+  \ 'colorscheme': 'gruvbox',
   \ 'active': {
   \     'left': [
   \         ['mode', 'paste'],

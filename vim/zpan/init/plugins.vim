@@ -45,6 +45,7 @@ Plug 'brglng/vim-sidebar-manager'
 
 " Moving Plugins
 Plug 'rhysd/clever-f.vim'
+Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
@@ -59,6 +60,7 @@ Plug 'sgur/vim-textobj-parameter'
 " Plug 'tpope/vim-commentary'
 Plug 'scrooloose/nerdcommenter'
 Plug 'junegunn/vim-easy-align'
+Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-repeat'
 Plug 'mg979/vim-visual-multi'
@@ -133,6 +135,7 @@ runtime zpan/init/plugins/dasht.vim
 " runtime zpan/init/plugins/denite.vim
 runtime zpan/init/plugins/devicons.vim
 runtime zpan/init/plugins/easy_align.vim
+runtime zpan/init/plugins/endwise.vim
 runtime zpan/init/plugins/indent_line.vim
 runtime zpan/init/plugins/leaderf.vim
 runtime zpan/init/plugins/lightline.vim

@@ -87,7 +87,7 @@ inoremap <expr> <TAB>
 inoremap <expr> <C-Space> coc#refresh()
 inoremap <expr> <C-x><C-x> coc#refresh()
 
-inoremap <expr> <CR> zpan#pumselected() ? coc#_select_confirm() : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>"
+inoremap <expr> <CR> zpan#pumselected() ? coc#_select_confirm() : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>\<C-r>=EndwiseDiscretionary()<CR>"
 
 inoremap <expr> <Esc> pumvisible() ? "\<C-e>\<Esc>" : "\<Esc>"
 
