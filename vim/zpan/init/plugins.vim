@@ -144,6 +144,7 @@ runtime zpan/init/plugins/nerd_commenter.vim
 " runtime zpan/init/plugins/neoformat.vim
 " runtime zpan/init/plugins/netrw.vim
 runtime zpan/init/plugins/sidebar_manager.vim
+runtime zpan/init/plugins/sneak.vim
 runtime zpan/init/plugins/startify.vim
 runtime zpan/init/plugins/terminal_help.vim
 runtime zpan/init/plugins/undotree.vim

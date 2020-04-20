@@ -14,9 +14,9 @@
 
 	"session":                    { "fg": "black", "bg": "gray10", "attrs": ["bold"] },
 
-	"date":                       { "fg": "gruvbox:light4", "bg": "gruvbox:dark2", "attrs": [] },
-	"time":                       { "fg": "gruvbox:light4", "bg": "gruvbox:dark2", "attrs": ["bold"] },
-	"time:divider":               { "fg": "gruvbox:light4", "bg": "gruvbox:dark2", "attrs": [] },
+	"date":                       { "fg": "gruvbox:light3", "bg": "gruvbox:dark2", "attrs": [] },
+	"time":                       { "fg": "gruvbox:light3", "bg": "gruvbox:dark2", "attrs": ["bold"] },
+	"time:divider":               { "fg": "gruvbox:light3", "bg": "gruvbox:dark2", "attrs": [] },
 
 	"email_alert":                "warning:regular",
 	"email_alert_gradient":       { "fg": "white", "bg": "yellow_orange_red", "attrs": ["bold"] },
