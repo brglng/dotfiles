@@ -47,6 +47,4 @@ if [[ "$GOPATH" = "" ]]; then
     path_append "$GOPATH/bin"
 fi
 
-export HOMEBREW_NO_AUTO_UPDATE=1
-
 # vim: ts=8 sts=4 sw=4 et

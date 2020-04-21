@@ -62,7 +62,6 @@ function install_mac() {
 
 mkdir -p $HOME/.local/bin
 export PATH=$HOME/.local/bin:$PATH
-export HOMEBREW_NO_AUTO_UPDATE=1
 
 UNAME_S=$(uname -s)
 
