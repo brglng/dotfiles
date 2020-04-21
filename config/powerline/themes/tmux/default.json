@@ -6,7 +6,7 @@
 		"priority": 50
 	    },
             {
-                "function": "powerline.segments.common.sys.system_load",
+                "function": "powerline.segments.common.sys.cpu_load_percent",
                 "priority": 50
             },
             {
