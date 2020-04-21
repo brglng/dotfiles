@@ -81,7 +81,7 @@ endif
 if has('termguicolors')
     " fix bug for vim
     if !has('nvim')
-        if &term =~# '^screen'
+        if &term =~# '^screen\|^tmux'
             let &t_8f = "\e[38;2;%lu;%lu;%lum"
             let &t_8b = "\e[48;2;%lu;%lu;%lum"
         endif
@@ -95,6 +95,10 @@ let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
 
 let &t_TI = ''
 let &t_TE = ''
+
+" Italic support
+let t_ZH = "\e[3m"
+let t_ZR = "\e[23m"
 
 set guicursor+=i:ver100-iCursor
 

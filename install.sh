@@ -107,6 +107,9 @@ brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff
 
 brew link --overwrite ruby
 
+sudo chown -R $USER ~/.terminfo
+tic -x $PWD/terminfo/tmux-256color.terminfo
+
 "$HOMEBREW_PREFIX/bin/rustup-init" -y
 source $HOME/.cargo/env
 rustup update
@@ -175,7 +178,7 @@ read -p "Press ENTER to continue..."
 vim '+PlugUpdate'
 
 echo 'Now Zsh will be launched to install plugins.'
-echo 'Please type `exit` to quit from Zsh after all plugins have been installed.'
+echo "Please type ${BOLD}exit${SGR0} to quit from Zsh after all plugins have been installed."
 read -p "Press ENTER to continue..."
 
 zsh -i
