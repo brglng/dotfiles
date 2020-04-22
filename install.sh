@@ -57,7 +57,9 @@ function install_mac() {
 
     brew cask install font-firacode-nerd-font font-firacode-nerd-font-mono
 
-    curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
+    curl -Ls https://raw.githubusrcontent.com/daipeihust/im-select/master/install_mac.sh | sh
+
+    tic -x terminfo/tmux-256color.terminfo
 }
 
 mkdir -p $HOME/.local/bin
@@ -108,7 +110,6 @@ brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff
 brew link --overwrite ruby
 
 sudo chown -R $USER ~/.terminfo
-tic -x $PWD/terminfo/tmux-256color.terminfo
 
 "$HOMEBREW_PREFIX/bin/rustup-init" -y
 source $HOME/.cargo/env
