@@ -105,7 +105,7 @@ esac
 
 export HOMEBREW_PREFIX="$(brew --prefix)"
 
-brew install rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm dasht
+brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm dasht
 
 brew link --overwrite ruby
 
