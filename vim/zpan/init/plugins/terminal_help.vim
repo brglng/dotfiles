@@ -12,6 +12,6 @@ let g:terminal_list = 1
 let g:terminal_cwd = 2
 let g:terminal_fixheight = 1
 let g:terminal_close = 1
-let g:terminal_auto_insert = 1
+" let g:terminal_auto_insert = 1
 
 " vim: ts=8 sts=4 sw=4 et

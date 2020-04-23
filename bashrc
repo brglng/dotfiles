@@ -42,41 +42,6 @@ HISTIGNORE=$'[ \t]*:&:[fb]g:exit'
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-if type powerline-daemon &>/dev/null; then
-    powerline-daemon -q
-fi
-
-GIT_PS1_SHOWDIRTYSTATE=true
-
-if [[ "$(uname -s)" = "Darwin" ]]; then
-    if [[ -s /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.zsh ]]; then
-        source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.zsh
-    fi
-    if [[ -s /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh ]]; then
-        source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
-    fi
-elif [[ "$(uname -s)" = "Linux" ]]; then
-    source /etc/bash_completion.d/git-prompt
-fi
-
-PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\] \[\e[1;93m\]$(__git_ps1 "(%s) ")\[\e[0m\]\$ '
-
-if type brew &>/dev/null; then
-    HOMEBREW_PREFIX="$(brew --prefix)"
-    if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
-        source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
-    else
-        for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
-            [[ -r "$COMPLETION" ]] && source "$COMPLETION"
-        done
-    fi
-fi
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-fi
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -90,6 +55,31 @@ fi
 
 if [ -f /etc/bash_completion.d/git ]; then
     source /etc/bash_completion.d/git
+fi
+
+GIT_PS1_SHOWDIRTYSTATE=true
+
+if type brew &>/dev/null; then
+    HOMEBREW_PREFIX="$(brew --prefix)"
+
+    if [[ -s "$HOMEBREW_PREFIX/etc/bash_completion.d/git-prompt.sh" ]]; then
+        source "$HOMEBREW_PREFIX/etc/bash_completion.d/git-prompt.sh"
+    fi
+
+    PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\] \[\e[1;93m\]$(__git_ps1 "(%s) ")\[\e[0m\]\$ '
+
+    if [[ -s "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
+        source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+    else
+        for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+            [[ -r "$COMPLETION" ]] && source "$COMPLETION"
+        done
+    fi
+fi
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
 set show-all-if-ambiguous on

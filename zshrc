@@ -215,7 +215,9 @@ zinit ice wait lucid atload"zicompinit; zicdreplay;" blockf
 zinit light zsh-users/zsh-completions
 
 unalias fd
+alias -s bash=$EDITOR
 alias -s c=$EDITOR
+alias -s conf=$EDITOR
 alias -s h=$EDITOR
 alias -s cc=$EDITOR
 alias -s hh=$EDITOR
@@ -225,6 +227,11 @@ alias -s cxx=$EDITOR
 alias -s hxx=$EDITOR
 alias -s java=$EDITOR
 alias -s txt=$EDITOR
+alias -s py=$EDITOR
+alias -s rs=$EDITOR
+alias -s sh=$EDITOR
+alias -s vim=$EDITOR
+alias -s zsh=$EDITOR
 
 setopt BANG_HIST                # Treat the '!' character specially during expansion.
 setopt INC_APPEND_HISTORY       # Write to the history file immediately, not when the shell exits.
@@ -237,10 +244,6 @@ setopt HIST_IGNORE_SPACE        # Don't record an entry starting with a space.
 setopt HIST_SAVE_NO_DUPS        # Don't write duplicate entries in the history file.
 setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY              # Don't execute immediately upon history expansion.
-
-if type powerline-daemon &>/dev/null; then
-    powerline-daemon -q
-fi
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
