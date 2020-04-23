@@ -215,7 +215,6 @@ zinit ice wait lucid atload"zicompinit; zicdreplay;" blockf
 zinit light zsh-users/zsh-completions
 
 unalias fd
-alias -s bash=$EDITOR
 alias -s c=$EDITOR
 alias -s conf=$EDITOR
 alias -s h=$EDITOR
@@ -225,13 +224,9 @@ alias -s cpp=$EDITOR
 alias -s hpp=$EDITOR
 alias -s cxx=$EDITOR
 alias -s hxx=$EDITOR
-alias -s java=$EDITOR
 alias -s txt=$EDITOR
-alias -s py=$EDITOR
 alias -s rs=$EDITOR
-alias -s sh=$EDITOR
 alias -s vim=$EDITOR
-alias -s zsh=$EDITOR
 
 setopt BANG_HIST                # Treat the '!' character specially during expansion.
 setopt INC_APPEND_HISTORY       # Write to the history file immediately, not when the shell exits.
