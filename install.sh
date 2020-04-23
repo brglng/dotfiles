@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+source "scripts/util.sh"
+
 function install_yum() {
     echo "Not implemented yet!"
     exit -1
@@ -68,32 +70,7 @@ export PATH=$HOME/.local/bin:$PATH
 UNAME_S=$(uname -s)
 
 if [[ $http_proxy == "" || $https_proxy == "" ]]; then
-    while true; do
-        read -p "Do you want to setup a proxy? (y/n): " yn
-        echo
-        case $yn in
-            [Yy]*)
-                while true; do
-                    read -p "Please input your proxy address (e.g., http://127.0.0.1:8118): " proxy_address
-                    echo
-                    if [[ "$proxy_address" =~ ^http:// ]]; then
-                        break
-                    else
-                        echo "Your proxy address must start with http://"
-                        echo
-                    fi
-                done
-                proxy_command="export http_proxy='$proxy_address' https_proxy='$proxy_address'"
-                echo "$proxy_command"
-                echo
-                eval "$proxy_command"
-                break;;
-            [Nn]*)
-                break;;
-            *)
-                echo "Please answer yes or no";;
-        esac
-    done
+    ask_setup_proxy
 fi
 
 scripts/setup_python3.sh --no-setup-proxy
