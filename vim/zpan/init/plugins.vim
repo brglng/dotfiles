@@ -89,7 +89,7 @@ Plug 'skywind3000/asynctasks.vim'
 " Language Semantic
 Plug 'neoclide/coc.nvim', {
   \ 'branch': 'release',
-  \ 'do': {-> execute(['UpdateRemotePlugins', 'CocUpdate'], 'silent!')}
+  \ 'do': {-> execute(['UpdateRemotePlugins', 'CocUpdateSync'], 'silent!')}
   \ }
 Plug 'honza/vim-snippets'
 Plug 'liuchengxu/vista.vim'
