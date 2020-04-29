@@ -99,6 +99,10 @@ function! s:lightline_update()
             let g:lightline.colorscheme = 'solarized'
         elseif g:colors_name =~# 'soft-era'
             let g:lightline.colorscheme = 'softera_alter'
+        elseif g:colors_name =~# 'ayu'
+            let g:lightline.colorscheme = 'ayu'
+        elseif g:colors_name =~# 'gruvbox'
+            let g:lightline.colorscheme = 'gruvbox'
         else
             let g:lightline.colorscheme =
 	      \ substitute(substitute(g:colors_name, '-', '_', 'g'), '256.*', '', '')
@@ -112,7 +116,7 @@ function! s:lightline_update()
 endfunction
 
 let g:lightline = {
-  \ 'colorscheme': 'gruvbox',
+  \ 'colorscheme': 'ayu',
   \ 'active': {
   \     'left': [
   \         ['mode', 'paste'],

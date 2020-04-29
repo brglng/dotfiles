@@ -16,7 +16,7 @@ Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
 Plug 'roxma/vim-hug-neovim-rpc', has('nvim') ? {'on': []} : {}
 Plug 'tpope/vim-eunuch'
 Plug 'tmux-plugins/vim-tmux-focus-events', has('nvim') ? {} : {'on': []}
-Plug 'roxma/vim-tmux-clipboard'
+" Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
 
 " Documentation
@@ -66,7 +66,8 @@ Plug 'tpope/vim-repeat'
 Plug 'bootleq/vim-cycle'
 Plug 'mg979/vim-visual-multi'
 Plug 'Shougo/vinarise.vim', {'do': ':silent! UpdateRemotePlugins'}
-" call dein#add('Shougo/deorise.vim')
+" Plug 'tmsvg/pear-tree'
+" Plug 'Shougo/deorise.vim'
 
 " FileType Plugins
 Plug 'PProvost/vim-ps1'
@@ -108,12 +109,14 @@ Plug 'junegunn/seoul256.vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
 Plug 'arcticicestudio/nord-vim'
 Plug 'soft-aesthetic/soft-era-vim'
 Plug 'sainnhe/lightline_foobar.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'nightsense/snow'
 Plug 'morhetz/gruvbox'
+Plug 'cocopon/iceberg.vim'
 
 call plug#end()
 

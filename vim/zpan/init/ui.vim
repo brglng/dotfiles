@@ -103,10 +103,11 @@ let t_ZR = "\e[23m"
 set guicursor+=i:ver100-iCursor
 
 syntax on
-set background=dark
-" let ayucolor="dark"
-let g:gruvbox_italic=1
-silent! colorscheme gruvbox
+set background=light
+let g:ayucolor = "light"
+let g:gruvbox_italic = 1
+let g:one_allow_italics = 1
+silent! colorscheme ayu
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
 " autocmd Syntax,ColorScheme * highlight! link FoldColumn LineNr
