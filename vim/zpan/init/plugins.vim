@@ -117,6 +117,9 @@ Plug 'ayu-theme/ayu-vim'
 Plug 'nightsense/snow'
 Plug 'morhetz/gruvbox'
 Plug 'cocopon/iceberg.vim'
+Plug 'tyrannicaltoucan/vim-quantum'
+Plug 'hzchirs/vim-material'
+Plug 'KeitaNakamura/neodark.vim'
 
 call plug#end()
 

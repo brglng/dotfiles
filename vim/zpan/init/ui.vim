@@ -107,6 +107,7 @@ set background=light
 let g:ayucolor = "light"
 let g:gruvbox_italic = 1
 let g:one_allow_italics = 1
+let g:quantum_italics = 1
 silent! colorscheme ayu
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
