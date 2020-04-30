@@ -32,39 +32,39 @@ zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit ice atload'!source ~/.p10k.zsh' lucid nocd
 zinit light romkatv/powerlevel10k
 
-zinit ice as"completion" wait=3 lucid
+zinit ice as"completion" lucid
 zinit snippet OMZ::plugins/adb/_adb
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/autopep8/_autopep8
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/brew/brew.plugin.zsh
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/cargo/_cargo
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/command-not-found/command-not-found.plugin.zsh
 
 zinit snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/colorize/colorize.plugin.zsh
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 
-zinit ice as"completion" wait=1 lucid
+zinit ice as"completion" lucid
 zinit snippet OMZ::plugins/docker/_docker
 
-zinit ice as"completion" wait=1 lucid
+zinit ice as"completion" lucid
 zinit snippet OMZ::plugins/docker-compose/_docker-compose
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/docker-compose/docker-compose.plugin.zsh
 
-zinit ice svn wait lucid
+zinit ice svn lucid
 zinit snippet OMZ::plugins/emoji
 
 zinit ice as"completion"
@@ -73,76 +73,76 @@ zinit snippet OMZ::plugins/fd/_fd
 zinit ice as"completion"
 zinit snippet OMZ::plugins/gem/_gem
 
-zinit ice wait=2 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/gem/gem.plugin.zsh
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/github/_hub
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/github/github.plugin.zsh
 
-zinit ice wait=2 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/gitignore/gitignore.plugin.zsh
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/gnu-utils/gnu-utils.plugin.zsh
 
-zinit ice svn wait lucid
+zinit ice svn lucid
 zinit snippet OMZ::plugins/golang
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/gradle/_gradle
 
-zinit ice wait lucid wait=3 lucid
+zinit ice lucid lucid
 zinit snippet OMZ::plugins/gradle/gradle.plugin.zsh
 
-zinit ice wait=1 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/mercurial/mercurial.plugin.zsh
 
-zinit ice wait=3 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/mvn/mvn.plugin.zsh
 
-zinit ice wait=1 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/node/node.plugin.zsh
 
-zinit ice wait=1 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/npm/npm.plugin.zsh
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/nvm/_nvm
 
-zinit ice wait=1 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/nvm/nvm.plugin.zsh
 
-zinit ice svn wait lucid
+zinit ice svn lucid
 zinit snippet OMZ::plugins/osx
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/perl/perl.plugin.zsh
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/pip/_pip
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/pip/pip.plugin.zsh
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/pipenv/pipenv.plugin.zsh
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/pylint/_pylint
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/pylint/pylint.plugin.zsh
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/python/python.plugin.zsh
 
 zinit ice as"completion"
@@ -151,45 +151,45 @@ zinit snippet OMZ::plugins/redis-cli/_redis-cli
 zinit ice as"completion"
 zinit snippet OMZ::plugins/repo/_repo
 
-zinit ice wait lucid wait=3 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/repo/repo.plugin.zsh
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/ripgrep/_ripgrep
 
-zinit ice wait lucid wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/rsync/rsync.plugin.zsh
 
-zinit ice wait lucid wait=2 lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/ruby/ruby.plugin.zsh
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/rust/_rust
 
-zinit ice svn wait lucid
+zinit ice svn lucid
 zinit snippet OMZ::plugins/tmux
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/ubuntu/ubuntu.plugin.zsh
 
 zinit ice as"completion"
 zinit snippet OMZ::plugins/ufw/_ufw
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/virtualenv/virtualenv.plugin.zsh
 
-zinit ice wait lucid
+zinit ice lucid
 zinit snippet OMZ::plugins/vscode/vscode.plugin.zsh
 
-zinit ice wait=1 atload'_zsh_autosuggest_start' lucid
+zinit ice atload'_zsh_autosuggest_start' lucid
 zinit light zsh-users/zsh-autosuggestions
 
 zinit light hlissner/zsh-autopair
 
-zinit ice wait=1 lucid
+zinit ice lucid
 zinit light zdharma/fast-syntax-highlighting
 
-zinit ice wait=1 lucid
+zinit ice lucid
 zinit light lukechilds/zsh-better-npm-completion
 
 # zinit light Aloxaf/fzf-tab
@@ -201,7 +201,7 @@ export _ZL_MATCH_MODE=1
 export _ZL_ADD_ONCE=1
 zinit light skywind3000/z.lua
 
-zinit ice wait atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" lucid
+zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" lucid
 zinit load trapd00r/LS_COLORS
 
 # if [[ $(uname -s) = 'Darwin' ]]; then
@@ -211,7 +211,7 @@ zinit load trapd00r/LS_COLORS
 # fi
 # zinit light arcticicestudio/nord-dircolors
 
-zinit ice wait lucid atload"zicompinit; zicdreplay;" blockf
+zinit ice lucid atload"zicompinit; zicdreplay;" blockf
 zinit light zsh-users/zsh-completions
 
 unalias fd

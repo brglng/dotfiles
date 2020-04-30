@@ -179,35 +179,65 @@ draw_bold_text_with_bright_colors: true
 #     white: '0xECEFF4'
 
 # Gruvbox dark
+# colors:
+#   # Default colors
+#   primary:
+#     # hard contrast: background = '#1d2021'
+#     background: '#282828'
+#     # soft contrast: background = '#32302f'
+#     foreground: '#ebdbb2'
+
+#   # Normal colors
+#   normal:
+#     black:   '#282828'
+#     red:     '#cc241d'
+#     green:   '#98971a'
+#     yellow:  '#d79921'
+#     blue:    '#458588'
+#     magenta: '#b16286'
+#     cyan:    '#689d6a'
+#     white:   '#a89984'
+
+#   # Bright colors
+#   bright:
+#     black:   '#928374'
+#     red:     '#fb4934'
+#     green:   '#b8bb26'
+#     yellow:  '#fabd2f'
+#     blue:    '#83a598'
+#     magenta: '#d3869b'
+#     cyan:    '#8ec07c'
+#     white:   '#ebdbb2'
+
+# Ayu light
 colors:
   # Default colors
   primary:
-    # hard contrast: background = '#1d2021'
-    background: '#282828'
-    # soft contrast: background = '#32302f'
-    foreground: '#ebdbb2'
+    background: '0xf9f9f9'
+    foreground: '0x4a5460'
 
   # Normal colors
   normal:
-    black:   '#282828'
-    red:     '#cc241d'
-    green:   '#98971a'
-    yellow:  '#d79921'
-    blue:    '#458588'
-    magenta: '#b16286'
-    cyan:    '#689d6a'
-    white:   '#a89984'
+    black:   '0x000000'
+    red:     '0xec420e'
+    green:   '0x67c605'
+    yellow:  '0xed8515'
+    blue:    '0x3694d0'
+    magenta: '0x864cc0'
+    cyan:    '0x41b487'
+    white:   '0xbbbbbb'
 
   # Bright colors
   bright:
-    black:   '#928374'
-    red:     '#fb4934'
-    green:   '#b8bb26'
-    yellow:  '#fabd2f'
-    blue:    '#83a598'
-    magenta: '#d3869b'
-    cyan:    '#8ec07c'
-    white:   '#ebdbb2'
+    black:   '0x555555'
+    red:     '0xca4e57'
+    green:   '0x94d507'
+    yellow:  '0xe0bb38'
+    blue:    '0x5555ff'
+    magenta: '0x9161c0'
+    cyan:    '0x4bd49d'
+    white:   '0xffffff'
+
 
 # Visual Bell
 #
