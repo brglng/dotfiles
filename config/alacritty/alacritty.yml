@@ -182,9 +182,15 @@ draw_bold_text_with_bright_colors: true
 # colors:
 #   # Default colors
 #   primary:
-#     # hard contrast: background = '#1d2021'
-#     background: '#282828'
-#     # soft contrast: background = '#32302f'
+#     # hard contrast
+#     background: '#1d2021'
+
+#     # medium contrast
+#     # background: '#282828'
+
+#     # soft contrast
+#     # background: '#32302f'
+
 #     foreground: '#ebdbb2'
 
 #   # Normal colors
@@ -209,34 +215,71 @@ draw_bold_text_with_bright_colors: true
 #     cyan:    '#8ec07c'
 #     white:   '#ebdbb2'
 
+# Gruvbox light
+# colors:
+#   # Default colors
+#   primary:
+#     # hard contrast
+#     background: '#f9f5d7'
+
+#     # medium contrast:
+#     # backgound: '#fbf1c7'
+
+#     # soft contrast:
+#     # background: '#f2e5bc'
+
+#     foreground: '#3c3836'
+
+#   # Normal colors
+#   normal:
+#     black:   '#fdf4c1'
+#     red:     '#cc241d'
+#     green:   '#98971a'
+#     yellow:  '#d79921'
+#     blue:    '#458588'
+#     magenta: '#b16286'
+#     cyan:    '#689d6a'
+#     white:   '#7c6f64'
+
+#   # Bright colors
+#   bright:
+#     black:   '#928374'
+#     red:     '#9d0006'
+#     green:   '#79740e'
+#     yellow:  '#b57614'
+#     blue:    '#076678'
+#     magenta: '#8f3f71'
+#     cyan:    '#427b58'
+#     white:   '#3c3836'
+
 # Ayu light
 colors:
   # Default colors
   primary:
-    background: '0xf9f9f9'
-    foreground: '0x4a5460'
+    background: '#f9f9f9'
+    foreground: '#4a5460'
 
   # Normal colors
   normal:
-    black:   '0x000000'
-    red:     '0xec420e'
-    green:   '0x67c605'
-    yellow:  '0xed8515'
-    blue:    '0x3694d0'
-    magenta: '0x864cc0'
-    cyan:    '0x41b487'
-    white:   '0xbbbbbb'
+    black:   '#000000'
+    red:     '#ec420e'
+    green:   '#67c605'
+    yellow:  '#ed8515'
+    blue:    '#3694d0'
+    magenta: '#864cc0'
+    cyan:    '#41b487'
+    white:   '#bbbbbb'
 
   # Bright colors
   bright:
-    black:   '0x555555'
-    red:     '0xca4e57'
-    green:   '0x94d507'
-    yellow:  '0xe0bb38'
-    blue:    '0x5555ff'
-    magenta: '0x9161c0'
-    cyan:    '0x4bd49d'
-    white:   '0xffffff'
+    black:   '#555555'
+    red:     '#ca4e57'
+    green:   '#94d507'
+    yellow:  '#e0bb38'
+    blue:    '#5555ff'
+    magenta: '#9161c0'
+    cyan:    '#4bd49d'
+    white:   '#ffffff'
 
 
 # Visual Bell

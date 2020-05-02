@@ -1,0 +1,15 @@
+{
+    "groups": {
+	"active_window_status": {"fg": "ayu_light:common.accent",     "bg": "gruvbox:dark1",	    "attrs": []},
+	"window_status":        {"fg": "gray70",                    "bg": "gruvbox:dark1",	    "attrs": []},
+	"activity_status":      {"fg": "gruvbox:bright_orange",     "bg": "gruvbox:dark1",	    "attrs": []},
+	"bell_status":          {"fg": "red",                       "bg": "gruvbox:dark1",	    "attrs": []},
+	"window":               {"fg": "ayu_light:common.fg",	    "bg": "ayu_light:ui.panel.border",	    "attrs": []},
+	"window:divider":       {"fg": "ayu_light:common.fg",	    "bg": "ayu_light:ui.panel.border",	    "attrs": []},
+	"window:current":       {"fg": "ayu_light:common.fg",	    "bg": "ayu_light:ui.selection.border",	    "attrs": ["bold"]},
+	"window_name":          {"fg": "ayu_light:common.fg",	    "bg": "ayu_light:ui.selection.border",	    "attrs": ["bold"]},
+	"session":              {"fg": "ayu_light:common.fg",	    "bg": "ayu_light:ui.gutter.normal",    "attrs": ["bold"]},
+	"session:prefix":       {"fg": "ayu_light:common.bg",	    "bg": "ayu_light:syntax.tag",    "attrs": ["bold"]}
+    }
+}
+
