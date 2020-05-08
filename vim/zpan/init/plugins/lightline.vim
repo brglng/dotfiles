@@ -89,6 +89,9 @@ endfunction
 augroup LightlineColorscheme
     autocmd!
     autocmd ColorScheme * silent! call s:lightline_update()
+    autocmd OptionSet background
+      \ execute 'source' globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
+      \ | call lightline#colorscheme() | call lightline#update()
 augroup END
 function! s:lightline_update()
     if !exists('g:loaded_lightline')
@@ -116,7 +119,7 @@ function! s:lightline_update()
 endfunction
 
 let g:lightline = {
-  \ 'colorscheme': 'ayu',
+  \ 'colorscheme': '',
   \ 'active': {
   \     'left': [
   \         ['mode', 'paste'],
