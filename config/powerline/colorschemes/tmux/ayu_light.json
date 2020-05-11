@@ -1,8 +1,8 @@
 {
     "groups": {
-        "active_window_status": {"fg": "ayu_light:fg.primary",      "bg": "ayu_light:bg.secondary", "attrs": []},
+        "active_window_status": {"fg": "ayu_light:fg.contrast",     "bg": "ayu_light:bg.secondary", "attrs": []},
         "window_status":        {"fg": "ayu_light:fg.primary",      "bg": "ayu_light:bg.secondary", "attrs": []},
-        "activity_status":      {"fg": "ayu_light:fg.primary",      "bg": "ayu_light:bg.secondary", "attrs": []},
+        "activity_status":      {"fg": "ayu_light:fg.error",        "bg": "ayu_light:bg.secondary", "attrs": []},
         "bell_status":          {"fg": "ayu_light:fg.primary",      "bg": "ayu_light:bg.secondary", "attrs": []},
         "window":               {"fg": "ayu_light:fg.primary",      "bg": "ayu_light:bg.secondary", "attrs": []},
         "window:divider":       {"fg": "ayu_light:fg.primary",      "bg": "ayu_light:bg.secondary", "attrs": []},

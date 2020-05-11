@@ -1,9 +1,9 @@
 {
     "groups": {
 	"active_window_status": {"fg": "gruvbox:bright_yellow",     "bg": "gruvbox:dark1",	    "attrs": []},
-	"window_status":        {"fg": "gray70",                    "bg": "gruvbox:dark1",	    "attrs": []},
+	"window_status":        {"fg": "gruvbox:light2",            "bg": "gruvbox:dark1",	    "attrs": []},
 	"activity_status":      {"fg": "gruvbox:bright_orange",     "bg": "gruvbox:dark1",	    "attrs": []},
-	"bell_status":          {"fg": "red",                       "bg": "gruvbox:dark1",	    "attrs": []},
+	"bell_status":          {"fg": "gruvbox:bright_red",        "bg": "gruvbox:dark1",	    "attrs": []},
 	"window":               {"fg": "gruvbox:light2",	    "bg": "gruvbox:dark1",	    "attrs": []},
 	"window:divider":       {"fg": "gruvbox:light2",	    "bg": "gruvbox:dark1",	    "attrs": []},
 	"window:current":       {"fg": "gruvbox:dark0",		    "bg": "gruvbox:light4",	    "attrs": []},
