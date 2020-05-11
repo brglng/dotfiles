@@ -44,6 +44,9 @@
 	"cpu_load_percent":           { "fg": "gruvbox:light4", "bg": "gruvbox:dark1", "attrs": [] },
 	"cpu_load_percent_gradient":  { "fg": "green_yellow_orange_red", "bg": "gruvbox:dark1", "attrs": [] },
 
+	"mem_usage":		      { "fg": "gruvbox:light4", "bg": "gruvbox:dark1", "attrs": []},
+	"mem_usage_gradient":	      { "fg": "green_yellow_orange_red", "bg": "gruvbox:dark1", "attrs": []},
+
 	"battery":                    { "fg": "gray8", "bg": "gruvbox:dark0", "attrs": [] },
 	"battery_gradient":           { "fg": "white_red", "bg": "gruvbox:dark0", "attrs": [] },
 	"battery_full":               { "fg": "red", "bg": "gruvbox:dark0", "attrs": [] },

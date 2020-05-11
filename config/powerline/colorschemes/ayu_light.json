@@ -44,6 +44,9 @@
 	"cpu_load_percent":           { "fg": "ayu_light:fg.primary", "bg": "ayu_light:bg.primary", "attrs": [] },
 	"cpu_load_percent_gradient":  { "fg": "green_yellow_orange_red", "bg": "ayu_light:bg.primary", "attrs": [] },
 
+	"mem_usage":		      {"fg": "ayu_light:fg.primary", "bg": "ayu_light:bg.primary", "attrs": []},
+	"mem_usage_gradient":	      {"fg": "green_yellow_orange_red", "bg": "ayu_light:bg.primary", "attrs": []},
+
 	"battery":                    { "fg": "gray8", "bg": "ayu_light:bg.primary", "attrs": [] },
 	"battery_gradient":           { "fg": "white_red", "bg": "ayu_light:bg.primary", "attrs": [] },
 	"battery_full":               { "fg": "red", "bg": "ayu_light:bg.primary", "attrs": [] },

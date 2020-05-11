@@ -4,7 +4,7 @@ set -e
 source "scripts/util.sh"
 
 function do_pip_install {
-    "$1" -m pip install --user -U pynvim autopep8 pylint jedi mypy pygments cppman neovim-remote powerline-status
+    "$1" -m pip install --user -U pynvim autopep8 pylint jedi mypy pygments cppman neovim-remote powerline-status powerline-mem-segment
     echo
 }
 
