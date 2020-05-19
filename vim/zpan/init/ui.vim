@@ -89,21 +89,23 @@ if has('termguicolors')
     set termguicolors
 endif
 
-let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
-let &t_SR = "\<esc>[3 q"  " blinking underline in replace mode
-let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
+if !has('nvim')
+    let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
+    let &t_SR = "\<esc>[3 q"  " blinking underline in replace mode
+    let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
 
-let &t_TI = ''
-let &t_TE = ''
+    let &t_TI = ''
+    let &t_TE = ''
 
-" Italic support
-let t_ZH = "\e[3m"
-let t_ZR = "\e[23m"
+    " Italic support
+    let t_ZH = "\e[3m"
+    let t_ZR = "\e[23m"
 
-set guicursor+=i:ver100-iCursor
+    set guicursor+=i:ver100-iCursor
+endif
 
 syntax on
-set background=dark
+set background=light
 let g:ayucolor = &background
 let g:gruvbox_contrast_light = 'hard'
 let g:gruvbox_contrast_dark = 'hard'
@@ -112,7 +114,9 @@ let g:gruvbox_italic = 1
 " let g:gruvbox_improved_warnings = 1
 let g:one_allow_italics = 1
 let g:quantum_italics = 1
-silent! colorscheme gruvbox
+silent! colorscheme ayu
+" let g:Lf_StlColorscheme = 'default'
+" let g:Lf_PopupColorscheme = 'default'
 let g:lightline.colorscheme = g:colors_name
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr

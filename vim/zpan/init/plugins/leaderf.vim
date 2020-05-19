@@ -32,7 +32,5 @@ let g:Lf_CommandMap = {
 let g:Lf_ShowHidden = 1
 let g:Lf_IgnoreCurrentBufferName = 1
 let g:Lf_PreviewInPopup = 1
-let g:Lf_StlColorscheme = 'gruvbox_material'
-let g:Lf_PopupColorscheme = 'gruvbox_material'
 
 " vim: ts=8 sts=4 sw=4 et

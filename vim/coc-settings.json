@@ -18,8 +18,8 @@
     "explorer.file.column.indent.indentLine": true,
     "explorer.icon.enableNerdfont": true,
     "explorer.keyMappings": {
-        "<cr>": ["expandable?", "expandOrCollapse", "open"],
-        "<2-LeftMouse>": ["expandable?", "expandOrCollapse", "open"]
+        "<cr>": ["expandable?", ["expanded?", "collapse", "expand"], "open"],
+        "<2-LeftMouse>": ["expandable?", ["expanded?", "collapse", "expand"], "open"]
     },
     "explorer.sources": [
         {

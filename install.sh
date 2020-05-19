@@ -3,24 +3,23 @@ set -e
 
 source "scripts/util.sh"
 
-function install_yum() {
+install_yum() {
     echo "Not implemented yet!"
     exit -1
 }
 
-function install_apt() {
+install_apt() {
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
-    sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git xsel
+    sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git xsel python3-pip
 
-    # Fix for vim
-    if [[ -e ~/.viminfo ]]; then
-        local viminfo_file=~/.viminfo
-        sudo chown $SUDO_USER:$SUDO_USER $viminfo_file
-    fi
 }
 
-function install_linux() {
+install_pacman() {
+    sudo pacman -S gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip
+}
+
+install_linux() {
     distname=$(cat /etc/*release | sed -ne 's/DISTRIB_ID=\(.*\)/\1/gp')
     distver=$(cat /etc/*release | sed -ne 's/DISTRIB_RELEASE=\(.*\)/\1/gp')
     machine=$(uname -m)
@@ -30,7 +29,14 @@ function install_linux() {
       	Debian) install_apt ;;
       	Fedora) install_yum ;;
       	CentOS) install_yum ;;
+      	Arch) install_pacman ;;
     esac
+
+    # Fix for vim
+    if [[ -e ~/.viminfo ]]; then
+        local viminfo_file=~/.viminfo
+        sudo chown $SUDO_USER $viminfo_file
+    fi
 
     ln -sf $PWD/local/bin/brew $HOME/.local/bin
 
@@ -73,12 +79,12 @@ if [[ $http_proxy == "" || $https_proxy == "" ]]; then
     ask_setup_proxy
 fi
 
-scripts/setup_python3.sh --no-setup-proxy
-
 case $UNAME_S in
     Linux) install_linux ;;
     Darwin) install_mac ;;
 esac
+
+scripts/setup_python3.sh --no-setup-proxy
 
 export HOMEBREW_PREFIX="$(brew --prefix)"
 

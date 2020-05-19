@@ -4,7 +4,7 @@
     },
     "ext": {
         "tmux": {
-            "colorscheme": "gruvbox_dark",
+            "colorscheme": "ayu_light",
             "theme": "default"
         }
     }
