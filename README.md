@@ -34,6 +34,8 @@ The configurations and installation scripts are only tested on:
 
 - Ubuntu 16.04
 - Ubuntu 18.04
+- Ubuntu 20.04
+- Arch Linux
 - macOS Mojave
 
 If you found they work on your system, please report to me and I will add it
@@ -54,27 +56,33 @@ on your environment.
        $ ./install.sh
 
    This will use the proper package manager on your system to install the
-   necessary packages. On Ubuntu/Debian, `apt` is used. On macOS,
-   [Homebrew](https://brew.sh/) is used, or installed if there is not an
-   existing one.
+   necessary packages. On Ubuntu/Debian, `apt` is used. On Arch Linux,
+   `pacman` is used. On macOS, [Homebrew](https://brew.sh/) is used, or
+   installed if there is not an existing one.
 
    If you want to setup your environment manually and only want to link the
    configuration files, run
 
-       $ ./link.sh
+       $ scripts/link.sh
 
    This will overwrite your existing configuration files. The original files
    will be suffixed with `.orig`.
 
 ## Utility Scripts
 
-There are some utility scripts in this repo:
+There are some utility scripts in the `scripts` directory:
+
+- `disable_sudo_secure_path.sh`: Disable sudo's secure path feature.
+
+- `install-docsets.sh`: Install docsets for dasht.
 
 - `linuxbrew_post_install.sh`: Do some post installation work after installing
   linuxbrew. This can be useful if you installed required packages manually
   without the help of `install.sh`.
 
 - `setup_python3.sh`: Fix your Python environment.
+
+Those scripts must be run under the root of this repo.
 
 <!-- vim: cc=79 sw=4 sts=4 ts=8 et
 -->
