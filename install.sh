@@ -16,7 +16,7 @@ install_apt() {
 }
 
 install_pacman() {
-    sudo pacman -S gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip
+    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch
 }
 
 install_linux() {
@@ -34,8 +34,7 @@ install_linux() {
 
     # Fix for vim
     if [[ -e ~/.viminfo ]]; then
-        local viminfo_file=~/.viminfo
-        sudo chown $SUDO_USER $viminfo_file
+        sudo chown $USER:$(id -g -n $USER) $HOME/.viminfo
     fi
 
     ln -sf $PWD/local/bin/brew $HOME/.local/bin
