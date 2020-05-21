@@ -101,9 +101,9 @@ if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/bin/rustup-init" ]]; then
     "$HOMEBREW_PREFIX/bin/rustup-init" -y
 fi
 [[ -s "$HOME/.cargo/env" ]] && source $HOME/.cargo/env
-rustup update
+rustup toolchain install stable
 rustup component add rls rust-analysis rust-src rustfmt
-rustup toolchain install nightly
+rustup update
 
 if type brew &>/dev/null; then
     if ! brew ls --versions universal-ctags &> /dev/null; then
