@@ -90,7 +90,7 @@ scripts/setup_python3.sh --no-setup-proxy
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm dasht
+    brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff nvm dasht
     brew link --overwrite ruby
 fi
 
