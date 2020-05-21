@@ -16,7 +16,7 @@ install_apt() {
 }
 
 install_pacman() {
-    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup go cmake ruby rubygems zsh tmux ccls fzf ripgrep-all vim neovim colordiff nvm
+    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup go cmake ruby rubygems zsh tmux ccls fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git
 }
 
 install_linux() {
@@ -90,9 +90,8 @@ scripts/setup_python3.sh --no-setup-proxy
 if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
     brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm dasht
+    brew link --overwrite ruby
 fi
-
-brew link --overwrite ruby
 
 sudo chown -R $USER ~/.terminfo
 
@@ -116,7 +115,7 @@ if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
     scripts/linuxbrew_post_install.sh
 fi
 
-if [[ $UNAME_S = "Linux" && $disname = "Arch" ]]; then
+if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
     source /usr/share/nvm/init-nvm.sh
 else
     export NVM_DIR="$HOME/.nvm"
