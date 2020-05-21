@@ -17,7 +17,7 @@ install_apt() {
 
 install_pacman() {
     sudo pacman -Sy
-    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup go cmake ruby rubygems zsh tmux ccls fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git
+    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm go cmake ruby rubygems zsh tmux ccls fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git
 }
 
 install_linux() {
@@ -99,11 +99,14 @@ sudo chown -R $USER ~/.terminfo
 
 if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/bin/rustup-init" ]]; then
     "$HOMEBREW_PREFIX/bin/rustup-init" -y
+else
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
 [[ -s "$HOME/.cargo/env" ]] && source $HOME/.cargo/env
-rustup toolchain install stable
-rustup component add rls rust-analysis rust-src rustfmt
+rustup default stable
+rustup toolchain install nightly
 rustup update
+rustup component add rls rust-analysis rust-src rustfmt
 
 if type brew &>/dev/null; then
     if ! brew ls --versions universal-ctags &> /dev/null; then
