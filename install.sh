@@ -38,9 +38,9 @@ install_linux() {
         sudo chown $USER:$(id -g -n $USER) $HOME/.viminfo
     fi
 
-    ln -sf $PWD/local/bin/brew $HOME/.local/bin
-
     if [[ $distname != "Arch" ]]; then
+        ln -sf $PWD/local/bin/brew $HOME/.local/bin
+
         # Install Homebrew for Linux
         if [[ -x $HOME/.linuxbrew/bin/brew ]]; then
       	    brew update
