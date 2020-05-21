@@ -88,7 +88,7 @@ esac
 
 scripts/setup_python3.sh --no-setup-proxy
 
-if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
+if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
     brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm dasht
     brew link --overwrite ruby
@@ -97,13 +97,15 @@ fi
 mkdir -p ~/.terminfo
 sudo chown -R $USER ~/.terminfo
 
-"$HOMEBREW_PREFIX/bin/rustup-init" -y
-source $HOME/.cargo/env
+if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/bin/rustup-init" ]]; then
+    "$HOMEBREW_PREFIX/bin/rustup-init" -y
+fi
+[[ -s source $HOME/.cargo/env ]] && source $HOME/.cargo/env
 rustup update
 rustup component add rls rust-analysis rust-src rustfmt
 rustup toolchain install nightly
 
-if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
+if type brew &>/dev/null; then
     if ! brew ls --versions universal-ctags &> /dev/null; then
         brew tap universal-ctags/universal-ctags
         brew install --HEAD universal-ctags
@@ -111,9 +113,7 @@ if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
     if ! brew ls --versions neovim &> /dev/null; then
         brew install --HEAD neovim
     fi
-fi
 
-if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
     scripts/linuxbrew_post_install.sh
 fi
 
@@ -175,7 +175,7 @@ read -p "Press ENTER to continue..."
 
 zsh -i
 
-if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
+if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/opt/fzf/install" ]]; then
     zsh -c "$HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish"
 fi
 
