@@ -100,7 +100,7 @@ sudo chown -R $USER ~/.terminfo
 if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/bin/rustup-init" ]]; then
     "$HOMEBREW_PREFIX/bin/rustup-init" -y
 fi
-[[ -s source $HOME/.cargo/env ]] && source $HOME/.cargo/env
+[[ -s "$HOME/.cargo/env" ]] && source $HOME/.cargo/env
 rustup update
 rustup component add rls rust-analysis rust-src rustfmt
 rustup toolchain install nightly
