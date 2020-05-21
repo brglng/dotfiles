@@ -16,6 +16,7 @@ install_apt() {
 }
 
 install_pacman() {
+    sudo pacman -Sy
     sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup go cmake ruby rubygems zsh tmux ccls fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git
 }
 
