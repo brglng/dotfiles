@@ -94,6 +94,7 @@ if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
     brew link --overwrite ruby
 fi
 
+mkdir -p ~/.terminfo
 sudo chown -R $USER ~/.terminfo
 
 "$HOMEBREW_PREFIX/bin/rustup-init" -y
