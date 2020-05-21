@@ -16,7 +16,7 @@ install_apt() {
 }
 
 install_pacman() {
-    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch
+    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup go cmake ruby rubygems zsh tmux ccls fzf ripgrep-all vim neovim colordiff nvm
 }
 
 install_linux() {
@@ -39,16 +39,18 @@ install_linux() {
 
     ln -sf $PWD/local/bin/brew $HOME/.local/bin
 
-    # Install Homebrew for Linux
-    if [[ -x $HOME/.linuxbrew/bin/brew ]]; then
-      	brew update
-    else
-	git clone --recursive https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
-	mkdir -p ~/.linuxbrew/bin
-	ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
-    fi
+    if [[ $distname != "Arch" ]]; then
+        # Install Homebrew for Linux
+        if [[ -x $HOME/.linuxbrew/bin/brew ]]; then
+      	    brew update
+        else
+	    git clone --recursive https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
+	    mkdir -p ~/.linuxbrew/bin
+	    ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
+        fi
 
-    brew install llvm
+        brew install llvm
+    fi
 }
 
 function install_mac() {
@@ -85,9 +87,10 @@ esac
 
 scripts/setup_python3.sh --no-setup-proxy
 
-export HOMEBREW_PREFIX="$(brew --prefix)"
-
-brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm dasht
+if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
+    export HOMEBREW_PREFIX="$(brew --prefix)"
+    brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff exa fselect fx nnn tig glances nvm dasht
+fi
 
 brew link --overwrite ruby
 
@@ -99,22 +102,27 @@ rustup update
 rustup component add rls rust-analysis rust-src rustfmt
 rustup toolchain install nightly
 
-if ! brew ls --versions universal-ctags &> /dev/null; then
-    brew tap universal-ctags/universal-ctags
-    brew install --HEAD universal-ctags
+if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
+    if ! brew ls --versions universal-ctags &> /dev/null; then
+        brew tap universal-ctags/universal-ctags
+        brew install --HEAD universal-ctags
+    fi
+    if ! brew ls --versions neovim &> /dev/null; then
+        brew install --HEAD neovim
+    fi
 fi
 
-if ! brew ls --versions neovim &> /dev/null; then
-    brew install --HEAD neovim
-fi
-
-if [[ $UNAME_S = "Linux" ]]; then
+if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
     scripts/linuxbrew_post_install.sh
 fi
 
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-[[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+if [[ $UNAME_S = "Linux" && $disname = "Arch" ]]; then
+    source /usr/share/nvm/init-nvm.sh
+else
+    export NVM_DIR="$HOME/.nvm"
+    [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+    [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+fi
 
 nvm install node npm
 nvm use node
@@ -166,7 +174,9 @@ read -p "Press ENTER to continue..."
 
 zsh -i
 
-zsh -c "$HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish"
+if [[ $UNAME_S = "Linux" && $distname != "Arch" ]]; then
+    zsh -c "$HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish"
+fi
 
 echo "Congratulations! The installation is finished."
 echo "It is ${BOLD}strongly recommended${SGR0} that you log out from your current shell and log in again ${BOLD}now${SGR0}."
