@@ -103,8 +103,6 @@ else
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
 [[ -s "$HOME/.cargo/env" ]] && source $HOME/.cargo/env
-rustup default stable
-rustup toolchain install nightly
 rustup update
 rustup component add rls rust-analysis rust-src rustfmt
 
