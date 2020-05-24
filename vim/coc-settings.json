@@ -1,5 +1,6 @@
 {
     "coc.preferences.formatOnType": false,
+    "coc.preferences.extensionUpdateCheck": "never",
     "diagnostic.errorSign": "",
     "diagnostic.hintSign": "",
     "diagnostic.infoSign": "",

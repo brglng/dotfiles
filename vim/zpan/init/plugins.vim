@@ -144,6 +144,7 @@ runtime zpan/init/plugins/dasht.vim
 runtime zpan/init/plugins/devicons.vim
 runtime zpan/init/plugins/easy_align.vim
 runtime zpan/init/plugins/endwise.vim
+runtime zpan/init/plugins/im_select.vim
 runtime zpan/init/plugins/indent_line.vim
 runtime zpan/init/plugins/leaderf.vim
 runtime zpan/init/plugins/lightline.vim
