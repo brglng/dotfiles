@@ -50,7 +50,9 @@ install_linux() {
 	    ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
         fi
 
-        brew install llvm
+        if ! brew ls --versions llvm &> /dev/null; then
+            brew install llvm
+        fi
     fi
 }
 
