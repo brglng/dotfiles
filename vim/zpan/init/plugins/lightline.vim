@@ -86,38 +86,6 @@ function! LightlineTag()
     return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 
-augroup LightlineColorscheme
-    autocmd!
-    autocmd ColorScheme * silent! call s:lightline_update()
-    autocmd OptionSet background
-      \ execute 'source' globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
-      \ | call lightline#colorscheme() | call lightline#update()
-augroup END
-function! s:lightline_update()
-    if !exists('g:loaded_lightline')
-        return
-    endif
-    try
-        if g:colors_name =~# 'solarized'
-            let g:lightline.colorscheme = 'solarized'
-        elseif g:colors_name =~# 'soft-era'
-            let g:lightline.colorscheme = 'softera_alter'
-        elseif g:colors_name =~# 'ayu'
-            let g:lightline.colorscheme = 'ayu'
-        elseif g:colors_name =~# 'gruvbox'
-            let g:lightline.colorscheme = 'gruvbox'
-        else
-            let g:lightline.colorscheme =
-	      \ substitute(substitute(g:colors_name, '-', '_', 'g'), '256.*', '', '')
-        endif
-
-        call lightline#init()
-        call lightline#colorscheme()
-        call lightline#update()
-    catch
-    endtry
-endfunction
-
 let g:lightline = {
   \ 'colorscheme': '',
   \ 'active': {

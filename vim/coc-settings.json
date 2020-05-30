@@ -1,6 +1,5 @@
 {
     "coc.preferences.formatOnType": false,
-    "coc.preferences.extensionUpdateCheck": "never",
     "diagnostic.errorSign": "",
     "diagnostic.hintSign": "",
     "diagnostic.infoSign": "",
@@ -33,12 +32,12 @@
         }
     ],
     "explorer.previewAction.onHover": false,
-    "git.addedSign.text": "\u00a0",
+    "git.addedSign.text": "+",
     "git.addGBlameToVirtualText": false,
     "git.addGBlameToBufferVar": true,
     "git.changedDecorator": " ",
-    "git.changedSign.text": "\u00a0",
-    "git.changeRemovedSign.text": "\u00a0",
+    "git.changedSign.text": "~",
+    "git.changeRemovedSign.text": "-",
     "git.conflictedDecorator": " ",
     "git.gitlab.hosts": [
         "gitlab.ximalaya.com"

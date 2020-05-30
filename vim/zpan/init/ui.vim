@@ -71,7 +71,7 @@ call s:key_escape('<S-F12>', '[24;2~')
 " 防止tmux下vim的背景色显示异常
 " Refer: http://sunaku.github.io/vim-256color-bce.html
 "----------------------------------------------------------------------
-if &term =~ '256color' && $TMUX != ''
+if !has('nvim') && &term =~ '256color' && $TMUX != ''
     " disable Background Color Erase (BCE) so that color schemes
     " render properly when inside 256-color tmux and GNU screen.
     " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
@@ -104,9 +104,6 @@ if !has('nvim')
     set guicursor+=i:ver100-iCursor
 endif
 
-syntax on
-set background=light
-let g:ayucolor = &background
 let g:gruvbox_contrast_light = 'hard'
 let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_italic = 1
@@ -114,10 +111,81 @@ let g:gruvbox_italic = 1
 " let g:gruvbox_improved_warnings = 1
 let g:one_allow_italics = 1
 let g:quantum_italics = 1
-silent! colorscheme ayu
-" let g:Lf_StlColorscheme = 'gruvbox_material'
-" let g:Lf_PopupColorscheme = 'gruvbox_material'
-let g:lightline.colorscheme = g:colors_name
+syntax on
+
+function! s:set_leaderf_highlights()
+    let guifg = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'gui')
+    let ctermfg = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'cterm')
+    let cmd = 'hi Lf_hl_cursorline'
+    if ctermfg != ''
+        let cmd = cmd . ' ctermfg=' . ctermfg
+    endif
+    if guifg != ''
+        let cmd = cmd . ' guifg=' . guifg
+    endif
+    execute cmd
+endfunction
+
+function! s:set_colorsheme()
+    let [hour, minute] = split(strftime('%H:%M', localtime()), ':')
+    let hour = str2nr(hour)
+    let minute = str2nr(minute)
+    if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 18 || (hour == 18 && minute < 45))
+        set background=light
+        let g:ayucolor = 'light'
+        silent! colorscheme ayu
+    else
+        set background=dark
+        let g:ayucolor = 'dark'
+        silent! colorscheme gruvbox
+    endif
+    let g:lightline.colorscheme = g:colors_name
+    let g:zpan_colorscheme = g:colors_name
+    call s:set_leaderf_highlights()
+endfunction
+call s:set_colorsheme()
+
+function! s:on_colorscheme()
+    let g:zpan_colorscheme = g:colors_name
+    if exists('g:loaded_lightline')
+        if g:colors_name =~# 'solarized'
+            let g:lightline.colorscheme = 'solarized'
+        elseif g:colors_name =~# 'soft-era'
+            let g:lightline.colorscheme = 'softera_alter'
+        elseif g:colors_name =~# 'ayu'
+            let g:lightline.colorscheme = 'ayu'
+        elseif g:colors_name =~# 'gruvbox'
+            let g:lightline.colorscheme = 'gruvbox'
+        else
+            let g:lightline.colorscheme =
+              \ substitute(substitute(g:colors_name, '-', '_', 'g'), '256.*', '', '')
+        endif
+        call lightline#init()
+        call lightline#colorscheme()
+        call lightline#update()
+    endif
+    call s:set_leaderf_highlights()
+endfunction
+
+function! s:on_set_background()
+    let g:ayucolor = &background
+    " if g:zpan_colorscheme ==# 'ayu'
+        execute 'color ' . g:zpan_colorscheme
+    " endif
+    syntax on
+    if exists('g:loaded_lightline')
+        execute 'source' globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
+        call lightline#colorscheme()
+        call lightline#update()
+    endif
+    call s:set_leaderf_highlights()
+endfunction
+
+augroup ZpanColorScheme
+    autocmd!
+    autocmd ColorScheme * silent! call s:on_colorscheme()
+    autocmd OptionSet background silent! call s:on_set_background()
+augroup END
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
 " autocmd Syntax,ColorScheme * highlight! link FoldColumn LineNr
