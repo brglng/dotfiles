@@ -111,11 +111,10 @@ let g:gruvbox_italic = 1
 " let g:gruvbox_improved_warnings = 1
 let g:one_allow_italics = 1
 let g:quantum_italics = 1
-syntax on
 
 function! s:set_leaderf_highlights()
-    let guifg = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'gui')
-    let ctermfg = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'cterm')
+    let guifg = synIDattr(synIDtrans(hlID('CursorLineNr')), 'fg', 'gui')
+    let ctermfg = synIDattr(synIDtrans(hlID('CursorLineNr')), 'fg', 'cterm')
     let cmd = 'hi Lf_hl_cursorline'
     if ctermfg != ''
         let cmd = cmd . ' ctermfg=' . ctermfg
@@ -132,21 +131,19 @@ function! s:set_colorsheme()
     let minute = str2nr(minute)
     if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 18 || (hour == 18 && minute < 45))
         set background=light
-        let g:ayucolor = 'light'
         silent! colorscheme ayu
     else
         set background=dark
-        let g:ayucolor = 'dark'
         silent! colorscheme gruvbox
     endif
     let g:lightline.colorscheme = g:colors_name
     let g:zpan_colorscheme = g:colors_name
     call s:set_leaderf_highlights()
+    syntax on
 endfunction
 call s:set_colorsheme()
 
 function! s:on_colorscheme()
-    let g:zpan_colorscheme = g:colors_name
     if exists('g:loaded_lightline')
         if g:colors_name =~# 'solarized'
             let g:lightline.colorscheme = 'solarized'
@@ -168,13 +165,8 @@ function! s:on_colorscheme()
 endfunction
 
 function! s:on_set_background()
-    let g:ayucolor = &background
-    " if g:zpan_colorscheme ==# 'ayu'
-        execute 'color ' . g:zpan_colorscheme
-    " endif
-    syntax on
     if exists('g:loaded_lightline')
-        execute 'source' globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
+        execute 'source ' . globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
         call lightline#colorscheme()
         call lightline#update()
     endif
@@ -183,8 +175,8 @@ endfunction
 
 augroup ZpanColorScheme
     autocmd!
-    autocmd ColorScheme * silent! call s:on_colorscheme()
-    autocmd OptionSet background silent! call s:on_set_background()
+    autocmd ColorScheme * call s:on_colorscheme()
+    autocmd OptionSet background call s:on_set_background()
 augroup END
 
 " autocmd Syntax,ColorScheme * highlight! link SignColumn LineNr
