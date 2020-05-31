@@ -87,7 +87,7 @@ function! LightlineTag()
 endfunction
 
 let g:lightline = {
-  \ 'colorscheme': '',
+  \ 'colorscheme': 'default',
   \ 'active': {
   \     'left': [
   \         ['mode', 'paste'],

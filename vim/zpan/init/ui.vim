@@ -113,8 +113,8 @@ let g:one_allow_italics = 1
 let g:quantum_italics = 1
 
 function! s:set_leaderf_highlights()
-    let guifg = synIDattr(synIDtrans(hlID('CursorLineNr')), 'fg', 'gui')
-    let ctermfg = synIDattr(synIDtrans(hlID('CursorLineNr')), 'fg', 'cterm')
+    let guifg = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'gui')
+    let ctermfg = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'cterm')
     let cmd = 'hi Lf_hl_cursorline'
     if ctermfg != ''
         let cmd = cmd . ' ctermfg=' . ctermfg
@@ -122,7 +122,9 @@ function! s:set_leaderf_highlights()
     if guifg != ''
         let cmd = cmd . ' guifg=' . guifg
     endif
-    execute cmd
+    if ctermfg != '' || guifg != ''
+        execute cmd
+    endif
 endfunction
 
 function! s:set_colorsheme()
@@ -138,8 +140,8 @@ function! s:set_colorsheme()
     endif
     let g:lightline.colorscheme = g:colors_name
     let g:zpan_colorscheme = g:colors_name
-    call s:set_leaderf_highlights()
     syntax on
+    call s:set_leaderf_highlights()
 endfunction
 call s:set_colorsheme()
 
