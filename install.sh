@@ -114,7 +114,7 @@ if type brew &>/dev/null; then
         brew install --HEAD universal-ctags
     fi
     if ! brew ls --versions neovim &> /dev/null; then
-        brew install --HEAD neovim
+        brew install neovim
     fi
 
     scripts/linuxbrew_post_install.sh
