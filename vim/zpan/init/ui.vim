@@ -71,14 +71,14 @@ call s:key_escape('<S-F12>', '[24;2~')
 " 防止tmux下vim的背景色显示异常
 " Refer: http://sunaku.github.io/vim-256color-bce.html
 "----------------------------------------------------------------------
-if !has('nvim') && &term =~ '256color' && $TMUX != ''
+if !has('nvim') && !has('gui_running') && &term =~ '256color' && $TMUX != ''
     " disable Background Color Erase (BCE) so that color schemes
     " render properly when inside 256-color tmux and GNU screen.
     " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
     set t_ut=
 endif
 
-if has('termguicolors')
+if has('termguicolors') && !has('gui_running')
     " fix bug for vim
     if !has('nvim')
         if &term =~# '^screen\|^tmux'
@@ -89,7 +89,7 @@ if has('termguicolors')
     set termguicolors
 endif
 
-if !has('nvim')
+if !has('nvim') && !has('gui_running')
     let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
     let &t_SR = "\<esc>[3 q"  " blinking underline in replace mode
     let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
@@ -112,22 +112,60 @@ let g:gruvbox_italic = 1
 let g:one_allow_italics = 1
 let g:quantum_italics = 1
 
-function! s:set_leaderf_highlights()
-    let guifg = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'gui')
-    let ctermfg = synIDattr(synIDtrans(hlID('Normal')), 'fg', 'cterm')
-    let cmd = 'hi Lf_hl_cursorline'
-    if ctermfg != ''
-        let cmd = cmd . ' ctermfg=' . ctermfg
+function! s:hi_link(hi_name, fg_hi_name, bg_hi_name)
+    let guifg = synIDattr(synIDtrans(hlID(a:fg_hi_name)), 'fg', 'gui')
+    if guifg == ''
+        let guifg = 'NONE'
     endif
+    let ctermfg = synIDattr(synIDtrans(hlID(a:fg_hi_name)), 'fg', 'cterm')
+    if ctermfg == ''
+        let ctermfg = 'NONE'
+    endif
+    let guibg = synIDattr(synIDtrans(hlID(a:bg_hi_name)), 'bg', 'gui')
+    if guibg == ''
+        let guibg = 'NONE'
+    endif
+    let ctermbg = synIDattr(synIDtrans(hlID(a:bg_hi_name)), 'fg', 'cterm')
+    if ctermbg == ''
+        let ctermbg = 'NONE'
+    endif
+    let cmd = 'hi ' . a:hi_name
     if guifg != ''
         let cmd = cmd . ' guifg=' . guifg
     endif
-    if ctermfg != '' || guifg != ''
+    if ctermfg != ''
+        let cmd = cmd . ' ctermfg=' . ctermfg
+    endif
+    if guibg != ''
+        let cmd = cmd . ' guibg=' . guibg
+    endif
+    if ctermbg != ''
+        let cmd = cmd . ' ctermbg=' . ctermbg
+    endif
+    if guifg != '' || guibg != '' || ctermfg != '' || ctermbg != ''
         execute cmd
     endif
 endfunction
 
-function! s:set_colorsheme()
+function! s:set_leaderf_highlights()
+    highlight link Lf_hl_cursorline Cursorline
+    highlight link Lf_hl_popup_inputText LightlineLeft_inactive_0
+    highlight link Lf_hl_popup_blank LightlineLeft_inactive_0
+    highlight link Lf_hl_popup_window Pmenu
+    highlight link Lf_hl_popup_normalMode LightlineLeft_normal_0
+    highlight link Lf_hl_popup_inputMode LightlineLeft_insert_0
+    highlight link Lf_hl_popup_lineInfo LightlineRight_normal_1
+    highlight link Lf_hl_popup_total LightlineRight_normal_0
+    highlight link Lf_hl_popup_category LightlineLeft_normal_0
+    highlight link Lf_hl_popup_nameOnlyMode LightlineLeft_normal_1
+    highlight link Lf_hl_popup_fullPathMode LightlineLeft_normal_1
+    highlight link Lf_hl_popup_fuzzyMode LightlineLeft_normal_1
+    highlight link Lf_hl_popup_regexMode LightlineLeft_normal_1
+    highlight link Lf_hl_popup_cwd LightlineRight_normal_2
+    highlight link Lf_hl_match Search
+endfunction
+
+function! s:set_colorscheme()
     let [hour, minute] = split(strftime('%H:%M', localtime()), ':')
     let hour = str2nr(hour)
     let minute = str2nr(minute)
@@ -139,11 +177,10 @@ function! s:set_colorsheme()
         silent! colorscheme gruvbox
     endif
     let g:lightline.colorscheme = g:colors_name
-    let g:zpan_colorscheme = g:colors_name
     syntax on
     call s:set_leaderf_highlights()
 endfunction
-call s:set_colorsheme()
+call s:set_colorscheme()
 
 function! s:on_colorscheme()
     if exists('g:loaded_lightline')
@@ -163,6 +200,7 @@ function! s:on_colorscheme()
         call lightline#colorscheme()
         call lightline#update()
     endif
+    syntax on
     call s:set_leaderf_highlights()
 endfunction
 
@@ -172,6 +210,7 @@ function! s:on_set_background()
         call lightline#colorscheme()
         call lightline#update()
     endif
+    syntax on
     call s:set_leaderf_highlights()
 endfunction
 
@@ -225,21 +264,15 @@ if has('gui_running')
     endif
 
     if has('win32') || has('win64')
-        set guifont=FuraCodeNerdFontC-Regular:h11,Ubuntu_Mono_for_Powerline:h13,Consolas:h12,Lucida_Console:h12,Courier_New:h12
+        set guifont=FiraCodeNerdFontComplete-Regular:h13
     elseif has('mac') || has('macunix')
-        set guifont=FuraCodeNerdFontC-Regular:h14,Ubuntu_Mono_for_Powerline:h13,Menlo:h12
+        set guifont=FiraCodeNerdFontComplete-Regular:h13
     elseif has('unix')
         if system('uname -s') == "Linux\n"
             " font height bug of GVim on Ubuntu
             let $LC_ALL='en_US.UTF-8'
         endif
-        set guifont=Fura\ Code\ Nerd\ Font\ 11,Ubuntu\ Mono\ for\ Powerline\ 13,DejaVu\ Sans\ Mono\ 12
-    endif
-
-    if has('mac') || has('macunix')
-        set guifontwide=Noto_Sans_CJK_SC:h12,Noto_Sans_CJK_TC:h12,Noto_Sans_CJK_JP:h12,Noto_Sans_CJK_KR:h12,Hiragino_Sans_GB:h12,STHeiti:h12
-    elseif has('unix')
-        set guifontwide=Noto\ Sans\ CJK\ SC\ 12,Noto\ Sans\ CJK\ TC\ 12,Noto\ Sans\ CJK\ JP\ 12,Noto\ Sans\ CJK\ KR\ 12,WenQuanYi\ Zen\ Hei\ 12,WenQuanYi\ Micro\ Hei\ 12
+        set guifont=Fura\ Code\ Nerd\ Font\ 11
     endif
 endif
 

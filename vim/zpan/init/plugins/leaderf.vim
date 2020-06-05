@@ -7,7 +7,7 @@ let g:Lf_WildIgnore = {
         \ 'dir': ['.svn','.git','.hg'],
         \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
         \ }
-let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "FuraCode Nerd Font" }
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2" }
 let g:Lf_CtagsFuncOpts = {
         \ 'c': '--c-kinds=fp',
         \ 'rust': '--rust-kinds=f',
