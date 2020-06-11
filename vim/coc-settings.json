@@ -101,5 +101,6 @@
         "unit": "\uf475",
         "value": "\uf8a3",
         "variable": "\uf71b"
-    }
+    },
+    "tabnine.priority": 9999
 }
