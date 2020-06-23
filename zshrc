@@ -27,159 +27,161 @@ zinit snippet OMZ::lib/termsupport.zsh
 zinit snippet OMZ::lib/theme-and-appearance.zsh
 
 # some OMZ themes use this plugin
-zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/git
 
 zinit ice atload'!source ~/.p10k.zsh' lucid nocd
 zinit light romkatv/powerlevel10k
 
-zinit ice as"completion" lucid
-zinit snippet OMZ::plugins/adb/_adb
+zinit ice svn lucid
+zinit snippet OMZ::plugins/adb
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/autopep8/_autopep8
+zinit ice svn lucid
+zinit snippet OMZ::plugins/autopep8
 
-zinit ice lucid
-zinit snippet OMZ::plugins/brew/brew.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/brew
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/cargo/_cargo
+zinit ice svn lucid
+zinit snippet OMZ::plugins/cargo
 
-zinit ice lucid
-zinit snippet OMZ::plugins/command-not-found/command-not-found.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/command-not-found
 
-zinit snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/common-aliases
 
-zinit ice lucid
-zinit snippet OMZ::plugins/colorize/colorize.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/colorize
 
-zinit ice lucid
-zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/colored-man-pages
 
-zinit ice as"completion" lucid
-zinit snippet OMZ::plugins/docker/_docker
+zinit ice svn lucid
+zinit snippet OMZ::plugins/docker
 
-zinit ice as"completion" lucid
-zinit snippet OMZ::plugins/docker-compose/_docker-compose
+zinit ice svn lucid
+zinit snippet OMZ::plugins/docker-compose
 
-zinit ice lucid
-zinit snippet OMZ::plugins/docker-compose/docker-compose.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/emacs
 
 zinit ice svn lucid
 zinit snippet OMZ::plugins/emoji
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/fd/_fd
+zinit ice svn lucid
+zinit snippet OMZ::plugins/fd
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/gem/_gem
+zinit ice svn lucid
+zinit snippet OMZ::plugins/gem
 
-zinit ice lucid
-zinit snippet OMZ::plugins/gem/gem.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/git-flow
 
-zinit ice lucid
-zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/github
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/github/_hub
+zinit ice svn lucid
+zinit snippet OMZ::plugins/gitignore
 
-zinit ice lucid
-zinit snippet OMZ::plugins/github/github.plugin.zsh
-
-zinit ice lucid
-zinit snippet OMZ::plugins/gitignore/gitignore.plugin.zsh
-
-zinit ice lucid
-zinit snippet OMZ::plugins/gnu-utils/gnu-utils.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/gnu-utils
 
 zinit ice svn lucid
 zinit snippet OMZ::plugins/golang
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/gradle/_gradle
+zinit ice svn lucid
+zinit snippet OMZ::plugins/gradle
 
-zinit ice lucid lucid
-zinit snippet OMZ::plugins/gradle/gradle.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/mercurial
 
-zinit ice lucid
-zinit snippet OMZ::plugins/mercurial/mercurial.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/man
 
-zinit ice lucid
-zinit snippet OMZ::plugins/mvn/mvn.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/mvn
 
-zinit ice lucid
-zinit snippet OMZ::plugins/node/node.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/node
 
-zinit ice lucid
-zinit snippet OMZ::plugins/npm/npm.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/npm
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/nvm/_nvm
-
-zinit ice lucid
-zinit snippet OMZ::plugins/nvm/nvm.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/nvm
 
 zinit ice svn lucid
 zinit snippet OMZ::plugins/osx
 
-zinit ice lucid
-zinit snippet OMZ::plugins/perl/perl.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/perl
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/pip/_pip
+zinit ice svn lucid
+zinit snippet OMZ::plugins/pip
 
-zinit ice lucid
-zinit snippet OMZ::plugins/pip/pip.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/pipenv
 
-zinit ice lucid
-zinit snippet OMZ::plugins/pipenv/pipenv.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/pylint
 
-zinit ice lucid
-zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/python
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/pylint/_pylint
+zinit ice svn lucid
+zinit snippet OMZ::plugins/redis-cli
 
-zinit ice lucid
-zinit snippet OMZ::plugins/pylint/pylint.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/repo
 
-zinit ice lucid
-zinit snippet OMZ::plugins/python/python.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/ripgrep
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/redis-cli/_redis-cli
+zinit ice svn lucid
+zinit snippet OMZ::plugins/rsync
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/repo/_repo
+zinit ice svn lucid
+zinit snippet OMZ::plugins/ruby
 
-zinit ice lucid
-zinit snippet OMZ::plugins/repo/repo.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/rust
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/ripgrep/_ripgrep
+zinit ice svn lucid
+zinit snippet OMZ::plugins/rustup
 
-zinit ice lucid
-zinit snippet OMZ::plugins/rsync/rsync.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/sudo
 
-zinit ice lucid
-zinit snippet OMZ::plugins/ruby/ruby.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/supervisor
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/rust/_rust
+zinit ice svn lucid
+zinit snippet OMZ::plugins/svn
+
+zinit ice svn lucid
+zinit snippet OMZ::plugins/systemd
+
+zinit ice svn lucid
+zinit snippet OMZ::plugins/tig
 
 zinit ice svn lucid
 zinit snippet OMZ::plugins/tmux
 
-zinit ice lucid
-zinit snippet OMZ::plugins/ubuntu/ubuntu.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/ubuntu
 
-zinit ice as"completion"
-zinit snippet OMZ::plugins/ufw/_ufw
+zinit ice svn lucid
+zinit snippet OMZ::plugins/ufw
 
-zinit ice lucid
-zinit snippet OMZ::plugins/virtualenv/virtualenv.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/virtualenv
 
-zinit ice lucid
-zinit snippet OMZ::plugins/vscode/vscode.plugin.zsh
+zinit ice svn lucid
+zinit snippet OMZ::plugins/vscode
+
+zinit ice svn lucid
+zinit snippet OMZ::plugins/yarn
 
 zinit ice atload'_zsh_autosuggest_start' lucid
 zinit light zsh-users/zsh-autosuggestions
