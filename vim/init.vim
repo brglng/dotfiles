@@ -200,11 +200,7 @@ endif
 " fold settings
 set foldmethod=syntax
 "set foldminlines=500
-if &diff
-    set foldlevel=0
-else
-    set foldlevel=99
-endif
+set foldlevel=99
 set foldlevelstart=99
 set foldnestmax=1
 " set foldcolumn=2
@@ -214,6 +210,7 @@ autocmd FileType cpp setl foldnestmax=3 foldcolumn=4
 autocmd FileType python setl foldmethod=indent foldnestmax=2 foldcolumn=3
 autocmd FileType rust setl foldnestmax=2 foldcolumn=3
 " autocmd FileType * let &l:foldcolumn = &l:foldnestmax + 1
+set diffopt+=context:99999
 
 " omni complete settings
 set completeopt=menuone,noinsert,noselect
