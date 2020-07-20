@@ -200,7 +200,11 @@ endif
 " fold settings
 set foldmethod=syntax
 "set foldminlines=500
-set foldlevel=99
+if &diff
+    set foldlevel=0
+else
+    set foldlevel=99
+endif
 set foldlevelstart=99
 set foldnestmax=1
 " set foldcolumn=2
