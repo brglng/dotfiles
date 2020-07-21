@@ -88,7 +88,7 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'skywind3000/asynctasks.vim'
 
 " Language Semantic
-Plug 'neoclide/coc.nvim', &diff ? {'on': []} : {
+Plug 'neoclide/coc.nvim', {
   \ 'branch': 'release',
   \ 'do': {-> execute(['UpdateRemotePlugins', 'CocUpdateSync'], 'silent!')}
   \ }
