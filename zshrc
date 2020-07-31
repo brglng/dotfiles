@@ -89,15 +89,19 @@ if ! zgen saved; then
 
     zgen load skywind3000/z.lua
 
-    # zgen load trapd00r/LS_COLORS
-
     zgen load zsh-users/zsh-completions src
 
     # generate the init script from plugins above
     zgen save
 fi
 
-[[ -s ~/.local/share/lscolors.sh ]] && source ~/.local/share/lscolors.sh
+if [[ ! -e ~/.local/share/lscolors.sh ]]; then
+    mkdir -p ~/.local/src/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=~/.local/src/LS_COLORS --strip=1
+    pushd ~/.local/src/LS_COLORS
+    sh install.sh
+    popd
+fi
+source ~/.local/share/lscolors.sh
 
 unalias fd
 alias -s c=$EDITOR
