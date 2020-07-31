@@ -96,7 +96,7 @@ if ! zgen saved; then
 fi
 
 if [[ ! -e ~/.local/share/lscolors.sh ]]; then
-    mkdir -p ~/.local/src/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=~/.local/src/LS_COLORS --strip=1
+    mkdir -p ~/.local/src/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=$HOME/.local/src/LS_COLORS --strip=1
     pushd ~/.local/src/LS_COLORS
     sh install.sh
     popd
