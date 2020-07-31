@@ -10,211 +10,94 @@ if [[ $HOMEBREW_PREFIX != "" ]]; then
     FPATH=$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH
 fi
 
-source ~/.zinit/bin/zinit.zsh
-
-# most themes use this option
-setopt promptsubst
-
-# common OMZ libraries
-zinit snippet OMZ::lib/clipboard.zsh
-zinit snippet OMZ::lib/completion.zsh
-zinit snippet OMZ::lib/correction.zsh
-zinit snippet OMZ::lib/directories.zsh
-zinit snippet OMZ::lib/git.zsh
-zinit snippet OMZ::lib/history.zsh
-zinit snippet OMZ::lib/key-bindings.zsh
-zinit snippet OMZ::lib/termsupport.zsh
-zinit snippet OMZ::lib/theme-and-appearance.zsh
-
-# some OMZ themes use this plugin
-zinit ice svn lucid
-zinit snippet OMZ::plugins/git
-
-zinit ice atload'!source ~/.p10k.zsh' lucid nocd
-zinit light romkatv/powerlevel10k
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/adb
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/autopep8
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/brew
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/cargo
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/command-not-found
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/common-aliases
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/colorize
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/colored-man-pages
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/docker
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/docker-compose
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/emacs
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/emoji
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/fd
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/gem
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/git-flow
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/github
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/gitignore
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/gnu-utils
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/golang
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/gradle
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/mercurial
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/man
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/mvn
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/node
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/npm
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/nvm
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/osx
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/perl
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/pip
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/pipenv
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/pylint
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/python
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/redis-cli
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/repo
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/ripgrep
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/rsync
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/ruby
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/rust
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/rustup
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/sudo
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/supervisor
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/svn
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/systemd
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/tig
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/tmux
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/ubuntu
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/ufw
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/virtualenv
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/vscode
-
-zinit ice svn lucid
-zinit snippet OMZ::plugins/yarn
-
-zinit ice atload'_zsh_autosuggest_start' lucid
-zinit light zsh-users/zsh-autosuggestions
-
-zinit light hlissner/zsh-autopair
-
-zinit ice lucid
-zinit light zdharma/fast-syntax-highlighting
-
-zinit ice lucid
-zinit light lukechilds/zsh-better-npm-completion
-
-# zinit light Aloxaf/fzf-tab
+if [[ ! -e ~/.zgen ]]; then
+    git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+fi
 
 if type luajit &>/dev/null; then
     ZLUA_EXEC=$(which luajit)
 fi
 export _ZL_MATCH_MODE=1
 export _ZL_ADD_ONCE=1
-zinit light skywind3000/z.lua
 
-zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" lucid
-zinit load trapd00r/LS_COLORS
+# load zgen
+source "${HOME}/.zgen/zgen.zsh"
 
-# if [[ $(uname -s) = 'Darwin' ]]; then
-#     zinit ice cloneonly atclone'ln -fs $PWD/src/dir_colors ~/.dir_colors' atload'test -r ~/.dir_colors && eval $(gdircolors ~/.dir_colors)' lucid
-# else
-#     zinit ice cloneonly atclone'ln -fs $PWD/src/dir_colors ~/.dir_colors' atload'test -r ~/.dir_colors && eval $(dircolors ~/.dir_colors)' lucid
-# fi
-# zinit light arcticicestudio/nord-dircolors
+# if the init script doesn't exist
+if ! zgen saved; then
+    # specify plugins here
+    zgen oh-my-zsh
 
-zinit ice lucid atload"zicompinit; zicdreplay;" blockf
-zinit light zsh-users/zsh-completions
+    zgen oh-my-zsh plugins/git
+    zgen oh-my-zsh plugins/adb
+    zgen oh-my-zsh plugins/autopep8
+    zgen oh-my-zsh plugins/brew
+    zgen oh-my-zsh plugins/cargo
+    zgen oh-my-zsh plugins/command-not-found
+    zgen oh-my-zsh plugins/common-aliases
+    zgen oh-my-zsh plugins/colorize
+    zgen oh-my-zsh plugins/colored-man-pages
+    zgen oh-my-zsh plugins/docker
+    zgen oh-my-zsh plugins/docker-compose
+    zgen oh-my-zsh plugins/emacs
+    zgen oh-my-zsh plugins/emoji
+    zgen oh-my-zsh plugins/fd
+    zgen oh-my-zsh plugins/gem
+    zgen oh-my-zsh plugins/git-flow
+    zgen oh-my-zsh plugins/github
+    zgen oh-my-zsh plugins/gitignore
+    zgen oh-my-zsh plugins/gnu-utils
+    zgen oh-my-zsh plugins/golang
+    zgen oh-my-zsh plugins/gradle
+    zgen oh-my-zsh plugins/mercurial
+    zgen oh-my-zsh plugins/man
+    zgen oh-my-zsh plugins/mvn
+    zgen oh-my-zsh plugins/node
+    zgen oh-my-zsh plugins/npm
+    zgen oh-my-zsh plugins/nvm
+    zgen oh-my-zsh plugins/osx
+    zgen oh-my-zsh plugins/perl
+    zgen oh-my-zsh plugins/pip
+    zgen oh-my-zsh plugins/pipenv
+    zgen oh-my-zsh plugins/pylint
+    zgen oh-my-zsh plugins/python
+    zgen oh-my-zsh plugins/redis-cli
+    zgen oh-my-zsh plugins/repo
+    zgen oh-my-zsh plugins/ripgrep
+    zgen oh-my-zsh plugins/rsync
+    zgen oh-my-zsh plugins/ruby
+    zgen oh-my-zsh plugins/rust
+    zgen oh-my-zsh plugins/rustup
+    zgen oh-my-zsh plugins/sudo
+    zgen oh-my-zsh plugins/supervisor
+    zgen oh-my-zsh plugins/svn
+    zgen oh-my-zsh plugins/systemd
+    zgen oh-my-zsh plugins/tig
+    zgen oh-my-zsh plugins/tmux
+    zgen oh-my-zsh plugins/ubuntu
+    zgen oh-my-zsh plugins/ufw
+    zgen oh-my-zsh plugins/virtualenv
+    zgen oh-my-zsh plugins/vscode
+    zgen oh-my-zsh plugins/yarn
+
+    zgen load romkatv/powerlevel10k powerlevel10k
+    zgen load zsh-users/zsh-autosuggestions
+    zgen load hlissner/zsh-autopair
+    zgen load zdharma/fast-syntax-highlighting
+    zgen load lukechilds/zsh-better-npm-completion
+    # zgen load Aloxaf/fzf-tab
+
+    zgen load skywind3000/z.lua
+
+    # zgen load trapd00r/LS_COLORS
+
+    zgen load zsh-users/zsh-completions src
+
+    # generate the init script from plugins above
+    zgen save
+fi
+
+[[ -s ~/.local/share/lscolors.sh ]] && source ~/.local/share/lscolors.sh
 
 unalias fd
 alias -s c=$EDITOR

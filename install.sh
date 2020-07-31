@@ -144,13 +144,20 @@ else
     git clone --recursive https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
-mkdir -p ~/.zinit
-if [[ -r ~/.zinit/bin && -d ~/.zinit/bin ]]; then
-    pushd ~/.zinit/bin
+mkdir -p ~/.zgen
+if [[ -r ~/.zgen && -d ~/.zgen ]]; then
+    pushd ~/.zgen
     git pull
     popd
 else
-    git clone --recursive https://github.com/zdharma/zinit.git ~/.zinit/bin
+    git clone https://github.com/tarjoilija/zgen.git ~/.zgen
+fi
+
+if [[ ! -e ~/.local/share/lscolors.sh ]]; then
+    mkdir -p ~/.local/src/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=~/.local/src/LS_COLORS --strip=1
+    pushd ~/.local/src/LS_COLORS
+    sh install.sh
+    popd
 fi
 
 scripts/disable_sudo_secure_path.sh
