@@ -152,13 +152,7 @@ if [[ -r ~/.zgen && -d ~/.zgen ]]; then
 else
     git clone https://github.com/tarjoilija/zgen.git ~/.zgen
 fi
-
-if [[ ! -e ~/.local/share/lscolors.sh ]]; then
-    mkdir -p ~/.local/src/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=~/.local/src/LS_COLORS --strip=1
-    pushd ~/.local/src/LS_COLORS
-    sh install.sh
-    popd
-fi
+rm .zgen/init.zsh
 
 scripts/disable_sudo_secure_path.sh
 
