@@ -95,13 +95,15 @@ if ! zgen saved; then
     zgen save
 fi
 
-if [[ ! -e ~/.local/share/lscolors.sh ]]; then
-    mkdir -p ~/.local/src/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=$HOME/.local/src/LS_COLORS --strip=1
-    pushd ~/.local/src/LS_COLORS
-    sh install.sh
-    popd
+if [[ $(uname -s) == "Linux" ]]; then
+    if [[ ! -e ~/.local/share/lscolors.sh ]]; then
+        mkdir -p ~/.local/src/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=$HOME/.local/src/LS_COLORS --strip=1
+        pushd ~/.local/src/LS_COLORS
+        sh install.sh
+        popd
+    fi
+    source ~/.local/share/lscolors.sh
 fi
-source ~/.local/share/lscolors.sh
 
 unalias fd
 alias -s c=$EDITOR
