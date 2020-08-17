@@ -14,6 +14,8 @@ if [[ ! -e ~/.zgen ]]; then
     git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
 fi
 
+DISABLE_AUTO_UPDATE="true"
+
 if type luajit &>/dev/null; then
     ZLUA_EXEC=$(which luajit)
 fi
