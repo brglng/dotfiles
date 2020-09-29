@@ -62,8 +62,6 @@ fi
 alias more='less'
 alias ping='ping -c 5'
 
-alias t='tmux attach > /dev/null 2>&1 || tmux'
-
 # z.lua aliases
 alias zh='z -I -t .'
 alias zz='z -c'      # restrict matches to subdirs of $PWD
