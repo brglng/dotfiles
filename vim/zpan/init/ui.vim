@@ -177,7 +177,7 @@ function! s:set_colorscheme()
         silent! colorscheme ayu
     else
         set background=dark
-        silent! colorscheme gruvbox
+        silent! colorscheme ayu
     endif
     let g:lightline.colorscheme = g:colors_name
     syntax on
