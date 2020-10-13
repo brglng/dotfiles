@@ -197,7 +197,7 @@ function! s:on_colorscheme()
             let g:lightline.colorscheme = 'ayu'
         elseif g:colors_name =~# 'gruvbox'
             let g:lightline.colorscheme = 'gruvbox'
-        elseif g:colors_name =~# 'onehalflight'
+        elseif g:colors_name ==# 'onehalflight'
             let g:lightline.colorscheme = 'one'
         else
             let g:lightline.colorscheme =
