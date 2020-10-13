@@ -121,6 +121,7 @@ Plug 'cocopon/iceberg.vim'
 Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'hzchirs/vim-material'
 Plug 'KeitaNakamura/neodark.vim'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
 
 call plug#end()
 

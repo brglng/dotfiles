@@ -174,12 +174,13 @@ function! s:set_colorscheme()
     let minute = str2nr(minute)
     if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 18 || (hour == 18 && minute < 45))
         set background=light
-        silent! colorscheme ayu
+        silent! colorscheme onehalflight
+        let g:lightline.colorscheme = 'one'
     else
         set background=dark
-        silent! colorscheme ayu
+        silent! colorscheme onehalfdark
+        let g:lightline.colorscheme = 'onehalfdark'
     endif
-    let g:lightline.colorscheme = g:colors_name
     syntax on
     " call s:set_leaderf_highlights()
 endfunction
@@ -196,6 +197,8 @@ function! s:on_colorscheme()
             let g:lightline.colorscheme = 'ayu'
         elseif g:colors_name =~# 'gruvbox'
             let g:lightline.colorscheme = 'gruvbox'
+        elseif g:colors_name =~# 'onehalflight'
+            let g:lightline.colorscheme = 'one'
         else
             let g:lightline.colorscheme =
               \ substitute(substitute(g:colors_name, '-', '_', 'g'), '256.*', '', '')
