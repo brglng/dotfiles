@@ -150,24 +150,20 @@ endfunction
 function! s:set_leaderf_highlights()
     " {'inactive': {'right': [['#7c6f64', '#3c3836', '243', '237'], ['#7c6f64', '#3c3836', '243', '237']], 'middle': [['#7c6f64', '#3c3836', '243', '237']], 'left': [['#7c6f64', '#3c3836', '243', '237'], ['#7c6f64', '#3c3836', '243', '237']]}, 'replace': {'right': [['#1d2021', '#8ec07c', '234', '108'], ['#ebdbb2', '#504945', '223', '239']], 'middle': [['#a89984', '#504945', '246', '239']], 'left': [['#1d2021', '#8ec07c', '234', '108', 'bold'], ['#ebdbb2', '#504945', '223', '239']]}, 'normal': {'right': [['#1d2021', '#a89984', '234', '246'], ['#a89984', '#504945', '246', '239']], 'middle': [['#a89984', '#3c3836', '246', '237']], 'warning': [['#504945', '#fabd2f', '239', '214']], 'left': [['#1d2021', '#a89984', '234', '246', 'bold'], ['#a89984', '#504945', '246', '239']], 'error': [['#1d2021', '#fe8019', '234', '208']]}, 'terminal': {'right': [['#1d2021', '#b8bb26', '234', '142'], ['#ebdbb2', '#504945', '223', '239']], 'middle': [['#a89984', '#504945', '246', '239']], 'left': [['#1d2021', '#b8bb26', '234', '142', 'bold'], ['#ebdbb2', '#504945', '223', '239']]}, 'tabline': {'right': [['#1d2021', '#fe8019', '234', '208']], 'middle': [['#1d2021', '#1d2021', '234', '234']], 'left': [['#a89984', '#504945', '246', '239']], 'tabsel': [['#1d2021', '#a89984', '234', '246']]}, 'visual': {'right': [['#1d2021', '#fe8019', '234', '208'], ['#1d2021', '#7c6f64', '234', '243']], 'middle': [['#a89984', '#3c3836', '246', '237']], 'left': [['#1d2021', '#fe8019', '234', '208', 'bold'], ['#1d2021', '#7c6f64', '234', '243']]}, 'insert': {'right': [['#1d2021', '#83a598', '234', '109'], ['#ebdbb2', '#504945', '223', '239']], 'middle': [['#a89984', '#504945', '246', '239']], 'left': [['#1d2021', '#83a598', '234', '109', 'bold'], ['#ebdbb2', '#504945', '223', '239']]}}
     let palette = lightline#palette()
-    highlight link Lf_hl_cursorline Visual
-    highlight link Lf_hl_popup_inputText CursorLine
-    highlight link Lf_hl_popup_blank CursorLine
-    execute 'hi Lf_hl_popup_inputText guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
-    " execute 'hi Lf_hl_popup_blank guifg=' . palette.inactive.left[0][0] . ' guibg=' . palette.inactive.left[0][1] . ' ctermfg=' . palette.inactive.left[0][2] . ' ctermbg=' . palette.inactive.left[0][3]
-    highlight link Lf_hl_popup_window CursorLine
+    highlight link Lf_hl_cursorline CursorLine
+    highlight link Lf_hl_popup_inputText Normal
+    execute 'hi Lf_hl_popup_blank guifg=' . palette.inactive.middle[0][0] . ' guibg=' . palette.inactive.middle[0][1] . ' ctermfg=' . palette.inactive.middle[0][2] . ' ctermbg=' . palette.inactive.middle[0][3]
+    highlight link Lf_hl_popup_window Normal
     execute 'hi Lf_hl_popup_normalMode guifg=' . palette.normal.left[0][0] . ' guibg=' . palette.normal.left[0][1] . ' ctermfg=' . palette.normal.left[0][2] . ' ctermbg=' . palette.normal.left[0][3]
     execute 'hi Lf_hl_popup_inputMode guifg=' . palette.insert.left[0][0] . ' guibg=' . palette.insert.left[0][1] . ' ctermfg=' . palette.insert.left[0][2] . ' ctermbg=' . palette.insert.left[0][3]
     execute 'hi Lf_hl_popup_lineInfo guifg=' . palette.normal.right[1][0] . ' guibg=' . palette.normal.right[1][1] . ' ctermfg=' . palette.normal.right[1][2] . ' ctermbg=' . palette.normal.right[1][3]
     execute 'hi Lf_hl_popup_total guifg=' . palette.normal.right[0][0] . ' guibg=' . palette.normal.right[0][1] . ' ctermfg=' . palette.normal.right[0][2] . ' ctermbg=' . palette.normal.right[0][3]
-    execute 'hi Lf_hl_popup_category guifg=' . palette.normal.left[0][0] . ' guibg=' . palette.normal.left[0][1] . ' ctermfg=' . palette.normal.left[0][2] . ' ctermbg=' . palette.normal.left[0][3]
+    execute 'hi Lf_hl_popup_category guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
     execute 'hi Lf_hl_popup_nameOnlyMode guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
     execute 'hi Lf_hl_popup_fullPathMode guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
     execute 'hi Lf_hl_popup_fuzzyMode guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
     execute 'hi Lf_hl_popup_regexMode guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
-    execute 'hi Lf_hl_popup_cwd guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
-    " execute 'hi Lf_hl_popup_cwd guifg=' . palette.inactive.right[0][0] . ' guibg=' . palette.inactive.right[0][1] . ' ctermfg=' . palette.inactive.right[0][2] . ' ctermbg=' . palette.inactive.right[0][3]
-    " highlight link Lf_hl_popup_cwd LineNr
+    execute 'hi Lf_hl_popup_cwd guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
     execute 'hi Lf_hl_popup_File_sep0 guifg=' . palette.insert.left[0][1] . ' guibg=' . palette.normal.left[1][0] . ' ctermfg=' . palette.insert.left[0][3] . ' ctermbg=' . palette.normal.left[1][2]
     highlight link Lf_hl_match Search
 endfunction
@@ -178,8 +174,8 @@ function! s:set_colorscheme()
     let minute = str2nr(minute)
     if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 18 || (hour == 18 && minute < 45))
         set background=light
-        silent! colorscheme onehalflight
-        let g:lightline.colorscheme = 'one'
+        silent! colorscheme ayu
+        let g:lightline.colorscheme = 'ayu'
     else
         set background=dark
         silent! colorscheme onehalfdark
