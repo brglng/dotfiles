@@ -122,6 +122,10 @@ Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'hzchirs/vim-material'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'sainnhe/gruvbox-material'
+Plug 'sainnhe/forest-night'
+Plug 'sainnhe/edge'
+Plug 'sainnhe/sonokai'
 
 call plug#end()
 

@@ -111,6 +111,9 @@ let g:gruvbox_italic = 1
 " let g:gruvbox_improved_warnings = 1
 let g:one_allow_italics = 1
 let g:quantum_italics = 1
+let g:sonokai_style = 'atlantis'
+let g:sonokai_enable_italic = 1
+let g:sonokai_disable_italic_comment = 0
 
 function! s:hi_link(hi_name, fg_hi_name, bg_hi_name)
     let guifg = synIDattr(synIDtrans(hlID(a:fg_hi_name)), 'fg', 'gui')
@@ -166,7 +169,7 @@ function! s:set_leaderf_highlights()
     execute 'hi Lf_hl_popup_fuzzyMode guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
     execute 'hi Lf_hl_popup_regexMode guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
     execute 'hi Lf_hl_popup_cwd guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
-    execute 'hi Lf_hl_popup_File_sep0 guifg=' . palette.insert.left[0][1] . ' guibg=' . palette.normal.left[1][0] . ' ctermfg=' . palette.insert.left[0][3] . ' ctermbg=' . palette.normal.left[1][2]
+    " execute 'hi Lf_hl_popup_File_sep0 guifg=' . palette.insert.left[0][1] . ' guibg=' . palette.normal.left[1][0] . ' ctermfg=' . palette.insert.left[0][3] . ' ctermbg=' . palette.normal.left[1][2]
     highlight link Lf_hl_match Search
 endfunction
 
@@ -180,8 +183,8 @@ function! s:set_colorscheme()
         let g:lightline.colorscheme = 'ayu'
     else
         set background=dark
-        silent! colorscheme onehalfdark
-        let g:lightline.colorscheme = 'onehalfdark'
+        silent! colorscheme sonokai
+        let g:lightline.colorscheme = 'sonokai'
     endif
     syntax on
     " call s:set_leaderf_highlights()
