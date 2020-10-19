@@ -150,15 +150,87 @@ function! s:hi_link(hi_name, fg_hi_name, bg_hi_name)
     endif
 endfunction
 
+function! s:str2rgb(rgb_str)
+    call assert_equal(v:t_string, type(a:rgb_str))
+    call assert_equal(7, len(a:rgb_str))
+    if a:rgb_str[0] == '#'
+        return [str2nr(a:rgb_str[1:2], 16), str2nr(a:rgb_str[3:4], 16), str2nr(a:rgb_str[5:6], 16)]
+    else
+        return [str2nr(a:rgb_str[0:1], 16), str2nr(a:rgb_str[2:3], 16), str2nr(a:rgb_str[4:5], 16)]
+    endif
+endfunction
+
+function! s:rgb2str(rgb)
+    return printf('#%02X%02X%02X', a:rgb[0], a:rgb[1], a:rgb[2])
+endfunction
+
+function! s:rgb2hsv(rgb)
+    let [r, g, b] = a:rgb
+    let rgbmax = max([r, g, b]) + 0.0
+    let rgbmin = min([r, g, b]) + 0.0
+    if rgbmax == rgbmin
+        let h = 0.0
+    elseif rgbmax == r && g >= b
+        let h = 60.0 * (g - b) / (rgbmax - rgbmin) + 0.0
+    elseif rgbmax == r && g < b
+        let h = 60.0 * (g - b) / (rgbmax - rgbmin) + 360.0
+    elseif rgbmax == g
+        let h = 60.0 * (b - r) / (rgbmax - rgbmin) + 120.0
+    elseif rgbmax == b
+        let h = 60.0 * (r - g) / (rgbmax - rgbmin) + 240.0
+    endif
+    if rgbmax == 0.0
+        let s = 0.0
+    else
+        let s = 1.0 - rgbmin / rgbmax
+    endif
+    let v = rgbmax
+    return [h, s, v]
+endfunction
+
+function! s:hsv2rgb(hsv)
+    let [h, s, v] = a:hsv
+    let hi = floor(h / 60.0)
+    let f = h / 60.0 - hi
+    let p = float2nr(v * (1.0 - s))
+    let q = float2nr(v * (1.0 - f * s))
+    let t = float2nr(v * (1.0 - (1.0 - f) * s))
+    if hi == 0
+        return [v, t, p]
+    elseif hi == 1
+        return [q, v, p]
+    elseif hi == 2
+        return [p, v, t]
+    elseif hi == 3
+        return [p, q, v]
+    elseif hi == 4
+        return [t, p, v]
+    elseif hi == 5
+        return [v, p, q]
+    endif
+endfunction
+
+function! s:middle_color(rgb1_str, rgb2_str)
+    let [h1, s1, v1] = s:rgb2hsv(s:str2rgb(a:rgb1_str))
+    let [h2, s2, v2] = s:rgb2hsv(s:str2rgb(a:rgb2_str))
+    if abs(h1 - h2) <= 180
+        let h = (h1 + h2) / 2
+    else
+        let h = (360 - (h1 + h2)) / 2
+    endif
+    let s = (s1 + s2) / 2
+    let v = (v1 + v2) / 2
+    let rgb = s:hsv2rgb([h, s, v])
+    return s:rgb2str([float2nr(rgb[0]), float2nr(rgb[1]), float2nr(rgb[2])])
+endfunction
+
 function! s:set_leaderf_highlights()
-    " {'inactive': {'right': [['#7c6f64', '#3c3836', '243', '237'], ['#7c6f64', '#3c3836', '243', '237']], 'middle': [['#7c6f64', '#3c3836', '243', '237']], 'left': [['#7c6f64', '#3c3836', '243', '237'], ['#7c6f64', '#3c3836', '243', '237']]}, 'replace': {'right': [['#1d2021', '#8ec07c', '234', '108'], ['#ebdbb2', '#504945', '223', '239']], 'middle': [['#a89984', '#504945', '246', '239']], 'left': [['#1d2021', '#8ec07c', '234', '108', 'bold'], ['#ebdbb2', '#504945', '223', '239']]}, 'normal': {'right': [['#1d2021', '#a89984', '234', '246'], ['#a89984', '#504945', '246', '239']], 'middle': [['#a89984', '#3c3836', '246', '237']], 'warning': [['#504945', '#fabd2f', '239', '214']], 'left': [['#1d2021', '#a89984', '234', '246', 'bold'], ['#a89984', '#504945', '246', '239']], 'error': [['#1d2021', '#fe8019', '234', '208']]}, 'terminal': {'right': [['#1d2021', '#b8bb26', '234', '142'], ['#ebdbb2', '#504945', '223', '239']], 'middle': [['#a89984', '#504945', '246', '239']], 'left': [['#1d2021', '#b8bb26', '234', '142', 'bold'], ['#ebdbb2', '#504945', '223', '239']]}, 'tabline': {'right': [['#1d2021', '#fe8019', '234', '208']], 'middle': [['#1d2021', '#1d2021', '234', '234']], 'left': [['#a89984', '#504945', '246', '239']], 'tabsel': [['#1d2021', '#a89984', '234', '246']]}, 'visual': {'right': [['#1d2021', '#fe8019', '234', '208'], ['#1d2021', '#7c6f64', '234', '243']], 'middle': [['#a89984', '#3c3836', '246', '237']], 'left': [['#1d2021', '#fe8019', '234', '208', 'bold'], ['#1d2021', '#7c6f64', '234', '243']]}, 'insert': {'right': [['#1d2021', '#83a598', '234', '109'], ['#ebdbb2', '#504945', '223', '239']], 'middle': [['#a89984', '#504945', '246', '239']], 'left': [['#1d2021', '#83a598', '234', '109', 'bold'], ['#ebdbb2', '#504945', '223', '239']]}}
     let palette = lightline#palette()
     highlight link Lf_hl_cursorline CursorLine
-    " highlight link Lf_hl_popup_inputText Normal
-    execute 'hi Lf_hl_popup_inputText guifg=' . palette.inactive.middle[0][0] . ' guibg=' . palette.inactive.middle[0][1] . ' ctermfg=' . palette.inactive.middle[0][2] . ' ctermbg=' . palette.inactive.middle[0][3]
-    execute 'hi Lf_hl_popup_blank guifg=' . palette.inactive.middle[0][0] . ' guibg=' . palette.inactive.middle[0][1] . ' ctermfg=' . palette.inactive.middle[0][2] . ' ctermbg=' . palette.inactive.middle[0][3]
-    highlight link Lf_hl_popup_window Normal
-    " execute 'hi Lf_hl_popup_window guifg=' . palette.inactive.middle[0][0] . ' guibg=' . palette.inactive.middle[0][1] . ' ctermfg=' . palette.inactive.middle[0][2] . ' ctermbg=' . palette.inactive.middle[0][3]
+    execute 'hi Lf_hl_popup_inputText guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
+    execute 'hi Lf_hl_popup_blank guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
+    " hi link Lf_hl_popup_window Normal
+    execute 'hi Lf_hl_popup_window guifg=' . synIDattr(synIDtrans(hlID('Normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('Normal')), 'bg'), synIDattr(synIDtrans(hlID('CursorLine')), 'bg'))
     execute 'hi Lf_hl_popup_normalMode guifg=' . palette.normal.left[0][0] . ' guibg=' . palette.normal.left[0][1] . ' ctermfg=' . palette.normal.left[0][2] . ' ctermbg=' . palette.normal.left[0][3]
     execute 'hi Lf_hl_popup_inputMode guifg=' . palette.insert.left[0][0] . ' guibg=' . palette.insert.left[0][1] . ' ctermfg=' . palette.insert.left[0][2] . ' ctermbg=' . palette.insert.left[0][3]
     execute 'hi Lf_hl_popup_lineInfo guifg=' . palette.normal.right[1][0] . ' guibg=' . palette.normal.right[1][1] . ' ctermfg=' . palette.normal.right[1][2] . ' ctermbg=' . palette.normal.right[1][3]
@@ -169,7 +241,6 @@ function! s:set_leaderf_highlights()
     execute 'hi Lf_hl_popup_fuzzyMode guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
     execute 'hi Lf_hl_popup_regexMode guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
     execute 'hi Lf_hl_popup_cwd guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
-    " execute 'hi Lf_hl_popup_File_sep0 guifg=' . palette.insert.left[0][1] . ' guibg=' . palette.normal.left[1][0] . ' ctermfg=' . palette.insert.left[0][3] . ' ctermbg=' . palette.normal.left[1][2]
     highlight link Lf_hl_match Search
 endfunction
 

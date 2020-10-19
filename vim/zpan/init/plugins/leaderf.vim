@@ -33,4 +33,6 @@ let g:Lf_ShowHidden = 1
 let g:Lf_IgnoreCurrentBufferName = 1
 let g:Lf_PreviewInPopup = 1
 
+autocmd FileType leaderf set signcolumn=no foldcolumn=0
+
 " vim: ts=8 sts=4 sw=4 et
