@@ -213,13 +213,13 @@ endfunction
 function! s:middle_color(rgb1_str, rgb2_str)
     let [h1, s1, v1] = s:rgb2hsv(s:str2rgb(a:rgb1_str))
     let [h2, s2, v2] = s:rgb2hsv(s:str2rgb(a:rgb2_str))
-    if abs(h1 - h2) <= 180
-        let h = (h1 + h2) / 2
+    if abs(h1 - h2) <= 180.0
+        let h = (h1 + h2) / 2.0
     else
-        let h = (360 - (h1 + h2)) / 2
+        let h = ((360.0 - h1) + (360.0 - h2)) / 2.0
     endif
-    let s = (s1 + s2) / 2
-    let v = (v1 + v2) / 2
+    let s = (s1 + s2) / 2.0
+    let v = (v1 + v2) / 2.0
     let rgb = s:hsv2rgb([h, s, v])
     return s:rgb2str([float2nr(rgb[0]), float2nr(rgb[1]), float2nr(rgb[2])])
 endfunction
