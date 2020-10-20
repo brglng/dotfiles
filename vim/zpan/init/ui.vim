@@ -254,8 +254,8 @@ function! s:set_colorscheme()
         let g:lightline.colorscheme = 'ayu'
     else
         set background=dark
-        silent! colorscheme sonokai
-        let g:lightline.colorscheme = 'sonokai'
+        silent! colorscheme ayu
+        let g:lightline.colorscheme = 'nord'
     endif
     syntax on
     " call s:set_leaderf_highlights()
@@ -286,9 +286,12 @@ endfunction
 
 function! s:on_set_background()
     if exists('g:loaded_lightline')
-        execute 'source ' . globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
-        call lightline#colorscheme()
-        call lightline#update()
+        let colorfile = globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
+        if colorfile != ''
+            execute 'source ' . colorfile
+            call lightline#colorscheme()
+            call lightline#update()
+        endif
     endif
     syntax on
     call s:set_leaderf_highlights()
