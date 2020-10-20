@@ -254,7 +254,7 @@ function! s:set_colorscheme()
         let g:lightline.colorscheme = 'ayu'
     else
         set background=dark
-        silent! colorscheme ayu
+        silent! colorscheme nord
         let g:lightline.colorscheme = 'nord'
     endif
     syntax on

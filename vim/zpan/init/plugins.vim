@@ -126,6 +126,7 @@ Plug 'sainnhe/gruvbox-material'
 Plug 'sainnhe/forest-night'
 Plug 'sainnhe/edge'
 Plug 'sainnhe/sonokai'
+Plug 'zeis/vim-kolor'
 
 call plug#end()
 
