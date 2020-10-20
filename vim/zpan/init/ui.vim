@@ -271,13 +271,10 @@ function! s:on_colorscheme()
             let g:lightline.colorscheme = 'softera_alter'
         elseif g:colors_name =~# 'ayu'
             let g:lightline.colorscheme = 'ayu'
-        elseif g:colors_name =~# 'gruvbox'
-            let g:lightline.colorscheme = 'gruvbox'
         elseif g:colors_name ==# 'onehalflight'
             let g:lightline.colorscheme = 'one'
         else
-            let g:lightline.colorscheme =
-              \ substitute(substitute(g:colors_name, '-', '_', 'g'), '256.*', '', '')
+            let g:lightline.colorscheme = substitute(substitute(g:colors_name, '-', '_', 'g'), '256.*', '', '')
         endif
         call lightline#init()
         call lightline#colorscheme()
