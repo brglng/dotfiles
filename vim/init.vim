@@ -215,18 +215,18 @@ set diffopt+=context:99999
 " omni complete settings
 set completeopt=menuone,noinsert,noselect
 set pumheight=15
-" silent! set pumblend=15
+silent! set pumblend=15
 
 " Always show the complete popup under the cursor,
 " except when the cursor is at the last 3 lines on the screen.
 " When the cursor is at the last 3 lines on the screen,
-" always set pumheight=3
-" autocmd CursorMoved,CursorMovedI *
-      " \ if winline() <= winheight('%') - 4 |
-      " \   let &pumheight = winheight('%') - winline() - 1 |
-      " \ else |
-      " \   set pumheight=3 |
-      " \ endif
+" always set pumheight=15
+autocmd CursorMoved,CursorMovedI *
+      \ if winline() <= winheight('%') - 4 |
+      \   let &pumheight = min([winheight('%') - winline() - 1, 15]) |
+      \ else |
+      \   set pumheight=15 |
+      \ endif
 
 
 " set formatoptions+=a
