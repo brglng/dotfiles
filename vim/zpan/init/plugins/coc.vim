@@ -55,7 +55,7 @@ let s:coc_extensions = [
   \ 'coc-pairs',
   \ 'coc-powershell',
   \ 'coc-prettier',
-  \ 'coc-python',
+  \ "coc-pyright",
   \ 'coc-rust-analyzer',
   \ 'coc-smartf',
   \ 'coc-snippets',
