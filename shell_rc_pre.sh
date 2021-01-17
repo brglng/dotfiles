@@ -10,11 +10,23 @@ path_prepend() {
     fi
 }
 
+update_environment() {
+    if [[ -n $TMUX ]] && type tmux >/dev/null; then
+        eval $(tmux showenv DISPLAY)
+        eval $(tmux showenv KRB5CCNAME)
+        eval $(tmux showenv SSH_ASKPASS)
+        eval $(tmux showenv SSH_AUTH_SOCK)
+        eval $(tmux showenv SSH_AGENT_PID)
+        eval $(tmux showenv SSH_CONNECTION)
+        eval $(tmux showenv WINDOWID)
+        eval $(tmux showenv XAUTHORITY)
+    fi
+}
+
 if [[ "`uname -s`" = Darwin ]]; then
-    [[ -d ~/Library/Python/3.5/bin ]] && path_prepend ~/Library/Python/3.5/bin
-    [[ -d ~/Library/Python/3.6/bin ]] && path_prepend ~/Library/Python/3.6/bin
-    [[ -d ~/Library/Python/3.7/bin ]] && path_prepend ~/Library/Python/3.7/bin
-    [[ -d ~/Library/Python/3.8/bin ]] && path_prepend ~/Library/Python/3.8/bin
+    for minor in {0..20}; do
+        [[ -d ~/Library/Python/3.${minor}/bin ]] && path_prepend ~/Library/Python/3.${minor}/bin
+    done
 fi
 
 path_prepend "$HOME/.local/bin"
@@ -53,4 +65,4 @@ if type powerline-daemon &>/dev/null; then
     powerline-daemon -q
 fi
 
-# vim: ts=8 sts=4 sw=4 et
+# vim: ts=8 sts=4 sw=4 et ft=bash

@@ -123,6 +123,10 @@ setopt HIST_SAVE_NO_DUPS        # Don't write duplicate entries in the history f
 setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY              # Don't execute immediately upon history expansion.
 
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd update_environment
+add-zsh-hook preexec update_environment
+
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 source "$BRGLNG_DOTFILES_DIR/shell_rc_post.sh"

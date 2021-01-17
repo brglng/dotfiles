@@ -71,4 +71,4 @@ alias zb='z -b'      # quickly cd to the parent directory
 
 stty -ixon > /dev/null 2>&1 || true
 
-# vim: ts=8 sts=4 sw=4 et
+# vim: ts=8 sts=4 sw=4 et ft=bash
