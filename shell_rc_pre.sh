@@ -13,21 +13,21 @@ path_prepend() {
 update_environment() {
     if [[ -n $TMUX ]] && type tmux >/dev/null; then
         local cmd=$(tmux showenv DISPLAY)
-        [[ ! $cmd =~ ^\- ]] && eval "export $cmd"
+        [[ ! $cmd =~ ^\- ]] && eval "export '$cmd'"
         local cmd=$(tmux showenv KRB5CCNAME)
-        [[ ! $cmd =~ ^\- ]] && eval "export $cmd"
+        [[ ! $cmd =~ ^\- ]] && eval "export '$cmd'"
         local cmd=$(tmux showenv SSH_ASKPASS)
-        [[ ! $cmd =~ ^\- ]] && eval "export $cmd"
+        [[ ! $cmd =~ ^\- ]] && eval "export '$cmd'"
         local cmd=$(tmux showenv SSH_AUTH_SOCK)
-        [[ ! $cmd =~ ^\- ]] && eval "export $cmd"
+        [[ ! $cmd =~ ^\- ]] && eval "export '$cmd'"
         local cmd=$(tmux showenv SSH_AGENT_PID)
-        [[ ! $cmd =~ ^\- ]] && eval "export $cmd"
+        [[ ! $cmd =~ ^\- ]] && eval "export '$cmd'"
         local cmd=$(tmux showenv SSH_CONNECTION)
-        [[ ! $cmd =~ ^\- ]] && eval "export $cmd"
+        [[ ! $cmd =~ ^\- ]] && eval "export '$cmd'"
         local cmd=$(tmux showenv WINDOWID)
-        [[ ! $cmd =~ ^\- ]] && eval "export $cmd"
+        [[ ! $cmd =~ ^\- ]] && eval "export '$cmd'"
         local cmd=$(tmux showenv XAUTHORITY)
-        [[ ! $cmd =~ ^\- ]] && eval "export $cmd"
+        [[ ! $cmd =~ ^\- ]] && eval "export '$cmd'"
     fi
 }
 
