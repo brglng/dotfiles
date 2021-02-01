@@ -24,3 +24,4 @@ doc/tags
 
 .mypy_cache/
 *.zwc
+vim/autoload/plug.vim.old
