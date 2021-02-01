@@ -32,7 +32,6 @@ omap if <Plug>(coc-funcobj-i)
 omap af <Plug>(coc-funcobj-a)
 
 let s:coc_extensions = [
-  \ 'coc-bookmark',
   \ 'coc-cmake',
   \ 'coc-css',
   \ 'coc-dictionary',
