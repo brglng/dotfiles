@@ -44,16 +44,16 @@ vnoremap <D-x> "+x
 map <M-v> "+gP
 exe 'inoremap <script> <M-v> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <M-v> ' . paste#paste_cmd['v']
-cmap <M-v> <C-r>+
+" cmap <M-v> <C-r>+
 map <D-v> "+gP
 exe 'inoremap <script> <D-v> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <D-v> ' . paste#paste_cmd['v']
-cmap <D-v> <C-r>+
+" cmap <D-v> <C-r>+
 
 map <S-Insert> "+gP
 exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <S-Insert> ' . paste#paste_cmd['v']
-cmap <S-Insert> <C-r>+
+" cmap <S-Insert> <C-r>+
 
 noremap <C-q> <C-v>
 inoremap <C-q> <C-o><C-v>
@@ -95,8 +95,8 @@ inoremap <silent> <expr> <Down> pumvisible() ? "\<C-n>" : "\<C-o>gj"
 inoremap <silent> <expr> <Up> pumvisible() ? "\<C-p>" : "\<C-o>gk"
 
 if has('nvim')
-    cnoremap <silent> <expr> <Down> pumvisible() ? "\<C-n>" : "\<Down>"
-    cnoremap <silent> <expr> <Up> pumvisible() ? "\<C-p>" : "\<Up>"
+    cnoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Down>"
+    cnoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<Up>"
 endif
 
 " arrows move through screen lines
