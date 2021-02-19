@@ -15,6 +15,8 @@ for arg in "$@"; do
     fi
 done
 
+echo
+
 if [[ $CONDA_PREFIX != "" ]]; then
     echo "Your are in a conda environment. Please deactivate it before running this script."
     exit -1
