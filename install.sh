@@ -175,7 +175,6 @@ else
     git clone --recursive https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
-mkdir -p ~/.zgen
 if [[ -r ~/.zgen && -d ~/.zgen ]]; then
     pushd ~/.zgen
     git pull
