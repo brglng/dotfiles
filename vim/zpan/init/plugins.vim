@@ -63,6 +63,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-abolish'
 Plug 'bootleq/vim-cycle'
 Plug 'mg979/vim-visual-multi'
 Plug 'Shougo/vinarise.vim', {'do': ':silent! UpdateRemotePlugins'}
@@ -88,10 +89,7 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'skywind3000/asynctasks.vim'
 
 " Language Semantic
-Plug 'neoclide/coc.nvim', {
-  \ 'branch': 'release',
-  \ 'do': {-> execute(['UpdateRemotePlugins', 'CocUpdateSync'], 'silent!')}
-  \ }
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':silent! UpdateRemotePlugins'}
 Plug 'honza/vim-snippets'
 Plug 'liuchengxu/vista.vim'
 Plug 'pechorin/any-jump.vim'
