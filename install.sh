@@ -54,7 +54,7 @@ install_linux() {
 	    sudo adduser -q $USER linuxbrew
       	    brew update
         else
-	    sudo exec http_proxy="$http_proxy" https_proxy="$https_proxy" no_proxy="$no_proxy" git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
+	    sudo env http_proxy="$http_proxy" https_proxy="$https_proxy" no_proxy="$no_proxy" git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
 	    sudo mkdir -p /home/linuxbrew/.linuxbrew/bin
 	    sudo ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
 	    sudo addgroup -q linuxbrew
