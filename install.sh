@@ -31,6 +31,14 @@ install_linux() {
       	Fedora) install_yum ;;
       	CentOS) install_yum ;;
       	Arch) install_pacman ;;
+        *)
+            if [[ "$distname" = "" ]]; then
+                echo "Your distribution is not supported!"
+            else
+                echo "$distname is not supported!"
+            fi
+            exit 1
+            ;;
     esac
 
     # Fix for vim
@@ -42,12 +50,15 @@ install_linux() {
         ln -sf $PWD/local/bin/brew $HOME/.local/bin
 
         # Install Homebrew for Linux
-        if [[ -x $HOME/.linuxbrew/bin/brew ]]; then
+        if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
       	    brew update
         else
-	    git clone --recursive https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew
-	    mkdir -p ~/.linuxbrew/bin
-	    ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin
+	    sudo git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
+	    sudo mkdir -p /home/linuxbrew/.linuxbrew/bin
+	    sudo ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
+	    sudo adduser -q linuxbrew
+	    sudo chown -R linuxbrew:linuxbrew /home/linuxbrew
+	    sudo adduser -q $USER linuxbrew
         fi
 
         if ! brew ls --versions llvm &> /dev/null; then
@@ -86,6 +97,10 @@ fi
 case $UNAME_S in
     Linux) install_linux ;;
     Darwin) install_mac ;;
+    *)
+        echo "$UNAME_S is not supported!"
+        exit 1
+        ;;
 esac
 
 scripts/setup_python3.sh --no-setup-proxy

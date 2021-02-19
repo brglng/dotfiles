@@ -24,7 +24,45 @@ if [[ $no_setup_proxy == 0 && ($http_proxy == "" || $https_proxy == "") ]]; then
     ask_setup_proxy
 fi
 
-echo "Please select what you want to do:"
+if [[ ! -d $HOME/opt/miniconda3 ]] && \
+   [[ ! -d $HOME/opt/anaconda3 ]] && \
+   [[ ! -d $HOME/miniconda3 ]] &&  \
+   [[ ! -d $HOME/anaconda3 ]] &&  \
+   [[ ! -d /miniconda3 ]] &&  \
+   [[ ! -d /anaconda3 ]]; then
+    echo "Please select what to do: "
+    PS3=">>> "
+    select opt in \
+        "Install Miniconda3" \
+        "Install Anaconda3" \
+        "Skip installation of Miniconda3/Anaconda3"; do
+        case $REPLY in
+            1)
+                mkdir -p ~/.cache/brglng/dotfiles
+                pushd ~/.cache/brglng/dotfiles
+                curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+                chmod +x Miniconda3-latest-Linux-x86_64.sh
+                ./Miniconda3-latest-Linux-x86_64.sh -b
+                popd
+                break;;
+            2)
+                mkdir -p ~/.cache/brglng/dotfiles
+                pushd ~/.cache/brglng/dotfiles
+                curl -LO https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_64.sh
+                chmod +x Anaconda3-2020.11-Linux-x86_64.sh
+                ./Anaconda3-2020.11-Linux-x86_64.sh -b
+                popd
+                break;;
+            3)
+                break;;
+            *)
+                echo "Please choose 1/2/3"
+        esac
+    done
+fi
+echo
+
+echo "Please select what you want to do: "
 PS3=">>> "
 select opt in \
     "Set your user's default Python and install necessary packages" \
@@ -56,7 +94,6 @@ for py in python3 python; do
         $HOME/anaconda3/bin \
         /miniconda3/bin \
         /anaconda3/bin \
-        $HOME/.local/bin \
         /usr/local/bin \
         /usr/bin \
         /bin; do
@@ -100,7 +137,7 @@ elif [[ -x "$(dirname $selected_py)/pip" ]]; then
     link "$(dirname $selected_py)/pip" "$HOME/.local/bin/pip3"
 fi
 echo
-echo "~/.local/bin/python3 and ~/.local/bin/pip3 has been linked to your selection of Python."
+echo "~/.local/bin/python3 and ~/.local/bin/pip3 has been linked to your choice."
 echo
 
 while true; do
@@ -144,6 +181,7 @@ for py in ${all_pythons[@]}; do
 done
 echo
 
-echo "Done."
+echo "Python 3 setup done."
+echo
 
 # vim: ts=8 sts=4 sw=4 et

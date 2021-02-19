@@ -31,12 +31,12 @@ function link {
         else
             echo "Original $dst is renamed to $dst.orig"
             mv "$dst" "$dst.orig"
-            echo "Linking $dst"
+            echo "Linking $dst -> $src"
             mkdir -p $(dirname "$dst")
             ln -s "$src" "$dst"
         fi
     else
-        echo "Linking $dst"
+        echo "Linking $dst -> $src"
         mkdir -p $(dirname "$dst")
         ln -s "$src" "$dst"
     fi
