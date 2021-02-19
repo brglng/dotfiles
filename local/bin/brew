@@ -3,5 +3,5 @@ if [ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
     echo "$0: error: /home/linuxbrew/.linuxbrew/bin/brew does not exist or is not executable."
     exit 1
 fi
-eval /home/linuxbrew/.linuxbrew/bin/brew shellenv
+eval /home/linuxbrew/.linuxbrew/bin/brew shellenv > /dev/null
 exec /home/linuxbrew/.linuxbrew/bin/brew "$@"

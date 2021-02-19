@@ -9,7 +9,7 @@ install_yum() {
 }
 
 install_apt() {
-    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    # sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
     sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git xsel python3-pip
 
@@ -56,8 +56,12 @@ install_linux() {
 	    sudo git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
 	    sudo mkdir -p /home/linuxbrew/.linuxbrew/bin
 	    sudo ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
+	    sudo addgroup -q linuxbrew
 	    sudo adduser -q linuxbrew
+	    sudo adduser linuxbrew linuxbrew
 	    sudo chown -R linuxbrew:linuxbrew /home/linuxbrew
+	    sudo chmod g+srwx /home/linuxbrew
+	    sudo find -H /home/linuxbrew -type d -exec chmod g+srwx {} \;
 	    sudo adduser -q $USER linuxbrew
         fi
 
@@ -126,7 +130,7 @@ rustup component add rls rust-analysis rust-src rustfmt
 if type brew &>/dev/null; then
     if ! brew ls --versions universal-ctags &> /dev/null; then
         brew tap universal-ctags/universal-ctags
-        brew install --HEAD universal-ctags
+        brew install --HEAD universal-ctags --without-xml
     fi
     if ! brew ls --versions neovim &> /dev/null; then
         brew install neovim
