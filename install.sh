@@ -51,6 +51,7 @@ install_linux() {
 
         # Install Homebrew for Linux
         if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+	    sudo adduser -q $USER linuxbrew
       	    brew update
         else
 	    sudo git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
