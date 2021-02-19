@@ -90,6 +90,11 @@ function install_mac() {
     tic -x terminfo/tmux-256color.terminfo
 }
 
+if [[ $(id -u) -eq 0 ]] || [[ $(id -g) -eq 0 ]]; then
+    echo "Please do not run this script as root."
+    exit 1
+fi
+
 mkdir -p $HOME/.local/bin
 export PATH=$HOME/.local/bin:$PATH
 
