@@ -54,7 +54,7 @@ install_linux() {
 	    sudo adduser -q $USER linuxbrew
       	    brew update
         else
-	    sudo adduser -q linuxbrew
+	    sudo useradd linuxbrew
 	    sudo mkdir -p /home/linuxbrew
 	    sudo chown linuxbrew:linuxbrew /home/linuxbrew
 	    sudo chmod g+srwx /home/linuxbrew
