@@ -59,6 +59,7 @@ install_linux() {
 	    sudo chown linuxbrew:linuxbrew /home/linuxbrew
 	    sudo chmod g+srwx /home/linuxbrew
 	    sudo adduser -q $USER linuxbrew
+	    newgrp linuxbrew
 
 	    git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
 	    mkdir -p /home/linuxbrew/.linuxbrew/bin
