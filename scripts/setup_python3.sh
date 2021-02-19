@@ -183,7 +183,7 @@ for py in ${all_pythons[@]}; do
 done
 echo
 
-echo "Python 3 setup done."
+echo "Python 3 setup is done."
 echo
 
 # vim: ts=8 sts=4 sw=4 et
