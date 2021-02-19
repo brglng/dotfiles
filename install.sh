@@ -57,7 +57,7 @@ install_linux() {
 	    sudo addgroup -q linuxbrew || true
 	    sudo adduser -q linuxbrew || true
 	    sudo adduser linuxbrew linuxbrew || true
-	    mkdir -p /home/linuxbrew
+	    sudo mkdir -p /home/linuxbrew
 	    sudo chown linuxbrew:linuxbrew /home/linuxbrew
 	    sudo chmod g+srwx /home/linuxbrew
 	    sudo adduser -q $USER linuxbrew || true
