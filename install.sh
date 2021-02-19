@@ -182,7 +182,7 @@ if [[ -r ~/.zgen && -d ~/.zgen ]]; then
 else
     git clone https://github.com/tarjoilija/zgen.git ~/.zgen
 fi
-rm .zgen/init.zsh
+rm -f .zgen/init.zsh
 
 scripts/disable_sudo_secure_path.sh
 
