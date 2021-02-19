@@ -54,11 +54,11 @@ install_linux() {
 	    sudo adduser -q $USER linuxbrew
       	    brew update
         else
-	    sudo useradd linuxbrew
+	    sudo useradd linuxbrew || true
 	    sudo mkdir -p /home/linuxbrew
 	    sudo chown linuxbrew:linuxbrew /home/linuxbrew
 	    sudo chmod g+srwx /home/linuxbrew
-	    sudo adduser -q $USER linuxbrew
+	    sudo adduser -q $USER linuxbrew || true
 	    newgrp linuxbrew
 
 	    git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
