@@ -54,16 +54,17 @@ install_linux() {
 	    sudo adduser -q $USER linuxbrew
       	    brew update
         else
-	    sudo env http_proxy="$http_proxy" https_proxy="$https_proxy" no_proxy="$no_proxy" git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
-	    sudo mkdir -p /home/linuxbrew/.linuxbrew/bin
-	    sudo ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
 	    sudo addgroup -q linuxbrew || true
 	    sudo adduser -q linuxbrew || true
 	    sudo adduser linuxbrew linuxbrew || true
-	    sudo chown -R linuxbrew:linuxbrew /home/linuxbrew
+	    mkdir -p /home/linuxbrew
+	    sudo chown linuxbrew:linuxbrew /home/linuxbrew
 	    sudo chmod g+srwx /home/linuxbrew
-	    sudo find -H /home/linuxbrew -type d -exec chmod g+srwx {} \;
 	    sudo adduser -q $USER linuxbrew || true
+
+	    git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
+	    mkdir -p /home/linuxbrew/.linuxbrew/bin
+	    ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
         fi
 
         if ! brew ls --versions llvm &> /dev/null; then
