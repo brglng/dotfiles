@@ -3,6 +3,9 @@ set -e
 
 source "scripts/util.sh"
 
+BOLD=$(tput bold)
+SGR0=$(tput sgr0)
+
 install_yum() {
     echo "Not implemented yet!"
     exit -1
@@ -59,7 +62,10 @@ install_linux() {
 	    sudo chown linuxbrew:linuxbrew /home/linuxbrew
 	    sudo chmod g+srwx /home/linuxbrew
 	    sudo adduser -q $USER linuxbrew || true
-	    newgrp linuxbrew
+
+            echo
+	    echo "${BOLD}If you see error below, please log out and run this script again.${SGR0}"
+	    echo
 
 	    git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
 	    mkdir -p /home/linuxbrew/.linuxbrew/bin
@@ -182,9 +188,6 @@ rm .zgen/init.zsh
 scripts/disable_sudo_secure_path.sh
 
 scripts/link.sh
-
-BOLD=$(tput bold)
-SGR0=$(tput sgr0)
 
 echo 'Now Neovim will be launched to install plugins.'
 echo "Please type ${BOLD}:qa${SGR0} to quit from Neovim after all plugins have been installed."
