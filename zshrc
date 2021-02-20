@@ -99,7 +99,6 @@ if ! zgen saved; then
     zgen save
 fi
 
-unalias fd
 alias -s c=$EDITOR
 alias -s conf=$EDITOR
 alias -s h=$EDITOR
