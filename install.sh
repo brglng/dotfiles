@@ -64,7 +64,7 @@ install_linux() {
 	    sudo adduser -q $USER linuxbrew || true
 
             echo
-	    echo "${BOLD}If you see error below, please log out and log in, and then run this script again.${SGR0}"
+	    echo "${BOLD}If you encounter any permission error, please log out and log in, and then run this script again.${SGR0}"
 	    echo
 
 	    git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
