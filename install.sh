@@ -85,7 +85,7 @@ function install_mac() {
       	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake luajit clang-format git-lfs reattach-to-user-namespace
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake clang-format git-lfs reattach-to-user-namespace
 
     brew cask install macvim
 
@@ -123,7 +123,7 @@ scripts/setup_python3.sh --no-setup-proxy
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff nvm dasht
+    brew install git rustup-init go cmake zsh tmux ccls fzf ripgrep-all fd vim colordiff nvm dasht luajit
     brew link --overwrite ruby
 fi
 
