@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! `uname -s` = Linux ]; then
+if [[ ! $(uname -s) = "Linux" ]]; then
     echo "Your system is not Linux."
     exit
 fi

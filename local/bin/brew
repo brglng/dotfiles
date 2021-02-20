@@ -1,5 +1,5 @@
-#!/bin/sh
-if [ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+#!/bin/bash
+if [[ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     echo "$0: error: /home/linuxbrew/.linuxbrew/bin/brew does not exist or is not executable."
     exit 1
 fi
