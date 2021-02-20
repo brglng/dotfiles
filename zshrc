@@ -22,6 +22,8 @@ fi
 export _ZL_MATCH_MODE=1
 export _ZL_ADD_ONCE=1
 
+ZSH_DISABLE_COMPFIX="true"
+
 # load zgen
 source "${HOME}/.zgen/zgen.zsh"
 
