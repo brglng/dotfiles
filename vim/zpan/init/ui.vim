@@ -254,8 +254,8 @@ function! s:set_colorscheme()
         let g:lightline.colorscheme = 'ayu'
     else
         set background=dark
-        silent! colorscheme nord
-        let g:lightline.colorscheme = 'nord'
+        silent! colorscheme gruvbox
+        let g:lightline.colorscheme = 'gruvbox'
     endif
     syntax on
     " call s:set_leaderf_highlights()
