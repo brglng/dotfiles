@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ ! `uname -s` = Linux ]; then
     echo "Your system is not Linux."
@@ -46,6 +46,8 @@ ln -fs $HOMEBREW_PREFIX/bin/rdoc            ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/rg              ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/ri              ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/ruby            ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/rust-analyzer   ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/rustup-init     ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/scan-build      ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/scan-view       ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/sqlite3         ~/.local/bin/
@@ -55,5 +57,7 @@ ln -fs $HOMEBREW_PREFIX/bin/vim             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/vimdiff         ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/w3m             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/w3mman          ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/yarn            ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/yarnpkg         ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/y2racc          ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/zsh             ~/.local/bin/
