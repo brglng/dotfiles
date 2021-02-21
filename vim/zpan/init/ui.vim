@@ -250,8 +250,8 @@ function! s:set_colorscheme()
     let minute = str2nr(minute)
     if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 18 || (hour == 18 && minute < 45))
         set background=light
-        silent! colorscheme ayu
-        let g:lightline.colorscheme = 'ayu'
+        silent! colorscheme gruvbox
+        let g:lightline.colorscheme = 'gruvbox'
     else
         set background=dark
         silent! colorscheme gruvbox
