@@ -104,8 +104,8 @@ if !has('nvim') && !has('gui_running')
     set guicursor+=i:ver100-iCursor
 endif
 
-" let g:gruvbox_contrast_light = 'hard'
-" let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_contrast_light = 'hard'
+let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_italic = 1
 " let g:gruvbox_improved_strings = 1
 " let g:gruvbox_improved_warnings = 1
