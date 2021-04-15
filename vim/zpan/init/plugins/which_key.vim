@@ -58,35 +58,10 @@ let g:which_key_map[','] = ['<Plug>(coc-smartf-repeat-opposite)', 'coc-smartf-re
 
 let g:which_key_map['g'] = {
   \ 'name': '+goto',
-  \ 'c': {
-  \     'name': '+call-hierarchy',
-  \     'r': ['CocLocations(''ccls'', ''$ccls/call'')', 'show-callers'],
-  \     'e': ['CocLocations(''ccls'', ''$ccls/call'', {''callee'': v:true})', 'show-callees'],
-  \ },
   \ 'd': ['<Plug>(coc-definition)', 'goto-definition'],
   \ 'i': ['<Plug>(coc-implementation)', 'goto-implementation'],
-  \ 'I': {
-  \     'name': '+inheritance-hierarchy',
-  \     'b': ['CocLocations(''ccls'', ''$ccls/inheritance'')', 'base-types'],
-  \     'd': ['CocLocations(''ccls'', ''$ccls/inheritance'', {''derived'': v:true})', 'derived-types'],
-  \ },
   \ 'k': ['<Plug>(coc-declaration)', 'goto-declaration'],
-  \ 'n': {
-  \     'name': '+navigating-declarations',
-  \     'd': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''D''})', 'goto-first-child-declaration'],
-  \     'l': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''L''})', 'goto-previous-declaration'],
-  \     'r': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''R''})', 'goto-next-declaration'],
-  \     'u': ['CocLocations(''ccls'', ''$ccls/navigate'', {''direction'': ''U''})', 'goto-parent-declaration'],
-  \ },
-  \ 'm': {
-  \     'name': '+members',
-  \     'v': ['CocLocations(''ccls'', ''$ccls/member'')', 'member-vairables'],
-  \     'f': ['CocLocations(''ccls'', ''$ccls/member'', {''kind'': 3})', 'member-functions'],
-  \     'm': ['CocLocations(''ccls'', ''$ccls/member'', {''kind'': 2})', 'member-types'],
-  \ },
   \ 't': ['<Plug>(coc-type-definition)', 'goto-type-definition'],
-  \ 'v': ['CocLocations(''ccls'', ''$ccls/var'')', 'find-all-instances-of-type'],
-  \ 'V': ['CocLocations(''ccls'', ''$ccls/var'', {''kind'': 1})', 'find-all-instances-of-the-type-of-symbol'],
   \ }
 
 let g:which_key_map['i'] = [':IndentLinesToggle', 'toggle-indent-line']

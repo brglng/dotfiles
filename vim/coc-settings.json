@@ -1,5 +1,6 @@
 {
     "coc.preferences.formatOnType": false,
+    "clangd.semanticHighlighting": true,
     "diagnostic.errorSign": "",
     "diagnostic.hintSign": "",
     "diagnostic.infoSign": "",
@@ -46,20 +47,6 @@
     "git.stagedDecorator": " ",
     "git.topRemovedSign.text": "\u00a0",
     "git.untrackedDecorator": " ",
-    "languageserver": {
-        "ccls": {
-            "command": "ccls",
-            "filetypes": ["c", "cpp", "objc", "objcpp"],
-            "initializationOptions": {
-                "index": {
-                    "initialBlacklist": ["build/", "cmake-build-.*/"],
-                    "onChange": true,
-                    "trackDependency": 2
-                }
-            },
-            "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"]
-        }
-    },
     "list.autoResize": false,
     "list.maxHeight": 15,
     "list.source.grep.defaultArgs": ["-smartcase", "-regex"],

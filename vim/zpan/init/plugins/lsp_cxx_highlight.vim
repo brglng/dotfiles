@@ -1,0 +1,3 @@
+hi link LspCxxHlGroupEnumConstant Constant
+hi link LspCxxHlGroupNamespace Type
+hi link LspCxxHlGroupMemberVariable Normal

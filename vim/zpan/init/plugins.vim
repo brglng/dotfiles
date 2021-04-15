@@ -93,6 +93,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':silent! UpdateRemotePlug
 Plug 'honza/vim-snippets'
 Plug 'liuchengxu/vista.vim'
 Plug 'pechorin/any-jump.vim'
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 " Debuggig Plugins
 Plug 'puremourning/vimspector'
@@ -154,6 +155,7 @@ runtime zpan/init/plugins/im_select.vim
 runtime zpan/init/plugins/indent_line.vim
 runtime zpan/init/plugins/leaderf.vim
 runtime zpan/init/plugins/lightline.vim
+runtime zpan/init/plugins/lsp_cxx_highlight.vim
 runtime zpan/init/plugins/matchup.vim
 runtime zpan/init/plugins/nerd_commenter.vim
 " runtime zpan/init/plugins/neoformat.vim

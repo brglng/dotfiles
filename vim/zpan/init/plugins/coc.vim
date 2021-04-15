@@ -33,6 +33,7 @@ omap af <Plug>(coc-funcobj-a)
 
 let s:coc_extensions = [
   \ 'coc-cmake',
+  \ 'coc-clangd',
   \ 'coc-css',
   \ 'coc-dictionary',
   \ 'coc-docker',
@@ -51,7 +52,6 @@ let s:coc_extensions = [
   \ 'coc-lua',
   \ 'coc-marketplace',
   \ 'coc-omni',
-  \ 'coc-pairs',
   \ 'coc-powershell',
   \ 'coc-prettier',
   \ "coc-pyright",
@@ -87,8 +87,8 @@ endfor
 
 let g:coc_snippet_next = '<tab>'
 
-silent! call mkdir($HOME . '/.cache/ccls', 'p')
-silent! call coc#config('languageserver.ccls.initializationOptions.cache.directory', expand('~/.cache/ccls'))
+" silent! call mkdir($HOME . '/.cache/ccls', 'p')
+" silent! call coc#config('languageserver.ccls.initializationOptions.cache.directory', expand('~/.cache/ccls'))
 
 if executable('fd')
     silent! call coc#config('list.source.files.command', 'fd')
