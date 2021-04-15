@@ -11,3 +11,6 @@ Thumbs.db
 
 *.pyc
 .mypy_cache
+
+.clangd
+compile_flags.txt
