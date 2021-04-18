@@ -9,6 +9,8 @@
 [push]
 		default = simple
 		recurseSubmodules = on-demand
+[pull]
+	  rebase = false
 [gc]
 		autoDetach = false
 [format]
@@ -58,3 +60,4 @@
 		trustExitCode = true
 [mergetool "bc3"]
 		trustExitCode = true
+

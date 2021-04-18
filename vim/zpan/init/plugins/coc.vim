@@ -91,15 +91,19 @@ let g:coc_snippet_next = '<tab>'
 " silent! call coc#config('languageserver.ccls.initializationOptions.cache.directory', expand('~/.cache/ccls'))
 
 if executable('fd')
-    silent! call coc#config('list.source.files.command', 'fd')
-    silent! call coc#config('list.source.files.args', ['-I'])
+    call coc#config('list.source.files.command', 'fd')
+    call coc#config('list.source.files.args', ['-I'])
 elseif executable('bfind')
-    silent! call coc#config('list.source.files.command', 'bfind')
-    silent! call coc#config('list.source.files.args', [])
+    call coc#config('list.source.files.command', 'bfind')
+    call coc#config('list.source.files.args', [])
+endif
+
+if has('mac')
+    call coc#config('clangd.path', '/usr/local/opt/llvm/bin/clangd')
 endif
 
 if exists('g:python3_host_prog') && g:python3_host_prog != ''
-    silent! call coc#config('python.pythonPath', g:python3_host_prog)
+    call coc#config('python.pythonPath', g:python3_host_prog)
 endif
 
 " let g:coc_node_args = ['--nolazy', '--inspect-brk=6045']

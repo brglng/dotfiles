@@ -1,6 +1,7 @@
 {
     "coc.preferences.formatOnType": false,
     "clangd.semanticHighlighting": true,
+    "clangd.path": "/usr/local/opt/llvm/bin/clangd",
     "diagnostic.errorSign": "",
     "diagnostic.hintSign": "",
     "diagnostic.infoSign": "",
