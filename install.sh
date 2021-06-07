@@ -142,7 +142,7 @@ rustup component add rls rust-analysis rust-src rustfmt
 if type brew &>/dev/null; then
     if ! brew ls --versions universal-ctags &> /dev/null; then
         brew tap universal-ctags/universal-ctags
-        brew install --HEAD universal-ctags --without-xml
+        brew install --HEAD universal-ctags
     fi
     if ! brew ls --versions neovim &> /dev/null; then
         brew install -s neovim
