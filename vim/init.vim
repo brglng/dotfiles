@@ -187,9 +187,9 @@ autocmd BufRead,BufNewFile *.md set filetype=markdown
 " autocmd BufRead,BufNewFile *.md set spell
 
 if has('nvim')
-    let s:undodir = $HOME . '/.cache/vim/undo'
-else
     let s:undodir = $HOME . '/.cache/nvim/undo'
+else
+    let s:undodir = $HOME . '/.cache/vim/undo'
 endif
 if !isdirectory(s:undodir)
     if !zpan#is_sudo()
