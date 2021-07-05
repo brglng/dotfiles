@@ -186,8 +186,11 @@ let g:vim_indent_cont = 2
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 " autocmd BufRead,BufNewFile *.md set spell
 
-set undofile
-let s:undodir = $HOME . '/.cache/vim/undo'
+if has('nvim')
+    let s:undodir = $HOME . '/.cache/vim/undo'
+else
+    let s:undodir = $HOME . '/.cache/nvim/undo'
+endif
 if !isdirectory(s:undodir)
     if !zpan#is_sudo()
         silent call mkdir(s:undodir, 'p')
@@ -196,6 +199,7 @@ if !isdirectory(s:undodir)
 else
     let &undodir = s:undodir
 endif
+set undofile
 
 " fold settings
 set foldmethod=syntax
