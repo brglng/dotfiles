@@ -4,4 +4,4 @@ if [[ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     exit 1
 fi
 eval /home/linuxbrew/.linuxbrew/bin/brew shellenv > /dev/null
-exec sudo -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
+exec /home/linuxbrew/.linuxbrew/bin/brew "$@"
