@@ -45,7 +45,7 @@ Plug 'brglng/vim-sidebar-manager'
 
 " Moving Plugins
 Plug 'rhysd/clever-f.vim'
-Plug 'justinmk/vim-sneak'
+" Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
@@ -93,7 +93,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':silent! UpdateRemotePlug
 Plug 'honza/vim-snippets'
 Plug 'liuchengxu/vista.vim'
 Plug 'pechorin/any-jump.vim'
-Plug 'jackguo380/vim-lsp-cxx-highlight'
+" Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 " Debuggig Plugins
 Plug 'puremourning/vimspector'

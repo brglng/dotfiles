@@ -72,7 +72,7 @@ if ! zgen saved; then
     zgen oh-my-zsh plugins/ruby
     zgen oh-my-zsh plugins/rust
     zgen oh-my-zsh plugins/rustup
-    zgen oh-my-zsh plugins/sudo
+    # zgen oh-my-zsh plugins/sudo
     zgen oh-my-zsh plugins/supervisor
     zgen oh-my-zsh plugins/svn
     zgen oh-my-zsh plugins/systemd

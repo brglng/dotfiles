@@ -3,7 +3,7 @@
 		excludesfile = ~/.gitignore_global
 		filemodes = true
 		fileMode = true
-		pager = cat
+		; pager = cat
 [http]
 		postBuffer = 524288000
 [push]
@@ -60,4 +60,3 @@
 		trustExitCode = true
 [mergetool "bc3"]
 		trustExitCode = true
-

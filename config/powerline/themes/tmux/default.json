@@ -21,7 +21,7 @@
                 "priority": 50,
                 "args": {
                     "si_prefix": true,
-                    "recv_format": " {value:>7} ",
+                    "recv_format": " {value:>7}  ",
                     "sent_format": "祝{value:>7}",
                     "recv_max": 10485760,
                     "sent_max": 10485760

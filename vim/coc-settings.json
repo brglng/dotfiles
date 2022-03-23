@@ -1,6 +1,9 @@
 {
     "coc.preferences.formatOnType": false,
     "clangd.semanticHighlighting": true,
+    "clangd.arguments": ["--background-index", "--completion-style=detailed", "--cross-file-rename", "--limit-results=10000", "-j=2", "--pch-storage=disk"],
+    // "clangd.trace.server": "verbose",
+    // "clangd.trace.file": "clangd-trace.log",
     "diagnostic.errorSign": "",
     "diagnostic.hintSign": "",
     "diagnostic.infoSign": "",
@@ -24,10 +27,6 @@
     },
     "explorer.sources": [
         {
-            "name": "buffer",
-            "expand": true
-        },
-        {
             "name": "file",
             "expand": true
         }
@@ -47,11 +46,8 @@
     "git.stagedDecorator": " ",
     "git.topRemovedSign.text": "\u00a0",
     "git.untrackedDecorator": " ",
-    "list.autoResize": false,
-    "list.maxHeight": 15,
     "list.source.grep.defaultArgs": ["-smartcase", "-regex"],
     "list.source.grep.defaultOptions": ["--interactive", "--no-sort", "--regex"],
-    "python.jediEnabled": true,
     "python.linting.mypyEnabled": true,
     "python.linting.mypyArgs": [
         "--ignore-missing-imports",
@@ -60,7 +56,6 @@
     ],
     "python.linting.pylintEnabled": true,
     "python.linting.pylintArgs": ["--disable=wildcard-import,invalid-name,missing-function-docstring,broad-except,logging-format-interpolation,missing-module-docstring,missing-class-docstring,line-too-long,too-few-public-methods,inconsistent-return-statements,too-many-branches,too-many-locals,too-many-statements,too-many-arguments,too-many-instance-attributes,too-many-return-statements", "--enable=unused-import"],
-    "pyright.reportMissingTypeStubs": false,
     "rust-analyzer.inlayHints.chainingHints": false,
     "snippets.extends": {
         "cpp": ["c"],

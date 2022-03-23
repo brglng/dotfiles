@@ -149,37 +149,37 @@ font:
   #
   # This is a global setting and will require a log out or restart to take
   # effect.
-  use_thin_strokes: true
+  use_thin_strokes: false
 
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
 
 # (Nord dark)
-colors:
-  primary:
-    background: '0x2E3440'
-    foreground: '0xD8DEE9'
-  cursor:
-    text: '0x2E3440'
-    cursor: '0xD8DEE9'
-  normal:
-    black: '0x3B4252'
-    red: '0xBF616A'
-    green: '0xA3BE8C'
-    yellow: '0xEBCB8B'
-    blue: '0x81A1C1'
-    magenta: '0xB48EAD'
-    cyan: '0x88C0D0'
-    white: '0xE5E9F0'
-  bright:
-    black: '0x4C566A'
-    red: '0xBF616A'
-    green: '0xA3BE8C'
-    yellow: '0xEBCB8B'
-    blue: '0x81A1C1'
-    magenta: '0xB48EAD'
-    cyan: '0x8FBCBB'
-    white: '0xECEFF4'
+# colors:
+#   primary:
+#     background: '0x2E3440'
+#     foreground: '0xD8DEE9'
+#   cursor:
+#     text: '0x2E3440'
+#     cursor: '0xD8DEE9'
+#   normal:
+#     black: '0x3B4252'
+#     red: '0xBF616A'
+#     green: '0xA3BE8C'
+#     yellow: '0xEBCB8B'
+#     blue: '0x81A1C1'
+#     magenta: '0xB48EAD'
+#     cyan: '0x88C0D0'
+#     white: '0xE5E9F0'
+#   bright:
+#     black: '0x4C566A'
+#     red: '0xBF616A'
+#     green: '0xA3BE8C'
+#     yellow: '0xEBCB8B'
+#     blue: '0x81A1C1'
+#     magenta: '0xB48EAD'
+#     cyan: '0x8FBCBB'
+#     white: '0xECEFF4'
 
 # Gruvbox dark
 # colors:
@@ -256,33 +256,33 @@ colors:
 #     white:   '#3c3836'
 
 # Ayu light
-# colors:
-#   # Default colors
-#   primary:
-#     background: '#f9f9f9'
-#     foreground: '#4a5460'
+colors:
+  # Default colors
+  primary:
+    background: '#f9f9f9'
+    foreground: '#4a5460'
 
-#   # Normal colors
-#   normal:
-#     black:   '#000000'
-#     red:     '#ec420e'
-#     green:   '#67c605'
-#     yellow:  '#ed8515'
-#     blue:    '#3694d0'
-#     magenta: '#864cc0'
-#     cyan:    '#41b487'
-#     white:   '#bbbbbb'
+  # Normal colors
+  normal:
+    black:   '#000000'
+    red:     '#ec420e'
+    green:   '#67c605'
+    yellow:  '#ed8515'
+    blue:    '#3694d0'
+    magenta: '#864cc0'
+    cyan:    '#41b487'
+    white:   '#bbbbbb'
 
-#   # Bright colors
-#   bright:
-#     black:   '#555555'
-#     red:     '#ca4e57'
-#     green:   '#94d507'
-#     yellow:  '#e0bb38'
-#     blue:    '#5555ff'
-#     magenta: '#9161c0'
-#     cyan:    '#4bd49d'
-#     white:   '#ffffff'
+  # Bright colors
+  bright:
+    black:   '#555555'
+    red:     '#ca4e57'
+    green:   '#94d507'
+    yellow:  '#e0bb38'
+    blue:    '#5555ff'
+    magenta: '#9161c0'
+    cyan:    '#4bd49d'
+    white:   '#ffffff'
 
 
 # Visual Bell
