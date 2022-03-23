@@ -60,7 +60,7 @@ install_linux() {
 	    sudo useradd linuxbrew || true
 	    sudo mkdir -p /home/linuxbrew
 	    sudo chown linuxbrew:linuxbrew /home/linuxbrew
-	    sudo chmod g+srwx /home/linuxbrew
+	    sudo chmod g+srx /home/linuxbrew
 	    sudo adduser -q $USER linuxbrew || true
 
             echo
