@@ -204,6 +204,8 @@ echo 'Now Zsh will be launched to install plugins.'
 echo "Please type ${BOLD}exit${SGR0} to quit from Zsh after all plugins have been installed."
 read -p "Press ENTER to continue..."
 
+sudo chmod g-w /home/linuxbrew/.linuxbrew/share/zsh/site-functions /home/linuxbrew/.linuxbrew/share/zsh
+
 zsh -i
 
 if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/opt/fzf/install" ]]; then
