@@ -36,7 +36,6 @@ if ! zgen saved; then
     zgen oh-my-zsh plugins/adb
     zgen oh-my-zsh plugins/autopep8
     zgen oh-my-zsh plugins/brew
-    zgen oh-my-zsh plugins/cargo
     zgen oh-my-zsh plugins/command-not-found
     zgen oh-my-zsh plugins/common-aliases
     zgen oh-my-zsh plugins/colorize
@@ -55,11 +54,11 @@ if ! zgen saved; then
     zgen oh-my-zsh plugins/gradle
     zgen oh-my-zsh plugins/mercurial
     zgen oh-my-zsh plugins/man
+    zgen oh-my-zsh plugins/macos
     zgen oh-my-zsh plugins/mvn
     zgen oh-my-zsh plugins/node
     zgen oh-my-zsh plugins/npm
     zgen oh-my-zsh plugins/nvm
-    zgen oh-my-zsh plugins/osx
     zgen oh-my-zsh plugins/perl
     zgen oh-my-zsh plugins/pip
     zgen oh-my-zsh plugins/pipenv
@@ -71,7 +70,6 @@ if ! zgen saved; then
     zgen oh-my-zsh plugins/rsync
     zgen oh-my-zsh plugins/ruby
     zgen oh-my-zsh plugins/rust
-    zgen oh-my-zsh plugins/rustup
     # zgen oh-my-zsh plugins/sudo
     zgen oh-my-zsh plugins/supervisor
     zgen oh-my-zsh plugins/svn
