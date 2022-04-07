@@ -54,26 +54,15 @@ install_linux() {
 
         # Install Homebrew for Linux
         if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-	    sudo adduser -q $USER linuxbrew
-      	    brew update
+      	    sudo brew update
         else
-	    sudo useradd linuxbrew || true
-	    sudo mkdir -p /home/linuxbrew
-	    sudo chown linuxbrew:linuxbrew /home/linuxbrew
-	    sudo chmod g+srwx /home/linuxbrew
-	    sudo adduser -q $USER linuxbrew || true
-
-            echo
-	    echo "${BOLD}If you encounter any permission error, please log out and log in, and then run this script again.${SGR0}"
-	    echo
-
 	    git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
 	    mkdir -p /home/linuxbrew/.linuxbrew/bin
 	    ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
         fi
 
         if ! brew ls --versions llvm &> /dev/null; then
-            brew install llvm
+            sudo brew install llvm
         fi
     fi
 }
@@ -111,8 +100,14 @@ if [[ $http_proxy == "" || $https_proxy == "" ]]; then
 fi
 
 case $UNAME_S in
-    Linux) install_linux ;;
-    Darwin) install_mac ;;
+    Linux)
+        install_linux
+        BREW=sudo brew
+        ;;
+    Darwin)
+        install_mac
+        BREW=brew
+        ;;
     *)
         echo "$UNAME_S is not supported!"
         exit 1
@@ -123,8 +118,8 @@ scripts/setup_python3.sh --no-setup-proxy
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git rustup-init go cmake zsh tmux fzf ripgrep-all fd vim colordiff nvm dasht luajit
-    brew install -s ccls
+    $BREW install git rustup-init go cmake zsh tmux fzf ripgrep-all fd vim colordiff nvm dasht luajit
+    $BREW install -s ccls
 fi
 
 mkdir -p ~/.terminfo
@@ -141,11 +136,11 @@ rustup component add rls rust-analysis rust-src rustfmt
 
 if type brew &>/dev/null; then
     if ! brew ls --versions universal-ctags &> /dev/null; then
-        brew tap universal-ctags/universal-ctags
-        brew install --HEAD universal-ctags
+        $BREW tap universal-ctags/universal-ctags
+        $BREW install --HEAD universal-ctags
     fi
     if ! brew ls --versions neovim &> /dev/null; then
-        brew install -s neovim
+        $BREW install -s neovim
     fi
 
     scripts/linuxbrew_post_install.sh

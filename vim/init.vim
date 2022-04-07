@@ -3,6 +3,9 @@ if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
     let &runtimepath = $HOME . '/.vim,' . &runtimepath . ',' . $HOME . '/.vim/after'
 endif
 
+let &runtimepath = &runtimepath . ',/home/linuxbrew/.linuxbrew/share/vim/vimfiles'
+let &runtimepath = &runtimepath . ',/usr/local/share/vim/vimfiles'
+
 let s:viewdir = $HOME . '/.cache/vim/view'
 if !isdirectory(s:viewdir)
     if !zpan#is_sudo()
