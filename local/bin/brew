@@ -11,7 +11,9 @@ case $1 in
     upgrade) ;&
     uninstall)
         exec sudo -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
+        ;;
     *)
         exec /home/linuxbrew/.linuxbrew/bin/brew "$@"
+        ;;
 esac
 
