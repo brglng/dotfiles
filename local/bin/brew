@@ -10,7 +10,7 @@ case $1 in
     update) ;&
     upgrade) ;&
     uninstall)
-        exec sudo -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
+        exec sudo -H -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
         ;;
     *)
         exec /home/linuxbrew/.linuxbrew/bin/brew "$@"
