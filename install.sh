@@ -54,15 +54,24 @@ install_linux() {
 
         # Install Homebrew for Linux
         if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-      	    sudo brew update
+            sudo adduser -q $USER linuxbrew
+      	    sudo -u linuxbrew brew update
         else
+            sudo useradd linuxbrew || true
+            sudo mkdir -p /home/linuxbrew
+            sudo chown linuxbrew:linuxbrew /home/linuxbrew
+
+            echo
+            echo "${BOLD}If you encounter any permission error, please log out and log in, and then run this script again.${SGR0}"
+            echo
+
 	    git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
 	    mkdir -p /home/linuxbrew/.linuxbrew/bin
 	    ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
         fi
 
         if ! brew ls --versions llvm &> /dev/null; then
-            sudo brew install llvm
+            brew install llvm
         fi
     fi
 }
