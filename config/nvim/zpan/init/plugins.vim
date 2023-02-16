@@ -18,6 +18,7 @@ Plug 'tpope/vim-eunuch'
 " Plug 'tmux-plugins/vim-tmux-focus-events', has('nvim') ? {} : {'on': []}
 " Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
+Plug 'nvim-lua/plenary.nvim'
 
 " Documentation
 Plug 'sunaku/vim-dasht'
@@ -27,11 +28,12 @@ Plug 'voldikss/vim-translator'
 
 " UI Plugins
 Plug 'ryanoasis/vim-devicons'
+Plug 'nvim-tree/nvim-web-devicons'
 Plug 'justinmk/vim-dirvish'
 Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
-Plug 'Yggdroot/indentLine'
-" Plug 'nathanaelkane/vim-indent-guides'
+Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' }
+Plug 'petertriho/nvim-scrollbar'
+Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
@@ -42,6 +44,7 @@ Plug 'tamago324/LeaderF-filer'
 " Plug 'liuchengxu/vim-clap', {'do': ':Clap install-binary'}
 Plug 'skywind3000/vim-terminal-help'
 Plug 'brglng/vim-sidebar-manager'
+
 
 " Moving Plugins
 Plug 'rhysd/clever-f.vim'
@@ -79,9 +82,8 @@ Plug 'tmux-plugins/vim-tmux'
 Plug 'iamcco/markdown-preview.nvim', {'do': {-> mkdp#util#install()}}
 
 " Source Control Plugins
-Plug 'tpope/vim-fugitive'
-Plug 'will133/vim-dirdiff'
-Plug 'gregsexton/gitv'
+Plug 'TimUntersberger/neogit'
+Plug 'sindrets/diffview.nvim'
 
 " Project management
 Plug 'editorconfig/editorconfig-vim'
@@ -127,6 +129,9 @@ Plug 'sainnhe/forest-night'
 Plug 'sainnhe/edge'
 Plug 'sainnhe/sonokai'
 Plug 'zeis/vim-kolor'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'EdenEast/nightfox.nvim'
 
 call plug#end()
 

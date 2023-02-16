@@ -52,7 +52,7 @@ function link_common() {
     link "$PWD/tmux.conf"                       "$HOME/.tmux.conf"
     link "$PWD/vimrc"                           "$HOME/.vimrc"
     link "$PWD/vim"                             "$HOME/.vim"
-    link "$PWD/vim"                             "$HOME/.config/nvim"
+    link "$PWD/nvim"                            "$HOME/.config/nvim"
     link "$PWD/zprofile"                        "$HOME/.zprofile"
     update_zshrc
 }

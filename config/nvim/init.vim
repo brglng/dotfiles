@@ -1,12 +1,7 @@
-" The default runtimepath on windows is $USERPROFILE/vimfiles, but I am not going to use it
-if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
-    let &runtimepath = $HOME . '/.vim,' . &runtimepath . ',' . $HOME . '/.vim/after'
-endif
-
 let &runtimepath = &runtimepath . ',/home/linuxbrew/.linuxbrew/share/vim/vimfiles'
 let &runtimepath = &runtimepath . ',/usr/local/share/vim/vimfiles'
 
-let s:viewdir = $HOME . '/.cache/vim/view'
+let s:viewdir = $HOME . '/.cache/nvim/view'
 if !isdirectory(s:viewdir)
     if !zpan#is_sudo()
         silent call mkdir(s:viewdir, 'p')
@@ -30,8 +25,6 @@ if &encoding != 'utf-8'
     set encoding=utf-8
     let &langmenu = strpart($LANG, 0, 5) . '.UTF-8'
     exe 'language messages ' . strpart($LANG, 0, 5) . '.UTF-8'
-    source $VIMRUNTIME/delmenu.vim
-    source $VIMRUNTIME/menu.vim
     if has('iconv')
         function s:QfMakeConv()
             let qflist = getqflist()
@@ -75,7 +68,7 @@ endif
 set backup
 set writebackup
 set backupcopy=yes
-let s:backupdir = $HOME . '/.cache/vim/backup'
+let s:backupdir = $HOME . '/.cache/nvim/backup'
 if !isdirectory(s:backupdir)
     if !zpan#is_sudo()
         silent call mkdir(s:backupdir, 'p')
@@ -86,7 +79,7 @@ else
 endif
 
 set swapfile
-let s:directory = $HOME . '/.cache/vim/swap'
+let s:directory = $HOME . '/.cache/nvim/swap'
 if !isdirectory(s:directory)
     if !zpan#is_sudo()
         silent call mkdir(s:directory, 'p')
@@ -189,11 +182,7 @@ let g:vim_indent_cont = 2
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 " autocmd BufRead,BufNewFile *.md set spell
 
-if has('nvim')
-    let s:undodir = $HOME . '/.cache/nvim/undo'
-else
-    let s:undodir = $HOME . '/.cache/vim/undo'
-endif
+let s:undodir = $HOME . '/.cache/nvim/undo'
 if !isdirectory(s:undodir)
     if !zpan#is_sudo()
         silent call mkdir(s:undodir, 'p')
@@ -222,7 +211,7 @@ set diffopt+=context:99999
 " omni complete settings
 set completeopt=menuone,noinsert,noselect
 set pumheight=15
-silent! set pumblend=15
+silent! set pumblend=0
 
 " Always show the complete popup under the cursor,
 " except when the cursor is at the last 3 lines on the screen.
@@ -254,6 +243,7 @@ set cscopequickfix=s-,c-,d-,i-,t-,e-
 
 let mapleader = "\<Space>"
 runtime zpan/init/plugins.vim
+runtime zpan/init.lua
 runtime zpan/init/key_mappings.vim
 runtime zpan/init/ui.vim
 

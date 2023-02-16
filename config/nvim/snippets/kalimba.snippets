@@ -1,0 +1,32 @@
+snippet inc
+	#include "${1}.h"${2}
+
+snippet once
+	#ifndef `toupper(Filename('__$1_H__', '__UNTITLED_H__'))`
+	#define `toupper(Filename('__$1_H__', '__UNTITLED_H__'))`
+	
+	${1}
+	
+	#endif  /* `toupper(Filename('__$1_H__', '__UNTITLED_H__'))` */
+
+snippet fun
+	/* Function:    $$1
+	 * Description:
+	 * Parameters:  ${4}
+	 * Return:      ${5}
+	 * Trashed registers: 
+	 */
+	.MODULE $M.${1:/* function_name */};
+	${2:.PRIVATE;}
+	.CODESEGMENT ${3:/* segment_name */};
+	$$1:
+	    ${6:/* code */}
+	    rts;
+	.ENDMODULE; /* $M.$1 */
+
+snippet block
+	.BLOCK ${1:/* block_name */};
+	    ${2:/* code */}
+	.ENDBLOCK; /* $1 */
+
+# vim: ts=8 sw=8 sts=8 noet

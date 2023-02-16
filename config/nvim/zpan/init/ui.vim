@@ -249,17 +249,17 @@ function! s:set_colorscheme()
     let hour = str2nr(hour)
     let minute = str2nr(minute)
     if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 18 || (hour == 18 && minute < 45))
+        let g:ayucolor = 'dark'
+        silent! colorscheme catppuccin
         set background=light
-        let g:ayucolor = 'mirage'
-        silent! colorscheme ayu
-        let g:lightline.colorscheme = 'ayu'
+        let g:lightline.colorscheme = 'catppuccin'
     else
-        let g:ayucolor = 'mirage'
+        let g:ayucolor = 'dark'
+        silent! colorscheme catppuccin
         set background=dark
-        silent! colorscheme ayu
-        let g:lightline.colorscheme = 'ayu'
+        let g:lightline.colorscheme = 'catppuccin'
     endif
-    syntax on
+    " syntax on
     " call s:set_leaderf_highlights()
 endfunction
 call s:set_colorscheme()
@@ -275,6 +275,8 @@ function! s:on_colorscheme()
             let g:lightline.colorscheme = 'ayu'
         elseif g:colors_name ==# 'onehalflight'
             let g:lightline.colorscheme = 'one'
+        elseif g:colors_name =~# 'tokyonight'
+            let g:lightline.colorscheme = 'tokyonight'
         else
             let g:lightline.colorscheme = substitute(substitute(g:colors_name, '-', '_', 'g'), '256.*', '', '')
         endif
@@ -282,7 +284,7 @@ function! s:on_colorscheme()
         call lightline#colorscheme()
         call lightline#update()
     endif
-    syntax on
+    " syntax on
     call s:set_leaderf_highlights()
 endfunction
 
@@ -295,7 +297,7 @@ function! s:on_set_background()
             call lightline#update()
         endif
     endif
-    syntax on
+    " syntax on
     call s:set_leaderf_highlights()
 endfunction
 

@@ -54,21 +54,18 @@ install_linux() {
 
         # Install Homebrew for Linux
         if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-            sudo adduser -q $USER linuxbrew
-      	    sudo -u linuxbrew brew update
+      	    brew update
         else
             sudo useradd linuxbrew || true
             sudo mkdir -p /home/linuxbrew
-            sudo chown linuxbrew:linuxbrew /home/linuxbrew
-
-            echo
-            echo "${BOLD}If you encounter any permission error, please log out and log in, and then run this script again.${SGR0}"
-            echo
-
-	    git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
-	    mkdir -p /home/linuxbrew/.linuxbrew/bin
-	    ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
+            sudo git clone --recursive https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
+            sudo mkdir -p /home/linuxbrew/.linuxbrew/bin
+            sudo ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin
+            sudo chown -R linuxbrew:linuxbrew /home/linuxbrew
         fi
+
+        sudo -H -u linuxbrew ln -fs /etc/localtime /home/linuxbrew/.linuxbrew/etc/localtime
+        sudo -H -u linuxbrew /home/linuxbrew/.linuxbrew/opt/glibc/bin/localedef -i zh_CN -f UTF-8 zh_CN.UTF-8
 
         if ! brew ls --versions llvm &> /dev/null; then
             brew install llvm
@@ -111,11 +108,9 @@ fi
 case $UNAME_S in
     Linux)
         install_linux
-        BREW=sudo brew
         ;;
     Darwin)
         install_mac
-        BREW=brew
         ;;
     *)
         echo "$UNAME_S is not supported!"
@@ -127,8 +122,8 @@ scripts/setup_python3.sh --no-setup-proxy
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    $BREW install git rustup-init go cmake zsh tmux fzf ripgrep-all fd vim colordiff nvm dasht luajit
-    $BREW install -s ccls
+    brew install git rustup-init go cmake zsh tmux fzf ripgrep-all fd vim colordiff nvm dasht luajit
+    brew install -s ccls
 fi
 
 mkdir -p ~/.terminfo
@@ -145,11 +140,11 @@ rustup component add rls rust-analysis rust-src rustfmt
 
 if type brew &>/dev/null; then
     if ! brew ls --versions universal-ctags &> /dev/null; then
-        $BREW tap universal-ctags/universal-ctags
-        $BREW install --HEAD universal-ctags
+        brew tap universal-ctags/universal-ctags
+        brew install --HEAD universal-ctags
     fi
     if ! brew ls --versions neovim &> /dev/null; then
-        $BREW install -s neovim
+        brew install -s neovim
     fi
 
     scripts/linuxbrew_post_install.sh
@@ -167,7 +162,7 @@ nvm install node npm
 nvm use node
 nvm alias default $(nvm current)
 
-gem install --user-install neovim
+# gem install --user-install neovim
 npm install -g neovim
 
 mkdir -p ~/.tmux/plugins

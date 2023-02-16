@@ -6,11 +6,15 @@ fi
 eval /home/linuxbrew/.linuxbrew/bin/brew shellenv > /dev/null
 
 case $1 in
+    doctor) ;&
     install) ;&
+    postinstall) ;&
+    reinstall) ;&
+    tap) ;&
     update) ;&
     upgrade) ;&
     uninstall)
-        exec sudo -H -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
+        exec sudo -H --preserve-env=http_proxy --preserve-env=https_proxy --preserve-env=no_proxy --preserve-env=HTTP_PROXY --preserve-env=HTTPS_PROXY --preserve-env=NO_PROXY -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
         ;;
     *)
         exec /home/linuxbrew/.linuxbrew/bin/brew "$@"

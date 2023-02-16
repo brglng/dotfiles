@@ -89,7 +89,7 @@ inoremap <silent> <expr> <C-x><C-x> coc#refresh()
 
 inoremap <silent> <expr> <CR> zpan#pumselected() ? coc#pum#confirm() : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>\<C-r>=EndwiseDiscretionary()<CR>"
 
-inoremap <silent> <expr> <Esc> coc#pum#visible() ? "\<C-o>:call coc#pum#cancel()\<CR>\<Esc>" : "\<Esc>"
+" inoremap <silent> <expr> <Esc> coc#pum#visible() ? "\<C-o>:call coc#pum#cancel()\<CR>\<Esc>" : "\<Esc>"
 
 inoremap <silent> <expr> <Down> coc#pum#visible() ? coc#pum#next(1) : "\<C-o>gj"
 inoremap <silent> <expr> <Up> coc#pum#visible() ? coc#pum#prev(1) : "\<C-o>gk"
