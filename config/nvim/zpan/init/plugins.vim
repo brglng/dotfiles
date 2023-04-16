@@ -9,7 +9,7 @@ if has('nvim')
     endif
 endif
 
-call plug#begin('~/.local/share/vim/plugged')
+call plug#begin('~/.local/share/nvim/plugged')
 
 " Generic Plugins
 Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
@@ -32,7 +32,7 @@ Plug 'nvim-tree/nvim-web-devicons'
 Plug 'justinmk/vim-dirvish'
 Plug 'itchyny/lightline.vim'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' }
-Plug 'petertriho/nvim-scrollbar'
+" Plug 'petertriho/nvim-scrollbar'
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
@@ -47,8 +47,7 @@ Plug 'brglng/vim-sidebar-manager'
 
 
 " Moving Plugins
-Plug 'rhysd/clever-f.vim'
-" Plug 'justinmk/vim-sneak'
+Plug 'phaazon/hop.nvim'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'

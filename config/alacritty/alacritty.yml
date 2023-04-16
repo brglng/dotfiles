@@ -35,7 +35,7 @@ font:
 draw_bold_text_with_bright_colors: true
 
 import:
-  - ~/.config/alacritty/colors/catppuccin-mocha.yml
+  - ~/.config/alacritty/colors/tokyonight_night.yml
 
 # Visual Bell
 #

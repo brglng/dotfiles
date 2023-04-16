@@ -1,4 +1,4 @@
-let g:startify_session_dir = '~/.local/share/vim/session'
+let g:startify_session_dir = '~/.local/share/nvim/session'
 
 let g:startify_lists = [
   \ { 'type': 'sessions',  'header': ['   Sessions']       },

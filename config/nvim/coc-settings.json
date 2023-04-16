@@ -93,5 +93,6 @@
     "suggest.noselect": true,
     "suggest.enablePreselect": false,
     "inlayHint.enable": false,
-    "tabnine.priority": 0
+    "tabnine.priority": 0,
+    "java.import.gradle.java.home": "/usr/lib/jvm/java-11-openjdk-amd64"
 }

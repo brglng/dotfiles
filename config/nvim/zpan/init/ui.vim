@@ -1,109 +1,3 @@
-set mouse=a
-
-" 打开功能键超时检测（终端下功能键为一串 ESC 开头的字符串）
-set ttimeout
-
-" 功能键超时检测 50 毫秒
-set ttimeoutlen=50
-
-"----------------------------------------------------------------------
-" 有 tmux 何没有的功能键超时（毫秒）
-"----------------------------------------------------------------------
-if $TMUX != ''
-    set ttimeoutlen=30
-elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
-    set ttimeoutlen=80
-endif
-
-"----------------------------------------------------------------------
-" 终端下允许 ALT，详见：http://www.skywind.me/blog/archives/2021
-" 记得设置 ttimeout （见 init-basic.vim） 和 ttimeoutlen （上面）
-"----------------------------------------------------------------------
-if has('nvim') == 0 && has('gui_running') == 0
-    function! s:metacode(key)
-        exec "set <M-".a:key.">=\e".a:key
-    endfunc
-    for i in range(10)
-        call s:metacode(nr2char(char2nr('0') + i))
-    endfor
-    for i in range(26)
-        call s:metacode(nr2char(char2nr('a') + i))
-        call s:metacode(nr2char(char2nr('A') + i))
-    endfor
-    for c in [',', '.', '/', ';', '{', '}']
-        call s:metacode(c)
-    endfor
-    for c in ['?', ':', '-', '_', '+', '=', "'", '`']
-        call s:metacode(c)
-    endfor
-endif
-
-"----------------------------------------------------------------------
-" 终端下功能键设置
-"----------------------------------------------------------------------
-function! s:key_escape(name, code)
-    if has('nvim') == 0 && has('gui_running') == 0
-        exec "set ".a:name."=\e".a:code
-    endif
-endfunc
-
-"----------------------------------------------------------------------
-" 功能键终端码矫正
-"----------------------------------------------------------------------
-call s:key_escape('<F1>', 'OP')
-call s:key_escape('<F2>', 'OQ')
-call s:key_escape('<F3>', 'OR')
-call s:key_escape('<F4>', 'OS')
-call s:key_escape('<S-F1>', '[1;2P')
-call s:key_escape('<S-F2>', '[1;2Q')
-call s:key_escape('<S-F3>', '[1;2R')
-call s:key_escape('<S-F4>', '[1;2S')
-call s:key_escape('<S-F5>', '[15;2~')
-call s:key_escape('<S-F6>', '[17;2~')
-call s:key_escape('<S-F7>', '[18;2~')
-call s:key_escape('<S-F8>', '[19;2~')
-call s:key_escape('<S-F9>', '[20;2~')
-call s:key_escape('<S-F10>', '[21;2~')
-call s:key_escape('<S-F11>', '[23;2~')
-call s:key_escape('<S-F12>', '[24;2~')
-
-"----------------------------------------------------------------------
-" 防止tmux下vim的背景色显示异常
-" Refer: http://sunaku.github.io/vim-256color-bce.html
-"----------------------------------------------------------------------
-if !has('nvim') && !has('gui_running') && &term =~ '256color' && $TMUX != ''
-    " disable Background Color Erase (BCE) so that color schemes
-    " render properly when inside 256-color tmux and GNU screen.
-    " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-    set t_ut=
-endif
-
-if has('termguicolors') && !has('gui_running')
-    " fix bug for vim
-    if !has('nvim')
-        if &term =~# '^screen\|^tmux'
-            let &t_8f = "\e[38;2;%lu;%lu;%lum"
-            let &t_8b = "\e[48;2;%lu;%lu;%lum"
-        endif
-    endif
-    set termguicolors
-endif
-
-if !has('nvim') && !has('gui_running')
-    let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
-    let &t_SR = "\<esc>[3 q"  " blinking underline in replace mode
-    let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
-
-    let &t_TI = ''
-    let &t_TE = ''
-
-    " Italic support
-    let t_ZH = "\e[3m"
-    let t_ZR = "\e[23m"
-
-    set guicursor+=i:ver100-iCursor
-endif
-
 let g:gruvbox_contrast_light = 'hard'
 let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_italic = 1
@@ -249,15 +143,15 @@ function! s:set_colorscheme()
     let hour = str2nr(hour)
     let minute = str2nr(minute)
     if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 18 || (hour == 18 && minute < 45))
-        let g:ayucolor = 'dark'
-        silent! colorscheme catppuccin
+        let g:ayucolor = 'light'
+        silent! colorscheme tokyonight-day
         set background=light
-        let g:lightline.colorscheme = 'catppuccin'
+        let g:lightline.colorscheme = 'tokyonight'
     else
         let g:ayucolor = 'dark'
-        silent! colorscheme catppuccin
+        silent! colorscheme tokyonight-night
         set background=dark
-        let g:lightline.colorscheme = 'catppuccin'
+        let g:lightline.colorscheme = 'tokyonight'
     endif
     " syntax on
     " call s:set_leaderf_highlights()
@@ -292,7 +186,6 @@ function! s:on_set_background()
     if exists('g:loaded_lightline')
         let colorfile = globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
         if colorfile != ''
-            execute 'source ' . colorfile
             call lightline#colorscheme()
             call lightline#update()
         endif

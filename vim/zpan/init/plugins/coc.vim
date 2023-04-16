@@ -48,7 +48,6 @@ let s:coc_extensions = [
   \ 'coc-gocode',
   \ 'coc-highlight',
   \ 'coc-html',
-  \ 'coc-java',
   \ 'coc-json',
   \ 'coc-lists',
   \ 'coc-lua',
