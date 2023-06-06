@@ -1,6 +1,6 @@
 {
     "coc.preferences.formatOnType": false,
-    "clangd.arguments": ["--background-index", "--completion-style=detailed", "--cross-file-rename", "--limit-results=10000", "-j=2", "--pch-storage=disk"],
+    "clangd.arguments": ["--background-index", "--completion-style=detailed", "--cross-file-rename", "--header-insertion=never", "--limit-results=10000", "-j=2", "--pch-storage=disk"],
     "clangd.fallbackFlags": ["-std=c++17"],
     // "clangd.trace.server": "verbose",
     // "clangd.trace.file": "clangd-trace.log",
@@ -94,5 +94,4 @@
     "suggest.enablePreselect": false,
     "inlayHint.enable": false,
     "tabnine.priority": 0,
-    "java.import.gradle.java.home": "/usr/lib/jvm/java-11-openjdk-amd64"
 }

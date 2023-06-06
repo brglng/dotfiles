@@ -1,7 +1,18 @@
-let &runtimepath = &runtimepath . ',/home/linuxbrew/.linuxbrew/share/vim/vimfiles'
-let &runtimepath = &runtimepath . ',/usr/local/share/vim/vimfiles'
+" The default runtimepath on windows is $USERPROFILE/vimfiles, but I am not going to use it
+if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
+    let &runtimepath = $HOME . '/.vim,' . &runtimepath . ',' . $HOME . '/.vim/after'
+endif
 
-let s:viewdir = $HOME . '/.cache/nvim/view'
+if !has('nvim')
+    let &runtimepath = &runtimepath . ',/home/linuxbrew/.linuxbrew/share/vim/vimfiles'
+    let &runtimepath = &runtimepath . ',/usr/local/share/vim/vimfiles'
+endif
+
+if has('nvim')
+    let s:viewdir = $HOME . '/.cache/nvim/view'
+else
+    let s:viewdir = $HOME . '/.cache/vim/view'
+endif
 if !isdirectory(s:viewdir)
     if !zpan#is_sudo()
         silent call mkdir(s:viewdir, 'p')
@@ -68,7 +79,11 @@ endif
 set backup
 set writebackup
 set backupcopy=yes
-let s:backupdir = $HOME . '/.cache/nvim/backup'
+if has('nvim')
+    let s:backupdir = $HOME . '/.cache/nvim/backup'
+else
+    let s:backupdir = $HOME . '/.cache/vim/backup'
+endif
 if !isdirectory(s:backupdir)
     if !zpan#is_sudo()
         silent call mkdir(s:backupdir, 'p')
@@ -79,7 +94,11 @@ else
 endif
 
 set swapfile
-let s:directory = $HOME . '/.cache/nvim/swap'
+if has('nvim')
+    let s:directory = $HOME . '/.cache/nvim/swap'
+else
+    let s:directory = $HOME . '/.cache/vim/swap'
+endif
 if !isdirectory(s:directory)
     if !zpan#is_sudo()
         silent call mkdir(s:directory, 'p')
@@ -182,7 +201,11 @@ let g:vim_indent_cont = 2
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 " autocmd BufRead,BufNewFile *.md set spell
 
-let s:undodir = $HOME . '/.cache/nvim/undo'
+if has('nvim')
+    let s:undodir = $HOME . '/.cache/nvim/undo'
+else
+    let s:undodir = $HOME . '/.cache/vim/undo'
+endif
 if !isdirectory(s:undodir)
     if !zpan#is_sudo()
         silent call mkdir(s:undodir, 'p')
@@ -235,15 +258,21 @@ endif
 
 " Exuberant-ctags and Cscope settings
 set tags=./.tags;,.tags;./tags;tags
-if executable('gtags-cscope')
-    set cscopeprg=gtags-cscope
-    let $CSCOPE_DB = 'GTAGS'
+if exists('&cscopeprg') && exists('&cscopequickfix')
+    if executable('gtags-cscope')
+        set cscopeprg=gtags-cscope
+        let $CSCOPE_DB = 'GTAGS'
+    endif
+    set cscopequickfix=s-,c-,d-,i-,t-,e-
 endif
-set cscopequickfix=s-,c-,d-,i-,t-,e-
 
 let mapleader = "\<Space>"
 runtime zpan/init/plugins.vim
-runtime zpan/init.lua
+
+if has('nvim')
+    runtime zpan/init.lua
+endif
+
 runtime zpan/init/key_mappings.vim
 runtime zpan/init/ui.vim
 

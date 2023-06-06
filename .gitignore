@@ -16,12 +16,14 @@ desktop.ini
 readline_history.txt
 /emacs
 /emacs.d/
+/vim/autoload/plug.vim.old
 /vim/dein-local
 /vim/dein-local-disabled
 /vim/sessions
+/config/nvim/sessions
+/config/nvim/autoload/plug.vim.old
 doc/tags
 *.pyc
 
 .mypy_cache/
 *.zwc
-vim/autoload/plug.vim.old

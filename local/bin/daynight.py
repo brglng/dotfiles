@@ -71,10 +71,10 @@ def main():
             now = datetime.now(tz=timezone(timedelta(hours=8)))
             if sunrise <= now <= sunset:
                 switch_gtk_theme('Yaru-light')
-                switch_gnome_terminal_profile('Catppuccin Latte')
+                switch_gnome_terminal_profile('Ayu light')
             else:
                 switch_gtk_theme('Yaru-dark')
-                switch_gnome_terminal_profile('Catppuccin Mocha')
+                switch_gnome_terminal_profile('Ayu dark')
         except Exception as e:
             logger.exception(e)
         finally:

@@ -85,7 +85,7 @@ if ! zgen saved; then
     zgen load romkatv/powerlevel10k powerlevel10k
     zgen load zsh-users/zsh-autosuggestions
     zgen load hlissner/zsh-autopair
-    zgen load zdharma/fast-syntax-highlighting
+    zgen load z-shell/F-Sy-H . main
     zgen load lukechilds/zsh-better-npm-completion
     # zgen load Aloxaf/fzf-tab
 

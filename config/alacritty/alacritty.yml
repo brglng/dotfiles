@@ -8,6 +8,9 @@ window:
   dimensions:
     columns: 0
     lines: 0
+  # Send ESC (\x1b) before characters when alt is pressed.
+  alt_send_esc: true
+
 
 scrolling:
   history: 10000
@@ -30,12 +33,11 @@ font:
   glyph_offset:
     x: 0
     y: 0
-  use_thin_strokes: false
 
 draw_bold_text_with_bright_colors: true
 
 import:
-  - ~/.config/alacritty/colors/tokyonight_night.yml
+  - ~/.config/alacritty/colors/ayu-dark.yml
 
 # Visual Bell
 #
@@ -121,9 +123,6 @@ shell:
   program: /bin/zsh
   args:
     - --login
-
-# Send ESC (\x1b) before characters when alt is pressed.
-alt_send_esc: true
 
 key_bindings:
   - { key: Paste,                   action: Paste                            }

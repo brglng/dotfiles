@@ -77,7 +77,7 @@ require("bufferline").setup {
 
 require("indent_blankline").setup {
     show_end_of_line = false,
-    filetype_exclude = {"startify"}
+    filetype = {"python"}
 }
 
 -- place this in one of your configuration file(s)

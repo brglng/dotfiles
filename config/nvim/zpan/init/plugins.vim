@@ -9,7 +9,7 @@ if has('nvim')
     endif
 endif
 
-call plug#begin('~/.local/share/nvim/plugged')
+call plug#begin('~/.local/share/vim/plugged')
 
 " Generic Plugins
 Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
@@ -18,7 +18,7 @@ Plug 'tpope/vim-eunuch'
 " Plug 'tmux-plugins/vim-tmux-focus-events', has('nvim') ? {} : {'on': []}
 " Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
-Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/plenary.nvim', has('nvim') ? {} : {'on': []}
 
 " Documentation
 Plug 'sunaku/vim-dasht'
@@ -31,9 +31,11 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'justinmk/vim-dirvish'
 Plug 'itchyny/lightline.vim'
-Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' }
-" Plug 'petertriho/nvim-scrollbar'
-Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'mengelbrecht/lightline-bufferline', has('nvim') ? {'on': []} : {}
+Plug 'akinsho/bufferline.nvim', has('nvim') ? {'tag': 'v3.*'} : {'on': []}
+Plug 'Yggdroot/indentLine', has('nvim') ? {'on': []} : {}
+" Plug 'petertriho/nvim-scrollbar', has('nvim') ? {} : {'on': []}
+Plug 'lukas-reineke/indent-blankline.nvim', has('nvim') ? {} : {'on': []}
 Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
@@ -45,9 +47,9 @@ Plug 'tamago324/LeaderF-filer'
 Plug 'skywind3000/vim-terminal-help'
 Plug 'brglng/vim-sidebar-manager'
 
-
 " Moving Plugins
-Plug 'phaazon/hop.nvim'
+Plug 'rhysd/clever-f.vim', has('nvim') ? {'on': []} : {}
+Plug 'phaazon/hop.nvim', has('nvim') ? {} : {'on': []}
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
@@ -81,8 +83,11 @@ Plug 'tmux-plugins/vim-tmux'
 Plug 'iamcco/markdown-preview.nvim', {'do': {-> mkdp#util#install()}}
 
 " Source Control Plugins
-Plug 'TimUntersberger/neogit'
-Plug 'sindrets/diffview.nvim'
+Plug 'tpope/vim-fugitive'
+Plug 'will133/vim-dirdiff', has('nvim') ? {'on': []} : {}
+Plug 'gregsexton/gitv'
+Plug 'sindrets/diffview.nvim', has('nvim') ? {} : {'on': []}
+Plug 'TimUntersberger/neogit', has('nvim') ? {} : {'on': []}
 
 " Project management
 Plug 'editorconfig/editorconfig-vim'
@@ -113,8 +118,7 @@ Plug 'rakr/vim-one'
 Plug 'arcticicestudio/nord-vim'
 Plug 'soft-aesthetic/soft-era-vim'
 Plug 'sainnhe/lightline_foobar.vim'
-" Plug 'ayu-theme/ayu-vim'
-Plug 'brglng/ayu-vim', {'branch': 'feature/set-background'}
+Plug 'Luxed/ayu-vim'
 " Plug 'nightsense/snow'
 Plug 'gruvbox-community/gruvbox'
 Plug 'lifepillar/vim-gruvbox8'
@@ -156,7 +160,9 @@ runtime zpan/init/plugins/devicons.vim
 runtime zpan/init/plugins/easy_align.vim
 runtime zpan/init/plugins/endwise.vim
 runtime zpan/init/plugins/im_select.vim
-runtime zpan/init/plugins/indent_line.vim
+if !has('nvim')
+    runtime zpan/init/plugins/indent_line.vim
+endif
 runtime zpan/init/plugins/leaderf.vim
 runtime zpan/init/plugins/lightline.vim
 runtime zpan/init/plugins/lsp_cxx_highlight.vim

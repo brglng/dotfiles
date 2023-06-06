@@ -91,8 +91,14 @@ PALETTE_AYU_LIGHT = [
     '#555555', '#ca4e57', '#94d507', '#e0bb38', '#5555ff', '#9161c0', '#4bd49d', '#ffffff'
 ] + PALETTE_256[16:]
 
+PALETTE_AYU_MIRAGE = [
+    '#000000', '#ec420e', '#67c605', '#ed8515', '#3694d0', '#864cc0', '#41b487', '#bbbbbb',
+    '#555555', '#ca4e57', '#94d507', '#e0bb38', '#5555ff', '#9161c0', '#4bd49d', '#ffffff'
+] + PALETTE_256[16:]
+
 PALETTES = {
-    'ayu_light': PALETTE_AYU_LIGHT
+    'ayu_light': PALETTE_AYU_LIGHT,
+    'ayu_mirage': PALETTE_AYU_MIRAGE
 }
 
 def _rgb2256(palette: str, rgb):

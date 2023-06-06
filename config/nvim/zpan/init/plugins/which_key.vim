@@ -64,7 +64,11 @@ let g:which_key_map['g'] = {
   \ 't': ['<Plug>(coc-type-definition)', 'goto-type-definition'],
   \ }
 
-let g:which_key_map['i'] = [':IndentLinesToggle', 'toggle-indent-line']
+if has('nvim')
+    let g:which_key_map['i'] = [':IndentBlanklineToggle', 'toggle-indent-line']
+else
+    let g:which_key_map['i'] = [':IndentLinesToggle', 'toggle-indent-line']
+endif
 
 let g:which_key_map['j'] = {
   \ 'name': '+any-jump',
