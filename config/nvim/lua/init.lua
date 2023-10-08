@@ -31,6 +31,7 @@ require("lazy").setup(
         { "neovim/nvim-lspconfig" },
         { "williamboman/mason.nvim" },
         { "williamboman/mason-lspconfig.nvim", dependencies = { "neovim/nvim-lspconfig" } },
+        { "p00f/clangd_extensions.nvim" },
         { "mfussenegger/nvim-lint" },
         { "mhartington/formatter.nvim" },
         {
@@ -63,7 +64,13 @@ require("lazy").setup(
                 "petertriho/cmp-git",
                 "davidsierradz/cmp-conventionalcommits",
                 "FelipeLema/cmp-async-path",
-                "onsails/lspkind.nvim"
+                "onsails/lspkind.nvim",
+                {
+                    "Exafunction/codeium.nvim",
+                    dependencies = {
+                        "nvim-lua/plenary.nvim"
+                    }
+                },
             }
         },
         {
@@ -75,7 +82,7 @@ require("lazy").setup(
         },
         { "mfussenegger/nvim-dap" },
         { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
-        { "RRethy/vim-illuminate" },
+        { "RRethy/vim-illuminate", enabled = false },
 
         -- Project Management
         { "stevearc/overseer.nvim" },

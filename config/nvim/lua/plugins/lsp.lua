@@ -2,29 +2,43 @@ require("mason").setup()
 require("mason-lspconfig").setup {
     ensure_installed = { "bashls", "clangd", "cmake", "lua_ls", "marksman", "pyright", "rust_analyzer", "tsserver", "vimls" }
 }
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local lspconfig = require('lspconfig')
 -- vim.lsp.set_log_level("debug")
 
+local clangd_capabilities = cmp_capabilities
+clangd_capabilities.textDocument.semanticHighlighting = true
+clangd_capabilities.offsetEncoding = "utf-8"
+
+require("clangd_extensions").setup {
+    inlay_hints = {
+        only_current_line = true
+    }
+}
+
 lspconfig.clangd.setup {
-    capabilities = capabilities,
-    cmd = { "clangd", "--header-insertion=never" }
+    capabilities = cmp_capabilities,
+    cmd = { "clangd", "--background-index", "--header-insertion=never", "--clang-tidy", "--suggest-missing-includes", "--completion-style=detailed" },
+    on_attach = function (args)
+        require("clangd_extensions.inlay_hints").setup_autocmd()
+        require("clangd_extensions.inlay_hints").set_inlay_hints()
+    end
 }
 lspconfig.pyright.setup {
-    capabilities = capabilities
+    capabilities = cmp_capabilities
 }
 lspconfig.tsserver.setup {
-    capabilities = capabilities
+    capabilities = cmp_capabilities
 }
 lspconfig.rust_analyzer.setup {
-    capabilities = capabilities,
+    capabilities = cmp_capabilities,
     settings = {
         ['rust-analyzer'] = {},
     },
 }
 lspconfig.lua_ls.setup {
-    capabilities = capabilities,
+    capabilities = cmp_capabilities,
     cmd = { "lua-language-server", "--logpath=" .. vim.fn.stdpath("log") .. "/luals" },
     on_init = function(client)
         local path = client.workspace_folders[1].name

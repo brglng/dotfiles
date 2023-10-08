@@ -4,6 +4,12 @@ local str = require("cmp.utils.str")
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local luasnip = require('luasnip')
 local lspkind = require('lspkind')
+lspkind.init {
+    symbol_map = {
+        Codeium = ""
+    },
+}
+require("codeium").setup {}
 
 local has_words_before = function()
     unpack = unpack or table.unpack
@@ -45,10 +51,11 @@ cmp.setup {
             }
         },
         { name = "async_path" },
-    }, {
-        { name = "buffer" }
+        { name = "codeium" },
+        { name = "buffer" },
     }),
     mapping = cmp.mapping.preset.insert({
+        ['<C-x><C-x>'] = cmp.mapping.complete(),
         ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
         ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
         ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
@@ -118,10 +125,10 @@ cmp.setup {
 }
 cmp.setup.filetype('gitcommit', {
     sources = cmp.config.sources({
-        { name = 'git' },
+        { name = "conventionalcommits" },
         { name = "async_path" },
-        { name = "conventionalcommits" }
-    }, {
+        { name = 'git' },
+        { name = "codeium" },
         { name = 'buffer' },
     })
 })
@@ -136,7 +143,7 @@ cmp.setup.filetype("lua", {
             }
         },
         { name = "async_path" },
-    }, {
+        { name = "codeium" },
         { name = "buffer" }
     })
 })
