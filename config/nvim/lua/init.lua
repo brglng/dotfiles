@@ -82,7 +82,7 @@ require("lazy").setup(
         },
         { "mfussenegger/nvim-dap" },
         { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
-        { "RRethy/vim-illuminate", enabled = false },
+        { "RRethy/vim-illuminate" },
 
         -- Project Management
         { "stevearc/overseer.nvim" },
@@ -243,7 +243,7 @@ require("plugins.autopairs")
 require("plugins.cmp")
 require("plugins.lspsaga")
 require("plugins.dap")
--- require("plugins.illuminate")
+require("plugins.illuminate")
 
 require("plugins.overseer")
 

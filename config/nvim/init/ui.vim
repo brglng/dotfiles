@@ -281,9 +281,9 @@ function! s:set_noice_highlights()
 endfunction
 
 function! s:set_illuminated_highlights()
-    hi! link IlluminatedWordText Visual
-    hi! link IlluminatedWordRead Visual
-    hi! link IlluminatedWordWrite Visual
+    hi! link IlluminatedWordText CursorLine
+    hi! link IlluminatedWordRead CursorLine
+    hi! link IlluminatedWordWrite CursorLine
 endfunction
 
 function! s:set_colorscheme()
