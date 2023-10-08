@@ -5,7 +5,8 @@ function! TagbarStatusFunc(current, sort, fname, ...) abort
 endfunction
 
 function! LightlineMode()
-    return &filetype ==# 'coc-explorer' ? 'Explorer' :
+    return &filetype ==# 'coc-explorer' ? 'CocExplorer' :
+      \ &filetype ==# 'neo-tree' ? 'Neotree' :
       \ &filetype ==# 'defx' ? 'Defx' :
       \ &filetype ==# 'denite' ? 'Denite' :
       \ &filetype ==# 'gitv' ? 'GitV' :
@@ -22,6 +23,7 @@ endfunction
 
 function! LightlineFilename()
     let filename = &filetype ==# 'coc-explorer' ? '' :
+      \ &filetype ==# 'neo-tree' ? '' :
       \ &filetype ==# 'defx' ? '' :
       \ &filetype ==# 'denite' ? '' :
       \ &filetype ==# 'gitv' ? '' :
@@ -121,10 +123,13 @@ let g:lightline = {
   \ 'subseparator': { 'left': '', 'right': '' }
   \ }
 
-" let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
-let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
-let g:lightline.component_type   = {'buffers': 'tabsel'}
-let g:lightline.component_raw    = {'buffers': 1}
+if !has('nvim')
+    let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
+    let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
+    let g:lightline.component_type   = {'buffers': 'tabsel'}
+    let g:lightline.component_raw    = {'buffers': 1}
+    let g:lightline.enable.tabline = 1
+endif
 
 let g:lightline#bufferline#show_number = 4
 " let g:lightline#bufferline#shorten_path = 0

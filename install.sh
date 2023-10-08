@@ -87,8 +87,6 @@ function install_mac() {
     brew cask install font-firacode-nerd-font font-firacode-nerd-font-mono
 
     curl -Ls https://raw.githubusrcontent.com/daipeihust/im-select/master/install_mac.sh | sh
-
-    tic -x terminfo/tmux-256color.terminfo
 }
 
 if [[ $(id -u) -eq 0 ]] || [[ $(id -g) -eq 0 ]]; then
@@ -117,6 +115,10 @@ case $UNAME_S in
         exit 1
         ;;
 esac
+
+if ! infocmp tmux-256color &> /dev/null; then
+    tic -x terminfo/tmux-256color.terminfo
+fi
 
 scripts/setup_python3.sh --no-setup-proxy
 

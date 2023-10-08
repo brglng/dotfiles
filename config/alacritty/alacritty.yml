@@ -1,5 +1,5 @@
 env:
-  TERM: xterm-256color
+  TERM: xterm-256color-italic
   LANG: zh_CN.UTF-8
   LC_ALL: zh_CN.UTF-8
 
@@ -18,15 +18,18 @@ scrolling:
 
 font:
   normal:
-    family: "FiraCode Nerd Font"
+    family: "Maple Mono SC NF"
     style: Regular
   bold:
-    family: "FiraCode Nerd Font"
+    family: "Maple Mono SC NF"
     style: Bold
   italic:
-    family: "FiraCode Nerd Font"
+    family: "Maple Mono SC NF"
     style: Italic
-  size: 14.0
+  bold_italic:
+    family: "Maple Mono SC NF"
+    style: BoldItalic
+  size: 14
   offset:
     x: 0
     y: 0
@@ -37,7 +40,7 @@ font:
 draw_bold_text_with_bright_colors: true
 
 import:
-  - ~/.config/alacritty/colors/ayu-dark.yml
+  - ~/.config/alacritty/colors/gruvbox-dark.yml
 
 # Visual Bell
 #

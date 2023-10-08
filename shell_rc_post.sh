@@ -60,6 +60,7 @@ else
 fi
 
 alias more='less'
+alias ssh='TERM=xterm-256color ssh'
 alias ping='ping -c 5'
 
 # z.lua aliases

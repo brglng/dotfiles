@@ -219,15 +219,16 @@ set undofile
 " fold settings
 set foldmethod=syntax
 "set foldminlines=500
+set foldcolumn=1
 set foldlevel=99
 set foldlevelstart=99
-set foldnestmax=1
-" set foldcolumn=2
-autocmd FileType vim setl foldmethod=marker foldnestmax=3 foldcolumn=4
-autocmd FileType c setl foldnestmax=1 foldcolumn=2
-autocmd FileType cpp setl foldnestmax=3 foldcolumn=4
-autocmd FileType python setl foldmethod=indent foldnestmax=2 foldcolumn=3
-autocmd FileType rust setl foldnestmax=2 foldcolumn=3
+set foldenable
+" set foldnestmax=1
+" autocmd FileType vim setl foldmethod=marker foldnestmax=3 foldcolumn=4
+" autocmd FileType c setl foldnestmax=1 foldcolumn=2
+" autocmd FileType cpp setl foldnestmax=3 foldcolumn=4
+" autocmd FileType python setl foldmethod=indent foldnestmax=2 foldcolumn=3
+" autocmd FileType rust setl foldnestmax=2 foldcolumn=3
 " autocmd FileType * let &l:foldcolumn = &l:foldnestmax + 1
 set diffopt+=context:99999
 
@@ -267,13 +268,225 @@ if exists('&cscopeprg') && exists('&cscopequickfix')
 endif
 
 let mapleader = "\<Space>"
-runtime zpan/init/plugins.vim
 
-if has('nvim')
-    runtime zpan/init.lua
+if has('termguicolors') && !has('gui_running')
+    " fix bug for vim
+    if !has('nvim')
+        if &term =~# '^screen\|^tmux'
+            let &t_8f = "\e[38;2;%lu;%lu;%lum"
+            let &t_8b = "\e[48;2;%lu;%lu;%lum"
+        endif
+    endif
+    set termguicolors
 endif
 
-runtime zpan/init/key_mappings.vim
-runtime zpan/init/ui.vim
+if has('nvim')
+    if exists('$CONDA_PYTHON_EXE') && executable('python') && system('which python')[:-2] == $CONDA_PYTHON_EXE
+        " We are in Conda environment
+        let g:python3_host_prog = $CONDA_PYTHON_EXE
+    elseif executable('python3')
+        let g:python3_host_prog = system('which python3')[:-2]
+    elseif executable('python') && system("python -c 'import sys; print(sys.version_info[0])'")[:-2] == '3'
+        let g:python3_host_prog = system('which python')[:-2]
+    endif
+endif
+
+call plug#begin('~/.local/share/vim/plugged')
+
+" Generic Plugins
+Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
+Plug 'roxma/vim-hug-neovim-rpc', has('nvim') ? {'on': []} : {}
+" Plug 'tmux-plugins/vim-tmux-focus-events', has('nvim') ? {} : {'on': []}
+" Plug 'roxma/vim-tmux-clipboard'
+Plug 'brglng/vim-im-select'
+
+" Documentation
+Plug 'sunaku/vim-dasht'
+Plug 'skywind3000/vim-cppman'
+Plug 'kkoomen/vim-doge'
+
+" UI Plugins
+Plug 'ryanoasis/vim-devicons'
+Plug 'justinmk/vim-dirvish'
+Plug 'itchyny/lightline.vim', has('nvim') ? {'on': []} : {}
+Plug 'mengelbrecht/lightline-bufferline', has('nvim') ? {'on': []} : {}
+Plug 'Yggdroot/indentLine', has('nvim') ? {'on': []} : {}
+Plug 'mbbill/fencview'
+Plug 'mbbill/undotree'
+Plug 'mhinz/vim-startify'
+Plug 'liuchengxu/vim-which-key'
+Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
+Plug 'Yggdroot/LeaderF-marks'
+Plug 'tamago324/LeaderF-filer'
+Plug 'brglng/vim-sidebar-manager'
+
+" Moving Plugins
+Plug 'rhysd/clever-f.vim', has('nvim') ? {'on': []} : {}
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-surround', has('nvim') ? {'on': []} : {}
+Plug 'wellle/targets.vim'
+Plug 'andymass/vim-matchup'
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-syntax'
+Plug 'kana/vim-textobj-function', has('nvim') ? {'on': []} : {}
+Plug 'sgur/vim-textobj-parameter', has('nvim') ? {'on': []} : {}
+
+" Editing Plugins
+" Plug 'tpope/vim-commentary'
+Plug 'scrooloose/nerdcommenter'
+Plug 'junegunn/vim-easy-align'
+" Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-abolish'
+Plug 'bootleq/vim-cycle'
+Plug 'mg979/vim-visual-multi'
+
+" FileType Plugins
+Plug 'PProvost/vim-ps1'
+Plug 'aklt/plantuml-syntax'
+Plug 'hynek/vim-python-pep8-indent'
+Plug 'sheerun/vim-polyglot'
+Plug 'tmux-plugins/vim-tmux'
+
+" Source Control Plugins
+Plug 'tpope/vim-fugitive'
+
+" Project management
+Plug 'skywind3000/asyncrun.vim'
+Plug 'skywind3000/asynctasks.vim'
+
+" Language Semantic
+" Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':silent! UpdateRemotePlugins'}
+" Plug 'honza/vim-snippets'
+Plug 'liuchengxu/vista.vim', has('nvim') ? {'on': []} : {}
+
+" ColorSchemes
+Plug 'lifepillar/vim-solarized8'
+Plug 'iCyMind/NeoSolarized'
+Plug 'sickill/vim-monokai'
+Plug 'chriskempson/vim-tomorrow-theme'
+Plug 'chriskempson/base16-vim'
+Plug 'junegunn/seoul256.vim'
+Plug 'nanotech/jellybeans.vim'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
+Plug 'arcticicestudio/nord-vim'
+Plug 'soft-aesthetic/soft-era-vim'
+Plug 'sainnhe/lightline_foobar.vim', has('nvim') ? {'on': []} : {}
+Plug 'Luxed/ayu-vim'
+" Plug 'nightsense/snow'
+Plug 'cocopon/iceberg.vim'
+Plug 'tyrannicaltoucan/vim-quantum'
+Plug 'hzchirs/vim-material'
+Plug 'KeitaNakamura/neodark.vim'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'sainnhe/gruvbox-material'
+Plug 'sainnhe/forest-night'
+Plug 'sainnhe/edge'
+Plug 'sainnhe/sonokai'
+Plug 'zeis/vim-kolor'
+Plug 'EdenEast/nightfox.nvim'
+Plug 'wuelnerdotexe/vim-enfocado'
+
+call plug#end()
+
+call zpan#install_missing_plugins(v:true)
+
+if has('nvim')
+    runtime lua/init.lua
+endif
+
+runtime init/plugins/which_key.vim
+" runtime init/plugins/any_jump.vim
+runtime init/plugins/asyncrun.vim
+runtime init/plugins/asynctasks.vim
+" runtime init/plugins/clap.vim
+if !zpan#is_sudo()
+    " runtime init/plugins/coc.vim
+    " runtime init/plugins/coc_explorer.vim
+    " runtime init/plugins/coc_smartf.vim
+endif
+runtime init/plugins/cppman.vim
+runtime init/plugins/cycle.vim
+runtime init/plugins/dasht.vim
+" runtime init/plugins/defx.vim
+" runtime init/plugins/dein_ui.vim
+" runtime init/plugins/denite.vim
+runtime init/plugins/devicons.vim
+runtime init/plugins/easy_align.vim
+" runtime init/plugins/endwise.vim
+runtime init/plugins/im_select.vim
+if !has('nvim')
+    runtime init/plugins/indent_line.vim
+endif
+runtime init/plugins/leaderf.vim
+if !has('nvim')
+    runtime init/plugins/lightline.vim
+endif
+runtime init/plugins/matchup.vim
+runtime init/plugins/nerd_commenter.vim
+" runtime init/plugins/neoformat.vim
+" runtime init/plugins/netrw.vim
+runtime init/plugins/sidebar_manager.vim
+runtime init/plugins/startify.vim
+" runtime init/plugins/terminal_help.vim
+runtime init/plugins/undotree.vim
+runtime init/plugins/vim_visual_multi.vim
+runtime init/plugins/vista.vim
+
+runtime init/plugins/ayu.vim
+runtime init/plugins/gruvbox_material.vim
+runtime init/plugins/one.vim
+runtime init/plugins/quantum.vim
+runtime init/plugins/sonokai.vim
+
+runtime init/keymap.vim
+runtime init/ui.vim
+
+function! s:find_project_root()
+    let found = v:false
+    let project_root = getcwd()
+    while v:true
+        if !empty(glob(project_root . '/.vim', v:true, v:true))
+            let found = v:true
+            break
+        endif
+        let parentdir = simplify(project_root . '/..')
+        if parentdir ==# project_root
+            break
+        endif
+        let project_root = parentdir
+    endwhile
+    return [found, project_root]
+endfunction
+
+function! s:load_local_config()
+    let [found, project_root] = s:find_project_root()
+    if found
+        let project_runtime = project_root . '/.vim'
+        if isdirectory(project_runtime)
+            let allrtp = split(&runtimepath, ',')
+            for i in range(len(allrtp))
+                let allrtp[i] = resolve(allrtp[i])
+            endfor
+            if index(allrtp, resolve(project_runtime)) < 0
+                let &runtimepath = project_runtime . ',' . &runtimepath . ',' . project_runtime . '/after'
+                if has('nvim') && !empty(glob(project_runtime . '/init.lua', v:true, v:true))
+                    execute 'source ' . project_runtime . '/init.lua'
+                elseif !empty(glob(project_runtime . '/init.vim', v:true, v:true))
+                    execute 'source ' . project_runtime . '/init.vim'
+                endif
+                execute 'chdir ' . project_root
+            endif
+        else
+            execute 'source ' . project_runtime
+            execute 'chdir ' . project_root
+        endif
+    endif
+endfunction
+auto VimEnter * call s:load_local_config()
 
 " vim: ts=8 sts=4 sw=4 et

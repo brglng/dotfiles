@@ -77,27 +77,22 @@ endif
 
 inoremap <silent> <C-u> <C-g>u<C-u>
 
-inoremap <silent> <expr> <TAB>
-  \ zpan#pumselected()
-  \ ? coc#pum#confirm()
-  \ : coc#expandableOrJumpable() ?
-  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
-  \ : "\<TAB>"
+" inoremap <silent> <expr> <TAB>
+"   \ zpan#pumselected()
+"   \ ? coc#pum#confirm()
+"   \ : coc#expandableOrJumpable() ?
+"   \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
+"   \ : "\<TAB>"
 
-inoremap <silent> <expr> <C-Space> coc#refresh()
-inoremap <silent> <expr> <C-x><C-x> coc#refresh()
-
-inoremap <silent> <expr> <CR> zpan#pumselected() ? coc#pum#confirm() : "\<C-g>u\<CR>\<C-r>=coc#on_enter()\<CR>\<C-r>=EndwiseDiscretionary()<CR>"
+" function s:expand_ultimate_autopair_cr()
+"     return luaeval("require('ultimate-autopair.core').run(vim.api.nvim_replace_termcodes('<CR>', true, true, true))")
+" endfunction
+" inoremap <silent> <expr> <CR> zpan#pumselected() ? coc#pum#confirm() : "\<C-g>u" . <SID>expand_ultimate_autopair_cr() . "\<C-r>=coc#on_enter()\<CR>\<C-r>=EndwiseDiscretionary()<CR>"
 
 " inoremap <silent> <expr> <Esc> coc#pum#visible() ? "\<C-o>:call coc#pum#cancel()\<CR>\<Esc>" : "\<Esc>"
 
-inoremap <silent> <expr> <Down> coc#pum#visible() ? coc#pum#next(1) : "\<C-o>gj"
-inoremap <silent> <expr> <Up> coc#pum#visible() ? coc#pum#prev(1) : "\<C-o>gk"
-
-if has('nvim')
-    cnoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Down>"
-    cnoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<Up>"
-endif
+" inoremap <silent> <expr> <Down> coc#pum#visible() ? coc#pum#next(1) : "\<C-o>gj"
+" inoremap <silent> <expr> <Up> coc#pum#visible() ? coc#pum#prev(1) : "\<C-o>gk"
 
 " arrows move through screen lines
 noremap  <silent> <Down>      gj
@@ -116,13 +111,13 @@ cnoremap <silent>           <C-b>       <Left>
 inoremap <silent> <expr>    <C-d>       col('.') > strlen(getline('.')) ? "\<Lt>C-d>":"\<Lt>Del>"
 cnoremap <silent> <expr>    <C-d>       getcmdpos() > strlen(getcmdline()) ? "\<Lt>C-d>":"\<Lt>Del>"
 
-inoremap <silent> <expr>    <C-e>       coc#pum#visible() ? coc#pum#cancel() : col('.') > strlen(getline('.')) ? "\<Lt>C-e>" : "\<Lt>End>"
+" inoremap <silent> <expr>    <C-e>       coc#pum#visible() ? coc#pum#cancel() : col('.') > strlen(getline('.')) ? "\<Lt>C-e>" : "\<Lt>End>"
 
 inoremap <silent> <expr>    <C-f>       col('.') > strlen(getline('.')) ? "\<Lt>C-f>":"\<Lt>Right>"
 cnoremap <silent> <expr>    <C-f>       getcmdpos() > strlen(getcmdline())? &cedit : "\<Lt>Right>"
 
-inoremap <silent> <expr>    <C-n>       coc#pum#visible() ? coc#pum#next(1) : "\<Down>"
-inoremap <silent> <expr>    <C-p>       coc#pum#visible() ? coc#pum#prev(1) : "\<Up>"
+" inoremap <silent> <expr>    <C-n>       coc#pum#visible() ? coc#pum#next(1) : "\<Down>"
+" inoremap <silent> <expr>    <C-p>       coc#pum#visible() ? coc#pum#prev(1) : "\<Up>"
 
 inoremap <silent>   <C-BS>      <C-w>
 inoremap <silent>   <M-b>       <C-Left>
@@ -146,33 +141,54 @@ nnoremap <silent>   <C-Tab>     :bp<CR>
 nnoremap <silent>   <C-S-Tab>   :bn<CR>
 
 " UI toggles
-noremap <silent> <M-1> :call sidebar#toggle('coc-explorer')<CR>
-noremap <silent> <M-2> :call sidebar#toggle('vista')<CR>
-noremap <silent> <M-3> :call sidebar#toggle('undotree')<CR>
+if has('nvim')
+    noremap <silent> <M-1> :call sidebar#toggle('neo-tree-filesystem')<CR>
+    noremap <silent> <M-2> :call sidebar#toggle('neo-tree-document-symbols')<CR>
+    noremap <silent> <M-3> :call sidebar#toggle('neo-tree-buffers')<CR>
+    noremap <silent> <M-4> :call sidebar#toggle('neo-tree-git-status')<CR>
+    noremap <silent> <M-8> :call sidebar#toggle('trouble-document-diagnostics')<CR>
+    noremap <silent> <M-9> :call sidebar#toggle('trouble-workspace-diagnostics')<CR>
+    noremap <silent> <M-0> :call sidebar#toggle('trouble-lsp-references')<CR>
+    noremap <silent> <M--> :call sidebar#toggle('trouble-lsp-definitions')<CR>
+    noremap <silent> <M-=> :call sidebar#toggle('trouble-lsp-type-definitions')<CR>
+else
+    noremap <silent> <M-2> :call sidebar#toggle('vista')<CR>
+endif
 noremap <silent> <M-6> :call sidebar#toggle('quickfix')<CR>
 noremap <silent> <M-7> :call sidebar#toggle('loclist')<CR>
-noremap <silent> <M-=> :call sidebar#toggle('terminal')<CR>
+noremap <silent> <M-5> :call sidebar#toggle('undotree')<CR>
+noremap <silent> <M-\> :call sidebar#toggle('terminal')<CR>
 if has('nvim')
-    tnoremap <silent> <M-1> <C-\><C-n>:call sidebar#toggle('coc-explorer')<CR>
-    tnoremap <silent> <M-2> <C-\><C-n>:call sidebar#toggle('vista')<CR>
-    tnoremap <silent> <M-3> <C-\><C-n>:call sidebar#toggle('undotree')<CR>
+    tnoremap <silent> <M-1> <C-\><C-n>:call sidebar#toggle('neo-tree-filesystem')<CR>
+    tnoremap <silent> <M-2> <C-\><C-n>:call sidebar#toggle('neo-tree-document-symbols')<CR>
+    tnoremap <silent> <M-3> <C-\><C-n>:call sidebar#toggle('neo-tree-buffers')<CR>
+    tnoremap <silent> <M-4> <C-\><C-n>:call sidebar#toggle('neo-tree-git-status')<CR>
+    tnoremap <silent> <M-5> <C-\><C-n>:call sidebar#toggle('undotree')<CR>
     tnoremap <silent> <M-6> <C-\><C-n>:call sidebar#toggle('quickfix')<CR>
     tnoremap <silent> <M-7> <C-\><C-n>:call sidebar#toggle('loclist')<CR>
-    tnoremap <silent> <M-=> <C-\><C-n>:call sidebar#toggle('terminal')<CR>
+    tnoremap <silent> <M-8> <C-\><C-n>:call sidebar#toggle('trouble-document-diagnostics')<CR>
+    tnoremap <silent> <M-9> <C-\><C-n>:call sidebar#toggle('trouble-workspace-diagnostics')<CR>
+    tnoremap <silent> <M-0> <C-\><C-n>:call sidebar#toggle('trouble-lsp-references')<CR>
+    tnoremap <silent> <M--> <C-\><C-n>:call sidebar#toggle('trouble-lsp-definitions')<CR>
+    tnoremap <silent> <M-=> <C-\><C-n>:call sidebar#toggle('trouble-lsp-type-definitions')<CR>
+    tnoremap <silent> <M-\> <C-\><C-n>:call sidebar#toggle('terminal')<CR>
 else
-    tnoremap <silent> <M-1> <C-_>:call sidebar#toggle('coc-explorer')<CR>
     tnoremap <silent> <M-2> <C-_>:call sidebar#toggle('vista')<CR>
-    tnoremap <silent> <M-3> <C-_>:call sidebar#toggle('undotree')<CR>
+    tnoremap <silent> <M-5> <C-_>:call sidebar#toggle('undotree')<CR>
     tnoremap <silent> <M-6> <C-_>:call sidebar#toggle('quickfix')<CR>
     tnoremap <silent> <M-7> <C-_>:call sidebar#toggle('loclist')<CR>
-    tnoremap <silent> <M-=> <C-_>:call sidebar#toggle('terminal')<CR>
+    tnoremap <silent> <M-\> <C-_>:call sidebar#toggle('terminal')<CR>
 endif
 
 " Fuzzy finder
 nnoremap <silent> <C-p> :Leaderf file<CR>
 
-" Tasks
-noremap <silent> <F5> :CocList --normal tasks<CR>
-inoremap <silent> <F5> <C-o>:CocList --normal tasks<CR>
+if has('nvim')
+    nnoremap <RightMouse> <Nop>
+    inoremap <RightMouse> <Nop>
+    inoremap <C-x><C-x> <Cmd>lua require('cmp').complete()<CR>
+endif
+
+nnoremap ; :
 
 " vim: sw=4 ts=8 sts=4 et

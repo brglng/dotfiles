@@ -13,26 +13,9 @@ vnoremap <silent> <Leader> :<C-u>WhichKeyVisual '<Space>'<CR>
 
 let g:which_key_map =  {}
 
-let g:which_key_map.a = {
-  \ 'a': 'easy-align'
-  \ }
+let g:which_key_map.a = 'easy-align'
 
-let g:which_key_map.b = {
-  \ 'name': '+buffer',
-  \ '1': ["<Plug>lightline#bufferline#go(1)", "buffer-1"],
-  \ '2': ["<Plug>lightline#bufferline#go(2)", "buffer-2"],
-  \ '3': ["<Plug>lightline#bufferline#go(3)", "buffer-3"],
-  \ '4': ["<Plug>lightline#bufferline#go(4)", "buffer-4"],
-  \ '5': ["<Plug>lightline#bufferline#go(5)", "buffer-5"],
-  \ '6': ["<Plug>lightline#bufferline#go(6)", "buffer-6"],
-  \ '7': ["<Plug>lightline#bufferline#go(7)", "buffer-7"],
-  \ '8': ["<Plug>lightline#bufferline#go(8)", "buffer-8"],
-  \ '9': ["<Plug>lightline#bufferline#go(9)", "buffer-9"],
-  \ '0': ["<Plug>lightline#bufferline#go(10)", "buffer-10"],
-  \ 'p': [':bp', 'previous-buffer'],
-  \ 'n': [':bn', 'next-buffer'],
-  \ '/': [':Leaderf buffer', 'search-for-a-buffer']
-  \ }
+let g:which_key_map.b = [':LeaderfBuffer', 'buffers']
 
 let g:which_key_map.c = {
   \ 'name': '+comments',
@@ -51,10 +34,9 @@ let g:which_key_map.c = {
   \ 'u': 'uncomment-lines'
   \ }
 
-let g:which_key_map.f = ['<Plug>(coc-smartf-forward)', 'coc-smartf-forward']
-let g:which_key_map.F = ['<Plug>(coc-smartf-backward)', 'coc-smartf-forward']
-let g:which_key_map[';'] = ['<Plug>(coc-smartf-repeat)', 'coc-smartf-repeat']
-let g:which_key_map[','] = ['<Plug>(coc-smartf-repeat-opposite)', 'coc-smartf-repeat-opposite']
+let g:which_key_map.e = 'Show Hover Documentation'
+
+let g:which_key_map.n = [':Navbuddy', 'navigate']
 
 let g:which_key_map['g'] = {
   \ 'name': '+goto',
@@ -69,13 +51,6 @@ if has('nvim')
 else
     let g:which_key_map['i'] = [':IndentLinesToggle', 'toggle-indent-line']
 endif
-
-let g:which_key_map['j'] = {
-  \ 'name': '+any-jump',
-  \ 'a': [':AnyJump', 'jump-to-definition'],
-  \ 'b': [':AnyJumpBack', 'jump-back'],
-  \ 'l': [':AnyJumpLastResults', 'retore-previous-search-window']
-  \ }
 
 let g:which_key_map['p'] = {
   \ 'name': '+fuzzy-finder',
@@ -120,9 +95,7 @@ let g:which_key_map.s = {
   \ 'G': 'search-replace-whole-file-no-prompt'
   \ }
 
-nmap <silent> <Leader>t <Plug>TranslateW
-vmap <silent> <Leader>t <Plug>TranslateWV
-let g:which_key_map.t = 'translate'
+let g:which_key_map.t = [':Leaderf task', 'tasks']
 
 let g:which_key_map.v = {
   \ 'name': '+version-control',
@@ -162,48 +135,41 @@ let g:which_key_map.w = {
 vmap <Leader>x= <Plug>(coc-format-selected)
 vmap <Leader>xa <Plug>(coc-codeaction-selected)
 let g:which_key_map.x = {
-  \ 'name': '+lsp',
-  \ 'a': ['<Plug>(coc-codeaction-selected)', 'do-code-action-on-region'],
-  \ 'A': ['<Plug>(coc-codeaction)', 'do-code-action-on-line'],
-  \ 'r': ['<Plug>(coc-references)', 'find-references'],
-  \ 'R': ['<Plug>(coc-rename)', 'rename-current-symbol'],
-  \ 'f': ['CocAction("format")', 'format-buffer'],
-  \ '=': ['<Plug>(coc-format-selected)', 'format-region'],
-  \ 'k': ["CocAction('doHover')", 'show-documentation'],
-  \ 'q': ['<Plug>(coc-fix-current)', 'fix-line'],
-  \ 'l': {
-  \     'name': '+lists',
-  \     'a': [':CocList --normal actions', 'list-code-actions'],
-  \     'e': [':CocList --normal diagnostics', 'list-errors']
-  \ },
+  \ 'name': '+Sementic (LSP & Treesitter)',
+  \ 'd': [':Trouble lsp_definitions', 'Definitions'],
+  \ 'i': [':Trouble lsp_implementations', 'Implementations'],
+  \ 'n': 'Rename',
+  \ 'q': 'Quick Fix',
+  \ 'r': [':Trouble lsp_references', 'References'],
+  \ 't': [':Trouble lsp_type_definitions', 'Type Definitions'],
   \ }
 
-silent! call which_key#register('K', 'g:which_key_map_K')
-nnoremap <silent> K :<C-u>WhichKey 'K'<CR>
-vnoremap <silent> K :<C-u>WhichKeyVisual 'K'<CR>
+" silent! call which_key#register('K', 'g:which_key_map_K')
+" nnoremap <silent> K :<C-u>WhichKey 'K'<CR>
+" vnoremap <silent> K :<C-u>WhichKeyVisual 'K'<CR>
 
-nnoremap Kc :execute 'Cppman ' . expand('<cword>')<CR>
-vnoremap Kc y:<C-u>execute 'Cppman ' . getreg(0)<CR>
-nnoremap KC :Cppman<Space>
-nnoremap KK :execute 'help ' . expand('<cword>')<CR>
-vnoremap KK y:<C-u>execute 'help ' . getreg(0)<CR>
-nnoremap Km :execute 'Man ' . expand('<cword>')<CR>
-nnoremap Km y:<C-u>execute 'Man ' . getreg(0)<CR>
-nnoremap KR :Dasht<Space>
-nnoremap KA :Dasht!<Space>
-let g:which_key_map_K = {
-  \ 'name': '+docsets',
-  \ 'c': 'search-cppman-for-cursor-word',
-  \ 'C': 'cppman',
-  \ 'K': 'vim-help',
-  \ 'm': 'man-page',
-  \ 'R': 'search-related-docsets',
-  \ 'a': [":call Dasht([expand('<cword>'), expand('<cWORD>')], '!')", 'search-all-docsets-for-cursor-word'],
-  \ 'A': 'search-all-docsets',
-  \ 'r': [":call Dasht([expand('<cword>'), expand('<cWORD>')])", 'search-related-docsets-for-cursor-word'],
-  \ 's': ["y:<C-U>call Dasht(getreg(0))", 'search-related-docsets-for-selection'],
-  \ 'd': ["y:<C-U>call Dasht(getreg(0), '!')", 'search-all-docsets-for-selection']
-  \ }
+" nnoremap Kc :execute 'Cppman ' . expand('<cword>')<CR>
+" vnoremap Kc y:<C-u>execute 'Cppman ' . getreg(0)<CR>
+" nnoremap KC :Cppman<Space>
+" nnoremap KK :execute 'help ' . expand('<cword>')<CR>
+" vnoremap KK y:<C-u>execute 'help ' . getreg(0)<CR>
+" nnoremap Km :execute 'Man ' . expand('<cword>')<CR>
+" nnoremap Km y:<C-u>execute 'Man ' . getreg(0)<CR>
+" nnoremap KR :Dasht<Space>
+" nnoremap KA :Dasht!<Space>
+" let g:which_key_map_K = {
+"   \ 'name': '+docsets',
+"   \ 'c': 'search-cppman-for-cursor-word',
+"   \ 'C': 'cppman',
+"   \ 'K': 'vim-help',
+"   \ 'm': 'man-page',
+"   \ 'R': 'search-related-docsets',
+"   \ 'a': [":call Dasht([expand('<cword>'), expand('<cWORD>')], '!')", 'search-all-docsets-for-cursor-word'],
+"   \ 'A': 'search-all-docsets',
+"   \ 'r': [":call Dasht([expand('<cword>'), expand('<cWORD>')])", 'search-related-docsets-for-cursor-word'],
+"   \ 's': ["y:<C-U>call Dasht(getreg(0))", 'search-related-docsets-for-selection'],
+"   \ 'd': ["y:<C-U>call Dasht(getreg(0), '!')", 'search-all-docsets-for-selection']
+"   \ }
 
 
 " vim: sw=4 sts=4 ts=8 et
