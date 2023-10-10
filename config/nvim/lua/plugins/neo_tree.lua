@@ -11,7 +11,7 @@ require('neo-tree').setup({
     },
     filesystem = {
         follow_current_file = {
-            enabled = true,
+            enabled = false,
             leave_dirs_open = true
         }
     },
@@ -22,7 +22,10 @@ require('neo-tree').setup({
             { source = "filesystem" },
             { source = "document_symbols" },
             { source = "buffers" },
-            { source = "git_status" },
+            {
+                source = "git_status",
+                follow_cursor = true
+            },
         },
     },
 })

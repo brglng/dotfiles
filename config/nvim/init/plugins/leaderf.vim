@@ -33,6 +33,7 @@ let g:Lf_ShowHidden = 1
 let g:Lf_IgnoreCurrentBufferName = 1
 let g:Lf_PreviewInPopup = 1
 let g:Lf_MruEnableFrecency = 1
+let g:Lf_PopupPreviewPosition='bottom'
 
 if executable('fd')
     let g:Lf_ExternalCommand = 'fd -t f "%s"'

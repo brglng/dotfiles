@@ -59,13 +59,11 @@ function link_common() {
 
 function link_linux() {
     update_bashrc                               "$HOME/.bashrc"
-    link "$PWD/config/TabNine/TabNine.toml"     "$HOME/.config/TabNine/TabNine.toml"
     link_common
 }
 
 function link_mac() {
     update_bashrc                               "$HOME/.bash_profile"
-    link "$PWD/config/TabNine/TabNine.toml"     "$HOME/Library/Preferences/TabNine/TabNine.toml"
     link_common
 }
 

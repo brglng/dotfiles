@@ -371,7 +371,7 @@ if exists('g:gui_oni') || exists('g:gui_gonvim')
 endif
 
 if has('nvim')
-    set signcolumn=yes:2
+    set signcolumn=yes:1
 else
     set signcolumn=yes
 endif
@@ -423,5 +423,7 @@ autocmd BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
 autocmd FileType man call s:setup_man_window()
 
 autocmd FileType terminal,toggleterm set foldcolumn=0 signcolumn=no statuscolumn=
+
+autocmd FileType python IBLEnable
 
 " vim: ts=8 sts=4 sw=4 et

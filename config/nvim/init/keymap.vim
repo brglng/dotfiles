@@ -180,9 +180,6 @@ else
     tnoremap <silent> <M-\> <C-_>:call sidebar#toggle('terminal')<CR>
 endif
 
-" Fuzzy finder
-nnoremap <silent> <C-p> :Leaderf file<CR>
-
 if has('nvim')
     nnoremap <RightMouse> <Nop>
     inoremap <RightMouse> <Nop>

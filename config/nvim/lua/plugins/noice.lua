@@ -47,6 +47,14 @@ require("noice").setup({
             filter = {
                 event = "msg_show",
                 kind = "",
+                find = "少了 %d+ 行"
+            },
+            opts = { skip = true }
+        },
+        {
+            filter = {
+                event = "msg_show",
+                kind = "",
                 find = "%d+ line less"
             },
             opts = { skip = true }

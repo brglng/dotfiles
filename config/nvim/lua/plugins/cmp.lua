@@ -2,7 +2,9 @@ local cmp = require('cmp')
 local types = require("cmp.types")
 local str = require("cmp.utils.str")
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+
 local luasnip = require('luasnip')
+
 local lspkind = require('lspkind')
 lspkind.init {
     symbol_map = {
@@ -18,6 +20,11 @@ local has_words_before = function()
 end
 
 cmp.setup {
+    window = {
+        completion = {
+            side_padding = 1
+        }
+    },
     formatting = {
         fields = {
             cmp.ItemField.Kind,
@@ -30,7 +37,7 @@ cmp.setup {
             before = function(entry, vim_item)
                 local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
                 local strings = vim.split(kind.kind, "%s", { trimempty = true })
-                kind.kind = (strings[1] or "") .. " "
+                kind.kind = (strings[1] or "")
                 kind.menu = "    (" .. (strings[2] or "") .. ")"
                 return kind
             end

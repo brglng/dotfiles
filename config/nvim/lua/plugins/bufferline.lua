@@ -12,26 +12,26 @@ require('bufferline').setup({
         offsets = {
             {
                 filetype = "coc-explorer",
-                text = " CocExplorer",
-                text_align = "left",
+                text = "CocExplorer",
+                text_align = "center",
                 separator = false
             },
             {
                 filetype = "vista",
-                text = " Vista",
-                text_align = "left",
+                text = "Vista",
+                text_align = "center",
                 separator = false
             },
             {
                 filetype = "undotree",
-                text = " UndoTree",
-                text_align = "left",
+                text = "UndoTree",
+                text_align = "center",
                 separator = false
             },
             {
                 filetype = "neo-tree",
-                text = " NeoTree",
-                text_align = "left",
+                text = "NeoTree",
+                text_align = "center",
                 separator = false
             }
         },

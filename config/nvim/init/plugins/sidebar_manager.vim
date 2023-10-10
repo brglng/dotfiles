@@ -9,25 +9,25 @@ let g:sidebars = {
   \ 'neo-tree-filesystem': {
   \     'position': 'left',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'filesystem'},
-  \     'open': 'Neotree filesystem',
+  \     'open': 'Neotree filesystem reveal',
   \     'close': 'Neotree close'
   \ },
   \ 'neo-tree-buffers': {
   \     'position': 'left',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'buffers'},
-  \     'open': 'Neotree buffers',
+  \     'open': 'Neotree buffers reveal',
   \     'close': 'Neotree close'
   \ },
   \ 'neo-tree-git-status': {
   \     'position': 'left',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'git_status'},
-  \     'open': 'Neotree git_status',
+  \     'open': 'Neotree git_status reveal',
   \     'close': 'Neotree close'
   \ },
   \ 'neo-tree-document-symbols': {
   \     'position': 'left',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'document_symbols'},
-  \     'open': 'Neotree document_symbols',
+  \     'open': 'Neotree document_symbols reveal',
   \     'close': 'Neotree close'
   \ },
   \ 'trouble-quickfix': {

@@ -1,1 +1,3 @@
-require('fold-preview').setup {}
+require("fold-preview").setup {
+    default_keybindings = true
+}
