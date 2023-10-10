@@ -22,7 +22,7 @@ end
 cmp.setup {
     window = {
         completion = {
-            side_padding = 1
+            side_padding = 0
         }
     },
     formatting = {

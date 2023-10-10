@@ -134,7 +134,7 @@ cnoremap <silent>   <C-a>       <Home>
 nnoremap <silent>   <M-Left>    <C-o>
 nnoremap <silent>   <M-Right>   <C-i>
 
-nnoremap <silent>   Q           :confirm qall<CR>
+nnoremap <silent> <expr> Q tabpagenr('$') > 1 ? ":tabclose\<CR>" : ":confirm qall\<CR>"
 
 " buffer
 nnoremap <silent>   <C-Tab>     :bp<CR>
