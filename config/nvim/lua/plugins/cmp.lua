@@ -19,11 +19,12 @@ local has_words_before = function()
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
+local window_bordered = cmp.config.window.bordered()
+window_bordered.side_padding = 0
 cmp.setup {
     window = {
-        completion = {
-            side_padding = 0
-        }
+        completion = window_bordered,
+        documentation = window_bordered
     },
     formatting = {
         fields = {

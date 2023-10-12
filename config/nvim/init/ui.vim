@@ -239,9 +239,9 @@ function! s:set_leaderf_highlights()
         execute 'hi Lf_hl_popup_regexMode guifg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('lualine_b_normal')), 'bg'), synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg'))
         execute 'hi Lf_hl_popup_cwd guifg=' . synIDattr(synIDtrans(hlID('lualine_c_normal')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg')
     endif
-    " hi link Lf_hl_popup_window Normal
+    hi link Lf_hl_popup_window Normal
     " hi link Lf_hl_popupBorder FloatBorder
-    execute 'hi Lf_hl_popup_window guifg=' . synIDattr(synIDtrans(hlID('Normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('Normal')), 'bg'), synIDattr(synIDtrans(hlID('CursorLine')), 'bg'))
+    " execute 'hi Lf_hl_popup_window guifg=' . synIDattr(synIDtrans(hlID('Normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('Normal')), 'bg'), synIDattr(synIDtrans(hlID('CursorLine')), 'bg'))
     execute 'hi Lf_hl_popupBorder guifg=' . synIDattr(synIDtrans(hlID('FloatBorder')), 'fg')
     highlight link Lf_hl_cursorline CursorLine
     highlight link Lf_hl_match Search

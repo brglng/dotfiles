@@ -1,5 +1,8 @@
-require('gruvbox').setup({
+local gruvbox = require("gruvbox")
+gruvbox.setup({
     contrast = "hard",
+    -- inverse = false,
+    -- invert_signs = false,
     overrides = {
         GruvboxRedSign = { bg = "NONE" },
         GruvboxGreenSign = { bg = "NONE" },
@@ -12,5 +15,10 @@ require('gruvbox').setup({
         SignColumn = { bg = "NONE" },
         FoldColumn = { bg = "NONE" },
         WinBarNC = { bg = "NONE" },
+        IncSearch = {
+            fg = "black",
+            bg = "darkorange",
+            reverse = false
+        }
     }
 })

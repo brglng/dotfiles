@@ -160,11 +160,6 @@ require("lazy").setup(
         {
             "folke/trouble.nvim",
             dependencies = { "nvim-tree/nvim-web-devicons" },
-            opts = {
-                -- your configuration comes here
-                -- or leave it empty to use the default settings
-                -- refer to the configuration section below
-            },
         },
         { 'akinsho/toggleterm.nvim', version = "*" },
         {
@@ -176,6 +171,10 @@ require("lazy").setup(
             }
         },
         { "anuvyklack/fold-preview.nvim", dependencies = "anuvyklack/keymap-amend.nvim" },
+        {
+            'nvim-telescope/telescope.nvim', branch = '0.1.x',
+            dependencies = { 'nvim-lua/plenary.nvim' }
+        },
 
         -- Source control
         {
@@ -263,9 +262,11 @@ require("plugins.toggleterm")
 require("plugins.ufo")
 require("plugins.statuscol")
 require("plugins.fold_preview")
+require("plugins.telescope")
 
 require("plugins.neogit")
 require("plugins.gitsigns")
+require("plugins.flash")
 require("plugins.todo_comments")
 require("plugins.surround")
 

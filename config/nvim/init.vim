@@ -293,10 +293,26 @@ endif
 
 call plug#begin('~/.local/share/vim/plugged')
 
+function! VimOnly(...)
+    if a:0 > 1
+        return extendnew(a:1, has('nvim') ? {'on': []} : {})
+    else
+        return has('nvim') ? {'on': []} : {}
+    endif
+endfunction
+
+function! NeovimOnly(...)
+    if a:0 > 1
+        return extendnew(a:1, has('nvim') ? {} : {'on': []})
+    else
+        return has('nvim') ? {} : {'on': []}
+    endif
+endfunction
+
 " Generic Plugins
-Plug 'roxma/nvim-yarp', has('nvim') ? {'on': []} : {}
-Plug 'roxma/vim-hug-neovim-rpc', has('nvim') ? {'on': []} : {}
-" Plug 'tmux-plugins/vim-tmux-focus-events', has('nvim') ? {} : {'on': []}
+" Plug 'roxma/nvim-yarp', VimOnly()
+" Plug 'roxma/vim-hug-neovim-rpc', VimOnly()
+" Plug 'tmux-plugins/vim-tmux-focus-events', NeovimOnly()
 " Plug 'roxma/vim-tmux-clipboard'
 Plug 'brglng/vim-im-select'
 
@@ -308,29 +324,29 @@ Plug 'kkoomen/vim-doge'
 " UI Plugins
 Plug 'ryanoasis/vim-devicons'
 Plug 'justinmk/vim-dirvish'
-Plug 'itchyny/lightline.vim', has('nvim') ? {'on': []} : {}
-Plug 'mengelbrecht/lightline-bufferline', has('nvim') ? {'on': []} : {}
-Plug 'Yggdroot/indentLine', has('nvim') ? {'on': []} : {}
+Plug 'itchyny/lightline.vim', VimOnly()
+Plug 'mengelbrecht/lightline-bufferline', VimOnly()
+Plug 'Yggdroot/indentLine', VimOnly()
 Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
 Plug 'liuchengxu/vim-which-key'
-Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
-Plug 'Yggdroot/LeaderF-marks'
-Plug 'tamago324/LeaderF-filer'
+Plug 'Yggdroot/LeaderF', VimOnly({'do': './install.sh'})
+Plug 'Yggdroot/LeaderF-marks', VimOnly()
+Plug 'tamago324/LeaderF-filer', VimOnly()
 Plug 'brglng/vim-sidebar-manager'
 
 " Moving Plugins
-Plug 'rhysd/clever-f.vim', has('nvim') ? {'on': []} : {}
+Plug 'rhysd/clever-f.vim', VimOnly()
 Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-surround', has('nvim') ? {'on': []} : {}
+Plug 'tpope/vim-surround', VimOnly()
 Plug 'wellle/targets.vim'
 Plug 'andymass/vim-matchup'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-syntax'
-Plug 'kana/vim-textobj-function', has('nvim') ? {'on': []} : {}
-Plug 'sgur/vim-textobj-parameter', has('nvim') ? {'on': []} : {}
+Plug 'kana/vim-textobj-function', VimOnly()
+Plug 'sgur/vim-textobj-parameter', VimOnly()
 
 " Editing Plugins
 " Plug 'tpope/vim-commentary'
@@ -360,7 +376,7 @@ Plug 'skywind3000/asynctasks.vim'
 " Language Semantic
 " Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':silent! UpdateRemotePlugins'}
 " Plug 'honza/vim-snippets'
-Plug 'liuchengxu/vista.vim', has('nvim') ? {'on': []} : {}
+Plug 'liuchengxu/vista.vim', VimOnly()
 
 " ColorSchemes
 Plug 'lifepillar/vim-solarized8'
@@ -375,7 +391,7 @@ Plug 'joshdick/onedark.vim'
 Plug 'rakr/vim-one'
 Plug 'arcticicestudio/nord-vim'
 Plug 'soft-aesthetic/soft-era-vim'
-Plug 'sainnhe/lightline_foobar.vim', has('nvim') ? {'on': []} : {}
+Plug 'sainnhe/lightline_foobar.vim', VimOnly()
 Plug 'Luxed/ayu-vim'
 " Plug 'nightsense/snow'
 Plug 'cocopon/iceberg.vim'
