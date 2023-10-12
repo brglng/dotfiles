@@ -4,7 +4,7 @@ require('lspsaga').setup {
         show_server_name = true
     },
     diagnostic = {
-        diagnostic_only_current = true
+        diagnostic_only_current = false
     },
     lightbulb = {
         sign = false

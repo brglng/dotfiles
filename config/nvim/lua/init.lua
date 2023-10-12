@@ -7,7 +7,7 @@ for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
--- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -173,7 +173,10 @@ require("lazy").setup(
         { "anuvyklack/fold-preview.nvim", dependencies = "anuvyklack/keymap-amend.nvim" },
         {
             'nvim-telescope/telescope.nvim', branch = '0.1.x',
-            dependencies = { 'nvim-lua/plenary.nvim' }
+            dependencies = {
+                'nvim-lua/plenary.nvim',
+                'GustavoKatel/telescope-asynctasks.nvim'
+            }
         },
 
         -- Source control

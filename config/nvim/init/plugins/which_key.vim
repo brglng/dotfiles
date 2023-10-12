@@ -39,7 +39,9 @@ let g:which_key_map.c = {
   \ 'u': 'uncomment-lines'
   \ }
 
-let g:which_key_map.e = [':lua vim.diagnostic.open_float()', 'Show Diagnostics']
+if has('nvim')
+    let g:which_key_map.e = [{-> luaeval('vim.diagnostic.open_float()')}, 'Show Diagnostics']
+endif
 
 if has('nvim')
     let g:which_key_map.f = {
@@ -111,7 +113,11 @@ let g:which_key_map.s = {
   \ 'G': 'Search & Replace (Full, No Prompt)'
   \ }
 
-let g:which_key_map.t = [':Leaderf task', 'Tasks']
+if has('nvim')
+    let g:which_key_map.t = [':Telescope asynctasks all initial_mode=normal', 'Tasks']
+else
+    let g:which_key_map.t = [':Leaderf task', 'Tasks']
+endif
 
 let g:which_key_map.w = {
   \ 'name': '+Windows',
