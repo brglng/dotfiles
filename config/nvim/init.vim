@@ -319,7 +319,7 @@ Plug 'brglng/vim-im-select'
 " Documentation
 Plug 'sunaku/vim-dasht'
 Plug 'skywind3000/vim-cppman'
-Plug 'kkoomen/vim-doge'
+" Plug 'kkoomen/vim-doge'
 
 " UI Plugins
 Plug 'ryanoasis/vim-devicons'
@@ -428,6 +428,7 @@ endif
 runtime init/plugins/cppman.vim
 runtime init/plugins/cycle.vim
 runtime init/plugins/dasht.vim
+runtime init/plugins/doge.vim
 " runtime init/plugins/defx.vim
 " runtime init/plugins/dein_ui.vim
 " runtime init/plugins/denite.vim
@@ -464,10 +465,17 @@ runtime init/ui.vim
 
 function! s:find_project_root()
     let found = v:false
+    let marker = ''
     let project_root = getcwd()
     while v:true
         if !empty(glob(project_root . '/.vim', v:true, v:true))
             let found = v:true
+            let marker = '.vim'
+            break
+        endif
+        if !empty(glob(project_root . '/.nvim', v:true, v:true))
+            let found = v:true
+            let marker = '.nvim'
             break
         endif
         let parentdir = simplify(project_root . '/..')
@@ -476,13 +484,13 @@ function! s:find_project_root()
         endif
         let project_root = parentdir
     endwhile
-    return [found, project_root]
+    return [found, project_root, marker]
 endfunction
 
 function! s:load_local_config()
-    let [found, project_root] = s:find_project_root()
-    if found
-        let project_runtime = project_root . '/.vim'
+    let [found, project_root, marker] = s:find_project_root()
+    if found && resolve(project_root) !=# resolve(stdpath('config'))
+        let project_runtime = project_root . '/' . marker
         if isdirectory(project_runtime)
             let allrtp = split(&runtimepath, ',')
             for i in range(len(allrtp))
@@ -491,9 +499,13 @@ function! s:load_local_config()
             if index(allrtp, resolve(project_runtime)) < 0
                 let &runtimepath = project_runtime . ',' . &runtimepath . ',' . project_runtime . '/after'
                 if has('nvim') && !empty(glob(project_runtime . '/init.lua', v:true, v:true))
-                    execute 'source ' . project_runtime . '/init.lua'
+                    let init_script = project_runtime . '/init.lua'
+                    echoerr 'Loading ' . init_script
+                    execute 'source ' . init_script
                 elseif !empty(glob(project_runtime . '/init.vim', v:true, v:true))
-                    execute 'source ' . project_runtime . '/init.vim'
+                    let init_script = project_runtime . '/init.vim'
+                    echoerr 'Loading ' . init_script
+                    execute 'source ' . init_script
                 endif
                 execute 'chdir ' . project_root
             endif

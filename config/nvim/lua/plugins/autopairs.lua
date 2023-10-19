@@ -1,5 +1,5 @@
 require('nvim-autopairs').setup {
-    ignored_next_char = "[%w%.]" -- will ignore alphanumeric and `.` symbol
+    ignored_next_char = "[%S]"
 }
 
 local npairs = require 'nvim-autopairs'

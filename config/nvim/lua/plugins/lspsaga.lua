@@ -7,7 +7,8 @@ require('lspsaga').setup {
         diagnostic_only_current = false
     },
     lightbulb = {
-        sign = false
+        sign = false,
+        virtual_text = false
     },
     outline = {
         close_after_jump = true,

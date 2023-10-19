@@ -82,6 +82,13 @@ require("lazy").setup(
         },
         { "mfussenegger/nvim-dap" },
         { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
+        {
+            "theHamsta/nvim-dap-virtual-text",
+            dependencies = {
+                "nvim-treesitter/nvim-treesitter",
+                "mfussenegger/nvim-dap",
+            }
+        },
         { "RRethy/vim-illuminate" },
 
         -- Project Management
@@ -178,6 +185,7 @@ require("lazy").setup(
                 'GustavoKatel/telescope-asynctasks.nvim'
             }
         },
+        { "petertriho/nvim-scrollbar", dependencies = "lewis6991/gitsigns.nvim" },
 
         -- Source control
         {
@@ -187,9 +195,7 @@ require("lazy").setup(
                 "nvim-lua/plenary.nvim"
             }
         },
-        {
-            "lewis6991/gitsigns.nvim",
-        },
+        { "lewis6991/gitsigns.nvim" },
 
         -- Editing and Motion
         {
@@ -266,6 +272,7 @@ require("plugins.ufo")
 require("plugins.statuscol")
 require("plugins.fold_preview")
 require("plugins.telescope")
+require("plugins.scrollbar")
 
 require("plugins.neogit")
 require("plugins.gitsigns")

@@ -422,7 +422,7 @@ endfunction
 autocmd BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
 autocmd FileType man call s:setup_man_window()
 
-autocmd FileType terminal,toggleterm set foldcolumn=0 signcolumn=no statuscolumn=
+autocmd FileType toggleterm set foldcolumn=0 signcolumn=no statuscolumn=
 
 autocmd FileType python IBLEnable
 

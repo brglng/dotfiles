@@ -1,4 +1,4 @@
 require("notify").setup({
     render = "compact",
-    top_down = true
+    top_down = false
 })

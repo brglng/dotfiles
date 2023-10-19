@@ -17,7 +17,7 @@ let g:which_key_map =  {}
 let g:which_key_map.a = ['<Plug>(EasyAlign)', 'Easy-Align']
 
 if has('nvim')
-    let g:which_key_map.b = [':Telescope buffers initial_mode=normal', 'Buffers']
+    let g:which_key_map.b = [':Telescope buffers', 'Buffers']
 else
     let g:which_key_map.b = [':LeaderfBuffer', 'Buffers']
 endif
@@ -39,6 +39,15 @@ let g:which_key_map.c = {
   \ 'u': 'uncomment-lines'
   \ }
 
+let g:which_key_map.d = {
+  \ 'name': '+Debug',
+  \ 'b': [{-> luaeval('require("dap").toggle_breakpoint()')}, 'Toggle Breakpoint'],
+  \ 'd': [{-> luaeval('require("dapui").toggle()')}, 'Toggle Debug UI'],
+  \ 'h': [{-> luaeval('require("dap").hover()')}, 'Debug Hover'],
+  \ 'p': [{-> luaeval('require("dap").preview()')}, 'Debug Preview'],
+  \ 'r': [{-> luaeval('require("dap").repl.toggle()')}, 'Toggle Debugger REPL']
+  \ }
+
 if has('nvim')
     let g:which_key_map.e = [{-> luaeval('vim.diagnostic.open_float()')}, 'Show Diagnostics']
 endif
@@ -46,7 +55,7 @@ endif
 if has('nvim')
     let g:which_key_map.f = {
       \ 'name': '+Finder',
-      \ 'b': [':Telescope buffers initial_mode=normal', 'Buffers'],
+      \ 'b': [':Telescope buffers', 'Buffers'],
       \ 'c': [':Telescope commands', 'Commands'],
       \ 'f': [':Telescope find_files', 'Files'],
       \ 'g': [':Telescope live_grep', 'Grep'],
@@ -114,7 +123,7 @@ let g:which_key_map.s = {
   \ }
 
 if has('nvim')
-    let g:which_key_map.t = [':Telescope asynctasks all initial_mode=normal', 'Tasks']
+    let g:which_key_map.t = [':Telescope asynctasks all', 'Tasks']
 else
     let g:which_key_map.t = [':Leaderf task', 'Tasks']
 endif

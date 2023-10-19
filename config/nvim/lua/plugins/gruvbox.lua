@@ -3,6 +3,13 @@ gruvbox.setup({
     contrast = "hard",
     -- inverse = false,
     -- invert_signs = false,
+    italic = {
+        strings = false,
+        emphasis = true,
+        comments = true,
+        operators = false,
+        folds = true,
+    },
     overrides = {
         GruvboxRedSign = { bg = "NONE" },
         GruvboxGreenSign = { bg = "NONE" },
