@@ -226,6 +226,7 @@ require("lazy").setup(
             version = "*",
             event = "VeryLazy",
         },
+        { "numToStr/Comment.nvim", lazy = false },
 
         -- Color schemes
         { "ellisonleao/gruvbox.nvim" },
@@ -279,6 +280,7 @@ require("plugins.gitsigns")
 require("plugins.flash")
 require("plugins.todo_comments")
 require("plugins.surround")
+require("plugins.comment")
 
 require("plugins.gruvbox")
 require("plugins.tokyonight")

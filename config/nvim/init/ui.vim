@@ -290,7 +290,7 @@ function! s:set_colorscheme()
     let [hour, minute] = split(strftime('%H:%M', localtime()), ':')
     let hour = str2nr(hour)
     let minute = str2nr(minute)
-    if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 17 || (hour == 17 && minute < 45))
+    if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 17 || (hour == 17 && minute < 20))
         if has('nvim')
             colorscheme gruvbox
         else
@@ -424,6 +424,8 @@ autocmd FileType man call s:setup_man_window()
 
 autocmd FileType toggleterm set foldcolumn=0 signcolumn=no statuscolumn=
 
-autocmd FileType python IBLEnable
+if has('nvim')
+    autocmd FileType python lua require("ibl").setup_buffer(0, {enabled = true})
+endif
 
 " vim: ts=8 sts=4 sw=4 et

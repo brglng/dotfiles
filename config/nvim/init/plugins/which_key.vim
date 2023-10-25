@@ -22,30 +22,12 @@ else
     let g:which_key_map.b = [':LeaderfBuffer', 'Buffers']
 endif
 
-let g:which_key_map.c = {
-  \ 'name': '+comments',
-  \ 'c': 'comment-lines',
-  \ 'n': 'comment-lines-force-nesting',
-  \ ' ': 'toggle-comment',
-  \ 'm': 'comment-lines-with-block-comment',
-  \ 'i': 'toggle-individual-line-comment',
-  \ 's': 'comment-lines-documentation-style',
-  \ 'y': 'yank-and-comment-lines',
-  \ '$': 'comment-to-the-end',
-  \ 'A': 'add-comment-to-end-of-line',
-  \ 'a': 'switch-comment-delimiters',
-  \ 'l': 'comment-left-aligned',
-  \ 'b': 'comment-both-side-aligned',
-  \ 'u': 'uncomment-lines'
-  \ }
-
 let g:which_key_map.d = {
   \ 'name': '+Debug',
   \ 'b': [{-> luaeval('require("dap").toggle_breakpoint()')}, 'Toggle Breakpoint'],
   \ 'd': [{-> luaeval('require("dapui").toggle()')}, 'Toggle Debug UI'],
-  \ 'h': [{-> luaeval('require("dap").hover()')}, 'Debug Hover'],
-  \ 'p': [{-> luaeval('require("dap").preview()')}, 'Debug Preview'],
-  \ 'r': [{-> luaeval('require("dap").repl.toggle()')}, 'Toggle Debugger REPL']
+  \ 'h': [{-> luaeval('require("dap.ui.widgets").hover()')}, 'Debug Hover'],
+  \ 'p': [{-> luaeval('require("dap.ui.widgets").preview()')}, 'Debug Preview'],
   \ }
 
 if has('nvim')
@@ -101,7 +83,7 @@ let g:which_key_map.h = {
   \ }
 
 if has('nvim')
-    let g:which_key_map['i'] = [':IBLToggle', 'Toggle Indent Lines']
+    let g:which_key_map['i'] = [{-> luaeval('require("ibl").setup_buffer(0, { enabled = not require("ibl.config").get_config(0).enabled })')}, 'Toggle Indent Lines']
 else
     let g:which_key_map['i'] = [':IndentLinesToggle', 'Toggle Indent Lines']
 endif

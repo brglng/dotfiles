@@ -349,8 +349,7 @@ Plug 'kana/vim-textobj-function', VimOnly()
 Plug 'sgur/vim-textobj-parameter', VimOnly()
 
 " Editing Plugins
-" Plug 'tpope/vim-commentary'
-Plug 'scrooloose/nerdcommenter'
+Plug 'tomtom/tcomment_vim', VimOnly()
 Plug 'junegunn/vim-easy-align'
 " Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-sleuth'
