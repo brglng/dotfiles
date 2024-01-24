@@ -42,9 +42,33 @@ EOF
 )"
 }
 
+function update_alacritty_yml {
+    update_file "$HOME/.config/alacritty/alacritty.yml" \
+        '#[ \t]*BEGIN[ \t]brglng\/dotfiles' \
+        '#[ \t]*END[ \t]brglng\/dotfiles' \
+        "$(cat <<EOF
+# BEGIN brglng/dotfiles
+import:
+  - $PWD/config/alacritty/alacritty.yml
+# END brglng/dotfiles
+EOF
+)"
+}
+
+function update_kitty_conf {
+    update_file "$HOME/.config/kitty/kitty.conf" \
+        '#[ \t]*BEGIN[ \t]brglng\/dotfiles' \
+        '#[ \t]*END[ \t]brglng\/dotfiles' \
+        "$(cat <<EOF
+# BEGIN brglng/dotfiles
+include $PWD/config/kitty/kitty.conf
+# END brglng/dotfiles
+EOF
+)"
+}
+
 function link_common() {
     link "$PWD/clang-format"                    "$HOME/.clang-format"
-    link "$PWD/config/alacritty/alacritty.yml"  "$HOME/.config/alacritty/alacritty.yml"
     link "$PWD/config/powerline"                "$HOME/.config/powerline"
     link "$PWD/cgdb/cgdbrc"                     "$HOME/.cgdb/cgdbrc"
     update_gitconfig
@@ -55,6 +79,8 @@ function link_common() {
     link "$PWD/nvim"                            "$HOME/.config/nvim"
     link "$PWD/zprofile"                        "$HOME/.zprofile"
     update_zshrc
+    update_alacritty_yml
+    update_kitty_confg
 }
 
 function link_linux() {

@@ -2,7 +2,7 @@
 vnoremap <BS> d
 
 " Don't copy the contents of an overwritten selection.
-vnoremap p "_dP
+" vnoremap <silent> <expr> p match(mode()[0], '^\(V\|S\|\|\)') ? "\"_dP" : (col('.') > strlen(getline('.')) ? "\"_dp" : "\"_dP")
 
 noremap <silent> <C-s> :update<CR>
 vnoremap <silent> <C-s> <C-c>:update<CR>
@@ -183,6 +183,7 @@ endif
 if has('nvim')
     nnoremap <RightMouse> <Nop>
     inoremap <RightMouse> <Nop>
+    vnoremap <RightMouse> <Nop>
     inoremap <C-x><C-x> <Cmd>lua require('cmp').complete()<CR>
 endif
 

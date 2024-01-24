@@ -241,7 +241,7 @@ function! s:set_leaderf_highlights()
     endif
     hi link Lf_hl_popup_window Normal
     " hi link Lf_hl_popupBorder FloatBorder
-    " execute 'hi Lf_hl_popup_window guifg=' . synIDattr(synIDtrans(hlID('Normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('Normal')), 'bg'), synIDattr(synIDtrans(hlID('CursorLine')), 'bg'))
+    execute 'hi Lf_hl_popup_window guifg=' . synIDattr(synIDtrans(hlID('Normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('Normal')), 'bg'), synIDattr(synIDtrans(hlID('CursorLine')), 'bg'))
     execute 'hi Lf_hl_popupBorder guifg=' . synIDattr(synIDtrans(hlID('FloatBorder')), 'fg')
     highlight link Lf_hl_cursorline CursorLine
     highlight link Lf_hl_match Search
@@ -290,7 +290,7 @@ function! s:set_colorscheme()
     let [hour, minute] = split(strftime('%H:%M', localtime()), ':')
     let hour = str2nr(hour)
     let minute = str2nr(minute)
-    if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 17 || (hour == 17 && minute < 20))
+    if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 17 || (hour == 17 && minute < 1))
         if has('nvim')
             colorscheme gruvbox
         else

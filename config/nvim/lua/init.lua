@@ -2,7 +2,7 @@ vim.opt.mousemoveevent = false
 vim.diagnostic.config {
     virtual_text = false,
 }
-local signs = { Error = " ", Warn = " ", Info = " ", Hint = " " }
+local signs = { Error = " ", Warn = " ", Info = " ", Hint = "󰌶 " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -103,8 +103,11 @@ require("lazy").setup(
             }
         },
         { "lukas-reineke/indent-blankline.nvim" },
+        { "MunifTanjim/nui.nvim" },
+        { "rcarriga/nvim-notify" },
         {
             "folke/noice.nvim",
+            enabled = false,
             event = "VeryLazy",
             dependencies = {
                 "MunifTanjim/nui.nvim",
@@ -141,7 +144,7 @@ require("lazy").setup(
             dependencies = {
                 "nvim-tree/nvim-web-devicons",
                 "SmiteshP/nvim-navic",
-                -- 'linrongbin16/lsp-progress.nvim',
+                'linrongbin16/lsp-progress.nvim',
             }
         },
         -- {
@@ -185,7 +188,9 @@ require("lazy").setup(
                 'GustavoKatel/telescope-asynctasks.nvim'
             }
         },
-        { "petertriho/nvim-scrollbar", dependencies = "lewis6991/gitsigns.nvim" },
+        { "petertriho/nvim-scrollbar", dependencies = "lewis6991/gitsigns.nvim", enabled = false },
+        { "dstein64/nvim-scrollview", enabled = false },
+        { "kevinhwang91/nvim-bqf" },
 
         -- Source control
         {
@@ -216,6 +221,7 @@ require("lazy").setup(
             "chrisgrieser/nvim-early-retirement",
             config = true,
             event = "VeryLazy",
+            enabled = false,
         },
         {
             "iamcco/markdown-preview.nvim",
@@ -267,15 +273,18 @@ require("plugins.navbuddy")
 require("plugins.lualine")
 require("plugins.trouble")
 require("plugins.notify")
-require("plugins.noice")
+-- require("plugins.noice")
 require("plugins.toggleterm")
 require("plugins.ufo")
 require("plugins.statuscol")
 require("plugins.fold_preview")
 require("plugins.telescope")
-require("plugins.scrollbar")
+require("plugins.bqf")
+-- require("plugins.scrollbar")
+-- require("plugins.scrollview")
 
 require("plugins.neogit")
+require("plugins.diffview")
 require("plugins.gitsigns")
 require("plugins.flash")
 require("plugins.todo_comments")

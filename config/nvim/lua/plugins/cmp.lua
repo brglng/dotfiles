@@ -23,8 +23,12 @@ local window_bordered = cmp.config.window.bordered()
 window_bordered.side_padding = 0
 cmp.setup {
     window = {
-        completion = window_bordered,
-        documentation = window_bordered
+        -- completion = window_bordered,
+        -- documentation = window_bordered
+        completion = {
+            col_offset = -2,
+            side_padding = 0
+        },
     },
     formatting = {
         fields = {
@@ -34,12 +38,17 @@ cmp.setup {
         },
         format = lspkind.cmp_format({
             mode = "symbol_text",
-            maxwidth = 50,
+            -- maxwidth = 50,
             before = function(entry, vim_item)
-                local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+                local kind = require("lspkind").cmp_format({
+                    mode = "symbol_text",
+                    maxwidth = 100,
+                    ellipsis_char = '…'
+                })(entry, vim_item)
                 local strings = vim.split(kind.kind, "%s", { trimempty = true })
-                kind.kind = (strings[1] or "")
-                kind.menu = "    (" .. (strings[2] or "") .. ")"
+                kind.kind = strings[1] or ""
+                kind.abbr = vim.trim(kind.abbr)
+                kind.menu = "(" .. (strings[2] or "") .. ")"
                 return kind
             end
         })

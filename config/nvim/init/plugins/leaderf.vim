@@ -33,7 +33,20 @@ let g:Lf_ShowHidden = 1
 let g:Lf_IgnoreCurrentBufferName = 1
 let g:Lf_PreviewInPopup = 1
 let g:Lf_MruEnableFrecency = 1
-let g:Lf_PopupPreviewPosition='bottom'
+let g:Lf_PopupPreviewPosition = 'bottom'
+let g:Lf_PopupShowBorder = 0
+let g:Lf_PreviewResult = {
+  \ 'File': 0,
+  \ 'Buffer': 0,
+  \ 'Mru': 0,
+  \ 'Tag': 0,
+  \ 'BufTag': 0,
+  \ 'Function': 0,
+  \ 'Line': 0,
+  \ 'Colorscheme': 1,
+  \ 'Rg': 0,
+  \ 'Gtags': 0
+  \ }
 
 if executable('fd')
     let g:Lf_ExternalCommand = 'fd -t f "%s"'

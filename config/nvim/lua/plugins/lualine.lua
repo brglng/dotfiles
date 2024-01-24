@@ -1,4 +1,4 @@
--- require('lsp-progress').setup {}
+require('lsp-progress').setup {}
 
 require('lualine').setup({
     options = {
@@ -22,19 +22,19 @@ require('lualine').setup({
             },
         },
         lualine_c = {
-            {
-                require("noice").api.status.search.get,
-                cond = require("noice").api.status.search.has,
-            },
-            -- "require('lsp-progress').progress()",
+            -- {
+            --     require("noice").api.status.search.get,
+            --     cond = require("noice").api.status.search.has,
+            -- },
+            "require('lsp-progress').progress()",
         },
         lualine_x = {
-            {
-                require("noice").api.status.command.get,
-                cond = require("noice").api.status.command.has,
-                separator = '',
-                padding = { right = 3 }
-            },
+            -- {
+            --     require("noice").api.status.command.get,
+            --     cond = require("noice").api.status.command.has,
+            --     separator = '',
+            --     padding = { right = 3 }
+            -- },
             'encoding',
             'fileformat',
             'filetype',

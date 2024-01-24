@@ -4,7 +4,7 @@ gruvbox.setup({
     -- inverse = false,
     -- invert_signs = false,
     italic = {
-        strings = false,
+        strings = true,
         emphasis = true,
         comments = true,
         operators = false,

@@ -16,11 +16,11 @@ let g:which_key_map =  {}
 
 let g:which_key_map.a = ['<Plug>(EasyAlign)', 'Easy-Align']
 
-if has('nvim')
-    let g:which_key_map.b = [':Telescope buffers', 'Buffers']
-else
+" if has('nvim')
+"     let g:which_key_map.b = [':Telescope buffers', 'Buffers']
+" else
     let g:which_key_map.b = [':LeaderfBuffer', 'Buffers']
-endif
+" endif
 
 let g:which_key_map.d = {
   \ 'name': '+Debug',
@@ -34,27 +34,28 @@ if has('nvim')
     let g:which_key_map.e = [{-> luaeval('vim.diagnostic.open_float()')}, 'Show Diagnostics']
 endif
 
-if has('nvim')
-    let g:which_key_map.f = {
-      \ 'name': '+Finder',
-      \ 'b': [':Telescope buffers', 'Buffers'],
-      \ 'c': [':Telescope commands', 'Commands'],
-      \ 'f': [':Telescope find_files', 'Files'],
-      \ 'g': [':Telescope live_grep', 'Grep'],
-      \ 'l': [':Telescope current_buffer_fuzzy_find', 'Lines'],
-      \ 'r': [':Telescope lsp_references', 'LSP References'],
-      \ 'o': [':Telescope lsp_document_symbols', 'LSP Symbols'],
-      \ }
-else
+" if has('nvim')
+"     let g:which_key_map.f = {
+"       \ 'name': '+Finder',
+"       \ 'b': [':Telescope buffers', 'Buffers'],
+"       \ 'c': [':Telescope commands', 'Commands'],
+"       \ 'f': [':Telescope find_files', 'Files'],
+"       \ 'g': [':Telescope live_grep', 'Grep'],
+"       \ 'l': [':Telescope current_buffer_fuzzy_find', 'Lines'],
+"       \ 'r': [':Telescope lsp_references', 'LSP References'],
+"       \ 'o': [':Telescope lsp_document_symbols', 'LSP Symbols'],
+"       \ }
+" else
     let g:which_key_map.f = {
       \ 'name': '+Finder',
       \ 'b': [':Leaderf buffer', 'Buffers'],
       \ 'c': [':Leaderf command', 'Commands'],
       \ 'f': [':Leaderf file', 'Files'],
       \ 'g': [':Leaderf rg', 'Grep'],
-      \ 'l': [':Leaderf line', 'Lines']
+      \ 'l': [':Leaderf line', 'Lines'],
+      \ 'o': [':Leaderf bufTag', 'Tags']
       \ }
-endif
+" endif
 
 let g:which_key_map.g = {
   \ 'name': '+Git',

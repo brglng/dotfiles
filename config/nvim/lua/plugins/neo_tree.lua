@@ -1,4 +1,5 @@
 require('neo-tree').setup({
+    enable_diagnostics = false,
     sources = {
         "filesystem",
         "buffers",
@@ -10,10 +11,11 @@ require('neo-tree').setup({
         modified = ""
     },
     filesystem = {
-        follow_current_file = {
-            enabled = false,
-            leave_dirs_open = true
-        }
+        bind_to_cwd = false,
+        -- follow_current_file = {
+        --     enabled = false,
+        --     leave_dirs_open = true
+        -- }
     },
     source_selector = {
         winbar = true,

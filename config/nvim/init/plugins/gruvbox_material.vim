@@ -1,7 +1,7 @@
 let g:gruvbox_material_foreground = 'original'
 let g:gruvbox_material_background = 'hard'
 let g:gruvbox_material_enable_bold = 1
-let g:gruvbox_material_enable_italic = 0
+let g:gruvbox_material_enable_italic = 1
 " let g:gruvbox_material_transparent_background = 2
 let g:gruvbox_material_sign_column_background = 'none'
 let g:gruvbox_material_ui_contrast = 'high'

@@ -241,12 +241,12 @@ silent! set pumblend=0
 " except when the cursor is at the last 3 lines on the screen.
 " When the cursor is at the last 3 lines on the screen,
 " always set pumheight=15
-autocmd CursorMoved,CursorMovedI *
-      \ if winline() <= winheight('%') - 4 |
-      \   let &pumheight = min([winheight('%') - winline() - 1, 15]) |
-      \ else |
-      \   set pumheight=15 |
-      \ endif
+" autocmd CursorMoved,CursorMovedI *
+"       \ if winline() <= winheight('%') - 4 |
+"       \   let &pumheight = min([winheight('%') - winline() - 1, 15]) |
+"       \ else |
+"       \   set pumheight=15 |
+"       \ endif
 
 
 " set formatoptions+=a
@@ -331,9 +331,9 @@ Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
 Plug 'liuchengxu/vim-which-key'
-Plug 'Yggdroot/LeaderF', VimOnly({'do': './install.sh'})
-Plug 'Yggdroot/LeaderF-marks', VimOnly()
-Plug 'tamago324/LeaderF-filer', VimOnly()
+Plug 'Yggdroot/LeaderF'
+Plug 'Yggdroot/LeaderF-marks'
+Plug 'tamago324/LeaderF-filer'
 Plug 'brglng/vim-sidebar-manager'
 
 " Moving Plugins
@@ -410,10 +410,6 @@ call plug#end()
 
 call zpan#install_missing_plugins(v:true)
 
-if has('nvim')
-    runtime lua/init.lua
-endif
-
 runtime init/plugins/which_key.vim
 " runtime init/plugins/any_jump.vim
 runtime init/plugins/asyncrun.vim
@@ -459,7 +455,11 @@ runtime init/plugins/one.vim
 runtime init/plugins/quantum.vim
 runtime init/plugins/sonokai.vim
 
-runtime init/keymap.vim
+if has('nvim')
+    runtime lua/init.lua
+endif
+
+runtime init/keymaps.vim
 runtime init/ui.vim
 
 function! s:find_project_root()
@@ -488,7 +488,7 @@ endfunction
 
 function! s:load_local_config()
     let [found, project_root, marker] = s:find_project_root()
-    if found && resolve(project_root) !=# resolve(stdpath('config'))
+    if found
         let project_runtime = project_root . '/' . marker
         if isdirectory(project_runtime)
             let allrtp = split(&runtimepath, ',')
