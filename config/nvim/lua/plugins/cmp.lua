@@ -20,15 +20,16 @@ local has_words_before = function()
 end
 
 local window_bordered = cmp.config.window.bordered()
+window_bordered.col_offset = -2
 window_bordered.side_padding = 0
 cmp.setup {
     window = {
-        -- completion = window_bordered,
-        -- documentation = window_bordered
         completion = {
             col_offset = -2,
             side_padding = 0
         },
+        -- completion = window_bordered,
+        -- documentation = window_bordered,
     },
     formatting = {
         fields = {

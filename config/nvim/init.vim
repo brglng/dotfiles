@@ -454,6 +454,7 @@ runtime init/plugins/gruvbox_material.vim
 runtime init/plugins/one.vim
 runtime init/plugins/quantum.vim
 runtime init/plugins/sonokai.vim
+runtime init/plugins/everforest.vim
 
 if has('nvim')
     runtime lua/init.lua

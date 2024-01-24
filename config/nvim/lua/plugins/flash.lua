@@ -1,9 +1,9 @@
 require("flash").setup {
-    highlight = {
-        groups = {
-            match = "FlashCurrent"
-        }
-    },
+    -- highlight = {
+    --     groups = {
+    --         match = "FlashCurrent"
+    --     }
+    -- },
     modes = {
         char = {
             char_actions = function(motion)

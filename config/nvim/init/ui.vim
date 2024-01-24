@@ -291,21 +291,13 @@ function! s:set_colorscheme()
     let hour = str2nr(hour)
     let minute = str2nr(minute)
     if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 17 || (hour == 17 && minute < 1))
-        if has('nvim')
-            colorscheme gruvbox
-        else
-            colorscheme gruvbox-material
-        endif
+        colorscheme everforest
         set background=light
         if exists('g:loaded_lightline')
             let g:lightline.colorscheme = 'gruvbox'
         endif
     else
-        if has('nvim')
-            colorscheme gruvbox
-        else
-            colorscheme gruvbox-material
-        endif
+        colorscheme everforest
         set background=dark
         if exists('g:loaded_lightline')
             let g:lightline.colorscheme = 'gruvbox'
@@ -336,7 +328,7 @@ function! s:on_colorscheme()
         call lightline#update()
     endif
     " syntax on
-    call s:set_leaderf_highlights()
+    " call s:set_leaderf_highlights()
     call s:set_lualine_highlights()
     call s:set_neotree_highlights()
     call s:set_noice_highlights()
@@ -352,7 +344,7 @@ function! s:on_set_background()
         endif
     endif
     syntax on
-    call s:set_leaderf_highlights()
+    " call s:set_leaderf_highlights()
     call s:set_lualine_highlights()
     call s:set_neotree_highlights()
     call s:set_noice_highlights()
@@ -401,9 +393,9 @@ autocmd FileType coc-explorer call s:setup_coc_explorer()
 autocmd BufWinEnter * if &filetype ==# 'coc-explorer' | call s:setup_coc_explorer() | endif
 
 function! s:setup_help_window()
-    if winwidth('%') >= 180
-        wincmd L
-        vertical resize 90
+    wincmd J
+    if winheight('%') > 24
+        vertical resize 24
     endif
     setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap nonumber
     nnoremap <silent> <buffer> q <C-w>q
@@ -412,9 +404,9 @@ autocmd BufWinEnter * if &filetype ==# 'help' | call s:setup_help_window() | end
 autocmd FileType help call s:setup_help_window()
 
 function! s:setup_man_window()
-    if winwidth('%') >= 180
-        wincmd L
-        vertical resize 90
+    wincmd J
+    if winheight('%') > 24
+        vertical resize 24
     endif
     setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap bufhidden nobuflisted noswapfile nonumber
     nnoremap <silent> <buffer> q <C-w>q
@@ -422,7 +414,7 @@ endfunction
 autocmd BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
 autocmd FileType man call s:setup_man_window()
 
-autocmd FileType toggleterm set foldcolumn=0 signcolumn=no statuscolumn=
+autocmd FileType toggleterm set foldcolumn=0 signcolumn=no statuscolumn= | normal i
 
 if has('nvim')
     autocmd FileType python lua require("ibl").setup_buffer(0, {enabled = true})
