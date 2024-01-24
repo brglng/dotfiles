@@ -47,9 +47,21 @@ cmp.setup {
                     ellipsis_char = '…'
                 })(entry, vim_item)
                 local strings = vim.split(kind.kind, "%s", { trimempty = true })
-                kind.kind = strings[1] or ""
+                kind.kind = (strings[1] or "")
                 kind.abbr = vim.trim(kind.abbr)
-                kind.menu = "(" .. (strings[2] or "") .. ")"
+                if string.sub(vim.fn.mode(), 1, 1) == "c" then
+                    cmp.setup({
+                        window = { completion = { col_offset = 1, side_padding = 1 } },
+                        formatting = { fields = { cmp.ItemField.Abbr, cmp.ItemField.Kind, cmp.ItemField.Menu } }
+                    })
+                    kind.menu = strings[2] or ""
+                else
+                    cmp.setup({
+                        window = { completion = { col_offset = -2, side_padding = 0 } },
+                        formatting = { fields = { cmp.ItemField.Kind, cmp.ItemField.Abbr, cmp.ItemField.Menu } }
+                    })
+                    kind.menu = "(" .. (strings[2] or "") .. ")"
+                end
                 return kind
             end
         })
