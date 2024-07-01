@@ -360,8 +360,7 @@ function! s:setup_quickfix_window()
     setlocal wrap foldcolumn=0 colorcolumn= signcolumn=no cursorline nobuflisted
     nnoremap <silent> <buffer> q <C-w>q
 endfunction
-autocmd FileType qf call s:setup_quickfix_window()
-autocmd BufWinEnter * if &filetype ==# 'qf' | call s:setup_quickfix_window() | endif
+autocmd FileType,BufWinEnter * if &filetype ==# 'qf' | call s:setup_quickfix_window() | endif
 
 autocmd QuickFixCmdPost [^l]* nested botright cwindow
 autocmd QuickFixCmdPost l*    nested botright lwindow
@@ -378,14 +377,14 @@ function! s:setup_help_window()
     setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap nonumber
     nnoremap <silent> <buffer> q <C-w>q
 endfunction
-autocmd WinNew * if &filetype ==# 'help' | call s:setup_help_window() | endif
+autocmd FileType,BufWinEnter * if &filetype ==# 'help' | call s:setup_help_window() | endif
 
 function! s:setup_man_window()
     wincmd L
     setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap bufhidden nobuflisted noswapfile nonumber
     nnoremap <silent> <buffer> q <C-w>q
 endfunction
-autocmd WinNew * if &filetype ==# 'man' | call s:setup_man_window() | endif
+autocmd FileType,BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
 
 autocmd FileType toggleterm set foldcolumn=0 signcolumn=no statuscolumn= | normal i
 

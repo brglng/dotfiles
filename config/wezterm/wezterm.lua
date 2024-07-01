@@ -343,9 +343,15 @@ else
     }
 
     if MAC then
-        config.default_prog = { 'zsh', '-i', '-c', 'if type nu &> /dev/null; then nu -i; else BRGLNG_ZSH_DISABLE_PLUGINS=0 zsh -i; fi' }
+        if #wezterm.glob('/opt/homebrew/bin/zsh') ~= 0 then
+            config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else BRGLNG_ZSH_DISABLE_PLUGINS=0 /opt/homebrew/bin/zsh -l -i; fi' }
+        elseif #wezterm.glob('/usr/local/bin/zsh') ~= 0 then
+            config.default_prog = { '/usr/local/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else BRGLNG_ZSH_DISABLE_PLUGINS=0 /usr/local/bin/zsh -l -i; fi' }
+        else
+            config.default_prog = { '/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else BRGLNG_ZSH_DISABLE_PLUGINS=0 /bin/zsh -l -i; fi' }
+        end
     else
-        config.default_prog = { '/bin/bash', '-i', '-c', 'if type nu &> /dev/null; then nu -i; elif type zsh &> /dev/null; then BRGLNG_ZSH_DISABLE_PLUGINS=0 zsh -i; else bash -i; fi' }
+        config.default_prog = { '/bin/bash', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then BRGLNG_ZSH_DISABLE_PLUGINS=0 zsh -l -i; else bash -l -i; fi' }
     end
 end
 

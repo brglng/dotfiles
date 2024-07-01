@@ -64,8 +64,8 @@ fi
 
 path_prepend "$HOME/.local/bin"
 
-if type powerline-daemon &>/dev/null; then
-    powerline-daemon -q
-fi
+# if type powerline-daemon &>/dev/null; then
+#     powerline-daemon -q
+# fi
 
 # vim: ts=8 sts=4 sw=4 et ft=bash
