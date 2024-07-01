@@ -1,3 +1,23 @@
+path_prepend "$HOME/.local/bin"
+
+setup_wsl_env() {
+    pushd /mnt/c > /dev/null
+    winpath=$(/mnt/c/Windows/System32/cmd.exe /c 'echo %PATH:\\=/%')
+    popd > /dev/null
+    winpath=$(echo $winpath | sed 's/ /\?/g' | tr ';' ' ')
+    for p in $(echo $winpath); do
+        p=$(echo "$p" | sed 's/\?/ /g')
+        p=$(/usr/bin/wslpath -u "$p")
+        path_append "$p"
+    done
+    export DISPLAY=:0
+    export WAYLAND_DISPLAY=wayland-0
+}
+
+if [[ -x /mnt/c/Windows/System32/cmd.exe ]]; then
+    setup_wsl_env
+fi
+
 # Preferred editor for local and remote sessions
 if type nvim &> /dev/null; then
     export EDITOR='nvim'
@@ -12,7 +32,7 @@ elif type nano &> /dev/null; then
 fi
 
 if [[ $(uname -s) = "Darwin" ]]; then
-    alias ls="/usr/local/bin/gls -hF --color=auto"
+    alias ls="gls -hF --color=auto"
 else
     alias ls="ls --group-directories-first -hF --color=auto"
 fi
@@ -30,19 +50,35 @@ alias fgrep='fgrep --color=auto'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 if [[ $(uname -s) = "Darwin" ]]; then
-    alias ll='/usr/local/bin/gls -ahlF --color=auto'
-    alias la='/usr/local/bin/gls -AhF --color=auto'
-    alias l='/usr/local/bin/gls -hF --color=auto'
-    alias df='/usr/local/bin/gdf -h'
-    alias du='/usr/local/bin/gdu -c -h'
-    alias mkdir='/usr/local/bin/gmkdir -p -v'
-    alias cp='/usr/local/bin/gcp -i'
-    alias mv='/usr/local/bin/gmv -i'
-    alias rm='/usr/local/bin/grm -I'
-    alias ln='/usr/local/bin/gln -i'
-    alias chown='/usr/local/bin/gchown --preserve-root'
-    alias chmod='/usr/local/bin/gchmod --preserve-root'
-    alias chgrp='/usr/local/bin/gchgrp --preserve-root'
+    if [[ -x /opt/homebrew/bin/brew ]]; then
+        alias ll='/opt/homebrew/bin/gls -ahlF --color=auto'
+        alias la='/opt/homebrew/bin/gls -AhF --color=auto'
+        alias l='/opt/homebrew/bin/gls -hF --color=auto'
+        alias df='/opt/homebrew/bin/gdf -h'
+        alias du='/opt/homebrew/bin/gdu -c -h'
+        alias mkdir='/opt/homebrew/bin/gmkdir -p -v'
+        alias cp='/opt/homebrew/bin/gcp -i'
+        alias mv='/opt/homebrew/bin/gmv -i'
+        alias rm='/opt/homebrew/bin/grm -I'
+        alias ln='/opt/homebrew/bin/gln -i'
+        alias chown='/opt/homebrew/bin/gchown --preserve-root'
+        alias chmod='/opt/homebrew/bin/gchmod --preserve-root'
+        alias chgrp='/opt/homebrew/bin/gchgrp --preserve-root'
+    elif [[ -x /usr/local/bin/brew ]]; then
+        alias ll='/usr/local/bin/gls -ahlF --color=auto'
+        alias la='/usr/local/bin/gls -AhF --color=auto'
+        alias l='/usr/local/bin/gls -hF --color=auto'
+        alias df='/usr/local/bin/gdf -h'
+        alias du='/usr/local/bin/gdu -c -h'
+        alias mkdir='/usr/local/bin/gmkdir -p -v'
+        alias cp='/usr/local/bin/gcp -i'
+        alias mv='/usr/local/bin/gmv -i'
+        alias rm='/usr/local/bin/grm -I'
+        alias ln='/usr/local/bin/gln -i'
+        alias chown='/usr/local/bin/gchown --preserve-root'
+        alias chmod='/usr/local/bin/gchmod --preserve-root'
+        alias chgrp='/usr/local/bin/gchgrp --preserve-root'
+    fi
 else
     alias ll='ls -al --color -F'
     alias la='ls -A --color -F'

@@ -42,20 +42,23 @@ EOF
 )"
 }
 
-function update_alacritty_yml {
-    update_file "$HOME/.config/alacritty/alacritty.yml" \
+function update_alacritty_toml {
+    mkdir -p "$HOME/.config/alacritty"
+    update_file "$HOME/.config/alacritty/alacritty.toml" \
         '#[ \t]*BEGIN[ \t]brglng\/dotfiles' \
         '#[ \t]*END[ \t]brglng\/dotfiles' \
         "$(cat <<EOF
 # BEGIN brglng/dotfiles
-import:
-  - $PWD/config/alacritty/alacritty.yml
+import = [
+    $PWD/config/alacritty/alacritty.toml
+]
 # END brglng/dotfiles
 EOF
 )"
 }
 
 function update_kitty_conf {
+    mkdir -p "$HOME/.config/kitty"
     update_file "$HOME/.config/kitty/kitty.conf" \
         '#[ \t]*BEGIN[ \t]brglng\/dotfiles' \
         '#[ \t]*END[ \t]brglng\/dotfiles' \
@@ -70,26 +73,33 @@ EOF
 function link_common() {
     link "$PWD/clang-format"                    "$HOME/.clang-format"
     link "$PWD/config/powerline"                "$HOME/.config/powerline"
+    link "$PWD/config/starship.toml"            "$HOME/.config/starship.toml"
+    link "$PWD/config/wezterm"                  "$HOME/.config/wezterm"
     link "$PWD/cgdb/cgdbrc"                     "$HOME/.cgdb/cgdbrc"
     update_gitconfig
     link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
     link "$PWD/tmux.conf"                       "$HOME/.tmux.conf"
     link "$PWD/vimrc"                           "$HOME/.vimrc"
-    link "$PWD/vim"                             "$HOME/.vim"
-    link "$PWD/nvim"                            "$HOME/.config/nvim"
+    link "$PWD/config/nvim"                     "$HOME/.vim"
+    link "$PWD/config/nvim"                     "$HOME/.config/nvim"
     link "$PWD/zprofile"                        "$HOME/.zprofile"
     update_zshrc
-    update_alacritty_yml
-    update_kitty_confg
+    update_alacritty_toml
+    # link "$PWD/config/alacritty/colors"         "$HOME/config/.alacritty/colors"
+    update_kitty_conf
 }
 
 function link_linux() {
     update_bashrc                               "$HOME/.bashrc"
+    link "$PWD/config/nushell/env.nu"           "$HOME/.config/nushell/env.nu"
+    link "$PWD/config/nushell/config.nu"        "$HOME/.config/nushell/config.nu"
     link_common
 }
 
 function link_mac() {
     update_bashrc                               "$HOME/.bash_profile"
+    link "$PWD/config/nushell/env.nu"           "$HOME/Library/Application Support/nushell/env.nu"
+    link "$PWD/config/nushell/config.nu"        "$HOME/Library/Application Support/nushell/config.nu"
     link_common
 }
 

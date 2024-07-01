@@ -4,7 +4,7 @@ set -e
 source "scripts/util.sh"
 
 function do_pip_install {
-    "$1" -m pip install --user -U pynvim autopep8 pylint jedi mypy pygments cppman neovim-remote powerline-status powerline-mem-segment
+    "$1" -m pip install --break-system-packages --user -U pynvim autopep8 pylint jedi mypy pygments cppman neovim-remote powerline-status powerline-mem-segment
     echo
 }
 
@@ -25,44 +25,6 @@ fi
 if [[ $no_setup_proxy == 0 && ($http_proxy == "" || $https_proxy == "") ]]; then
     ask_setup_proxy
 fi
-
-if [[ ! -d $HOME/opt/miniconda3 ]] && \
-   [[ ! -d $HOME/opt/anaconda3 ]] && \
-   [[ ! -d $HOME/miniconda3 ]] &&  \
-   [[ ! -d $HOME/anaconda3 ]] &&  \
-   [[ ! -d /miniconda3 ]] &&  \
-   [[ ! -d /anaconda3 ]]; then
-    echo "Please select what to do: "
-    PS3=">>> "
-    select opt in \
-        "Install Miniconda3" \
-        "Install Anaconda3" \
-        "Skip installation of Miniconda3/Anaconda3"; do
-        case $REPLY in
-            1)
-                mkdir -p ~/.cache/brglng/dotfiles
-                pushd ~/.cache/brglng/dotfiles
-                curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-                chmod +x Miniconda3-latest-Linux-x86_64.sh
-                ./Miniconda3-latest-Linux-x86_64.sh -b
-                popd
-                break;;
-            2)
-                mkdir -p ~/.cache/brglng/dotfiles
-                pushd ~/.cache/brglng/dotfiles
-                curl -LO https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_64.sh
-                chmod +x Anaconda3-2020.11-Linux-x86_64.sh
-                ./Anaconda3-2020.11-Linux-x86_64.sh -b
-                popd
-                break;;
-            3)
-                break;;
-            *)
-                echo "Please choose 1/2/3"
-        esac
-    done
-fi
-echo
 
 echo "Please select what you want to do: "
 PS3=">>> "

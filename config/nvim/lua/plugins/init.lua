@@ -1,0 +1,15 @@
+return {
+    { import = "plugins.util" },
+    { import = "plugins.lsp" },
+    { import = "plugins.treesitter" },
+    { import = "plugins.coding" },
+    { import = "plugins.formatter" },
+    { import = "plugins.lint" },
+    { import = "plugins.editing" },
+    { import = "plugins.ui" },
+    { import = "plugins.git" },
+    { import = "plugins.dap" },
+    { import = "plugins.session" },
+    { import = "plugins.org" },
+    { import = "plugins.colors" },
+}

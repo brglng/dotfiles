@@ -15,12 +15,11 @@ install_apt() {
     # sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
     sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git xsel python3-pip
-
 }
 
 install_pacman() {
     sudo pacman -Sy
-    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm go cmake ruby rubygems zsh tmux ccls fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git
+    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm go cmake ruby rubygems zsh nushell starship tmux fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git zoxide
 }
 
 install_linux() {
@@ -54,6 +53,8 @@ install_linux() {
 
         # Install Homebrew for Linux
         if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+            sudo useradd linuxbrew || true
+            sudo chown -R linuxbrew:linuxbrew /home/linuxbrew
       	    brew update
         else
             sudo useradd linuxbrew || true
@@ -65,7 +66,7 @@ install_linux() {
         fi
 
         sudo -H -u linuxbrew ln -fs /etc/localtime /home/linuxbrew/.linuxbrew/etc/localtime
-        sudo -H -u linuxbrew /home/linuxbrew/.linuxbrew/opt/glibc/bin/localedef -i zh_CN -f UTF-8 zh_CN.UTF-8
+        #sudo -H -u linuxbrew /home/linuxbrew/.linuxbrew/opt/glibc/bin/localedef -i zh_CN -f UTF-8 zh_CN.UTF-8
 
         if ! brew ls --versions llvm &> /dev/null; then
             brew install llvm
@@ -82,11 +83,10 @@ function install_mac() {
 
     brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake clang-format git-lfs reattach-to-user-namespace
 
-    brew cask install macvim
+    brew install --cask macvim
 
-    brew cask install font-firacode-nerd-font font-firacode-nerd-font-mono
-
-    curl -Ls https://raw.githubusrcontent.com/daipeihust/im-select/master/install_mac.sh | sh
+    brew tap daipeihust/tap
+    brew install im-select
 }
 
 if [[ $(id -u) -eq 0 ]] || [[ $(id -g) -eq 0 ]]; then
@@ -119,13 +119,18 @@ esac
 if ! infocmp tmux-256color &> /dev/null; then
     tic -x terminfo/tmux-256color.terminfo
 fi
+if ! infocmp xterm-256color-italic &> /dev/null; then
+    tic -x terminfo/xterm-256color-italic.terminfo
+fi
 
 scripts/setup_python3.sh --no-setup-proxy
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git rustup-init go cmake zsh tmux fzf ripgrep-all fd vim colordiff nvm dasht luajit
-    brew install -s ccls
+    brew install git rustup-init go cmake zsh tmux nushell starship zoxide fzf ripgrep-all fd vim colordiff nvm dasht luajit luarocks direnv
+
+    brew tap rsteube/homebrew-tap
+    brew install rsteube/tap/carapace
 fi
 
 mkdir -p ~/.terminfo
@@ -205,7 +210,9 @@ echo 'Now Zsh will be launched to install plugins.'
 echo "Please type ${BOLD}exit${SGR0} to quit from Zsh after all plugins have been installed."
 read -p "Press ENTER to continue..."
 
-sudo chmod g-w /home/linuxbrew/.linuxbrew/share/zsh/site-functions /home/linuxbrew/.linuxbrew/share/zsh
+if [[ "$UNAME_S" = "Linux" ]]; then
+    sudo chmod g-w /home/linuxbrew/.linuxbrew/share/zsh/site-functions /home/linuxbrew/.linuxbrew/share/zsh
+fi
 
 zsh -i
 

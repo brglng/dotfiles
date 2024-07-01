@@ -66,7 +66,6 @@ autocmd BufReadPost *
 "autocmd BufWinEnter ?* if &buflisted && &modifiable && !(&bufhidden) && &buftype == '' | silent loadview | endif
 
 " general settings
-behave mswin                    " MS Windows behaviors
 set mouse=a                     " mouse is on
 set nocompatible                " turn of vi compatible mode
 set winaltkeys=no
@@ -169,6 +168,9 @@ set backspace=indent,eol,start  " backspace can delete newlines in insert mode
 "set textwidth=78                " auto break lines longer than 78 charactors
 
 set selectmode=                 " always use visual mode
+set mousemodel=popup
+set keymodel=startsel,stopsel
+set selection=exclusive
 
 " tab and indent settings
 set autoindent
@@ -187,8 +189,12 @@ filetype plugin on
 filetype plugin indent on
 if exists('&breakindent')
     autocmd FileType *
-                \ if &filetype == '' || &filetype == 'markdown' || &filetype == 'txt' |
-                \   setlocal nobreakindent |
+                \ if index(['', 'markdown', 'txt', 'norg'], &filetype) >= 0 |
+                \   if &filetype == 'norg' |
+                \       setlocal breakindent |
+                \   else |
+                \       setlocal nobreakindent |
+                \   endif |
                 \   setlocal showbreak= |
                 \ else |
                 \   setlocal breakindent |
@@ -317,20 +323,18 @@ endfunction
 Plug 'brglng/vim-im-select'
 
 " Documentation
-Plug 'sunaku/vim-dasht'
 Plug 'skywind3000/vim-cppman'
 " Plug 'kkoomen/vim-doge'
 
 " UI Plugins
-Plug 'ryanoasis/vim-devicons'
-Plug 'justinmk/vim-dirvish'
+Plug 'ryanoasis/vim-devicons', VimOnly()
+" Plug 'justinmk/vim-dirvish'
 Plug 'itchyny/lightline.vim', VimOnly()
 Plug 'mengelbrecht/lightline-bufferline', VimOnly()
-Plug 'Yggdroot/indentLine', VimOnly()
 Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-startify'
-Plug 'liuchengxu/vim-which-key'
+" Plug 'liuchengxu/vim-which-key'
 Plug 'Yggdroot/LeaderF'
 Plug 'Yggdroot/LeaderF-marks'
 Plug 'tamago324/LeaderF-filer'
@@ -344,7 +348,7 @@ Plug 'wellle/targets.vim'
 Plug 'andymass/vim-matchup'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
-Plug 'kana/vim-textobj-syntax'
+Plug 'kana/vim-textobj-syntax', VimOnly()
 Plug 'kana/vim-textobj-function', VimOnly()
 Plug 'sgur/vim-textobj-parameter', VimOnly()
 
@@ -359,11 +363,11 @@ Plug 'bootleq/vim-cycle'
 Plug 'mg979/vim-visual-multi'
 
 " FileType Plugins
-Plug 'PProvost/vim-ps1'
+" Plug 'PProvost/vim-ps1'
 Plug 'aklt/plantuml-syntax'
-Plug 'hynek/vim-python-pep8-indent'
-Plug 'sheerun/vim-polyglot'
-Plug 'tmux-plugins/vim-tmux'
+" Plug 'hynek/vim-python-pep8-indent'
+" Plug 'sheerun/vim-polyglot'
+" Plug 'tmux-plugins/vim-tmux'
 
 " Source Control Plugins
 Plug 'tpope/vim-fugitive'
@@ -410,7 +414,7 @@ call plug#end()
 
 call zpan#install_missing_plugins(v:true)
 
-runtime init/plugins/which_key.vim
+" runtime init/plugins/which_key.vim
 " runtime init/plugins/any_jump.vim
 runtime init/plugins/asyncrun.vim
 runtime init/plugins/asynctasks.vim
@@ -479,7 +483,7 @@ function! s:find_project_root()
             break
         endif
         let parentdir = simplify(project_root . '/..')
-        if parentdir ==# project_root
+        if parentdir ==# project_root || parentdir ==# '/'
             break
         endif
         let project_root = parentdir
@@ -500,11 +504,11 @@ function! s:load_local_config()
                 let &runtimepath = project_runtime . ',' . &runtimepath . ',' . project_runtime . '/after'
                 if has('nvim') && !empty(glob(project_runtime . '/init.lua', v:true, v:true))
                     let init_script = project_runtime . '/init.lua'
-                    echoerr 'Loading ' . init_script
+                    echomsg 'Loading ' . init_script
                     execute 'source ' . init_script
                 elseif !empty(glob(project_runtime . '/init.vim', v:true, v:true))
                     let init_script = project_runtime . '/init.vim'
-                    echoerr 'Loading ' . init_script
+                    echomsg 'Loading ' . init_script
                     execute 'source ' . init_script
                 endif
                 execute 'chdir ' . project_root
@@ -515,6 +519,6 @@ function! s:load_local_config()
         endif
     endif
 endfunction
-auto VimEnter * call s:load_local_config()
+call s:load_local_config()
 
 " vim: ts=8 sts=4 sw=4 et

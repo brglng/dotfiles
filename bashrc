@@ -84,11 +84,32 @@ fi
 
 set show-all-if-ambiguous on
 
-if [ -e ~/.local/share/z.lua ]; then
-    eval "$(luajit ~/.local/share/z.lua --init bash)"
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# if [ -e ~/.local/share/z.lua ]; then
+#     if type luajit &>/dev/null; then
+#         ZLUA_EXEC=$(which luajit)
+#     fi
+#     export _ZL_MATCH_MODE=1
+#     export _ZL_ADD_ONCE=1
+#     export _ZL_ZSH_NO_FZF=1
+#     eval "$(luajit ~/.local/share/z.lua --init bash)"
+# fi
+
+if type zoxide &>/dev/null; then
+    eval "$(zoxide init bash)"
 fi
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+if type starship &>/dev/null; then
+    eval "$(starship init bash)"
+fi
+
+if type direnv &>/dev/null; then
+    eval "$(direnv hook bash)"
+fi
+
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+source <(carapace _carapace)
 
 source "$BRGLNG_DOTFILES_DIR/shell_rc_post.sh"
 

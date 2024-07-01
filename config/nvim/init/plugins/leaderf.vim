@@ -34,7 +34,31 @@ let g:Lf_IgnoreCurrentBufferName = 1
 let g:Lf_PreviewInPopup = 1
 let g:Lf_MruEnableFrecency = 1
 let g:Lf_PopupPreviewPosition = 'bottom'
-let g:Lf_PopupShowBorder = 0
+let g:Lf_PopupShowBorder = 1
+let g:Lf_PopupPalette = {
+  \ 'light': {
+  \     'Lf_hl_cursorline': {
+  \         'gui': 'NONE',
+  \         'font': 'NONE',
+  \         'guifg': 'NONE',
+  \         'guibg': 'NONE',
+  \         'cterm': 'NONE',
+  \         'ctermfg': 'NONE',
+  \         'ctermbg': 'NONE'
+  \     }
+  \ },
+  \ 'dark': {
+  \     'Lf_hl_cursorline': {
+  \         'gui': 'NONE',
+  \         'font': 'NONE',
+  \         'guifg': 'NONE',
+  \         'guibg': 'NONE',
+  \         'cterm': 'NONE',
+  \         'ctermfg': 'NONE',
+  \         'ctermbg': 'NONE'
+  \     }
+  \ }
+  \ }
 let g:Lf_PreviewResult = {
   \ 'File': 0,
   \ 'Buffer': 0,

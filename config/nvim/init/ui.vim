@@ -93,8 +93,12 @@ if !has('nvim') && !has('gui_running')
     set guicursor+=i:ver100-iCursor
 endif
 
-function! s:hiattr(hi_name, attr)
-    let color = synIDattr(synIDtrans(hlID(a:hi_name)), a:attr)
+function! s:hiattr(hi_name, attr, ...)
+    if a:0 > 0
+        let color = synIDattr(synIDtrans(hlID(a:hi_name)), a:attr, a:1)
+    else
+        let color = synIDattr(synIDtrans(hlID(a:hi_name)), a:attr)
+    endif
     if color == ''
         return 'NONE'
     endif
@@ -102,23 +106,23 @@ function! s:hiattr(hi_name, attr)
 endfunction
 
 function! s:hi_link(hi_name, fg_hi_name, bg_hi_name)
-    let guifg = synIDattr(synIDtrans(hlID(a:fg_hi_name)), 'fg', 'gui')
+    let guifg = s:hiattr(a:fg_hi_name, 'fg', 'gui')
     if guifg == ''
         let guifg = 'NONE'
     endif
-    let ctermfg = synIDattr(synIDtrans(hlID(a:fg_hi_name)), 'fg', 'cterm')
+    let ctermfg = s:hiattr(a:fg_hi_name, 'fg', 'cterm')
     if ctermfg == ''
         let ctermfg = 'NONE'
     endif
-    let guibg = synIDattr(synIDtrans(hlID(a:bg_hi_name)), 'bg', 'gui')
+    let guibg = s:hiattr(a:bg_hi_name, 'bg', 'gui')
     if guibg == ''
         let guibg = 'NONE'
     endif
-    let ctermbg = synIDattr(synIDtrans(hlID(a:bg_hi_name)), 'fg', 'cterm')
+    let ctermbg = s:hiattr(a:bg_hi_name, 'fg', 'cterm')
     if ctermbg == ''
         let ctermbg = 'NONE'
     endif
-    let cmd = 'hi ' . a:hi_name
+    let cmd = 'hi! ' . a:hi_name
     if guifg != ''
         let cmd = cmd . ' guifg=' . guifg
     endif
@@ -211,40 +215,44 @@ function! s:middle_color(rgb1_str, rgb2_str)
 endfunction
 
 function! s:set_leaderf_highlights()
+    highlight! link Lf_hl_popup_window NormalFloat
+    highlight! link Lf_hl_popupBorder FloatBorder
+    let win_fg = s:hiattr('Lf_hl_popup_window', 'fg')
+    let win_bg = s:hiattr('Lf_hl_popup_window', 'bg')
+    let cursorline_bg = s:hiattr('CursorLine', 'bg')
+    if cursorline_bg == win_bg
+        let win_bg = s:middle_color(cursorline_bg, s:hiattr('Normal', 'bg'))
+        execute 'hi! Lf_hl_popup_window guibg=' . win_bg
+    endif
+    highlight! link Lf_hl_match Search
     if exists('g:loaded_lightline')
         let palette = lightline#palette()
-        execute 'hi Lf_hl_popup_inputText guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
-        execute 'hi Lf_hl_popup_blank guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
-        execute 'hi Lf_hl_popup_normalMode guifg=' . palette.normal.left[0][0] . ' guibg=' . palette.normal.left[0][1] . ' ctermfg=' . palette.normal.left[0][2] . ' ctermbg=' . palette.normal.left[0][3]
-        execute 'hi Lf_hl_popup_inputMode guifg=' . palette.insert.left[0][0] . ' guibg=' . palette.insert.left[0][1] . ' ctermfg=' . palette.insert.left[0][2] . ' ctermbg=' . palette.insert.left[0][3]
-        execute 'hi Lf_hl_popup_lineInfo guifg=' . palette.normal.right[1][0] . ' guibg=' . palette.normal.right[1][1] . ' ctermfg=' . palette.normal.right[1][2] . ' ctermbg=' . palette.normal.right[1][3]
-        execute 'hi Lf_hl_popup_total guifg=' . palette.normal.right[0][0] . ' guibg=' . palette.normal.right[0][1] . ' ctermfg=' . palette.normal.right[0][2] . ' ctermbg=' . palette.normal.right[0][3]
-        execute 'hi Lf_hl_popup_category guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
-        execute 'hi Lf_hl_popup_nameOnlyMode guifg=' . palette.normal.left[1][0] . ' guibg=' . s:middle_color(palette.normal.left[1][1], palette.normal.middle[0][1])
-        execute 'hi Lf_hl_popup_fullPathMode guifg=' . palette.normal.left[1][0] . ' guibg=' . s:middle_color(palette.normal.left[1][1], palette.normal.middle[0][1])
-        execute 'hi Lf_hl_popup_fuzzyMode guifg=' . palette.normal.left[1][0] . ' guibg=' . s:middle_color(palette.normal.left[1][1], palette.normal.middle[0][1])
-        execute 'hi Lf_hl_popup_regexMode guifg=' . palette.normal.left[1][0] . ' guibg=' . s:middle_color(palette.normal.left[1][1], palette.normal.middle[0][1])
-        execute 'hi Lf_hl_popup_cwd guifg=' . palette.normal.middle[0][0] . ' guibg=' . palette.normal.middle[0][1] . ' ctermfg=' . palette.normal.middle[0][2] . ' ctermbg=' . palette.normal.middle[0][3]
+        execute 'hi! Lf_hl_popup_inputText guifg=' . win_fg . ' guibg=' . win_bg
+        execute 'hi! Lf_hl_popup_blank guifg=' . win_fg . ' guibg=' . win_bg
+        execute 'hi! Lf_hl_popup_normalMode guifg=' . palette.normal.left[0][0] . ' guibg=' . palette.normal.left[0][1] . ' ctermfg=' . palette.normal.left[0][2] . ' ctermbg=' . palette.normal.left[0][3]
+        execute 'hi! Lf_hl_popup_inputMode guifg=' . palette.insert.left[0][0] . ' guibg=' . palette.insert.left[0][1] . ' ctermfg=' . palette.insert.left[0][2] . ' ctermbg=' . palette.insert.left[0][3]
+        execute 'hi! Lf_hl_popup_lineInfo guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
+        execute 'hi! Lf_hl_popup_total guifg=' . palette.normal.left[0][0] . ' guibg=' . palette.normal.left[0][1] . ' ctermfg=' . palette.normal.left[0][2] . ' ctermbg=' . palette.normal.left[0][3]
+        execute 'hi! Lf_hl_popup_category guifg=' . palette.normal.left[1][0] . ' guibg=' . palette.normal.left[1][1] . ' ctermfg=' . palette.normal.left[1][2] . ' ctermbg=' . palette.normal.left[1][3]
+        execute 'hi! Lf_hl_popup_nameOnlyMode guifg=' . s:middle_color(palette.normal.left[1][0], palette.normal.middle[0][0]) . ' guibg=' . s:middle_color(palette.normal.left[1][1], win_bg)
+        execute 'hi! Lf_hl_popup_fullPathMode guifg=' . s:middle_color(palette.normal.left[1][0], palette.normal.middle[0][0]). ' guibg=' . s:middle_color(palette.normal.left[1][1], win_bg)
+        execute 'hi! Lf_hl_popup_fuzzyMode guifg=' . s:middle_color(palette.normal.left[1][0], palette.normal.middle[0][0]) . ' guibg=' . s:middle_color(palette.normal.left[1][1], win_bg)
+        execute 'hi! Lf_hl_popup_regexMode guifg=' . s:middle_color(palette.normal.left[1][0], palette.normal.middle[0][0]) . ' guibg=' . s:middle_color(palette.normal.left[1][1], win_bg)
+        execute 'hi! Lf_hl_popup_cwd guifg=' . palette.normal.middle[0][0] . ' guibg=' . win_bg
     elseif has('nvim') && luaeval('require("lualine") ~= nil')
-        execute 'hi Lf_hl_popup_inputText guifg=' . synIDattr(synIDtrans(hlID('lualine_c_normal')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg')
-        execute 'hi Lf_hl_popup_blank guifg=' . synIDattr(synIDtrans(hlID('lualine_c_normal')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg')
-        execute 'hi Lf_hl_popup_normalMode guifg=' . synIDattr(synIDtrans(hlID('lualine_a_normal')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_a_normal')), 'bg')
-        execute 'hi Lf_hl_popup_inputMode guifg=' . synIDattr(synIDtrans(hlID('lualine_a_insert')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_a_insert')), 'bg')
-        execute 'hi Lf_hl_popup_lineInfo guifg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'bg')
-        execute 'hi Lf_hl_popup_total guifg=' . synIDattr(synIDtrans(hlID('lualine_a_normal')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_a_normal')), 'bg')
-        execute 'hi Lf_hl_popup_category guifg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'bg')
-        execute 'hi Lf_hl_popup_nameOnlyMode guifg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('lualine_b_normal')), 'bg'), synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg'))
-        execute 'hi Lf_hl_popup_fullPathMode guifg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('lualine_b_normal')), 'bg'), synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg'))
-        execute 'hi Lf_hl_popup_fuzzyMode guifg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('lualine_b_normal')), 'bg'), synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg'))
-        execute 'hi Lf_hl_popup_regexMode guifg=' . synIDattr(synIDtrans(hlID('lualine_b_normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('lualine_b_normal')), 'bg'), synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg'))
-        execute 'hi Lf_hl_popup_cwd guifg=' . synIDattr(synIDtrans(hlID('lualine_c_normal')), 'fg') . ' guibg=' . synIDattr(synIDtrans(hlID('lualine_c_normal')), 'bg')
+        execute 'hi! Lf_hl_popup_inputText guifg=' . win_fg . ' guibg=' . win_bg
+        execute 'hi! Lf_hl_popup_blank guifg=' . win_fg . ' guibg=' . win_bg
+        execute 'hi! Lf_hl_popup_normalMode guifg=' . s:hiattr('lualine_a_normal', 'fg') . ' guibg=' . s:hiattr('lualine_a_normal', 'bg')
+        execute 'hi! Lf_hl_popup_inputMode guifg=' . s:hiattr('lualine_a_insert', 'fg') . ' guibg=' . s:hiattr('lualine_a_insert', 'bg')
+        execute 'hi! Lf_hl_popup_lineInfo guifg=' . s:hiattr('lualine_b_normal', 'fg') . ' guibg=' . s:hiattr('lualine_b_normal', 'bg')
+        execute 'hi! Lf_hl_popup_total guifg=' . s:hiattr('lualine_a_normal', 'fg') . ' guibg=' . s:hiattr('lualine_a_normal', 'bg')
+        execute 'hi! Lf_hl_popup_category guifg=' . s:hiattr('lualine_b_normal', 'fg') . ' guibg=' . s:hiattr('lualine_b_normal', 'bg')
+        execute 'hi! Lf_hl_popup_nameOnlyMode guifg=' . s:middle_color(s:hiattr('lualine_b_normal', 'fg'), s:hiattr('lualine_c_normal', 'fg')) . ' guibg=' . s:middle_color(s:hiattr('lualine_b_normal', 'bg'), win_bg)
+        execute 'hi! Lf_hl_popup_fullPathMode guifg=' . s:middle_color(s:hiattr('lualine_b_normal', 'fg'), s:hiattr('lualine_c_normal', 'fg')) . ' guibg=' . s:middle_color(s:hiattr('lualine_b_normal', 'bg'), win_bg)
+        execute 'hi! Lf_hl_popup_fuzzyMode guifg=' . s:middle_color(s:hiattr('lualine_b_normal', 'fg'), s:hiattr('lualine_c_normal', 'fg')) . ' guibg=' . s:middle_color(s:hiattr('lualine_b_normal', 'bg'), win_bg)
+        execute 'hi! Lf_hl_popup_regexMode guifg=' . s:middle_color(s:hiattr('lualine_b_normal', 'fg'), s:hiattr('lualine_c_normal', 'fg')) . ' guibg=' . s:middle_color(s:hiattr('lualine_b_normal', 'bg'), win_bg)
+        execute 'hi! Lf_hl_popup_cwd guifg=' . s:hiattr('lualine_c_normal', 'fg') . ' guibg=' . win_bg
     endif
-    hi link Lf_hl_popup_window Normal
-    " hi link Lf_hl_popupBorder FloatBorder
-    execute 'hi Lf_hl_popup_window guifg=' . synIDattr(synIDtrans(hlID('Normal')), 'fg') . ' guibg=' . s:middle_color(synIDattr(synIDtrans(hlID('Normal')), 'bg'), synIDattr(synIDtrans(hlID('CursorLine')), 'bg'))
-    execute 'hi Lf_hl_popupBorder guifg=' . synIDattr(synIDtrans(hlID('FloatBorder')), 'fg')
-    highlight link Lf_hl_cursorline CursorLine
-    highlight link Lf_hl_match Search
 endfunction
 
 function! s:set_lualine_highlights()
@@ -252,12 +260,15 @@ function! s:set_lualine_highlights()
 lua << EOF
     local lualine = require('lualine')
     if lualine ~= nil then
-        local my_theme = require("lualine.themes.gruvbox")
-        my_theme.insert.c = my_theme.normal.c
-        my_theme.visual.c = my_theme.normal.c
-        my_theme.replace.c = my_theme.normal.c
-        my_theme.command.c = my_theme.normal.c
-        lualine.setup({ theme = my_theme })
+        if vim.g.colors_name == "gruvbox" then
+            local my_theme = require("lualine.themes.gruvbox")
+            my_theme.insert.c = my_theme.normal.c
+            my_theme.visual.c = my_theme.normal.c
+            my_theme.replace.c = my_theme.normal.c
+            my_theme.command.c = my_theme.normal.c
+            lualine.setup({ theme = my_theme })
+            lualine.setup()
+        end
     end
 EOF
     endif
@@ -265,51 +276,23 @@ endfunction
 
 function! s:set_neotree_highlights()
     if has('nvim')
-        execute "hi NeoTreeTabActive guifg=" . synIDattr(synIDtrans(hlID('NeoTreeNormal')), 'fg') . " guibg=" . synIDattr(synIDtrans(hlID('NeoTreeNormal')), 'bg')
-        execute "hi NeoTreeTabInactive guibg=" . s:middle_color(synIDattr(synIDtrans(hlID('BufferLineBackground')), 'bg'), synIDattr(synIDtrans(hlID('NeoTreeNormal')), 'bg'))
-        execute "hi NeoTreeTabSeparatorInactive guifg=" . synIDattr(synIDtrans(hlID('BufferLineBuffer')), 'fg') . " guibg=" . s:middle_color(synIDattr(synIDtrans(hlID('BufferLineBackground')), 'bg'), synIDattr(synIDtrans(hlID('NeoTreeNormal')), 'bg'))
-        execute "hi NeoTreeTabSeparatorActive guifg=" . synIDattr(synIDtrans(hlID('NeoTreeNormal')), 'fg') . " guibg=" . synIDattr(synIDtrans(hlID('NeoTreeNormal')), 'bg')
+        execute "hi NeoTreeTabActive guifg=" . s:hiattr('NeoTreeNormal', 'fg') . " guibg=" . s:hiattr('NeoTreeNormal', 'bg')
+        execute "hi NeoTreeTabInactive guibg=" . s:middle_color(s:hiattr('BufferLineBackground', 'bg'), s:hiattr('NeoTreeNormal', 'bg'))
+        execute "hi NeoTreeTabSeparatorInactive guifg=" . s:hiattr('BufferLineBuffer', 'fg') . " guibg=" . s:middle_color(s:hiattr('BufferLineBackground', 'bg'), s:hiattr('NeoTreeNormal', 'bg'))
+        execute "hi NeoTreeTabSeparatorActive guifg=" . s:hiattr('NeoTreeNormal', 'fg') . " guibg=" . s:hiattr('NeoTreeNormal', 'bg')
     endif
 endfunction
 
-function! s:set_noice_highlights()
-    if hlexists('DiagnosticSignInfo')
-        execute 'hi! NoiceCmdlinePopupBorder guifg=' . s:hiattr('DiagnosticSignInfo', 'fg') . ' guibg=NONE'
-        execute 'hi! NoiceCmdlinePopupTitle guifg=' . s:hiattr('DiagnosticSignInfo', 'fg') . ' guibg=NONE'
-        execute 'hi! NoiceCmdlineIcon guifg=' . s:hiattr('DiagnosticSignInfo', 'fg') . ' guibg=NONE'
-    endif
-endfunction
-
-function! s:set_illuminated_highlights()
-    hi! link IlluminatedWordText CursorLine
-    hi! link IlluminatedWordRead CursorLine
-    hi! link IlluminatedWordWrite CursorLine
-endfunction
-
-function! s:set_colorscheme()
-    let [hour, minute] = split(strftime('%H:%M', localtime()), ':')
-    let hour = str2nr(hour)
-    let minute = str2nr(minute)
-    if ((hour == 5 && minute >= 30) || hour > 5) && (hour < 17 || (hour == 17 && minute < 1))
-        colorscheme everforest
-        set background=light
-        if exists('g:loaded_lightline')
-            let g:lightline.colorscheme = 'gruvbox'
-        endif
-    else
-        colorscheme everforest
-        set background=dark
-        if exists('g:loaded_lightline')
-            let g:lightline.colorscheme = 'gruvbox'
-        endif
-    endif
-    syntax on
-    " call s:set_leaderf_highlights()
-endfunction
-call s:set_colorscheme()
+colorscheme melange
+" if exists('g:loaded_lightline')
+"     let g:lightline.colorscheme = 'melange'
+" endif
+syntax on
 
 function! s:on_colorscheme()
-    if exists('g:loaded_lightline')
+    let float_border_fg = s:hiattr("FloatBorder", "bg")
+    execute 'highlight! FloatBorder guifg= ' . float_border_fg . ' guibg=NONE ctermbg=NONE'
+    if exists('g:loaded_lightline') && exists('g:colors_name')
         if g:colors_name =~# 'solarized'
             let g:lightline.colorscheme = 'solarized'
         elseif g:colors_name =~# 'soft-era'
@@ -328,14 +311,14 @@ function! s:on_colorscheme()
         call lightline#update()
     endif
     " syntax on
-    " call s:set_leaderf_highlights()
     call s:set_lualine_highlights()
+    call s:set_leaderf_highlights()
     call s:set_neotree_highlights()
-    call s:set_noice_highlights()
-    call s:set_illuminated_highlights()
 endfunction
 
 function! s:on_set_background()
+    let float_border_fg = s:hiattr("FloatBorder", "bg")
+    execute 'highlight! FloatBorder guifg= ' . float_border_fg . 'guibg=NONE ctermbg=NONE'
     if exists('g:loaded_lightline')
         let colorfile = globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
         if colorfile != ''
@@ -344,11 +327,9 @@ function! s:on_set_background()
         endif
     endif
     syntax on
-    " call s:set_leaderf_highlights()
     call s:set_lualine_highlights()
+    call s:set_leaderf_highlights()
     call s:set_neotree_highlights()
-    call s:set_noice_highlights()
-    call s:set_illuminated_highlights()
 endfunction
 
 augroup ZpanColorScheme
@@ -390,29 +371,21 @@ function! s:setup_coc_explorer()
     40wincmd |
 endfunction
 autocmd FileType coc-explorer call s:setup_coc_explorer()
-autocmd BufWinEnter * if &filetype ==# 'coc-explorer' | call s:setup_coc_explorer() | endif
+autocmd WinNew * if &filetype ==# 'coc-explorer' | call s:setup_coc_explorer() | endif
 
 function! s:setup_help_window()
-    wincmd J
-    if winheight('%') > 24
-        vertical resize 24
-    endif
+    wincmd L
     setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap nonumber
     nnoremap <silent> <buffer> q <C-w>q
 endfunction
-autocmd BufWinEnter * if &filetype ==# 'help' | call s:setup_help_window() | endif
-autocmd FileType help call s:setup_help_window()
+autocmd WinNew * if &filetype ==# 'help' | call s:setup_help_window() | endif
 
 function! s:setup_man_window()
-    wincmd J
-    if winheight('%') > 24
-        vertical resize 24
-    endif
+    wincmd L
     setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap bufhidden nobuflisted noswapfile nonumber
     nnoremap <silent> <buffer> q <C-w>q
 endfunction
-autocmd BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
-autocmd FileType man call s:setup_man_window()
+autocmd WinNew * if &filetype ==# 'man' | call s:setup_man_window() | endif
 
 autocmd FileType toggleterm set foldcolumn=0 signcolumn=no statuscolumn= | normal i
 

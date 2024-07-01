@@ -1,12 +1,12 @@
 path_append() {
     if [[ ":$PATH:" != *":$1:"* ]]; then
-        PATH="${PATH:+"$PATH:"}$1"
+        export PATH="${PATH:+"$PATH:"}$1"
     fi
 }
 
 path_prepend() {
-    if [[ ":$PATH:" != *":$1:"* ]]; then
-        PATH="$1${PATH:+":$PATH"}"
+    if [[ "$PATH" != "$1"* ]]; then
+        export PATH="$1${PATH:+":$PATH"}"
     fi
 }
 
@@ -37,7 +37,6 @@ if [[ "`uname -s`" = Darwin ]]; then
     done
 fi
 
-path_prepend "$HOME/.local/bin"
 path_prepend "$HOME/.cargo/bin"
 
 if type brew &>/dev/null; then
@@ -62,6 +61,8 @@ if [[ "$GOPATH" = "" ]]; then
     export GOPATH="$HOME/go"
     path_append "$GOPATH/bin"
 fi
+
+path_prepend "$HOME/.local/bin"
 
 if type powerline-daemon &>/dev/null; then
     powerline-daemon -q

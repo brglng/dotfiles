@@ -91,6 +91,8 @@ endif
 
 let g:which_key_map.n = [':Navbuddy', 'Code Navigate']
 
+let g:which_key_map.p = [{-> luaeval('require("nabla").toggle_virt { autogen = true, silent = true, align_center = true }')}, 'Toggle LaTeX Preview']
+
 let g:which_key_map.q = ['<C-w>q', 'Close Window']
 
 nnoremap <Leader>sr     :.,$s/\<<C-r><C-w>\>//gc<Left><Left><Left>
@@ -105,11 +107,7 @@ let g:which_key_map.s = {
   \ 'G': 'Search & Replace (Full, No Prompt)'
   \ }
 
-if has('nvim')
-    let g:which_key_map.t = [':Telescope asynctasks all', 'Tasks']
-else
-    let g:which_key_map.t = [':Leaderf task', 'Tasks']
-endif
+let g:which_key_map.t = [':Leaderf task', 'Tasks']
 
 let g:which_key_map.w = {
   \ 'name': '+Windows',

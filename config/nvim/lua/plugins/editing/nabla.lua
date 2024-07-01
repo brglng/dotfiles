@@ -1,0 +1,16 @@
+return {
+    "jbyuki/nabla.nvim",
+    -- keys = {
+    --     {
+    --         "<Leader>p",
+    --         mode = { "n" },
+    --         function()
+    --             require("nabla").toggle_virt {
+    --                 autogen = true,
+    --                 silent = true
+    --             }
+    --         end,
+    --         desc = "Preview LaTeX"
+    --     }
+    -- }
+}

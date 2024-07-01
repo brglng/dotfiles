@@ -1,0 +1,98 @@
+import = ["~/.config/alacritty/colors/melange_dark.toml"]
+live_config_reload = true
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[cursor]
+style = "Block"
+unfocused_hollow = true
+
+[env]
+LANG = "zh_CN.UTF-8"
+LC_ALL = "zh_CN.UTF-8"
+TERM = "alacritty"
+
+[font]
+size = 14
+
+[font.bold]
+family = "Maple Mono SC NF"
+style = "Bold"
+
+[font.bold_italic]
+family = "Maple Mono SC NF"
+style = "BoldItalic"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.italic]
+family = "Maple Mono SC NF"
+style = "Italic"
+
+[font.normal]
+family = "Maple Mono SC NF"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 0
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Hide"
+key = "H"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Minimize"
+key = "M"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "Q"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "W"
+mods = "Command"
+
+[mouse]
+hide_when_typing = false
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[selection]
+save_to_clipboard = false
+semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+
+[shell]
+args = ["--login"]
+program = "/bin/zsh"
+
+[window]
+opacity = 1.0
+option_as_alt = "Both"
+
+[window.dimensions]
+columns = 0
+lines = 0

@@ -13,4 +13,4 @@ elseif has('wsl')
     let g:asynctasks_system = 'wsl'
 endif
 
-" let g:asynctasks_config_name = '.vim/tasks.ini'
+let g:asynctasks_config_name = '.vim/tasks.ini'

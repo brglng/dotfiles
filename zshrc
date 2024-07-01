@@ -10,92 +10,97 @@ if [[ $HOMEBREW_PREFIX != "" ]]; then
     FPATH=$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH
 fi
 
-if [[ ! -e ~/.zgen ]]; then
-    git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
-fi
-
-DISABLE_AUTO_UPDATE="true"
+ZSH_DISABLE_COMPFIX="true"
 
 if type luajit &>/dev/null; then
     ZLUA_EXEC=$(which luajit)
 fi
 export _ZL_MATCH_MODE=1
 export _ZL_ADD_ONCE=1
+export _ZL_ZSH_NO_FZF=1
 
-ZSH_DISABLE_COMPFIX="true"
+if [[ $BRGLNG_ZSH_DISABLE_PLUGINS -ne 0 ]]; then
+    if [[ ! -e ~/.zgen ]]; then
+        git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+    fi
 
-# load zgen
-source "${HOME}/.zgen/zgen.zsh"
+    DISABLE_AUTO_UPDATE="true"
 
-# if the init script doesn't exist
-if ! zgen saved; then
-    # specify plugins here
-    zgen oh-my-zsh
+    # load zgen
+    source "${HOME}/.zgen/zgen.zsh"
 
-    zgen oh-my-zsh plugins/git
-    zgen oh-my-zsh plugins/adb
-    zgen oh-my-zsh plugins/autopep8
-    zgen oh-my-zsh plugins/brew
-    zgen oh-my-zsh plugins/command-not-found
-    zgen oh-my-zsh plugins/common-aliases
-    zgen oh-my-zsh plugins/colorize
-    zgen oh-my-zsh plugins/colored-man-pages
-    zgen oh-my-zsh plugins/docker
-    zgen oh-my-zsh plugins/docker-compose
-    zgen oh-my-zsh plugins/emacs
-    zgen oh-my-zsh plugins/emoji
-    zgen oh-my-zsh plugins/fd
-    zgen oh-my-zsh plugins/gem
-    zgen oh-my-zsh plugins/git-flow
-    zgen oh-my-zsh plugins/github
-    zgen oh-my-zsh plugins/gitignore
-    zgen oh-my-zsh plugins/gnu-utils
-    zgen oh-my-zsh plugins/golang
-    zgen oh-my-zsh plugins/gradle
-    zgen oh-my-zsh plugins/mercurial
-    zgen oh-my-zsh plugins/man
-    zgen oh-my-zsh plugins/macos
-    zgen oh-my-zsh plugins/mvn
-    zgen oh-my-zsh plugins/node
-    zgen oh-my-zsh plugins/npm
-    zgen oh-my-zsh plugins/nvm
-    zgen oh-my-zsh plugins/perl
-    zgen oh-my-zsh plugins/pip
-    zgen oh-my-zsh plugins/pipenv
-    zgen oh-my-zsh plugins/pylint
-    zgen oh-my-zsh plugins/python
-    zgen oh-my-zsh plugins/redis-cli
-    zgen oh-my-zsh plugins/repo
-    zgen oh-my-zsh plugins/ripgrep
-    zgen oh-my-zsh plugins/rsync
-    zgen oh-my-zsh plugins/ruby
-    zgen oh-my-zsh plugins/rust
-    # zgen oh-my-zsh plugins/sudo
-    zgen oh-my-zsh plugins/supervisor
-    zgen oh-my-zsh plugins/svn
-    zgen oh-my-zsh plugins/systemd
-    zgen oh-my-zsh plugins/tig
-    zgen oh-my-zsh plugins/tmux
-    zgen oh-my-zsh plugins/ubuntu
-    zgen oh-my-zsh plugins/ufw
-    zgen oh-my-zsh plugins/virtualenv
-    zgen oh-my-zsh plugins/vscode
-    zgen oh-my-zsh plugins/yarn
+    # if the init script doesn't exist
+    if ! zgen saved; then
+        # specify plugins here
+        zgen oh-my-zsh
 
-    zgen load romkatv/powerlevel10k powerlevel10k
-    zgen load zsh-users/zsh-autosuggestions
-    zgen load hlissner/zsh-autopair
-    zgen load z-shell/F-Sy-H . main
-    zgen load lukechilds/zsh-better-npm-completion
-    # zgen load Aloxaf/fzf-tab
+        zgen oh-my-zsh plugins/git
+        zgen oh-my-zsh plugins/adb
+        zgen oh-my-zsh plugins/autopep8
+        zgen oh-my-zsh plugins/brew
+        zgen oh-my-zsh plugins/command-not-found
+        zgen oh-my-zsh plugins/common-aliases
+        zgen oh-my-zsh plugins/colorize
+        zgen oh-my-zsh plugins/colored-man-pages
+        zgen oh-my-zsh plugins/docker
+        zgen oh-my-zsh plugins/docker-compose
+        zgen oh-my-zsh plugins/emacs
+        zgen oh-my-zsh plugins/emoji
+        zgen oh-my-zsh plugins/fd
+        zgen oh-my-zsh plugins/gem
+        zgen oh-my-zsh plugins/git-flow
+        zgen oh-my-zsh plugins/github
+        zgen oh-my-zsh plugins/gitignore
+        zgen oh-my-zsh plugins/gnu-utils
+        zgen oh-my-zsh plugins/golang
+        zgen oh-my-zsh plugins/gradle
+        zgen oh-my-zsh plugins/mercurial
+        zgen oh-my-zsh plugins/man
+        zgen oh-my-zsh plugins/macos
+        zgen oh-my-zsh plugins/mvn
+        zgen oh-my-zsh plugins/node
+        zgen oh-my-zsh plugins/npm
+        zgen oh-my-zsh plugins/nvm
+        zgen oh-my-zsh plugins/perl
+        zgen oh-my-zsh plugins/pip
+        zgen oh-my-zsh plugins/pipenv
+        zgen oh-my-zsh plugins/pylint
+        zgen oh-my-zsh plugins/python
+        zgen oh-my-zsh plugins/redis-cli
+        zgen oh-my-zsh plugins/repo
+        zgen oh-my-zsh plugins/ripgrep
+        zgen oh-my-zsh plugins/rsync
+        zgen oh-my-zsh plugins/ruby
+        zgen oh-my-zsh plugins/rust
+        # zgen oh-my-zsh plugins/sudo
+        zgen oh-my-zsh plugins/supervisor
+        zgen oh-my-zsh plugins/svn
+        zgen oh-my-zsh plugins/systemd
+        zgen oh-my-zsh plugins/tig
+        zgen oh-my-zsh plugins/tmux
+        zgen oh-my-zsh plugins/ubuntu
+        zgen oh-my-zsh plugins/ufw
+        zgen oh-my-zsh plugins/virtualenv
+        zgen oh-my-zsh plugins/vscode
+        zgen oh-my-zsh plugins/yarn
 
-    zgen load skywind3000/z.lua
+        # zgen load romkatv/powerlevel10k powerlevel10k
+        zgen load zsh-users/zsh-autosuggestions
+        zgen load hlissner/zsh-autopair
+        zgen load z-shell/F-Sy-H . main
+        zgen load lukechilds/zsh-better-npm-completion
+        # zgen load Aloxaf/fzf-tab
 
-    zgen load zsh-users/zsh-completions src
+        # zgen load skywind3000/z.lua
 
-    # generate the init script from plugins above
-    zgen save
+        zgen load zsh-users/zsh-completions src
+
+        # generate the init script from plugins above
+        zgen save
+    fi
 fi
+
+unset BRGLNG_ZSH_DISABLE_PLUGINS
 
 alias -s c=$EDITOR
 alias -s conf=$EDITOR
@@ -127,6 +132,24 @@ add-zsh-hook precmd update_environment
 add-zsh-hook preexec update_environment
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+
+if type zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+if type starship &>/dev/null; then
+    eval "$(starship init zsh)"
+fi
+
+if type direnv &>/dev/null; then
+    eval "$(direnv hook zsh)"
+fi
+
+if type carapace &>/dev/null; then
+    export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+    zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+    source <(carapace _carapace)
+fi
 
 source "$BRGLNG_DOTFILES_DIR/shell_rc_post.sh"
 
