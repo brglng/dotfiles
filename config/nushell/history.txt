@@ -23,3 +23,8 @@ Found direnv [direnv.direnv] Version 2.34.0
 This application is licensed to you by its owner.
 Microsoft is not responsible for, nor does it grant any licenses to, third-party packages.
 Downloading https://github.com/direnv/direnv/releases/download/v2.34.0/direnv.windows-amd64.exe
+ipconfig
+ipconfig /release
+ipconfig /renew
+gpupdate /force 
+ipconfig

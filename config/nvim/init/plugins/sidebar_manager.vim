@@ -5,30 +5,54 @@
   " \     'close': 'CocCommand explorer --toggle'
   " \ },
 
+function s:open_help()
+    let bufnr = 0
+    let lastused = 0
+    for nr in range(1, bufnr('$'))
+        if getbufvar(nr, '&buftype') ==# 'help'
+            if nr > bufnr || getbufinfo(nr)[0].lastused > lastused
+                let bufnr = nr
+                let lastused = getbufinfo(nr)[0].lastused
+            endif
+        endif
+    endfor
+    if bufnr > 0
+        botright vsplit
+        execute 'buffer ' . bufnr
+        return
+    else
+        help
+    endif
+endfunction
+
 let g:sidebars = {
   \ 'neo-tree-filesystem': {
   \     'position': 'left',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'filesystem'},
   \     'open': 'Neotree filesystem reveal',
-  \     'close': 'Neotree close'
+  \     'close': 'Neotree close',
+  \     'dont_close': 'neo-tree-.*'
   \ },
   \ 'neo-tree-buffers': {
   \     'position': 'left',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'buffers'},
   \     'open': 'Neotree buffers reveal',
-  \     'close': 'Neotree close'
+  \     'close': 'Neotree close',
+  \     'dont_close': 'neo-tree-.*'
   \ },
   \ 'neo-tree-git-status': {
   \     'position': 'left',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'git_status'},
   \     'open': 'Neotree git_status reveal',
-  \     'close': 'Neotree close'
+  \     'close': 'Neotree close',
+  \     'dont_close': 'neo-tree-.*'
   \ },
   \ 'neo-tree-document-symbols': {
   \     'position': 'left',
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'document_symbols'},
   \     'open': 'Neotree document_symbols reveal',
-  \     'close': 'Neotree close'
+  \     'close': 'Neotree close',
+  \     'dont_close': 'neo-tree-.*'
   \ },
   \ 'trouble-quickfix': {
   \     'position': 'bottom',
@@ -86,13 +110,13 @@ let g:sidebars = {
   \ },
   \ 'quickfix': {
   \     'position': 'bottom',
-  \     'check_win': {nr -> (getwinvar(nr, '&filetype') ==# 'qf') && !getwininfo(win_getid(nr))[0]['loclist']},
+  \     'check_win': {nr -> (getwinvar(nr, '&buftype') ==# 'quickfix') && !getwininfo(win_getid(nr))[0]['loclist']},
   \     'open': 'copen',
   \     'close': 'cclose'
   \ },
   \ 'loclist': {
   \     'position': 'bottom',
-  \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'qf' && getwininfo(win_getid(nr))[0]['loclist']},
+  \     'check_win': {nr -> getwinvar(nr, '&buftype') ==# 'quickfix' && getwininfo(win_getid(nr))[0]['loclist']},
   \     'open': 'silent! lopen',
   \     'close': 'silent! lclose'
   \ },
@@ -101,9 +125,21 @@ let g:sidebars = {
   \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'toggleterm'},
   \     'open': 'ToggleTerm',
   \     'close': 'ToggleTerm'
+  \ },
+  \ 'help': {
+  \     'position': 'right',
+  \     'check_win': {nr -> getwinvar(nr, '&buftype') ==# 'help'},
+  \     'open': function("<SID>open_help", []),
+  \     'close': 'helpclose'
   \ }
   \ }
 
 " let g:sidebar_close_tab_on_closing_last_buffer = 1
+
+autocmd QuickFixCmdPost asyncrun call sidebar#open('quickfix')
+
+autocmd BufWinEnter * if &l:buftype ==# 'help' |
+  \ execute "nnoremap <buffer> <silent> gO :call sidebar#close_side_except('bottom', 'loclist')<CR>" . maparg('gO', 'n') |
+  \ endif
 
 " vim: ts=8 sts=4 sw=4 et

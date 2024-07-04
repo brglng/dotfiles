@@ -121,6 +121,14 @@ return {
                 ['<C-x><C-x>'] = cmp.mapping.complete(),
                 ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
                 ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+                -- ['<C-n>'] = cmp.mapping({
+                --     i = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+                --     c = cmp.config.disable,
+                -- }),
+                -- ['<C-p>'] = cmp.mapping({
+                --     i = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+                --     c = cmp.config.disable,
+                -- }),
                 ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
                 ['<C-d>'] = cmp.mapping.scroll_docs(4),  -- Down
                 ['<C-j>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert, count = 10 }),

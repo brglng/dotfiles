@@ -150,6 +150,8 @@ if v:version > 703 || v:version == 703 && has("patch541")
 endif
 set history=1000
 set tabpagemax=50
+set sessionoptions-=globals
+set sessionoptions-=localoptions
 set sessionoptions-=options
 
 " set confirm

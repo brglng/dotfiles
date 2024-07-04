@@ -1,6 +1,7 @@
 let g:Lf_ShortcutF = ''
 let g:Lf_ShortcutB = ''
-let g:Lf_WindowPosition = 'popup'
+let g:Lf_WindowPosition = 'bottom'
+let g:Lf_WindowHeight = 0.3
 let g:Lf_CursorBlink = 0
 let g:Lf_FollowLinks = 1
 let g:Lf_WildIgnore = {
@@ -31,7 +32,7 @@ let g:Lf_CommandMap = {
 " let g:Lf_HideHelp = 1
 let g:Lf_ShowHidden = 1
 let g:Lf_IgnoreCurrentBufferName = 1
-let g:Lf_PreviewInPopup = 1
+let g:Lf_PreviewInPopup = 0
 let g:Lf_MruEnableFrecency = 1
 let g:Lf_PopupPreviewPosition = 'bottom'
 let g:Lf_PopupShowBorder = 1

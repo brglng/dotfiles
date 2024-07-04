@@ -1,10 +1,28 @@
 return {
     'akinsho/toggleterm.nvim',
     version = "*",
-    config = function ()
-        require("toggleterm").setup {
-            shade_terminals = false
+    opts = {
+        hide_numbers = false,
+        shade_terminals = false,
+        start_in_insert = true,
+        shell = (function()
+            if vim.fn.executable('nu') then
+                return vim.fn.exepath('nu')
+            elseif vim.fn.executable('zsh') then
+                return vim.fn.exepath('zsh')
+            else
+                return vim.fn.exepath('bash')
+            end
+        end)(),
+        winbar = {
+            enabled = true,
+            name_formatter = function(term)
+                return ' ' .. term.name
+            end
         }
+    },
+    config = function (_, opts)
+        require("toggleterm").setup(opts)
 
         function _G.set_terminal_keymaps()
             local opts = {buffer = 0}

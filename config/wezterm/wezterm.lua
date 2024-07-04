@@ -260,6 +260,21 @@ config.keys = {
     { mods = 'LEADER|CTRL', key = '[', action = wezterm.action.ActivateCopyMode },
     { mods = 'LEADER', key = ']', action = wezterm.action.PasteFrom('PrimarySelection') },
     { mods = 'LEADER|CTRL', key = ']', action = wezterm.action.PasteFrom('PrimarySelection') },
+    { mods = 'ALT', key = '`', action = wezterm.action.SendKey { key = '`', mods = 'ALT' } },
+    { mods = 'ALT', key = '1', action = wezterm.action.SendKey { key = '1', mods = 'ALT' } },
+    { mods = 'ALT', key = '2', action = wezterm.action.SendKey { key = '2', mods = 'ALT' } },
+    { mods = 'ALT', key = '3', action = wezterm.action.SendKey { key = '3', mods = 'ALT' } },
+    { mods = 'ALT', key = '4', action = wezterm.action.SendKey { key = '4', mods = 'ALT' } },
+    { mods = 'ALT', key = '5', action = wezterm.action.SendKey { key = '5', mods = 'ALT' } },
+    { mods = 'ALT', key = '6', action = wezterm.action.SendKey { key = '6', mods = 'ALT' } },
+    { mods = 'ALT', key = '7', action = wezterm.action.SendKey { key = '7', mods = 'ALT' } },
+    { mods = 'ALT', key = '8', action = wezterm.action.SendKey { key = '8', mods = 'ALT' } },
+    { mods = 'ALT', key = '9', action = wezterm.action.SendKey { key = '9', mods = 'ALT' } },
+    { mods = 'ALT', key = '0', action = wezterm.action.SendKey { key = '0', mods = 'ALT' } },
+    { mods = 'ALT', key = '-', action = wezterm.action.SendKey { key = '-', mods = 'ALT' } },
+    { mods = 'ALT', key = '=', action = wezterm.action.SendKey { key = '=', mods = 'ALT' } },
+    { mods = 'ALT', key = ']', action = wezterm.action.SendKey { key = ']', mods = 'ALT' } },
+    { mods = 'ALT', key = '\\', action = wezterm.action.SendKey { key = '\\', mods = 'ALT' } }
 }
 
 -- Launcher
@@ -351,7 +366,7 @@ else
             config.default_prog = { '/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else BRGLNG_ZSH_DISABLE_PLUGINS=0 /bin/zsh -l -i; fi' }
         end
     else
-        config.default_prog = { '/bin/bash', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then BRGLNG_ZSH_DISABLE_PLUGINS=0 zsh -l -i; else bash -l -i; fi' }
+        config.default_prog = { '/bin/bash', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then BRGLNG_ZSH_DISABLE_PLUGINS=0 zsh -l -i; else bash -i; fi' }
     end
 end
 

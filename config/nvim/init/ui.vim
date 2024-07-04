@@ -377,7 +377,7 @@ function! s:setup_help_window()
     setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap nonumber
     nnoremap <silent> <buffer> q <C-w>q
 endfunction
-autocmd FileType,BufWinEnter * if &filetype ==# 'help' | call s:setup_help_window() | endif
+autocmd FileType,BufWinEnter * if &l:buftype ==# 'help' | call s:setup_help_window() | endif
 
 function! s:setup_man_window()
     wincmd L
@@ -386,7 +386,7 @@ function! s:setup_man_window()
 endfunction
 autocmd FileType,BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
 
-autocmd FileType toggleterm set foldcolumn=0 signcolumn=no statuscolumn= | normal i
+autocmd FileType toggleterm normal i
 
 if has('nvim')
     autocmd FileType python lua require("ibl").setup_buffer(0, {enabled = true})

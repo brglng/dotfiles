@@ -1,6 +1,6 @@
 return {
     "folke/noice.nvim",
-    enabled = true,
+    enabled = false,
     event = "VeryLazy",
     dependencies = {
         "MunifTanjim/nui.nvim",
@@ -11,7 +11,11 @@ return {
         local hacks = require("noice.util.hacks")
 
         require("noice").setup {
+            cmdline = {
+                enabled = true,
+            },
             messages = {
+                enabled = true,
                 view_search = false,
                 view = "notify",
                 view_error = "notify",

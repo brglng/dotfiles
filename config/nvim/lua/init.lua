@@ -1,5 +1,7 @@
-vim.opt.mousemoveevent = true
-vim.opt.splitkeep = "screen"
+vim.o.mousemoveevent = true
+vim.o.splitkeep = "screen"
+vim.o.termsync = false
+
 vim.diagnostic.config {
     virtual_text = false,
     float = {

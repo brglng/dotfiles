@@ -79,7 +79,7 @@ if [[ $BRGLNG_ZSH_DISABLE_PLUGINS -eq 0 ]]; then
         zgen load zsh-users/zsh-autosuggestions
         zgen load hlissner/zsh-autopair
         zgen load z-shell/F-Sy-H . main
-        zgen load lukechilds/zsh-better-npm-completion
+        # zgen load lukechilds/zsh-better-npm-completion
 
         zgen load zsh-users/zsh-completions src
 
