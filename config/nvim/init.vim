@@ -191,20 +191,20 @@ filetype plugin on
 filetype plugin indent on
 if exists('&breakindent')
     autocmd FileType *
-                \ if index(['', 'markdown', 'txt', 'norg'], &filetype) >= 0 |
-                \   if &filetype == 'norg' |
-                \       setlocal breakindent |
-                \   else |
-                \       setlocal nobreakindent |
-                \   endif |
-                \   setlocal showbreak= |
-                \ else |
-                \   setlocal breakindent |
-                \   setlocal showbreak=⤷\  |
-                \ endif
+    \   if index(['', 'markdown', 'txt', 'norg'], &filetype) >= 0 |
+    \       if &filetype == 'norg' |
+    \           setlocal breakindent |
+    \       else |
+    \           setlocal nobreakindent |
+    \       endif |
+    \       setlocal showbreak= |
+    \   else |
+    \       setlocal breakindent |
+    \       setlocal showbreak=⤷\  |
+    \   endif
 endif
 set showtabline=2
-let g:vim_indent_cont = 2
+let g:vim_indent_cont = 0
 
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 " autocmd BufRead,BufNewFile *.md set spell
@@ -250,12 +250,11 @@ silent! set pumblend=0
 " When the cursor is at the last 3 lines on the screen,
 " always set pumheight=15
 " autocmd CursorMoved,CursorMovedI *
-"       \ if winline() <= winheight('%') - 4 |
-"       \   let &pumheight = min([winheight('%') - winline() - 1, 15]) |
-"       \ else |
-"       \   set pumheight=15 |
-"       \ endif
-
+" \   if winline() <= winheight('%') - 4 |
+" \       let &pumheight = min([winheight('%') - winline() - 1, 15]) |
+" \   else |
+" \       set pumheight=15 |
+" \   endif
 
 " set formatoptions+=a
 
@@ -299,6 +298,8 @@ if has('nvim')
     endif
 endif
 
+let g:plug_timeout = 300
+
 call plug#begin('~/.local/share/vim/plugged')
 
 function! VimOnly(...)
@@ -335,7 +336,7 @@ Plug 'itchyny/lightline.vim', VimOnly()
 Plug 'mengelbrecht/lightline-bufferline', VimOnly()
 Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
-Plug 'mhinz/vim-startify'
+" Plug 'mhinz/vim-startify'
 " Plug 'liuchengxu/vim-which-key'
 Plug 'Yggdroot/LeaderF'
 Plug 'Yggdroot/LeaderF-marks'

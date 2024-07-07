@@ -45,20 +45,21 @@ return {
             return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
         end
 
-        -- local window_bordered = cmp.config.window.bordered()
-        -- window_bordered.col_offset = -4
-        -- window_bordered.side_padding = 1
+        local window_bordered = cmp.config.window.bordered()
+        window_bordered.border = 'rounded'
+        window_bordered.col_offset = -4
+        window_bordered.side_padding = 1
         -- window_bordered.winblend = 20
         vim.cmd [[ autocmd ColorScheme * highlight! link CmpItemMenu Comment ]]
         vim.cmd [[ autocmd OptionSet background highlight! link CmpItemMenu Comment ]]
         cmp.setup {
             window = {
-                completion = {
-                    col_offset = -3,
-                    side_padding = 1
-                },
-                -- completion = window_bordered,
-                -- documentation = window_bordered,
+                -- completion = {
+                --     col_offset = -3,
+                --     side_padding = 1
+                -- },
+                completion = window_bordered,
+                documentation = window_bordered,
             },
             -- view = {
             --     entries = {
@@ -210,6 +211,7 @@ return {
         })
         cmp.setup.filetype("lua", {
             sources = cmp.config.sources({
+                { name = "lazydev", group_index = 0 },
                 { name = "nvim_lua" },
                 { name = "nvim_lsp" },
                 {

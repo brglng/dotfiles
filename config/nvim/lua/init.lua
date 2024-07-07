@@ -5,7 +5,7 @@ vim.o.termsync = false
 vim.diagnostic.config {
     virtual_text = false,
     float = {
-        -- border = "rounded"
+        border = "rounded"
     }
 }
 vim.env.DEBUG_CODEIUM = "error"
@@ -78,7 +78,10 @@ require("lazy").setup("plugins", {
             reset = false
         }
     },
-    rocks = {
-        enabled = false,
-    }
+    -- rocks = {
+    --     enabled = true,
+    --     hererocks = true,
+    -- }
 })
+
+vim.cmd [[ colorscheme melange ]]

@@ -1,5 +1,9 @@
 return {
     "3rd/image.nvim",
+    dependencies = {
+        "vhyrro/luarocks.nvim"
+    },
+    lazy = true,
     opts = {
         backend = "kitty",
         integrations = {

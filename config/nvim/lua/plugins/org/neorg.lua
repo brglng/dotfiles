@@ -2,6 +2,7 @@ return {
     "nvim-neorg/neorg",
     dependencies = {
         "3rd/image.nvim",
+        "vhyrro/luarocks.nvim",
     },
     lazy = true, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
     version = "*", -- Pin Neorg to the latest stable release

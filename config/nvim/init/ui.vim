@@ -283,7 +283,7 @@ function! s:set_neotree_highlights()
     endif
 endfunction
 
-colorscheme melange
+" colorscheme melange
 " if exists('g:loaded_lightline')
 "     let g:lightline.colorscheme = 'melange'
 " endif
@@ -369,8 +369,7 @@ function! s:setup_coc_explorer()
     wincmd H
     40wincmd |
 endfunction
-autocmd FileType coc-explorer call s:setup_coc_explorer()
-autocmd WinNew * if &filetype ==# 'coc-explorer' | call s:setup_coc_explorer() | endif
+autocmd FileType,BufWinEnter * if &filetype ==# 'coc-explorer' | call s:setup_coc_explorer() | endif
 
 function! s:setup_help_window()
     wincmd L

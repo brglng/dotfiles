@@ -106,26 +106,26 @@ config.status_update_interval = 300
 wezterm.on("update-status", function(window, pane)
     local fg, bg, leader, modes
     if get_appearance():find('Dark') then
-        fg = '#96918e'
-        bg = '#463f3b'
-        leader = { text = ' L', fg = '#2d2825', bg = '#b3b9e2' }
+        fg = '#34302c'
+        bg = '#c1a78e'
+        leader = { text = ' 󱐋 ', fg = '#34302c', bg = '#d47766' }
         modes = {
-            copy_mode = { text = " 󰆏 ", fg = '#2d2825', bg = '#ffd377' },
-            search_mode = { text = " 󰍉 ", fg = '#96918e', bg = '#463f3b' },
-            window_mode = { text = " 󱂬 ", fg = '#96918e', bg = '#463f3b' },
-            font_mode = { text = " 󰛖 ", fg = '#96918e', bg = '#463f3b' },
-            lock_mode = { text = "  ", fg = '#96918e', bg = '#463f3b' },
+            copy_mode = { text = " 󰆏 ", fg = '#34302c', bg = '#ebc06d' },
+            search_mode = { text = " 󰍉 ", fg = '#34302c', bg = '#cf9bc2' },
+            window_mode = { text = " 󱂬 ", fg = '#34302c', bg = '#c1a78e' },
+            font_mode = { text = " 󰛖 ", fg = '#34302c', bg = '#c1a78e' },
+            lock_mode = { text = "  ", fg = '#34302c', bg = '#c1a78e' },
         }
     else
-        fg = '#6f6f6f'
-        bg = '#c3bdb9'
-        leader = { text = ' L ', fg = '#d8d8d8', bg = '#3f5193' }
+        fg = '#e9e1db'
+        bg = '#7d6658'
+        leader = { text = ' 󱐋 ', fg = '#e9e1db', bg = '#bf0021' }
         modes = {
-            copy_mode = { text = " 󰆏 ", fg = '#d8d8d8', bg = '#906200' },
-            search_mode = { text = " 󰍉 ", fg = '#6f6f6f', bg = '#c3bdb9' },
-            window_mode = { text = " 󱂬 ", fg = '#6f6f6f', bg = '#c3bdb9' },
-            font_mode = { text = " 󰛖 ", fg = '#6f6f6f', bg = '#c3bdb9' },
-            lock_mode = { text = "  ", fg = '#6f6f6f', bg = '#c3bdb9' },
+            copy_mode = { text = " 󰆏 ", fg = '#e9e1db', bg = '#a06d00' },
+            search_mode = { text = " 󰍉 ", fg = '#e9e1db', bg = '#904180' },
+            window_mode = { text = " 󱂬 ", fg = '#e9e1db', bg = '#7d6658' },
+            font_mode = { text = " 󰛖 ", fg = '#e9e1db', bg = '#7d6658' },
+            lock_mode = { text = "  ", fg = '#e9e1db', bg = '#7d6658' },
         }
     end
 
@@ -134,7 +134,7 @@ wezterm.on("update-status", function(window, pane)
             { Foreground = { Color = leader.fg } },
             { Background = { Color = leader.bg  } },
             { Attribute = { Intensity = 'Bold' } },
-            { Text = ' L ' },
+            { Text = ' 󱐋 ' },
         })
     else
         local name = window:active_key_table()

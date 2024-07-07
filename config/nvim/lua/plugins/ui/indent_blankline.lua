@@ -5,6 +5,7 @@ return {
         enabled = false,
         indent = {
             char = "▏",
+            -- char = "│",
         },
         scope = {
             enabled = false

@@ -1,6 +1,6 @@
 return {
     "folke/noice.nvim",
-    enabled = false,
+    enabled = true,
     event = "VeryLazy",
     dependencies = {
         "MunifTanjim/nui.nvim",
@@ -55,7 +55,7 @@ return {
             },
             views = {
                 mini = {
-                    -- border = "rounded",
+                    border = "rounded",
                     position = {
                         row = -2
                     },
@@ -71,7 +71,7 @@ return {
                 },
                 hover = {
                     border = {
-                        -- style = "none",
+                        style = "rounded",
                         -- padding = { 0, 2 }
                     },
                     win_options = {
@@ -87,6 +87,9 @@ return {
                     title = "LSP",
                     replace = true,
                     merge = true
+                },
+                split = {
+                    enter = true,
                 }
             },
             routes = {

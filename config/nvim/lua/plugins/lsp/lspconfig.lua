@@ -4,15 +4,88 @@ return {
     dependencies = {
         "hrsh7th/nvim-cmp",
         "ray-x/lsp_signature.nvim",
-        "folke/neoconf.nvim"
+        "folke/neoconf.nvim",
+        "p00f/clangd_extensions.nvim"
+    },
+    opts = {
+        -- log_level = 'debug'
+        inlay_hint = {
+            enabled = true
+        },
+        codelens = {
+            enabled = true,
+        },
+        servers = {
+            clangd = {
+                cmd = {
+                    "clangd",
+                    "--background-index",
+                    "--header-insertion=never",
+                    "--clang-tidy",
+                    "--suggest-missing-includes",
+                    "--completion-style=detailed",
+                    "--function-arg-placeholders",
+                    "--fallback-style=llvm"
+                },
+                capabilities = {
+                    textDocument = {
+                        sementicHighlighting = true,
+                    },
+                    offsetEncoding = 'utf-8'
+                }
+            },
+            lua_ls = {},
+            -- lua_ls = {
+            --     cmd = { "lua-language-server", "--logpath=" .. vim.fn.stdpath("log") .. "/luals" },
+            --     on_init = function(client)
+            --         local path = client.workspace_folders[1].name
+            --         if not vim.uv.fs_stat(path .. '/.luarc.json') and not vim.loop.fs_stat(path .. '/.luarc.jsonc') then
+            --             client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
+            --                 Lua = {
+            --                     runtime = {
+            --                         -- Tell the language server which version of Lua you're using
+            --                         -- (most likely LuaJIT in the case of Neovim)
+            --                         version = 'LuaJIT'
+            --                     },
+            --                     -- Make the server aware of Neovim runtime files
+            --                     workspace = {
+            --                         checkThirdParty = false,
+            --                         -- library = {
+            --                         --     vim.env.VIMRUNTIME
+            --                         --     -- "${3rd}/luv/library"
+            --                         --     -- "${3rd}/busted/library",
+            --                         -- }
+            --                         -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+            --                         library = vim.api.nvim_get_runtime_file("", true)
+            --                     }
+            --                 }
+            --             })
+            --             client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+            --         end
+            --         return true
+            --     end,
+            -- },
+            nushell = {},
+            pyright = {},
+            tsserver = {},
+            rust_analyzer = {
+                settings = {
+                    ['rust_analyzer'] = {}
+                }
+            },
+            vimls = {}
+        }
     },
     config = function(_, opts)
-        vim.lsp.inlay_hint.enable(true)
-
-        local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-
         local lspconfig = require('lspconfig')
-        -- vim.lsp.set_log_level("debug")
+
+        if opts.log_level ~= nil then
+            vim.lsp.set_log_level(opts.log_level)
+        end
+
+        if opts.inlay_hint.enabled ~= nil then
+            vim.lsp.inlay_hint.enable(opts.inlay_hint.enabled)
+        end
 
         -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
         --     vim.lsp.handlers.signature_help, {
@@ -28,78 +101,34 @@ return {
         --     }
         -- )
 
-        local clangd_capabilities = cmp_capabilities
-        clangd_capabilities.textDocument.semanticHighlighting = true
-        clangd_capabilities.offsetEncoding = "utf-8"
-
-        lspconfig.clangd.setup {
-            capabilities = cmp_capabilities,
-            cmd = {
-                "clangd",
-                "--background-index",
-                "--header-insertion=never",
-                "--clang-tidy",
-                "--suggest-missing-includes",
-                "--completion-style=detailed",
-                "--function-arg-placeholders",
-                "--fallback-style=llvm"
-            },
-            -- on_attach = function (args)
-            --     require("clangd_extensions.inlay_hints").setup_autocmd()
-            --     require("clangd_extensions.inlay_hints").set_inlay_hints()
-            -- end,
-        }
-        lspconfig.lua_ls.setup {
-            capabilities = cmp_capabilities,
-            cmd = { "lua-language-server", "--logpath=" .. vim.fn.stdpath("log") .. "/luals" },
-            on_init = function(client)
-                local path = client.workspace_folders[1].name
-                if not vim.uv.fs_stat(path .. '/.luarc.json') and not vim.loop.fs_stat(path .. '/.luarc.jsonc') then
-                    client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
-                        Lua = {
-                            runtime = {
-                                -- Tell the language server which version of Lua you're using
-                                -- (most likely LuaJIT in the case of Neovim)
-                                version = 'LuaJIT'
-                            },
-                            -- Make the server aware of Neovim runtime files
-                            workspace = {
-                                checkThirdParty = false,
-                                -- library = {
-                                --     vim.env.VIMRUNTIME
-                                --     -- "${3rd}/luv/library"
-                                --     -- "${3rd}/busted/library",
-                                -- }
-                                -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
-                                library = vim.api.nvim_get_runtime_file("", true)
-                            }
-                        }
-                    })
-                    client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+        for server, server_opts in pairs(opts.servers) do
+            server_opts = vim.tbl_deep_extend('force',
+                {
+                    capabilities = vim.tbl_deep_extend('force',
+                        vim.lsp.protocol.make_client_capabilities(),
+                        require('cmp_nvim_lsp').default_capabilities(),
+                        server_opts.capabilities or {}
+                    )
+                },
+                server_opts
+            )
+            if opts.codelens.enabled then
+                local orig_on_attach = server_opts.on_attach
+                server_opts.on_attach = function(client, buffer)
+                    if client.supports_method('textDocument/codeLens') then
+                        vim.lsp.codelens.refresh()
+                        vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost' }, {
+                            buffer = buffer,
+                            callback = vim.lsp.codelens.refresh
+                        })
+                    end
+                    if orig_on_attach ~= nil then
+                        orig_on_attach(client, buffer)
+                    end
                 end
-                return true
-            end,
-        }
-        lspconfig.nushell.setup {}
-        lspconfig.pyright.setup {
-            capabilities = cmp_capabilities,
-        }
-        lspconfig.tsserver.setup {
-            capabilities = cmp_capabilities,
-        }
-        lspconfig.rust_analyzer.setup {
-            capabilities = cmp_capabilities,
-            settings = {
-                ['rust-analyzer'] = {},
-            },
-        }
-        lspconfig.vimls.setup {}
-
-        -- Global mappings.
-        -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-        -- vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float)
-        vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-        vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+            end
+            lspconfig[server].setup(server_opts)
+        end
 
         -- Use LspAttach autocommand to only map the following keys
         -- after the language server attaches to the current buffer
@@ -131,5 +160,10 @@ return {
                 end, opts)
             end
         })
-    end
+    end,
+    keys = {
+        { '<Leader>e', mode = { 'n' }, vim.diagnostic.open_float, desc = 'Show Diagnostic' },
+        { '[d', mode = { 'n' }, vim.diagnostic.goto_prev, desc = 'Previous Diagnostic' },
+        { ']d', mode = { 'n' }, vim.diagnostic.goto_next, desc = 'Next Diagnostic' }
+    }
 }

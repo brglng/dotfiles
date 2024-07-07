@@ -9,6 +9,7 @@ return {
             "~/Syncthing/sync/Projects/*",
             "~/Syncthing/sync/Projects/vim-plugins/*",
         },
+        dashboard_mode = false,
         last_session_on_startup = false
     },
     init = function()
