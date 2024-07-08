@@ -255,25 +255,6 @@ function! s:set_leaderf_highlights()
     endif
 endfunction
 
-function! s:set_lualine_highlights()
-    if has('nvim')
-lua << EOF
-    local lualine = require('lualine')
-    if lualine ~= nil then
-        if vim.g.colors_name == "gruvbox" then
-            local my_theme = require("lualine.themes.gruvbox")
-            my_theme.insert.c = my_theme.normal.c
-            my_theme.visual.c = my_theme.normal.c
-            my_theme.replace.c = my_theme.normal.c
-            my_theme.command.c = my_theme.normal.c
-            lualine.setup({ theme = my_theme })
-            lualine.setup()
-        end
-    end
-EOF
-    endif
-endfunction
-
 function! s:set_neotree_highlights()
     if has('nvim')
         execute "hi NeoTreeTabActive guifg=" . s:hiattr('NeoTreeNormal', 'fg') . " guibg=" . s:hiattr('NeoTreeNormal', 'bg')
@@ -290,8 +271,6 @@ endfunction
 syntax on
 
 function! s:on_colorscheme()
-    let float_border_fg = s:hiattr("FloatBorder", "bg")
-    execute 'highlight! FloatBorder guifg= ' . float_border_fg . ' guibg=NONE ctermbg=NONE'
     if exists('g:loaded_lightline') && exists('g:colors_name')
         if g:colors_name =~# 'solarized'
             let g:lightline.colorscheme = 'solarized'
@@ -311,14 +290,11 @@ function! s:on_colorscheme()
         call lightline#update()
     endif
     " syntax on
-    call s:set_lualine_highlights()
     call s:set_leaderf_highlights()
     call s:set_neotree_highlights()
 endfunction
 
 function! s:on_set_background()
-    let float_border_fg = s:hiattr("FloatBorder", "bg")
-    execute 'highlight! FloatBorder guifg= ' . float_border_fg . 'guibg=NONE ctermbg=NONE'
     if exists('g:loaded_lightline')
         let colorfile = globpath(&rtp, 'autoload/lightline/colorscheme/' . g:lightline.colorscheme . '.vim')
         if colorfile != ''
@@ -327,7 +303,6 @@ function! s:on_set_background()
         endif
     endif
     syntax on
-    call s:set_lualine_highlights()
     call s:set_leaderf_highlights()
     call s:set_neotree_highlights()
 endfunction

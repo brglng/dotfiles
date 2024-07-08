@@ -17,6 +17,7 @@ return {
                     height = 0.62,
                 },
                 borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+                -- borderchars = { '▔', '▕', '▁', '▏', '🭽', '🭾', '🭿', '🭼', },
                 prompt_prefix = "  ",
                 selection_caret = "  ",
                 mappings = {

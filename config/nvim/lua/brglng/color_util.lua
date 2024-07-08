@@ -111,7 +111,7 @@ function M.add_value(rgb, proportion)
     local r, g, b = M.extract_rgb(rgb)
     local h, s, v = M.rgb2hsv(r, g, b)
 
-    v = v * (1 - proportion) + proportion
+    v = math.min(v + proportion * 255, 255)
     r, g, b = M.hsv2rgb(h, s, v)
     return M.combine_rgb(r, g, b)
 end
@@ -124,7 +124,7 @@ function M.reduce_value(rgb, proportion)
     local r, g, b = M.extract_rgb(rgb)
     local h, s, v = M.rgb2hsv(r, g, b)
 
-    v = v * (1 - proportion)
+    v = math.max(v - proportion * 255, 0)
     r, g, b = M.hsv2rgb(h, s, v)
     return M.combine_rgb(r, g, b)
 end
@@ -137,7 +137,7 @@ function M.add_saturation(rgb, proportion)
     local r, g, b = M.extract_rgb(rgb)
     local h, s, v = M.rgb2hsv(r, g, b)
 
-    s = proportion + (1 - proportion) * s
+    s = math.min(s + proportion, 1.0)
     r, g, b = M.hsv2rgb(h, s, v)
     return M.combine_rgb(r, g, b)
 end
@@ -150,7 +150,7 @@ function M.reduce_saturation(rgb, proportion)
     local r, g, b = M.extract_rgb(rgb)
     local h, s, v = M.rgb2hsv(r, g, b)
 
-    s = s * (1 - proportion)
+    s = math.max(s - proportion, 0)
     r, g, b = M.hsv2rgb(h, s, v)
     return M.combine_rgb(r, g, b)
 end

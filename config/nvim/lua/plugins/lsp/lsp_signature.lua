@@ -13,6 +13,7 @@ return {
             floating_window_off_y = 0,
             handler_opts = {
                 border = "none",
+                -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
                 focusable = false,
             },
             -- transparency = 20,

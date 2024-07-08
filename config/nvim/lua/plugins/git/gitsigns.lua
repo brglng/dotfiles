@@ -40,7 +40,8 @@ return {
             map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
         end,
         preview_config = {
-            border = "rounded",
+            border = "none",
+            -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
             -- focusable = true,
         }
     }

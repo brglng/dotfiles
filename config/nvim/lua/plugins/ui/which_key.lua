@@ -9,8 +9,9 @@ return {
         window = {
             -- border = {"", "─" ,"", "", "", "", "", "" },
             border = {"", "▔" ,"", "", "", "", "", "" },
+            -- border = {"", "" ,"", "", "", "", "", "" },
             margin = { 0, 0, 0, 0 },
-            padding = { 1, 0, 1, 0 }
+            padding = { 0, 0, 1, 0 }
         },
         layout = {
             align = "center"
@@ -18,14 +19,14 @@ return {
     },
     config = function(_, opts)
         require('which-key').setup(opts)
-        local color_util = require('brglng.color_util')
 
+        local color_util = require('brglng.color_util')
         local set_which_key_border_color = function()
             -- vim.cmd [[ highlight! link WhichKeyFloat Normal ]]
             local WinSeparator = vim.api.nvim_get_hl(0, { name = 'WinSeparator', link = false })
             local WhichKeyFloat = vim.api.nvim_get_hl(0, { name = 'WhichKeyFloat', link = false })
             vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                fg = color_util.transparency(WinSeparator.fg, WhichKeyFloat.bg, 0.3),
+                fg = color_util.transparency(WinSeparator.fg, WhichKeyFloat.bg, 0.2),
                 bg = WhichKeyFloat.bg
             })
         end

@@ -1,14 +1,6 @@
 vim.o.mousemoveevent = true
 vim.o.splitkeep = "screen"
 vim.o.termsync = false
-
-vim.diagnostic.config {
-    virtual_text = false,
-    float = {
-        border = "rounded"
-    }
-}
-vim.env.DEBUG_CODEIUM = "error"
 vim.g.maplocalleader = ","
 
 vim.filetype.add {

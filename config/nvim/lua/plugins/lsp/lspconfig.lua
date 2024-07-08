@@ -9,6 +9,15 @@ return {
     },
     opts = {
         -- log_level = 'debug'
+
+        diagnostic = {
+            virtual_text = false,
+            float = {
+                border = "none"
+                -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
+            }
+        },
+
         inlay_hint = {
             enabled = true
         },
@@ -78,6 +87,10 @@ return {
     },
     config = function(_, opts)
         local lspconfig = require('lspconfig')
+
+        if opts.diagnostic ~= nil then
+            vim.diagnostic.config(opts.diagnostic)
+        end
 
         if opts.log_level ~= nil then
             vim.lsp.set_log_level(opts.log_level)

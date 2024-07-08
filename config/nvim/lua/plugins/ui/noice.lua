@@ -6,198 +6,271 @@ return {
         "MunifTanjim/nui.nvim",
         "rcarriga/nvim-notify",
     },
-    config = function ()
-        local format = require("noice.lsp.format")
-        local hacks = require("noice.util.hacks")
-
-        require("noice").setup {
-            cmdline = {
+    opts = {
+        cmdline = {
+            enabled = true,
+        },
+        messages = {
+            enabled = true,
+            view_search = false,
+            view = "notify",
+            view_error = "notify",
+            view_warn = "notify",
+        },
+        popupmenu = {
+            backend = "cmp",
+        },
+        notify = {
+            view = "notify",
+        },
+        lsp = {
+            progress = {
                 enabled = true,
+                view = "lsp_progress"
             },
-            messages = {
+            -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+            override = {
+                ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                ["vim.lsp.util.stylize_markdown"] = true,
+                -- ["cmp.entry.get_documentation"] = true,
+            },
+            signature = {
+                enabled = false,
+            },
+            hover = {
                 enabled = true,
-                view_search = false,
-                view = "notify",
-                view_error = "notify",
-                view_warn = "notify",
-            },
-            popupmenu = {
-                backend = "cmp",
-            },
-            notify = {
-                view = "notify",
-            },
-            lsp = {
-                progress = {
-                    enabled = true,
-                    view = "lsp_progress"
+            }
+        },
+        -- you can enable a preset for easier configuration
+        presets = {
+            bottom_search = false, -- use a classic bottom cmdline for search
+            command_palette = true, -- position the cmdline and popupmenu together
+            long_message_to_split = true, -- long messages will be sent to a split
+            inc_rename = false, -- enables an input dialog for inc-rename.nvim
+            lsp_doc_border = true, -- add a border to hover docs and signature help
+        },
+        views = {
+            mini = {
+                border = {
+                    style = 'rounded',
+                    -- style = {'🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
+                    -- style = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
                 },
-                -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-                override = {
-                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                    ["vim.lsp.util.stylize_markdown"] = true,
-                    -- ["cmp.entry.get_documentation"] = true,
+                position = {
+                    row = -2
                 },
-                signature = {
-                    enabled = false,
-                },
-                hover = {
-                    enabled = true,
+                focusable = false,
+                win_options = {
+                    -- winblend = 20,
+                    -- winhighlight = 'NormalFloat:NormalFloat'
                 }
             },
-            -- you can enable a preset for easier configuration
-            presets = {
-                bottom_search = false, -- use a classic bottom cmdline for search
-                command_palette = true, -- position the cmdline and popupmenu together
-                long_message_to_split = true, -- long messages will be sent to a split
-                inc_rename = false, -- enables an input dialog for inc-rename.nvim
-                lsp_doc_border = false, -- add a border to hover docs and signature help
-            },
-            views = {
-                mini = {
-                    border = "rounded",
-                    position = {
-                        row = -2
-                    },
-                    focusable = false,
-                    win_options = {
-                        -- winblend = 20,
-                    }
+            cmdline_popup = {
+                border = {
+                    -- style = 'rounded',
+                    -- style = {'🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
+                    style = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
                 },
-                cmdline_popup = {
-                    position = {
-                        row = "38%"
-                    }
+                position = {
+                    row = "38%"
                 },
-                hover = {
-                    border = {
-                        style = "rounded",
-                        -- padding = { 0, 2 }
-                    },
-                    win_options = {
-                        -- winblend = 20,
-                        winhighlight = {
-                            FloatBorder = "Normal"
-                        }
-                    }
-                },
-                lsp_progress = {
-                    backend = "notify",
-                    fallback = "mini",
-                    title = "LSP",
-                    replace = true,
-                    merge = true
-                },
-                split = {
-                    enter = true,
+                win_options = {
+                    winhighlight = 'NormalFloat:NormalFloat'
                 }
             },
-            routes = {
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ more line"
-                    },
-                    opts = { skip = true }
+            hover = {
+                border = {
+                    style = "none",
+                    -- style = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
+                    padding = {
+                        top = 0,
+                        bottom = 0,
+                        left = 1,
+                        right = 1,
+                    }
                 },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ 行被加入"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "多了 %d+ 行"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "少了 %d+ 行"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ line less"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ fewer lines"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ 行被去掉"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ change;"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ changes;"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ 行发生改变"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "缩进了 %d+ 行"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        event = "msg_show",
-                        kind = "",
-                        find = "%d+ lines indented"
-                    },
-                    opts = { skip = true }
-                },
-                {
-                    filter = {
-                        warning = true,
-                        find = "heartbeat failed"
-                    },
-                    opts = { skip = true }
+                win_options = {
+                    -- winblend = 20,
+                    -- winhighlight = {
+                    --     FloatBorder = "Normal"
+                    -- }
                 }
+            },
+            lsp_progress = {
+                backend = "notify",
+                fallback = "mini",
+                title = "LSP",
+                replace = true,
+                merge = true
+            },
+            split = {
+                enter = true,
+            }
+        },
+        routes = {
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ more line"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ 行被加入"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "多了 %d+ 行"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "少了 %d+ 行"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ line less"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ fewer lines"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ 行被去掉"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ change;"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ changes;"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ 行发生改变"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "缩进了 %d+ 行"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "%d+ lines indented"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    warning = true,
+                    find = "heartbeat failed"
+                },
+                opts = { skip = true }
             }
         }
+    },
+    config = function(_, opts)
+        require("noice").setup(opts)
+
+        -- local color_util = require('brglng.color_util')
+        local set_noice_color = function()
+            local Normal = vim.api.nvim_get_hl(0, { name = '', link = false })
+            local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
+            local FloatBorder = vim.api.nvim_get_hl(0, { name = 'FloatBorder', link = false })
+            local DiagnosticSignInfo = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignInfo', link = false })
+            local DiagnosticSignWarn = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignWarn', link = false })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopup', {
+            --     fg = NormalFloat.fg,
+            --     bg = color_util.transparency(NormalFloat.bg, Normal.bg, 0.5)
+            -- })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorder', {
+            --     fg = NormalFloat.fg,
+            --     bg = color_util.transparency(NormalFloat.bg, Normal.bg, 0.5)
+            -- })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleCmdline', {
+                fg = NormalFloat.bg,
+                bg = DiagnosticSignInfo.fg
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleSearch', {
+                fg = NormalFloat.bg,
+                bg = DiagnosticSignWarn.fg
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleLua', {
+                fg = NormalFloat.bg,
+                bg = DiagnosticSignInfo.fg
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleHelp', {
+                fg = NormalFloat.bg,
+                bg = DiagnosticSignInfo.fg
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleInput', {
+                fg = NormalFloat.bg,
+                bg = DiagnosticSignInfo.fg
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleFilter', {
+                fg = NormalFloat.bg,
+                bg = DiagnosticSignInfo.fg
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleCalculator', {
+                fg = NormalFloat.bg,
+                bg = DiagnosticSignInfo.fg
+            })
+        end
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            pattern = "*",
+            callback = set_noice_color
+        })
+        vim.api.nvim_create_autocmd("OptionSet", {
+            pattern = "background",
+            callback = set_noice_color
+        })
+
+        local format = require("noice.lsp.format")
+        local hacks = require("noice.util.hacks")
 
         local function from_lsp_clangd(e)
             return vim.tbl_get(e, "source", "name") == "nvim_lsp"
