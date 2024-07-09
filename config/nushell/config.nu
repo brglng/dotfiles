@@ -356,7 +356,7 @@ $env.config = {
                 min_description_width: 0
                 max_description_width: 50
                 max_description_height: 10
-                description_offset: 1
+                description_offset: 0
                 # If true, the cursor pos will be corrected, so the suggestions match up with the typed text
                 #
                 # C:\> str
