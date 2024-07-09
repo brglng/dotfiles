@@ -325,7 +325,7 @@ $env.config = {
         {
             name: completion_menu
             only_buffer_difference: false
-            marker: "| "
+            marker: ""
             type: {
                 layout: columnar
                 columns: 4
@@ -343,15 +343,15 @@ $env.config = {
         {
             name: ide_completion_menu
             only_buffer_difference: false
-            marker: "| "
+            marker: ""
             type: {
                 layout: ide
                 min_completion_width: 0,
-                max_completion_width: 50,
-                max_completion_height: 10, # will be limited by the available lines in the terminal
-                padding: 0,
+                max_completion_width: 100,
+                max_completion_height: 20, # will be limited by the available lines in the terminal
+                padding: 1,
                 border: true,
-                cursor_offset: 0,
+                cursor_offset: -2,
                 description_mode: "prefer_right"
                 min_description_width: 0
                 max_description_width: 50
@@ -363,7 +363,7 @@ $env.config = {
                 #      str join
                 #      str trim
                 #      str split
-                correct_cursor_pos: false
+                correct_cursor_pos: true
             }
             style: {
                 text: green
@@ -408,23 +408,23 @@ $env.config = {
     ]
 
     keybindings: [
-        {
-            name: completion_menu
-            modifier: none
-            keycode: tab
-            mode: [emacs vi_normal vi_insert]
-            event: {
-                until: [
-                    { send: menu name: completion_menu }
-                    { send: menunext }
-                    { edit: complete }
-                ]
-            }
-        }
+        # {
+        #     name: completion_menu
+        #     modifier: none
+        #     keycode: tab
+        #     mode: [emacs vi_normal vi_insert]
+        #     event: {
+        #         until: [
+        #             { send: menu name: completion_menu }
+        #             { send: menunext }
+        #             { edit: complete }
+        #         ]
+        #     }
+        # }
         {
             name: ide_completion_menu
-            modifier: control
-            keycode: char_n
+            modifier: none
+            keycode: tab
             mode: [emacs vi_normal vi_insert]
             event: {
                 until: [
