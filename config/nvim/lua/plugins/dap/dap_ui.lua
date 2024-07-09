@@ -6,6 +6,6 @@ return {
     },
     opts = {},
     keys = {
-        { "<F5>", mode = "n", function() require("brglng.dap_util").start_debugging() end, desc = "Continue" },
+        { "<F5>", mode = "n", function() require("brglng.daputil").start_debugging() end, desc = "Continue" },
     }
 }

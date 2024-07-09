@@ -20,13 +20,13 @@ return {
     config = function(_, opts)
         require('which-key').setup(opts)
 
-        local color_util = require('brglng.color_util')
+        local colorutil = require('brglng.colorutil')
         local set_which_key_border_color = function()
             -- vim.cmd [[ highlight! link WhichKeyFloat Normal ]]
             local WinSeparator = vim.api.nvim_get_hl(0, { name = 'WinSeparator', link = false })
             local WhichKeyFloat = vim.api.nvim_get_hl(0, { name = 'WhichKeyFloat', link = false })
             vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                fg = color_util.transparency(WinSeparator.fg, WhichKeyFloat.bg, 0.2),
+                fg = colorutil.transparency(WinSeparator.fg, WhichKeyFloat.bg, 0.2),
                 bg = WhichKeyFloat.bg
             })
         end
@@ -54,7 +54,7 @@ return {
                 h = { "<Cmd>Lspsaga hover_doc<CR>", "Hover Doc" },
                 i = { "<Cmd>Trouble lsp_implementations<CR>", "Implementations" },
                 n = { "<Cmd>Navbuddy<CR>", "Navigate" },
-                o = { "<Cmd>Lspsaga<CR>", "Outline" },
+                o = { "<Cmd>Lspsaga outline<CR>", "Outline" },
                 r = { "<Cmd>Trouble lsp_references<CR>", "References" },
                 R = { "<Cmd>Lspsaga rename<CR>", "Rename" },
                 t = { "<Cmd>Trouble lsp_type_definitions<CR>", "Type Definitions" }
@@ -62,7 +62,7 @@ return {
             d = {
                 name = "+debug",
                 b = { require("dap").toggle_breakpoint, "Toggle Breakpoint" },
-                d = { require("brglng.dap_util").start_debugging, "Start Debugging" },
+                d = { require("brglng.daputil").start_debugging, "Start Debugging" },
                 f = { require("dap").step_out, "Step Out" },
                 h = { require("dap.ui.widgets").hover, "Debug Hover" },
                 n = { require("dap").step_over, "Step Over" },

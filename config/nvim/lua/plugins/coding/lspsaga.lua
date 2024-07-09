@@ -7,7 +7,7 @@ return {
     opts = {
         code_action = {
             extend_gitsigns = true,
-            show_server_name = true
+            show_server_name = true,
         },
         diagnostic = {
             diagnostic_only_current = false
@@ -23,5 +23,8 @@ return {
         symbol_in_winbar = {
             enable = false,
         },
+        ui = {
+            -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
+        }
     }
 }

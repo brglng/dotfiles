@@ -70,10 +70,10 @@ require("lazy").setup("plugins", {
             reset = false
         }
     },
-    -- rocks = {
-    --     enabled = true,
+    rocks = {
+        enabled = false,
     --     hererocks = true,
-    -- }
+    }
 })
 
 vim.cmd [[ colorscheme melange ]]

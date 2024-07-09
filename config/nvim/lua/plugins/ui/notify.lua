@@ -6,17 +6,17 @@ return {
     "rcarriga/nvim-notify",
     config = function()
         local set_notify_colors = function()
-            local color_util = require('brglng.color_util')
+            local colorutil = require('brglng.colorutil')
             local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
             local WinSeparator = vim.api.nvim_get_hl(0, { name = "WinSeparator", link = false })
             local border_fg, bg
             if vim.o.background == 'dark' then
-                border_fg = color_util.reduce_value(Normal.bg, 0.1)
-                bg = color_util.add_value(NormalFloat.bg, 0.02)
+                border_fg = colorutil.reduce_value(Normal.bg, 0.1)
+                bg = colorutil.add_value(NormalFloat.bg, 0.02)
             else
-                border_fg = color_util.transparency(WinSeparator.fg, Normal.bg, 0.3)
-                bg = color_util.reduce_value(NormalFloat.bg, 0.02)
+                border_fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.3)
+                bg = colorutil.reduce_value(NormalFloat.bg, 0.02)
             end
 
             vim.api.nvim_set_hl(0, "NotifyERRORBorder", {

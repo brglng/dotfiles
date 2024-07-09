@@ -83,18 +83,12 @@ return {
                     style = "none",
                     -- style = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
                     padding = {
-                        top = 0,
-                        bottom = 0,
-                        left = 1,
-                        right = 1,
+                        top = 1,
+                        bottom = 1,
+                        left = 2,
+                        right = 2,
                     }
                 },
-                win_options = {
-                    -- winblend = 20,
-                    -- winhighlight = {
-                    --     FloatBorder = "Normal"
-                    -- }
-                }
             },
             lsp_progress = {
                 backend = "notify",
@@ -216,7 +210,7 @@ return {
     config = function(_, opts)
         require("noice").setup(opts)
 
-        -- local color_util = require('brglng.color_util')
+        -- local colorutil = require('brglng.colorutil')
         local set_noice_color = function()
             local Normal = vim.api.nvim_get_hl(0, { name = '', link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
@@ -225,11 +219,11 @@ return {
             local DiagnosticSignWarn = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignWarn', link = false })
             -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopup', {
             --     fg = NormalFloat.fg,
-            --     bg = color_util.transparency(NormalFloat.bg, Normal.bg, 0.5)
+            --     bg = colorutil.transparency(NormalFloat.bg, Normal.bg, 0.5)
             -- })
             -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorder', {
             --     fg = NormalFloat.fg,
-            --     bg = color_util.transparency(NormalFloat.bg, Normal.bg, 0.5)
+            --     bg = colorutil.transparency(NormalFloat.bg, Normal.bg, 0.5)
             -- })
             vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleCmdline', {
                 fg = NormalFloat.bg,

@@ -1,4 +1,4 @@
-local color_util = require("brglng.color_util")
+local colorutil = require("brglng.colorutil")
 
 return {
     'nvim-telescope/telescope.nvim', branch = '0.1.x',
@@ -92,16 +92,16 @@ return {
             end
             -- vim.notify(string.format("normal_float = { fg = %s, bg = %s }", normal_float.fg, normal_float.bg))
             -- vim.notify(string.format("pmenu_sel = { fg = %s, bg = %s, reverse = %s }", pmenu_sel.fg, pmenu_sel.bg, pmenu_sel.reverse))
-            local prompt_bg = color_util.transparency(pmenu_sel.bg, normal.bg, 0.3)
+            local prompt_bg = colorutil.transparency(pmenu_sel.bg, normal.bg, 0.3)
             local prompt_fg = normal_float.fg
-            local prompt_counter_fg = color_util.transparency(prompt_fg, prompt_bg, 0.5)
+            local prompt_counter_fg = colorutil.transparency(prompt_fg, prompt_bg, 0.5)
             local preview_bg, preview_title_bg
             if vim.o.background == "light" then
-                preview_bg = color_util.reduce_value(normal_float.bg, 0.05)
+                preview_bg = colorutil.reduce_value(normal_float.bg, 0.05)
             else
-                preview_bg = color_util.add_value(normal_float.bg, 0.05)
+                preview_bg = colorutil.add_value(normal_float.bg, 0.05)
             end
-            preview_title_bg = color_util.transparency(normal_float.fg, preview_bg, 0.6)
+            preview_title_bg = colorutil.transparency(normal_float.fg, preview_bg, 0.6)
             vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
                 fg = prompt_fg,
                 bg = prompt_bg

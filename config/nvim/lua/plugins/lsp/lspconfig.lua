@@ -13,7 +13,10 @@ return {
         diagnostic = {
             virtual_text = false,
             float = {
-                border = "none"
+                border = {
+                    { " ", "NormalFloat" },
+                    { " ", "NormalFloat" },
+                }
                 -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
             }
         },
@@ -101,8 +104,13 @@ return {
         end
 
         -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-        --     vim.lsp.handlers.signature_help, {
-        --         border = "rounded",
+        --     vim.lsp.handlers.hover, {
+        --         border = "none",
+        --         -- border = "rounded",
+        --         -- border = {
+        --         --     { " ", "NormalFloat" },
+        --         --     { " ", "NormalFloat" },
+        --         -- },
         --         silent = false
         --     }
         -- )

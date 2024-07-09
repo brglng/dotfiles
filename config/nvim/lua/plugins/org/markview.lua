@@ -1,9 +1,7 @@
 return {
-    "folke/trouble.nvim",
+    "OXY2DEV/markview.nvim",
     dependencies = {
+        "nvim-treesitter/nvim-treesitter",
         "nvim-tree/nvim-web-devicons"
     },
-    opts = {
-        focus = true
-    }
 }

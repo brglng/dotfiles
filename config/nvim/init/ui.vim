@@ -255,15 +255,6 @@ function! s:set_leaderf_highlights()
     endif
 endfunction
 
-function! s:set_neotree_highlights()
-    if has('nvim')
-        execute "hi NeoTreeTabActive guifg=" . s:hiattr('NeoTreeNormal', 'fg') . " guibg=" . s:hiattr('NeoTreeNormal', 'bg')
-        execute "hi NeoTreeTabInactive guibg=" . s:middle_color(s:hiattr('BufferLineBackground', 'bg'), s:hiattr('NeoTreeNormal', 'bg'))
-        execute "hi NeoTreeTabSeparatorInactive guifg=" . s:hiattr('BufferLineBuffer', 'fg') . " guibg=" . s:middle_color(s:hiattr('BufferLineBackground', 'bg'), s:hiattr('NeoTreeNormal', 'bg'))
-        execute "hi NeoTreeTabSeparatorActive guifg=" . s:hiattr('NeoTreeNormal', 'fg') . " guibg=" . s:hiattr('NeoTreeNormal', 'bg')
-    endif
-endfunction
-
 " colorscheme melange
 " if exists('g:loaded_lightline')
 "     let g:lightline.colorscheme = 'melange'
@@ -291,7 +282,6 @@ function! s:on_colorscheme()
     endif
     " syntax on
     call s:set_leaderf_highlights()
-    call s:set_neotree_highlights()
 endfunction
 
 function! s:on_set_background()
@@ -304,7 +294,6 @@ function! s:on_set_background()
     endif
     syntax on
     call s:set_leaderf_highlights()
-    call s:set_neotree_highlights()
 endfunction
 
 augroup ZpanColorScheme
