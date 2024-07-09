@@ -349,9 +349,9 @@ $env.config = {
                 min_completion_width: 0,
                 max_completion_width: 100,
                 max_completion_height: 20, # will be limited by the available lines in the terminal
-                padding: 1,
+                padding: 0,
                 border: true,
-                cursor_offset: -2,
+                cursor_offset: -1,
                 description_mode: "prefer_right"
                 min_description_width: 0
                 max_description_width: 50
