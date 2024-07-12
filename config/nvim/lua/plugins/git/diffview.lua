@@ -1,5 +1,8 @@
 return {
     'sindrets/diffview.nvim',
+    cmd = {
+        'DiffviewFileHistory', 'DiffviewOpen', 'DiffviewToggleFiles', 'DiffviewFocusFiles', 'DiffviewRefresh'
+    },
     opts = {
         enhanced_diff_hl = true,
         view = {

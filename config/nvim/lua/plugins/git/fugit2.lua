@@ -15,6 +15,7 @@ return {
     cmd = { 'Fugit2', 'Fugit2Blame', 'Fugit2Diff', 'Fugit2Graph' },
     opts = {
         width = '62%',
-        height = '90%'
+        height = '90%',
+        external_diffview = true,
     },
 }
