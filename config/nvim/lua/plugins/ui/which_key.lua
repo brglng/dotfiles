@@ -25,10 +25,19 @@ return {
             -- vim.cmd [[ highlight! link WhichKeyFloat Normal ]]
             local WinSeparator = vim.api.nvim_get_hl(0, { name = 'WinSeparator', link = false })
             local WhichKeyFloat = vim.api.nvim_get_hl(0, { name = 'WhichKeyFloat', link = false })
-            vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                fg = colorutil.transparency(WinSeparator.fg, WhichKeyFloat.bg, 0.2),
-                bg = WhichKeyFloat.bg
-            })
+            local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
+            if vim.o.background == 'dark' then
+                vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
+                    fg = colorutil.reduce_value(Normal.bg, 0.03),
+                    bg = WhichKeyFloat.bg
+                })
+            else
+                vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
+                    fg = colorutil.transparency(WinSeparator.fg, WhichKeyFloat.bg, 0.1),
+                    bg = WhichKeyFloat.bg
+                })
+            end
+            -- vim.api.nvim_set_hl(0, 'WhichKeyFloat', { link = 'Normal' })
         end
         set_which_key_border_color()
         vim.api.nvim_create_autocmd("ColorScheme", {

@@ -13,11 +13,14 @@ return {
         diagnostic = {
             virtual_text = false,
             float = {
-                border = {
-                    { " ", "NormalFloat" },
-                    { " ", "NormalFloat" },
-                }
+                border = "rounded",
+                -- border = {
+                --     { " ", "NormalFloat" },
+                --     { " ", "NormalFloat" },
+                -- }
                 -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
+                focusable = false,
+                winhighlight = 'NormalFloat:Normal'
             }
         },
 
@@ -93,6 +96,19 @@ return {
 
         if opts.diagnostic ~= nil then
             vim.diagnostic.config(opts.diagnostic)
+        end
+        local orig_open_float = vim.diagnostic.open_float
+        vim.diagnostic.open_float = function(open_float_opts)
+            local float_bufnr, win_id = orig_open_float(open_float_opts)
+            if win_id ~= nil then
+                if opts.diagnostic.float.winhighlight ~= nil then
+                    vim.api.nvim_set_option_value('winhighlight', opts.diagnostic.float.winhighlight, { win = win_id })
+                end
+                if opts.diagnostic.float.focusable ~= nil then
+                    vim.api.nvim_win_set_config(win_id, { focusable = opts.diagnostic.float.focusable })
+                end
+            end
+            return float_bufnr, win_id
         end
 
         if opts.log_level ~= nil then

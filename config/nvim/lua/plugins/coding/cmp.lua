@@ -53,17 +53,17 @@ return {
         -- window_bordered.border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
         window_bordered.col_offset = -4
         window_bordered.side_padding = 1
-        window_bordered.winhighlight = 'Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None'
+        -- window_bordered.winhighlight = 'Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None'
         -- window_bordered.winblend = 20
 
         cmp.setup {
             window = {
-                completion = {
-                    col_offset = -3,
-                    side_padding = 1
-                },
-                -- completion = window_bordered,
-                -- documentation = window_bordered,
+                -- completion = {
+                --     col_offset = -3,
+                --     side_padding = 1
+                -- },
+                completion = window_bordered,
+                documentation = window_bordered,
             },
             -- view = {
             --     entries = {

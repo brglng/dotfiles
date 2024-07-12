@@ -4,21 +4,22 @@ return {
     dependencies = {
         'nvim-telescope/telescope-fzf-native.nvim'
     },
-    config = function ()
-        require("dropbar").setup {
-            sources = {
-                path = {
-                    preview = false
-                }
+    opts = {
+        sources = {
+            path = {
+                preview = false
             }
         }
+    },
+    config = function (_, opts)
+        require("dropbar").setup(opts)
 
         local set_dropbar_colors = function()
-            local hl_winbar = vim.api.nvim_get_hl(0, { name = "WinBar", link = false })
-            local hl_winbar_nc = vim.api.nvim_get_hl(0, { name = "WinBarNC", link = false })
-            local hl_normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-            vim.api.nvim_set_hl(0, "WinBar", { fg = hl_winbar.fg, bg = hl_normal.bg, bold = true })
-            vim.api.nvim_set_hl(0, "WinBarNC", { fg = hl_winbar_nc.fg, bg = hl_normal.bg, bold = false })
+            local WinBar = vim.api.nvim_get_hl(0, { name = "WinBar", link = false })
+            local WinBarNC = vim.api.nvim_get_hl(0, { name = "WinBarNC", link = false })
+            local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
+            vim.api.nvim_set_hl(0, "WinBar", { fg = WinBar.fg, bg = Normal.bg, bold = true })
+            vim.api.nvim_set_hl(0, "WinBarNC", { fg = WinBarNC.fg, bg = Normal.bg, bold = false })
         end
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "*",

@@ -2,7 +2,7 @@ return {
     "savq/melange-nvim",
     priority = 1000,
     config = function()
-        local set_float_border_color = function ()
+        local set_melange_color = function ()
             local colorutil = require('brglng.colorutil')
             local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
@@ -15,7 +15,7 @@ return {
             --     fg = FloatBorder.bg,
             --     bg = WinSeparator.fg
             -- })
-            if vim.o.background == 'dark' then
+            --[[ if vim.o.background == 'dark' then
                 vim.api.nvim_set_hl(0, 'Pmenu', {
                     fg = Pmenu.fg,
                     bg = colorutil.add_value(Pmenu.bg, 0.02),
@@ -41,7 +41,8 @@ return {
                     fg = PmenuThumb.fg,
                     bg = colorutil.reduce_value(PmenuThumb.bg, 0.015)
                 })
-            end
+            end ]]
+            -- vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal' })
             vim.api.nvim_set_hl(0, 'FloatBorder', {
                 fg = FloatBorder.fg,
                 bg = Normal.bg
@@ -49,11 +50,12 @@ return {
         end
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "melange",
-            callback = set_float_border_color,
+            callback = set_melange_color,
         })
         vim.api.nvim_create_autocmd("OptionSet", {
             pattern = "background",
-            callback = set_float_border_color
+            callback = set_melange_color
         })
+        set_melange_color()
     end
 }

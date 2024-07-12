@@ -43,16 +43,8 @@ return {
         },
         -- popup_border_style = { " ", " ", " ", " ", " ", " " },
         popup_border_style = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
-        event_handlers = {
-            {
-                event = 'neo_tree_popup_buffer_enter',
-                handler = function(args)
-                    vim.api.nvim_set_option_value('winhighlight',
-                                                  'Normal:NeoTreeFloatNormal',
-                                                  { win = args.winid })
-                end,
-            }
-        }
+        -- popup_border_style = { '█', '█', '█', '▕', '🭿', '▁', '🭼', '▏' },
+        -- popup_border_style = "rounded"
     },
     config = function(_, opts)
         require('neo-tree').setup(opts)
@@ -67,10 +59,10 @@ return {
             local NeoTreeNormal = vim.api.nvim_get_hl(0, { name = "NeoTreeNormal", link = false })
             local border_fg, bg
             if vim.o.background == 'dark' then
-                border_fg = colorutil.reduce_value(Normal.bg, 0.1)
+                border_fg = colorutil.reduce_value(NormalFloat.bg, 0.05)
                 bg = colorutil.add_value(NormalFloat.bg, 0.05)
             else
-                border_fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.3)
+                border_fg = colorutil.transparency(WinSeparator.fg, NormalFloat.bg, 0.3)
                 bg = colorutil.reduce_value(NormalFloat.bg, 0.05)
             end
 
@@ -83,16 +75,18 @@ return {
                 bg = colorutil.reduce_value(NeoTreeNormal.bg, 0.1)
             })
             vim.api.nvim_set_hl(0, 'NeoTreeTabSeparatorActive', {
-                fg = colorutil.reduce_value(NeoTreeNormal.bg, 0.3),
+                fg = colorutil.reduce_value(NeoTreeNormal.bg, 0.2),
                 bg = NeoTreeNormal.bg
             })
             vim.api.nvim_set_hl(0, 'NeoTreeTabSeparatorInactive', {
-                fg = colorutil.reduce_value(NeoTreeNormal.bg, 0.3),
+                fg = colorutil.reduce_value(NeoTreeNormal.bg, 0.2),
                 bg = colorutil.reduce_value(NeoTreeNormal.bg, 0.1)
             })
-            vim.api.nvim_set_hl(0, 'NeoTreeFloatNormal', { fg = NormalFloat.fg, bg = bg })
-            vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { fg = border_fg, bg = bg })
-            vim.api.nvim_set_hl(0, 'NeoTreeFloatTitle', { fg = NormalFloat.fg, bg = bg })
+            -- vim.api.nvim_set_hl(0, 'NeoTreeWinSeparator', { link = 'WinSeparator' })
+            -- vim.api.nvim_set_hl(0, 'NeoTreeFloatNormal', { fg = NormalFloat.fg, bg = bg })
+            -- vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { fg = bg, bg = bg })
+            vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { fg = border_fg, bg = NormalFloat.bg })
+            vim.api.nvim_set_hl(0, 'NeoTreeFloatTitle', { fg = NormalFloat.fg, bg = border_fg })
         end
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "*",
@@ -102,6 +96,18 @@ return {
             pattern = "background",
             callback = set_neo_tree_colors
         })
+        -- vim.api.nvim_create_autocmd("FileType", {
+        --     pattern = "neo-tree-popup",
+        --     callback = set_neo_tree_colors
+        -- })
+        -- vim.api.nvim_create_autocmd("OptionSet", {
+        --     pattern = "winhighlight",
+        --     callback = function()
+        --         if vim.o.filetype == 'neo-tree-popup' or vim.w.neo_tree_preview == 1 then
+        --             vim.opt_local.winhighlight:append(',NormalFloat:NeoTreeFloatNormal')
+        --         end
+        --     end
+        -- })
         set_neo_tree_colors()
     end
 }
