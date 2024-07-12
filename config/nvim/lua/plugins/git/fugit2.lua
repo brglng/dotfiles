@@ -8,7 +8,13 @@ return {
             'chrisgrieser/nvim-tinygit', -- optional: for Github PR view
             dependencies = { 'stevearc/dressing.nvim' }
         },
+        {
+            'sindrets/diffview.nvim'
+        }
     },
-    cmd = { 'Fugit2', 'Fugit2Graph' },
-    opts = {},
+    cmd = { 'Fugit2', 'Fugit2Blame', 'Fugit2Diff', 'Fugit2Graph' },
+    opts = {
+        width = '62%',
+        height = '90%'
+    },
 }
