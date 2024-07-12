@@ -184,9 +184,9 @@ else
 endif
 
 if has('nvim')
-    " nnoremap <RightMouse> <Nop>
-    " inoremap <RightMouse> <Nop>
-    " vnoremap <RightMouse> <Nop>
+    nnoremap <RightMouse> <Nop>
+    inoremap <RightMouse> <Nop>
+    vnoremap <RightMouse> <Nop>
     inoremap <C-x><C-x> <Cmd>lua require('cmp').complete()<CR>
 endif
 
