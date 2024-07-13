@@ -59,7 +59,7 @@ return {
             local NeoTreeNormal = vim.api.nvim_get_hl(0, { name = "NeoTreeNormal", link = false })
             local border_fg, bg
             if vim.o.background == 'dark' then
-                border_fg = colorutil.reduce_value(NormalFloat.bg, 0.05)
+                border_fg = colorutil.reduce_value(Normal.bg, 0.1)
                 bg = colorutil.add_value(NormalFloat.bg, 0.05)
             else
                 border_fg = colorutil.transparency(WinSeparator.fg, NormalFloat.bg, 0.3)

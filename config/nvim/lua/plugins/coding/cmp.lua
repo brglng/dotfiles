@@ -53,8 +53,16 @@ return {
         -- window_bordered.border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
         window_bordered.col_offset = -4
         window_bordered.side_padding = 1
-        -- window_bordered.winhighlight = 'Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None'
+        window_bordered.winhighlight = 'Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None'
         -- window_bordered.winblend = 20
+
+        local function set_cmp_colors()
+            local Comment = vim.api.nvim_get_hl(0, { name = 'Comment', link = false })
+            vim.api.nvim_set_hl(0, 'CmpItemMenu', { fg = Comment.fg, bg = nil })
+        end
+        vim.api.nvim_create_autocmd('ColorScheme', { pattern = '*', callback = set_cmp_colors })
+        vim.api.nvim_create_autocmd('OptionSet', { pattern = 'background', callback = set_cmp_colors })
+        set_cmp_colors()
 
         cmp.setup {
             window = {

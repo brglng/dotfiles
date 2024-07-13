@@ -15,8 +15,8 @@ return {
         handler_opts = {
             border = "rounded",
             -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
-            -- focusable = false,
-            winhighlight = 'NormalFloat:Normal'
+            focusable = false,
+            -- winhighlight = 'NormalFloat:Normal'
         },
         -- transparency = 20,
         hint_enable = false,

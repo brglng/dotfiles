@@ -6,47 +6,45 @@ return {
         vim.o.timeoutlen = 300
     end,
     opts = {
-        window = {
+        preset = "modern",
+        win = {
             -- border = {"", "─" ,"", "", "", "", "", "" },
-            border = {"", "▔" ,"", "", "", "", "", "" },
+            -- border = {"", "▔" ,"", "", "", "", "", "" },
             -- border = {"", "" ,"", "", "", "", "", "" },
-            margin = { 0, 0, 0, 0 },
-            padding = { 0, 0, 1, 0 }
+            -- border = 'rounded'
+            -- padding = { 0, 0, 1, 0 }
         },
-        layout = {
-            align = "center"
-        }
     },
     config = function(_, opts)
         require('which-key').setup(opts)
 
         local colorutil = require('brglng.colorutil')
-        local set_which_key_border_color = function()
+        local set_which_key_color = function()
             -- vim.cmd [[ highlight! link WhichKeyFloat Normal ]]
             local WinSeparator = vim.api.nvim_get_hl(0, { name = 'WinSeparator', link = false })
             local WhichKeyFloat = vim.api.nvim_get_hl(0, { name = 'WhichKeyFloat', link = false })
             local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
-            if vim.o.background == 'dark' then
-                vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                    fg = colorutil.reduce_value(Normal.bg, 0.03),
-                    bg = WhichKeyFloat.bg
-                })
-            else
-                vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                    fg = colorutil.transparency(WinSeparator.fg, WhichKeyFloat.bg, 0.1),
-                    bg = WhichKeyFloat.bg
-                })
-            end
-            -- vim.api.nvim_set_hl(0, 'WhichKeyFloat', { link = 'Normal' })
+            -- if vim.o.background == 'dark' then
+            --     vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
+            --         fg = colorutil.reduce_value(Normal.bg, 0.03),
+            --         bg = WhichKeyFloat.bg
+            --     })
+            -- else
+            --     vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
+            --         fg = colorutil.transparency(WinSeparator.fg, WhichKeyFloat.bg, 0.1),
+            --         bg = WhichKeyFloat.bg
+            --     })
+            -- end
+            vim.api.nvim_set_hl(0, 'WhichKeyFloat', { link = 'Normal' })
         end
-        set_which_key_border_color()
+        set_which_key_color()
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "*",
-            callback = set_which_key_border_color
+            callback = set_which_key_color
         })
         vim.api.nvim_create_autocmd("OptionSet", {
             pattern = "background",
-            callback = set_which_key_border_color
+            callback = set_which_key_color
         })
 
         require("which-key").register({

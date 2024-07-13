@@ -20,7 +20,7 @@ return {
                 -- }
                 -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
                 focusable = false,
-                winhighlight = 'NormalFloat:Normal'
+                -- winhighlight = 'NormalFloat:Normal'
             }
         },
 

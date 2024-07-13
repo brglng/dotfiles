@@ -32,9 +32,8 @@ familiar with the configration files.
 
 The configurations and installation scripts are only tested on:
 
-- Ubuntu 16.04
-- Ubuntu 18.04
-- Ubuntu 20.04
+- Ubuntu 24.04
+- Ubuntu 24.04 (WSL)
 - Arch Linux
 - macOS Mojave
 

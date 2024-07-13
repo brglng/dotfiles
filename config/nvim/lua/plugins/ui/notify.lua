@@ -20,6 +20,7 @@ return {
             local colorutil = require('brglng.colorutil')
             local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
+            local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
             local WinSeparator = vim.api.nvim_get_hl(0, { name = "WinSeparator", link = false })
             local border_fg, bg
             -- if vim.o.background == 'dark' then
@@ -30,46 +31,46 @@ return {
             --     bg = colorutil.reduce_value(NormalFloat.bg, 0.02)
             -- end
 
-            -- vim.api.nvim_set_hl(0, "NotifyERRORBorder", {
-            --     fg = border_fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyWARNBorder", {
-            --     fg = border_fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyINFOBorder", {
-            --     fg = border_fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyDEBUGBorder", {
-            --     fg = border_fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyTRACEBorder", {
-            --     fg = border_fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyERRORBody", {
-            --     fg = NormalFloat.fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyWARNBody", {
-            --     fg = NormalFloat.fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyINFOBody", {
-            --     fg = NormalFloat.fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyDEBUGBody", {
-            --     fg = NormalFloat.fg,
-            --     bg = bg
-            -- })
-            -- vim.api.nvim_set_hl(0, "NotifyTRACEBody", {
-            --     fg = NormalFloat.fg,
-            --     bg = bg
-            -- })
+            vim.api.nvim_set_hl(0, "NotifyERRORBorder", {
+                fg = FloatBorder.fg,
+                -- bg = bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyWARNBorder", {
+                fg = FloatBorder.fg,
+                -- bg = bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyINFOBorder", {
+                fg = FloatBorder.fg,
+                -- bg = bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyDEBUGBorder", {
+                fg = FloatBorder.fg,
+                -- bg = bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyTRACEBorder", {
+                fg = FloatBorder.fg,
+                -- bg = bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyERRORBody", {
+                fg = NormalFloat.fg,
+                bg = NormalFloat.bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyWARNBody", {
+                fg = NormalFloat.fg,
+                bg = NormalFloat.bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyINFOBody", {
+                fg = NormalFloat.fg,
+                bg = NormalFloat.bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyDEBUGBody", {
+                fg = NormalFloat.fg,
+                bg = NormalFloat.bg
+            })
+            vim.api.nvim_set_hl(0, "NotifyTRACEBody", {
+                fg = NormalFloat.fg,
+                bg = NormalFloat.bg
+            })
             -- vim.api.nvim_set_hl(0, "NotifyERRORBody", { link = "NormalFloat" })
             -- vim.api.nvim_set_hl(0, "NotifyWARNBody", { link = "NormalFloat" })
             -- vim.api.nvim_set_hl(0, "NotifyINFOBody", { link = "NormalFloat" })

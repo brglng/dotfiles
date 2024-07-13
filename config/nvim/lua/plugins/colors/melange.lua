@@ -43,10 +43,22 @@ return {
                 })
             end ]]
             -- vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal' })
-            vim.api.nvim_set_hl(0, 'FloatBorder', {
-                fg = FloatBorder.fg,
-                bg = Normal.bg
-            })
+            -- vim.api.nvim_set_hl(0, 'FloatBorder', {
+            --     fg = FloatBorder.fg,
+            --     bg = Normal.bg
+            -- })
+            if vim.o.background == 'dark' then
+                vim.api.nvim_set_hl(0, 'FloatBorder', {
+                    fg = colorutil.reduce_value(Normal.bg, 0.2),
+                    bg = Normal.bg
+                })
+            else
+                vim.api.nvim_set_hl(0, 'FloatBorder', {
+                    -- fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.3),
+                    fg = colorutil.reduce_value(Normal.bg, 0.2),
+                    bg = Normal.bg
+                })
+            end
         end
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "melange",
