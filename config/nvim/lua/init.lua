@@ -71,7 +71,7 @@ require("lazy").setup("plugins", {
         }
     },
     rocks = {
-        enabled = false,
+        enabled = true,
         hererocks = true,
     }
 })
