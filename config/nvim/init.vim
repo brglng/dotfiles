@@ -348,7 +348,7 @@ Plug 'rhysd/clever-f.vim', VimOnly()
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround', VimOnly()
 Plug 'wellle/targets.vim'
-Plug 'andymass/vim-matchup'
+Plug 'andymass/vim-matchup', VimOnly()
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-syntax', VimOnly()

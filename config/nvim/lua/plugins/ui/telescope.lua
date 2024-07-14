@@ -1,6 +1,3 @@
-local actions = require("telescope.actions")
-local colorutil = require("brglng.colorutil")
-
 return {
     'nvim-telescope/telescope.nvim', branch = '0.1.x',
     cmd = "Telescope",
@@ -8,73 +5,81 @@ return {
         'nvim-lua/plenary.nvim',
         'GustavoKatel/telescope-asynctasks.nvim'
     },
-    opts = {
-        defaults = {
-            sorting_strategy = "ascending",
-            layout_config = {
-                prompt_position = "top",
-                height = 0.62,
-            },
-            -- borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
-            -- borderchars = { '▔', '▕', '▁', '▏', '🭽', '🭾', '🭿', '🭼', },
-            prompt_prefix = "  ",
-            selection_caret = "  ",
-            mappings = {
-                i = {
-                    ["<Esc>"] = actions.close,
-                    ["<TAB>"] = { "<Esc>", type = "command" },
-                },
-                n = {
-                    ["<Space>"] = actions.toggle_selection,
-                }
-            }
-        },
-        pickers = {
-            buffers = {
-                previewer = false,
+    config = function()
+        local actions = require("telescope.actions")
+        require("telescope").setup {
+            defaults = {
+                sorting_strategy = "ascending",
                 layout_config = {
-                    width = 0.62
+                    prompt_position = "top",
+                    height = 0.62,
                 },
+                -- borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+                -- borderchars = { '▔', '▕', '▁', '▏', '🭽', '🭾', '🭿', '🭼', },
+                prompt_prefix = "  ",
+                selection_caret = "  ",
                 mappings = {
                     i = {
-                        ["<C-d>"] = actions.delete_buffer
+                        ["<Esc>"] = actions.close,
+                        ["<TAB>"] = { "<Esc>", type = "command" },
                     },
                     n = {
-                        ["d"] = actions.delete_buffer
+                        ["<Space>"] = actions.toggle_selection,
                     }
                 }
             },
-            current_buffer_fuzzy_find = {
-                previewer = false,
-                layout_config = {
-                    width = 0.62,
+            pickers = {
+                buffers = {
+                    previewer = false,
+                    ignore_current_buffer = true,
+                    layout_config = {
+                        width = 0.62
+                    },
+                    mappings = {
+                        i = {
+                            ["<C-d>"] = actions.delete_buffer
+                        },
+                        n = {
+                            ["d"] = actions.delete_buffer
+                        }
+                    }
+                },
+                current_buffer_fuzzy_find = {
+                    previewer = false,
+                    layout_config = {
+                        width = 0.62,
+                    },
+                },
+                find_files = {
+                    hidden = true,
+                },
+                help_tags = {
+                    mappings = {
+                        i = {
+                            ["<CR>"] = actions.select_tab
+                        },
+                        n = {
+                            ["<CR>"] = actions.select_tab
+                        }
+                    }
+                },
+                lsp_document_symbols = {
+                    symbol_width = 50
+                },
+                oldfiles = {
+                    hidden = true,
                 },
             },
-            help_tags = {
-                mappings = {
-                    i = {
-                        ["<CR>"] = actions.select_tab
-                    },
-                    n = {
-                        ["<CR>"] = actions.select_tab
+            extensions = {
+                asynctasks = {
+                    layout_config = {
+                        width = 0.62
                     }
-                }
-            },
-            lsp_document_symbols = {
-                symbol_width = 50
-            }
-        },
-        extensions = {
-            asynctasks = {
-                layout_config = {
-                    width = 0.62
                 }
             }
         }
-    },
-    config = function (_, opts)
-        require("telescope").setup(opts)
 
+        local colorutil = require("brglng.colorutil")
         local set_telescope_colors = function()
             local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })

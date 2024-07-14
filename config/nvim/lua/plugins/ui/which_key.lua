@@ -148,7 +148,7 @@ return {
                 w = { function() require("spectre").open_visual({ select_word = true }) end, "Search Current Word" },
                 p = { function() require("spectre").open_file_search({ select_word = true }) end, "Search on Current File" }
             },
-            t = { require('telescope').extensions.asynctasks.all, "Tasks" },
+            -- t = { require('telescope').extensions.asynctasks.all, "Tasks" },
             w = {
                 name = "+windows",
                 t = { "<Cmd>TodoTrouble<CR>", "TODOs" }
