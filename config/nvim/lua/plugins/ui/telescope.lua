@@ -3,10 +3,14 @@ return {
     cmd = "Telescope",
     dependencies = {
         'nvim-lua/plenary.nvim',
-        'GustavoKatel/telescope-asynctasks.nvim'
+        'GustavoKatel/telescope-asynctasks.nvim',
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
     },
     config = function()
         local actions = require("telescope.actions")
+        require('telescope').load_extension('asynctasks')
+        require('telescope').load_extension('fzf')
+
         require("telescope").setup {
             defaults = {
                 sorting_strategy = "ascending",
@@ -32,6 +36,7 @@ return {
                 buffers = {
                     previewer = false,
                     ignore_current_buffer = true,
+                    sort_mru = true,
                     layout_config = {
                         width = 0.62
                     },
@@ -42,7 +47,7 @@ return {
                         n = {
                             ["d"] = actions.delete_buffer
                         }
-                    }
+                    },
                 },
                 current_buffer_fuzzy_find = {
                     previewer = false,
@@ -51,7 +56,15 @@ return {
                     },
                 },
                 find_files = {
-                    hidden = true,
+                    -- hidden = true,
+                    find_command = {
+                        "fd",
+                        "-H",
+                        "-I",
+                        "--exclude={.git,.idea,.vscode,.sass-cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local}",
+                        "--strip-cwd-prefix",
+                    },
+                    -- theme = 'ivy'
                 },
                 help_tags = {
                     mappings = {
@@ -71,6 +84,12 @@ return {
                 },
             },
             extensions = {
+                fzf = {
+                    fuzzy = true,
+                    override_generic_sorter = true,
+                    override_file_sorter = true,
+                    case_mode = 'smart_case',
+                },
                 asynctasks = {
                     layout_config = {
                         width = 0.62
@@ -109,7 +128,7 @@ return {
             local prompt_counter_fg = colorutil.transparency(prompt_fg, prompt_bg, 0.5)
             local preview_bg, preview_title_bg
             if vim.o.background == "light" then
-                preview_bg = colorutil.reduce_value(NormalFloat.bg, 0.05)
+                preview_bg = colorutil.reduce_value(NormalFloat.bg, 0.03)
             else
                 preview_bg = colorutil.add_value(NormalFloat.bg, 0.05)
             end
@@ -122,10 +141,17 @@ return {
                 fg = prompt_bg,
                 bg = prompt_bg
             })
-            vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
-                fg = PmenuSel.fg,
-                bg = PmenuSel.bg
-            })
+            if vim.o.background == 'dark' then
+                vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
+                    fg = prompt_bg,
+                    bg = colorutil.add_value(prompt_bg, 0.5)
+                })
+            else
+                vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
+                    fg = prompt_bg,
+                    bg = colorutil.add_saturation(colorutil.reduce_value(prompt_bg, 0.4), 0.2)
+                })
+            end
             vim.api.nvim_set_hl(0, "TelescopePromptCounter", {
                 fg = prompt_counter_fg
             })
@@ -169,5 +195,20 @@ return {
             pattern = "background",
             callback = set_telescope_colors
         })
-    end
+    end,
+    keys = {
+        { '<Leader>b', mode = 'n', require('telescope.builtin').buffers, desc = 'Buffers' },
+        { '<Leader>fb', mode = 'n', require('telescope.builtin').buffers, desc = 'Buffers' },
+        { '<Leader>fc', mode = 'n', require('telescope.builtin').command, desc = 'Commands' },
+        { '<Leader>fC', mode = 'n', require('telescope.builtin').colorscheme, desc = 'Color Schemes' },
+        { '<Leader>ff', mode = 'n', require('telescope.builtin').find_files, desc = 'Files' },
+        { '<Leader>fg', mode = 'n', require('telescope.builtin').live_grep, desc = 'Grep' },
+        { '<Leader>fh', mode = 'n', require('telescope.builtin').help_tags, desc = 'Help Tags' },
+        { '<Leader>fl', mode = 'n', require('telescope.builtin').current_buffer_fuzzy_find, desc = 'Lines' },
+        { '<Leader>fm', mode = 'n', require('telescope.builtin').marks, desc = 'Marks' },
+        { '<Leader>fM', mode = 'n', require('telescope.builtin').man_pagkes, desc = 'Man Pages' },
+        { '<Leader>fo', mode = 'n', require('telescope.builtin').vim_options, desc = 'Vim Options' },
+        { '<Leader>fs', mode = 'n', require('telescope.builtin').lsp_document_symbols, desc = 'LSP Document Symbols' },
+        { '<Leader>fr', mode = 'n', require('telescope.builtin').resume, desc = 'Resume Previous Picker' },
+    }
 }

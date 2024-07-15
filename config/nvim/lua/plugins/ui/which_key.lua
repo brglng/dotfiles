@@ -1,6 +1,7 @@
 return {
     "folke/which-key.nvim",
     event = "VeryLazy",
+    lazy = true,
     init = function()
         vim.o.timeout = true
         vim.o.timeoutlen = 300
@@ -8,12 +9,21 @@ return {
     opts = {
         preset = "modern",
         win = {
+            -- width = '100%',
             -- border = {"", "─" ,"", "", "", "", "", "" },
             -- border = {"", "▔" ,"", "", "", "", "", "" },
             -- border = {"", "" ,"", "", "", "", "", "" },
             -- border = 'rounded'
             -- padding = { 0, 0, 1, 0 }
+            title = true,
+            title_pos = "center",
         },
+        layout = {
+            align = "center"
+        },
+        icons = {
+            rules = false
+        }
     },
     config = function(_, opts)
         require('which-key').setup(opts)
@@ -35,23 +45,22 @@ return {
             --         bg = WhichKeyFloat.bg
             --     })
             -- end
-            vim.api.nvim_set_hl(0, 'WhichKeyFloat', { link = 'Normal' })
+            -- vim.api.nvim_set_hl(0, 'WhichKeyFloat', { link = 'Normal' })
         end
-        set_which_key_color()
-        vim.api.nvim_create_autocmd("ColorScheme", {
-            pattern = "*",
-            callback = set_which_key_color
-        })
-        vim.api.nvim_create_autocmd("OptionSet", {
-            pattern = "background",
-            callback = set_which_key_color
-        })
+        -- set_which_key_color()
+        -- vim.api.nvim_create_autocmd("ColorScheme", {
+        --     pattern = "*",
+        --     callback = set_which_key_color
+        -- })
+        -- vim.api.nvim_create_autocmd("OptionSet", {
+        --     pattern = "background",
+        --     callback = set_which_key_color
+        -- })
 
         require("which-key").register({
-            b = { require("telescope.builtin").buffers, "Buffers" },
             c = {
                 "+code",
-                a = { "<Cmd>Lspsaga code_action<CR>", "Code Actions" },
+                -- a = { "<Cmd>Lspsaga code_action<CR>", "Code Actions" },
                 c = { "<Cmd>Lspsaga incoming_calls<CR>", "Callers" },
                 C = { "<Cmd>Lspsaga outgoing_calls<CR>", "Callees" },
                 d = { "<Cmd>Trouble lsp_definitions<CR>", "Definitions" },
@@ -87,18 +96,6 @@ return {
             },
             f = {
                 name = "+fuzzy",
-                b = { require("telescope.builtin").buffers, "Buffers" },
-                c = { require("telescope.builtin").commands, "Commands" },
-                C = { require("telescope.builtin").colorscheme, "Colorschemes" },
-                f = { require("telescope.builtin").find_files, "Files" },
-                g = { require("telescope.builtin").live_grep, "Grep" },
-                h = { require("telescope.builtin").help_tags, "Help Tags" },
-                l = { require("telescope.builtin").current_buffer_fuzzy_find, "Lines" },
-                m = { require("telescope.builtin").marks, "Marks" },
-                M = { require("telescope.builtin").man_pages, "Man Pages" },
-                o = { require("telescope.builtin").vim_options, "Vim Options" },
-                s = { require("telescope.builtin").lsp_document_symbols, "LSP Document Symbols" },
-                r = { require("telescope.builtin").resume, "Resume Previous Picker" }
             },
             g = {
                 name = "+git",

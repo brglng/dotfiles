@@ -1,6 +1,6 @@
 return {
     "Shatur/neovim-session-manager",
-    event = "VeryLazy",
+    event = "VimEnter",
     dependencies = {
         "nvim-treesitter/nvim-treesitter",
         "s1n7ax/nvim-window-picker"
