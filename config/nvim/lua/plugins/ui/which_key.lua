@@ -60,7 +60,6 @@ return {
         require("which-key").register({
             c = {
                 "+code",
-                -- a = { "<Cmd>Lspsaga code_action<CR>", "Code Actions" },
                 c = { "<Cmd>Lspsaga incoming_calls<CR>", "Callers" },
                 C = { "<Cmd>Lspsaga outgoing_calls<CR>", "Callees" },
                 d = { "<Cmd>Trouble lsp_definitions<CR>", "Definitions" },

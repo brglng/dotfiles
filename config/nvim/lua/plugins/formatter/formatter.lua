@@ -1,5 +1,6 @@
 return {
     "mhartington/formatter.nvim",
+    enabled = false,
     config = function ()
         require("formatter").setup {
             filetype = {

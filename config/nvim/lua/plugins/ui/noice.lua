@@ -62,7 +62,7 @@ return {
                 focusable = false,
                 win_options = {
                     -- winblend = 20,
-                    winhighlight = 'NormalFloat:NormalFloat'
+                    winhighlight = 'NormalFloat:NormalFloat',
                 }
             },
             cmdline_popup = {
@@ -213,87 +213,87 @@ return {
     config = function(_, opts)
         require("noice").setup(opts)
 
-        -- local colorutil = require('brglng.colorutil')
-        -- local set_noice_color = function()
-        --     local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
-        --     local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
-        --     local FloatBorder = vim.api.nvim_get_hl(0, { name = 'FloatBorder', link = false })
-        --     local DiagnosticSignInfo = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignInfo', link = false })
-        --     local DiagnosticSignWarn = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignWarn', link = false })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopup', {
-        --         fg = Normal.fg,
-        --         bg = Normal.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorder', {
-        --         fg = FloatBorder.fg,
-        --         bg = FloatBorder.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderCmdline', {
-        --         fg = FloatBorder.fg,
-        --         bg = FloatBorder.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderSearch', {
-        --         fg = FloatBorder.fg,
-        --         bg = FloatBorder.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderLua', {
-        --         fg = FloatBorder.fg,
-        --         bg = FloatBorder.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderHelp', {
-        --         fg = FloatBorder.fg,
-        --         bg = FloatBorder.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderInput', {
-        --         fg = FloatBorder.fg,
-        --         bg = FloatBorder.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderFilter', {
-        --         fg = FloatBorder.fg,
-        --         bg = FloatBorder.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderCalculator', {
-        --         fg = FloatBorder.fg,
-        --         bg = FloatBorder.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleCmdline', {
-        --         fg = DiagnosticSignInfo.fg,
-        --         bg = Normal.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleSearch', {
-        --         fg = DiagnosticSignWarn.fg,
-        --         bg = Normal.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleLua', {
-        --         fg = DiagnosticSignInfo.fg,
-        --         bg = Normal.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleHelp', {
-        --         fg = DiagnosticSignInfo.fg,
-        --         bg = Normal.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleInput', {
-        --         fg = DiagnosticSignInfo.fg,
-        --         bg = Normal.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleFilter', {
-        --         fg = DiagnosticSignInfo.fg,
-        --         bg = Normal.bg
-        --     })
-        --     vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleCalculator', {
-        --         fg = DiagnosticSignInfo.fg,
-        --         bg = Normal.bg
-        --     })
-        -- end
-        -- vim.api.nvim_create_autocmd("ColorScheme", {
-        --     pattern = "*",
-        --     callback = set_noice_color
-        -- })
-        -- vim.api.nvim_create_autocmd("OptionSet", {
-        --     pattern = "background",
-        --     callback = set_noice_color
-        -- })
-        -- set_noice_color()
+        local colorutil = require('brglng.colorutil')
+        local set_noice_color = function()
+            local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
+            local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
+            local FloatBorder = vim.api.nvim_get_hl(0, { name = 'FloatBorder', link = false })
+            local DiagnosticSignInfo = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignInfo', link = false })
+            local DiagnosticSignWarn = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignWarn', link = false })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopup', {
+                fg = Normal.fg,
+                bg = Normal.bg
+            })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorder', {
+            --     fg = FloatBorder.fg,
+            --     bg = FloatBorder.bg
+            -- })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderCmdline', {
+            --     fg = FloatBorder.fg,
+            --     bg = FloatBorder.bg
+            -- })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderSearch', {
+            --     fg = FloatBorder.fg,
+            --     bg = FloatBorder.bg
+            -- })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderLua', {
+            --     fg = FloatBorder.fg,
+            --     bg = FloatBorder.bg
+            -- })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderHelp', {
+            --     fg = FloatBorder.fg,
+            --     bg = FloatBorder.bg
+            -- })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderInput', {
+            --     fg = FloatBorder.fg,
+            --     bg = FloatBorder.bg
+            -- })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderFilter', {
+            --     fg = FloatBorder.fg,
+            --     bg = FloatBorder.bg
+            -- })
+            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderCalculator', {
+            --     fg = FloatBorder.fg,
+            --     bg = FloatBorder.bg
+            -- })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleCmdline', {
+                fg = Normal.bg,
+                bg = DiagnosticSignInfo.fg,
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleSearch', {
+                fg = Normal.bg,
+                bg = DiagnosticSignWarn.fg,
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleLua', {
+                fg = Normal.bg,
+                bg = DiagnosticSignInfo.fg,
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleHelp', {
+                fg = Normal.bg,
+                bg = DiagnosticSignInfo.fg,
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleInput', {
+                fg = Normal.bg,
+                bg = DiagnosticSignInfo.fg,
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleFilter', {
+                fg = Normal.bg,
+                bg = DiagnosticSignInfo.fg,
+            })
+            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleCalculator', {
+                fg = Normal.bg,
+                bg = DiagnosticSignInfo.fg,
+            })
+        end
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            pattern = "*",
+            callback = set_noice_color
+        })
+        vim.api.nvim_create_autocmd("OptionSet", {
+            pattern = "background",
+            callback = set_noice_color
+        })
+        set_noice_color()
 
         local format = require("noice.lsp.format")
         local hacks = require("noice.util.hacks")
