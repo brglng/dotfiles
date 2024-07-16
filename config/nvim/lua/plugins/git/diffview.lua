@@ -10,5 +10,8 @@ return {
                 layout = "diff4_mixed",
             }
         }
+    },
+    keys = {
+        { '<Leader>gd', '<Cmd>DiffviewOpen<CR>', desc = 'Diff' }
     }
 }

@@ -98,15 +98,6 @@ return {
             },
             g = {
                 name = "+git",
-                b = { "<Cmd>Neogit kind=split branch<CR>", "Branches" },
-                c = { "<Cmd>Neogit kind=split commit<CR>", "Commit" },
-                d = { "<Cmd>DiffviewOpen<CR>", "Diff" },
-                g = { "<Cmd>Fugit2<CR>", "Neogit" },
-                l = { "<Cmd>Fugit2Graph<CR>", "Log" },
-                p = { "<Cmd>Neogit kind=split pull<CR>", "Pull" },
-                P = { "<Cmd>Neogit kind=split push<CR>", "Push" },
-                s = { "<Cmd>Neogit kind=split<CR>", "Neogit Split" },
-                t = { "<Cmd>Neogit kind=split stash<CR>", "Stash" }
             },
             h = {
                 name = "+hunk",

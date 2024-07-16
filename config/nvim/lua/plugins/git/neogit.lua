@@ -6,14 +6,17 @@ return {
         "nvim-lua/plenary.nvim",
         "ibhagwan/fzf-lua"
     },
-    config = function()
-        require("neogit").setup {
-            disable_commit_confirmation = true,
-            integrations = {
-                diffview = true
-            }
+    opts = {
+        disable_commit_confirmation = true,
+        integrations = {
+            diffview = true
         }
-
+    },
+    config = function(_, opts)
+        require("neogit").setup(opts)
         vim.cmd [[ autocmd FileType Neogit* setlocal foldcolumn=0 nofoldenable ]]
-    end
+    end,
+    keys = {
+        { '<Leader>gg', '<Cmd>Neogit<CR>', desc = 'Neogit' }
+    }
 }
