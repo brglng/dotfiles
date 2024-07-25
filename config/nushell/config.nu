@@ -2,9 +2,6 @@
 #
 # version = "0.94.2"
 
-source ~/.zoxide.nu
-source ~/.cache/carapace/init.nu
-
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
 # And here is the theme collection
@@ -141,25 +138,6 @@ let light_theme = {
     shape_raw_string: light_purple
 }
 
-# External completer example
-# let carapace_completer = {|spans|
-#     carapace $spans.0 nushell ...$spans | from json
-# }
-
-let zoxide_completer = {|spans|
-    $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
-}
-
-let external_completer = {|spans|
-    match $spans.0 {
-        z => $zoxide_completer
-        zi => $zoxide_completer
-        __zoxide_z => $zoxide_completer
-        __zoxide_zi => $zoxide_completer
-        _ => $carapace_completer
-    } | do $in $spans
-}
-
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
     show_banner: false # true or false to enable or disable the welcome banner at startup
@@ -229,7 +207,7 @@ $env.config = {
         external: {
             enable: true # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up may be very slow
             max_results: 100 # setting it lower can improve completion performance at the cost of omitting some options
-            completer: $external_completer
+            # completer: $external_completer
         }
         use_ls_colors: true # set this to true to enable file/path/directory completions using LS_COLORS
     }
@@ -918,6 +896,22 @@ $env.config = {
 }
 
 use ~/.cache/starship/init.nu
+source ~/.cache/carapace/init.nu
+source ~/.zoxide.nu
+
+let zoxide_completer = {|spans|
+    $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+}
+
+$env.config.completions.external.completer = {|spans|
+    match $spans.0 {
+        z => $zoxide_completer
+        zi => $zoxide_completer
+        __zoxide_z => $zoxide_completer
+        __zoxide_zi => $zoxide_completer
+        _ => $carapace_completer
+    } | do $in $spans
+}
 
 alias la = ls -al
 alias ll = ls -l

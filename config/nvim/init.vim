@@ -189,20 +189,21 @@ set copyindent
 set smartindent
 filetype plugin on
 filetype plugin indent on
-if exists('&breakindent')
-    autocmd FileType *
-    \   if index(['', 'markdown', 'txt', 'norg'], &filetype) >= 0 |
-    \       if &filetype == 'norg' |
-    \           setlocal breakindent |
-    \       else |
-    \           setlocal nobreakindent |
-    \       endif |
-    \       setlocal showbreak= |
-    \   else |
-    \       setlocal breakindent |
-    \       setlocal showbreak=⤷\  |
-    \   endif
-endif
+" if exists('&breakindent')
+"     autocmd FileType *
+"     \   if index(['', 'markdown', 'txt', 'norg'], &filetype) >= 0 |
+"     \       if &filetype == 'norg' |
+"     \           setlocal breakindent |
+"     \       else |
+"     \           setlocal nobreakindent |
+"     \       endif |
+"     \       setlocal showbreak= |
+"     \   else |
+"     \       setlocal breakindent |
+"     \       setlocal showbreak=⤷\  |
+"     \   endif
+" endif
+set breakindent
 set showtabline=2
 let g:vim_indent_cont = 0
 

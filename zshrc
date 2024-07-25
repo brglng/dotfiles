@@ -131,10 +131,6 @@ add-zsh-hook preexec update_environment
 #     eval "$(luajit ~/.local/share/z.lua --init zsh)"
 # fi
 
-if type zoxide &>/dev/null; then
-    eval "$(zoxide init zsh)"
-fi
-
 if type starship &>/dev/null; then
     eval "$(starship init zsh)"
 fi
@@ -147,6 +143,10 @@ if type carapace &>/dev/null; then
     export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
     zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
     source <(carapace _carapace)
+fi
+
+if type zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
 fi
 
 source "$BRGLNG_DOTFILES_DIR/shell_rc_post.sh"

@@ -102,9 +102,9 @@ $env.NU_PLUGIN_DIRS = [
 mkdir ~/.cache/starship
 starship init nu | save -f ~/.cache/starship/init.nu
 
-$env._ZO_RESOLVE_SYMLINKS = '0'
-zoxide init nushell | save -f ~/.zoxide.nu
-
 $env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
 mkdir ~/.cache/carapace
 carapace _carapace nushell | save --force ~/.cache/carapace/init.nu
+
+$env._ZO_RESOLVE_SYMLINKS = '0'
+zoxide init nushell | save -f ~/.zoxide.nu

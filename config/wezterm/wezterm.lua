@@ -34,7 +34,7 @@ config.color_scheme = scheme_for_appearance(get_appearance())
 
 -- GUI Appearance
 
-config.enable_scroll_bar = false
+config.enable_scroll_bar = true
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = true
 config.tab_max_width = 100
@@ -50,6 +50,13 @@ config.tab_bar_style = {
     window_close = window_close,
     window_close_hover = window_close,
 }
+config.window_padding = {
+    left = 0,
+    right = '1.5cell',
+    top = 0,
+    bottom = 0
+}
+
 
 local function tab_title(tab_info)
     local title = tab_info.tab_title
@@ -212,13 +219,6 @@ else
     }
 end
 
-config.window_padding = {
-    left = 0,
-    right = 0,
-    top = 0,
-    bottom = 0
-}
-
 -- Fonts
 
 config.allow_square_glyphs_to_overflow_width = "Always"
@@ -289,8 +289,6 @@ if WINDOWS then
         remote_address = 'localhost',
         username = 'brglng'
     })
-    config.default_domain = "SSH:WSL:Ubuntu"
-
     table.insert(config.launch_menu, {
         label = 'Ubuntu',
         domain = { DomainName = 'WSL:Ubuntu' }
@@ -318,6 +316,8 @@ if WINDOWS then
             "C:/cygwin64/Cygwin.bat"
         }
     })
+
+    config.default_domain = "SSH:WSL:Ubuntu"
 
     -- Find installed visual studio version(s) and add their compilation
     -- environment command prompts to the menu

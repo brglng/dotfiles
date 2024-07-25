@@ -15,7 +15,7 @@ return {
         handler_opts = {
             border = "rounded",
             -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
-            focusable = false,
+            focusable = true,
             -- winhighlight = 'NormalFloat:Normal'
         },
         -- transparency = 20,
@@ -31,6 +31,8 @@ return {
                 if opts.handler_opts.winhighlight ~= nil then
                     vim.api.nvim_set_option_value('winhighlight', opts.handler_opts.winhighlight, { win = win_id })
                 end
+                vim.api.nvim_set_option_value('filetype', 'markdown', { buf = float_bufnr })
+                vim.api.nvim_set_option_value('conceallevel', 3, { win = win_id })
                 if opts.handler_opts.focusable ~= nil then
                     vim.api.nvim_win_set_config(win_id, { focusable = opts.handler_opts.focusable })
                 end

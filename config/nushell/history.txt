@@ -28,3 +28,6 @@ ipconfig /release
 ipconfig /renew
 gpupdate /force 
 ipconfig
+ls
+a
+exit

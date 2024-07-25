@@ -83,11 +83,11 @@ return {
             nushell = {},
             pyright = {},
             tsserver = {},
-            rust_analyzer = {
-                settings = {
-                    ['rust_analyzer'] = {}
-                }
-            },
+            -- rust_analyzer = {
+            --     settings = {
+            --         ['rust_analyzer'] = {}
+            --     }
+            -- },
             vimls = {}
         }
     },

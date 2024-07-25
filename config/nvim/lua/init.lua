@@ -21,16 +21,20 @@ vim.filetype.add {
     },
 }
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-    pattern = {"*.nu"},
+    pattern = { "*.nu" },
     command = "setfiletype nu | TSBufEnable highlight"
 })
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-    pattern = {"*.norg"},
+    pattern = { "*.norg" },
     command = "setfiletype norg | TSBufEnable highlight"
 })
 vim.api.nvim_create_autocmd({"FileType"}, {
-    pattern = {"norg", "markdown"},
+    pattern = { "norg", "markdown" },
     command = "set conceallevel=3"
+})
+vim.api.nvim_create_autocmd({"FileType"}, {
+    pattern = { "markdown" },
+    command = "set shiftwidth=2 softtabstop=2 expandtab"
 })
 
 local signs = { Error = " ", Warn = " ", Info = " ", Hint = "󰌶 " }
