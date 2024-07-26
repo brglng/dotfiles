@@ -20,6 +20,6 @@ return {
     },
     keys = {
         { '<Leader>gf', mode = 'n', '<Cmd>Fugit2<CR>', desc = 'Fugit2' },
-        { '<Leader>gl', mode = 'n', '<Cmd>Fugit2Graph<CR>', desc = 'Graph' },
+        -- { '<Leader>gl', mode = 'n', '<Cmd>Fugit2Graph<CR>', desc = 'Graph' },
     }
 }
