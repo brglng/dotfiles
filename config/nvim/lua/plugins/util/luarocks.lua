@@ -1,6 +1,6 @@
 return {
     "vhyrro/luarocks.nvim",
-    enabled = false,
+    enabled = true,
     lazy = true,
     priority = 1000,
     opts = {

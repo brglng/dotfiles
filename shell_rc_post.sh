@@ -105,6 +105,8 @@ alias zz='z -c'      # restrict matches to subdirs of $PWD
 alias zi='z -i'      # cd with interactive selection
 alias zf='z -I'      # use fzf to select in multiple matches
 alias zb='z -b'      # quickly cd to the parent directory
+alias zbi='z -b -i'
+alias zbf='z -b -I'
 
 stty -ixon > /dev/null 2>&1 || true
 

@@ -5,6 +5,7 @@ return {
         'nvim-treesitter/nvim-treesitter',
         "luukvbaal/statuscol.nvim"
     },
+    event = "VeryLazy",
     config = function ()
         require('ufo').setup({
             provider_selector = function(bufnr, filetype, buftype)

@@ -11,41 +11,41 @@ return {
         require('telescope').load_extension('asynctasks')
         require('telescope').load_extension('fzf')
 
-        require('telescope.pickers.layout_strategies').brglng = function(picker, columns, lines, layout_config)
-            local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
-            config.prompt.width = config.results.width + 1
-            config.results.height = config.results.height + 1
-            config.results.width = config.results.width + 1
-            config.results.line = config.results.line - 1
-            return config
-        end
-        require('telescope.pickers.layout_strategies').brglng_nopreview = function(picker, columns, lines, layout_config)
-            local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
-            config.results.height = config.results.height + 1
-            config.results.line = config.results.line - 1
-            return config
-        end
+        -- require('telescope.pickers.layout_strategies').brglng = function(picker, columns, lines, layout_config)
+        --     local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
+        --     config.prompt.width = config.results.width + 1
+        --     config.results.height = config.results.height + 1
+        --     config.results.width = config.results.width + 1
+        --     config.results.line = config.results.line - 1
+        --     return config
+        -- end
+        -- require('telescope.pickers.layout_strategies').brglng_nopreview = function(picker, columns, lines, layout_config)
+        --     local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
+        --     config.results.height = config.results.height + 1
+        --     config.results.line = config.results.line - 1
+        --     return config
+        -- end
 
         require("telescope").setup {
             defaults = {
                 sorting_strategy = "ascending",
-                layout_strategy = 'brglng',
+                -- layout_strategy = 'brglng',
                 layout_config = {
                     prompt_position = "top",
                     width = 0.62,
                     height = 0.62,
                     preview_width = 0.5
                 },
-                border = {
-                    prompt = { 1, 1, 1, 1 },
-                    results = { 1, 1, 1, 1 },
-                    preview = { 1, 1, 1, 1 },
-                },
-                borderchars = {
-                    prompt = { "─", "│", "─", "│", "╭", "─", "─", "├" },
-                    results = { "─", "│", "─", "│", "├", "┤", "┴", "╰" },
-                    preview = { "─", "│", "─", "│", "┬", "╮", "╯", "┴" },
-                },
+                -- border = {
+                --     prompt = { 1, 1, 1, 1 },
+                --     results = { 1, 1, 1, 1 },
+                --     preview = { 1, 1, 1, 1 },
+                -- },
+                -- borderchars = {
+                --     prompt = { "─", "│", "─", "│", "╭", "─", "─", "├" },
+                --     results = { "─", "│", "─", "│", "├", "┤", "┴", "╰" },
+                --     preview = { "─", "│", "─", "│", "┬", "╮", "╯", "┴" },
+                -- },
                 results_title = false,
                 -- borderchars = { "", "", "", "", "", "", "", "" },
                 -- borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
@@ -55,21 +55,25 @@ return {
                 mappings = {
                     i = {
                         ["<Esc>"] = actions.close,
-                        ["<TAB>"] = { "<Esc>", type = "command" },
+                        ["<C-o>"] = { "<Esc>", type = "command" },
+                        ["<TAB>"] = actions.move_selection_next,
+                        ["<S-TAB>"] = actions.move_selection_previous
                     },
                     n = {
                         ["<Space>"] = actions.toggle_selection,
+                        ["<TAB>"] = actions.move_selection_next,
+                        ["<S-TAB>"] = actions.move_selection_previous
                     }
                 }
             },
             pickers = {
                 buffers = {
-                    previewer = false,
-                    layout_strategy = 'brglng_nopreview',
-                    borderchars = {
-                        prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                        results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                    },
+                    previewer = true,
+                    -- layout_strategy = 'brglng_nopreview',
+                    -- borderchars = {
+                    --     prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                    --     results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                    -- },
                     ignore_current_buffer = true,
                     sort_mru = true,
                     layout_config = {
@@ -86,11 +90,11 @@ return {
                 },
                 current_buffer_fuzzy_find = {
                     previewer = false,
-                    layout_strategy = 'brglng_nopreview',
-                    borderchars = {
-                        prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                        results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                    },
+                    -- layout_strategy = 'brglng_nopreview',
+                    -- borderchars = {
+                    --     prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                    --     results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                    -- },
                     layout_config = {
                         -- width = 0.62,
                     },
@@ -101,12 +105,19 @@ return {
                         -- width = 0.62
                     },
                     -- hidden = true,
+                    -- find_command = {
+                    --     "fd",
+                    --     "-H",
+                    --     "-I",
+                    --     "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder}",
+                    --     "--strip-cwd-prefix",
+                    -- },
                     find_command = {
-                        "fd",
+                        "bfind",
                         "-H",
                         "-I",
-                        "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target}",
-                        "--strip-cwd-prefix",
+                        ".DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder",
+                        "--strip-cwd-prefix"
                     },
                 },
                 help_tags = {
@@ -180,12 +191,12 @@ return {
             end
             preview_title_bg = colorutil.transparency(NormalFloat.fg, preview_bg, 0.6)
             vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
-                fg = Normal.fg,
-                bg = Normal.bg
+                fg = prompt_fg,
+                bg = prompt_bg
             })
             vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
-                fg = FloatBorder.fg,
-                bg = Normal.bg
+                fg = prompt_bg,
+                bg = prompt_bg
             })
             vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
                 fg = Normal.bg,
@@ -196,8 +207,8 @@ return {
                 bg = NormalFloat.bg
             })
             vim.api.nvim_set_hl(0, "TelescopeBorder", {
-                fg = FloatBorder.fg,
-                bg = Normal.bg
+                fg = NormalFloat.bg,
+                bg = NormalFloat.bg
             })
             vim.api.nvim_set_hl(0, "TelescopeSelection", {
                 fg = PmenuSel.fg,
@@ -206,11 +217,11 @@ return {
             vim.api.nvim_set_hl(0, "TelescopeMatching", { link = "Search" })
             vim.api.nvim_set_hl(0, "TelescopePreviewNormal", {
                 fg = NormalFloat.fg,
-                bg = NormalFloat.bg
+                bg = preview_bg
             })
             vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
-                fg = FloatBorder.fg,
-                bg = Normal.bg
+                fg = preview_bg,
+                bg = preview_bg
             })
             vim.api.nvim_set_hl(0, "TelescopePreviewTitle", {
                 fg = Normal.bg,
@@ -230,19 +241,20 @@ return {
         })
     end,
     keys = {
-        { '<Leader>b', mode = 'n', require('telescope.builtin').buffers, desc = 'Buffers' },
-        { '<Leader>fb', mode = 'n', require('telescope.builtin').buffers, desc = 'Buffers' },
-        { '<Leader>fc', mode = 'n', require('telescope.builtin').commands, desc = 'Commands' },
-        { '<M-x>', mode = 'i', require('telescope.builtin').commands, desc = 'Commands' },
-        { '<Leader>fC', mode = 'n', require('telescope.builtin').colorscheme, desc = 'Color Schemes' },
-        { '<Leader>ff', mode = 'n', require('telescope.builtin').find_files, desc = 'Files' },
-        { '<Leader>fg', mode = 'n', require('telescope.builtin').live_grep, desc = 'Grep' },
-        { '<Leader>fh', mode = 'n', require('telescope.builtin').help_tags, desc = 'Help Tags' },
-        { '<Leader>fl', mode = 'n', require('telescope.builtin').current_buffer_fuzzy_find, desc = 'Lines' },
-        { '<Leader>fm', mode = 'n', require('telescope.builtin').marks, desc = 'Marks' },
-        { '<Leader>fM', mode = 'n', require('telescope.builtin').man_pages, desc = 'Man Pages' },
-        { '<Leader>fo', mode = 'n', require('telescope.builtin').vim_options, desc = 'Vim Options' },
-        { '<Leader>fs', mode = 'n', require('telescope.builtin').lsp_document_symbols, desc = 'LSP Document Symbols' },
-        { '<Leader>fr', mode = 'n', require('telescope.builtin').resume, desc = 'Resume Previous Picker' },
+        { '<Leader>b', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
+        { '<Leader>fb', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
+        { '<Leader>f;', mode = 'n', function() require('telescope.builtin').commands() end, desc = 'Commands' },
+        { '<M-x>', mode = 'i', function() require('telescope.builtin').commands() end, desc = 'Commands' },
+        { '<Leader>fc', mode = 'n', function() require('telescope.builtin').colorscheme() end, desc = 'Color Schemes' },
+        { '<Leader>ff', mode = 'n', function() require('telescope.builtin').find_files() end, desc = 'Files' },
+        { '<Leader>fg', mode = 'n', function() require('telescope.builtin').live_grep() end, desc = 'Grep' },
+        { '<Leader>fh', mode = 'n', function() require('telescope.builtin').help_tags() end, desc = 'Help Tags' },
+        { '<Leader>fl', mode = 'n', function() require('telescope.builtin').current_buffer_fuzzy_find() end, desc = 'Lines' },
+        { "<Leader>f'", mode = 'n', function() require('telescope.builtin').marks() end, desc = 'Marks' },
+        { '<Leader>fm', mode = 'n', function() require('telescope.builtin').man_pages() end, desc = 'Man Pages' },
+        { '<Leader>fo', mode = 'n', function() require('telescope.builtin').vim_options() end, desc = 'Vim Options' },
+        { '<Leader>fs', mode = 'n', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'LSP Document Symbols' },
+        { '<Leader>fr', mode = 'n', function() require('telescope.builtin').resume() end, desc = 'Resume Previous Picker' },
+        { "<Leader>t", mode = "n",  function() require("telescope").extensions.asynctasks.all() end, desc = "Tasks" },
     }
 }

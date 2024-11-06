@@ -55,6 +55,7 @@ return {
             "xml",
             "yaml"
         },
+        sync_install = vim.fn.has('win32') == 1,
         auto_install = true,
         highlight = {
             enable = true,
@@ -63,5 +64,8 @@ return {
         indent = {
             enable = true,
         }
-    }
+    },
+    config = function(_, opts)
+        require('nvim-treesitter.configs').setup(opts)
+    end
 }

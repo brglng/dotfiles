@@ -1,0 +1,58 @@
+zmodule environment
+
+# zmodule ohmyzsh/ohmyzsh --root plugins/git
+# zmodule ohmyzsh/ohmyzsh --root plugins/git
+# zmodule ohmyzsh/ohmyzsh --root plugins/adb
+# zmodule ohmyzsh/ohmyzsh --root plugins/autopep8
+# zmodule ohmyzsh/ohmyzsh --root plugins/brew
+# zmodule ohmyzsh/ohmyzsh --root plugins/command-not-found
+# zmodule ohmyzsh/ohmyzsh --root plugins/common-aliases
+# zmodule ohmyzsh/ohmyzsh --root plugins/colorize
+# zmodule ohmyzsh/ohmyzsh --root plugins/colored-man-pages
+# zmodule ohmyzsh/ohmyzsh --root plugins/docker
+# zmodule ohmyzsh/ohmyzsh --root plugins/docker-compose
+# zmodule ohmyzsh/ohmyzsh --root plugins/emacs
+# zmodule ohmyzsh/ohmyzsh --root plugins/emoji
+# zmodule ohmyzsh/ohmyzsh --root plugins/fd
+# zmodule ohmyzsh/ohmyzsh --root plugins/gem
+# zmodule ohmyzsh/ohmyzsh --root plugins/git-flow
+# zmodule ohmyzsh/ohmyzsh --root plugins/github
+# zmodule ohmyzsh/ohmyzsh --root plugins/gitignore
+# zmodule ohmyzsh/ohmyzsh --root plugins/gnu-utils
+# zmodule ohmyzsh/ohmyzsh --root plugins/golang
+# zmodule ohmyzsh/ohmyzsh --root plugins/gradle
+# zmodule ohmyzsh/ohmyzsh --root plugins/mercurial
+# zmodule ohmyzsh/ohmyzsh --root plugins/man
+# zmodule ohmyzsh/ohmyzsh --root plugins/macos
+# zmodule ohmyzsh/ohmyzsh --root plugins/mvn
+# zmodule ohmyzsh/ohmyzsh --root plugins/node
+# zmodule ohmyzsh/ohmyzsh --root plugins/npm
+# zmodule ohmyzsh/ohmyzsh --root plugins/nvm
+# zmodule ohmyzsh/ohmyzsh --root plugins/perl
+# zmodule ohmyzsh/ohmyzsh --root plugins/pip
+# zmodule ohmyzsh/ohmyzsh --root plugins/pipenv
+# zmodule ohmyzsh/ohmyzsh --root plugins/pylint
+# zmodule ohmyzsh/ohmyzsh --root plugins/python
+# zmodule ohmyzsh/ohmyzsh --root plugins/redis-cli
+# zmodule ohmyzsh/ohmyzsh --root plugins/repo
+# zmodule ohmyzsh/ohmyzsh --root plugins/ripgrep
+# zmodule ohmyzsh/ohmyzsh --root plugins/rsync
+# zmodule ohmyzsh/ohmyzsh --root plugins/ruby
+# zmodule ohmyzsh/ohmyzsh --root plugins/rust
+# zmodule ohmyzsh/ohmyzsh --root plugins/supervisor
+# zmodule ohmyzsh/ohmyzsh --root plugins/svn
+# zmodule ohmyzsh/ohmyzsh --root plugins/systemd
+# zmodule ohmyzsh/ohmyzsh --root plugins/tig
+# zmodule ohmyzsh/ohmyzsh --root plugins/tmux
+# zmodule ohmyzsh/ohmyzsh --root plugins/ubuntu
+# zmodule ohmyzsh/ohmyzsh --root plugins/ufw
+# zmodule ohmyzsh/ohmyzsh --root plugins/virtualenv
+# zmodule ohmyzsh/ohmyzsh --root plugins/vscode
+# zmodule ohmyzsh/ohmyzsh --root plugins/yarn
+
+zmodule zsh-users/zsh-autosuggestions
+zmodule hlissner/zsh-autopair
+zmodule z-shell/F-Sy-H --branch main
+# zmodule lukechilds/zsh-better-npm-completion
+zmodule zsh-users/zsh-completions --fpath src
+zmodule completion

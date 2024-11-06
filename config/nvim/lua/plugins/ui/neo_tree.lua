@@ -41,10 +41,16 @@ return {
                 },
             },
         },
-        -- popup_border_style = { " ", " ", " ", " ", " ", " " },
-        popup_border_style = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
-        -- popup_border_style = { '█', '█', '█', '▕', '🭿', '▁', '🭼', '▏' },
-        -- popup_border_style = "rounded"
+        popup_border_style = (function()
+            if vim.g.neovide then
+                return "solid"
+            else
+                -- return { "▏", " ", " ", " ", " ", " ", "▏", "▏" }
+                return { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
+                -- return { '█', '█', '█', '▕', '🭿', '▁', '🭼', '▏' }
+                -- return "rounded"
+            end
+        end)(),
     },
     config = function(_, opts)
         require('neo-tree').setup(opts)
@@ -104,7 +110,7 @@ return {
         --     pattern = "winhighlight",
         --     callback = function()
         --         if vim.o.filetype == 'neo-tree-popup' or vim.w.neo_tree_preview == 1 then
-        --             vim.opt_local.winhighlight:append(',NormalFloat:NeoTreeFloatNormal')
+        --             vim.opt_local.winhighlight:append(',NormalFloat:NeoTreeFloatNormal,Normal:NeoTreeFloatNormal')
         --         end
         --     end
         -- })

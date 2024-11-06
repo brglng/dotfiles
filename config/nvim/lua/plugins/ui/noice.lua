@@ -30,15 +30,15 @@ return {
             },
             -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
             override = {
-                ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                ["vim.lsp.util.stylize_markdown"] = true,
+                -- ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                -- ["vim.lsp.util.stylize_markdown"] = true,
                 -- ["cmp.entry.get_documentation"] = true,
             },
             signature = {
                 enabled = false,
             },
             hover = {
-                enabled = true,
+                enabled = false,
             }
         },
         -- you can enable a preset for easier configuration
@@ -47,14 +47,15 @@ return {
             command_palette = true, -- position the cmdline and popupmenu together
             long_message_to_split = true, -- long messages will be sent to a split
             inc_rename = false, -- enables an input dialog for inc-rename.nvim
-            lsp_doc_border = true, -- add a border to hover docs and signature help
+            lsp_doc_border = false, -- add a border to hover docs and signature help
         },
         views = {
             mini = {
                 border = {
-                    style = 'rounded',
+                    style = {' ', ' ', ' ', '▕', '🭿', '▁', ' ', ' ' },
                     -- style = {'🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
                     -- style = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    -- style = {' ', ' ', ' ', ' ', ' ', '▁', ' ', ' ' },
                 },
                 position = {
                     row = -2
@@ -62,36 +63,53 @@ return {
                 focusable = false,
                 win_options = {
                     -- winblend = 20,
-                    winhighlight = 'NormalFloat:NormalFloat',
+                    -- winhighlight = 'NormalFloat:NormalFloat',
                 }
             },
             cmdline_popup = {
                 border = {
-                    style = 'rounded',
+                    style = (function()
+                        if vim.g.neovide then
+                            return "solid"
+                        else
+                            return 'rounded'
+                        end
+                    end)(),
                     -- style = {'🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
                     -- style = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
                 },
                 position = {
                     row = "38%"
                 },
-                -- win_options = {
-                --     winhighlight = 'NormalFloat:NormalFloat'
-                -- }
+                win_options = (function()
+                    if vim.g.neovide then
+                        return {
+                            winhighlight = "NormalFloat:NormalFloat"
+                        }
+                    else
+                        return {}
+                    end
+                end)()
             },
             hover = {
                 border = {
-                    style = "rounded",
+                    style = "none",
+                    -- style = { ' ', ' ', ' ', '▕', '🭿', '▁', ' ', ' ' },
                     -- style = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
-                    -- padding = {
-                    --     top = 0,
-                    --     bottom = 0,
-                    --     left = 0,
-                    --     right = 0,
-                    -- }
+                    padding = {
+                        top = 1,
+                        bottom = 1,
+                        left = 1,
+                        right = 1,
+                    }
                 },
-                -- win_options = {
-                --     winhighlight = 'NormalFloat:Normal'
-                -- }
+                position = {
+                    row = 2,
+                    col = 1
+                },
+                win_options = {
+                    winhighlight = 'FloatBorder:NoiceHoverBorder'
+                }
             },
             lsp_progress = {
                 backend = "notify",
@@ -220,42 +238,44 @@ return {
             local FloatBorder = vim.api.nvim_get_hl(0, { name = 'FloatBorder', link = false })
             local DiagnosticSignInfo = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignInfo', link = false })
             local DiagnosticSignWarn = vim.api.nvim_get_hl(0, { name = 'DiagnosticSignWarn', link = false })
-            vim.api.nvim_set_hl(0, 'NoiceCmdlinePopup', {
-                fg = Normal.fg,
-                bg = Normal.bg
-            })
-            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorder', {
-            --     fg = FloatBorder.fg,
-            --     bg = FloatBorder.bg
-            -- })
-            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderCmdline', {
-            --     fg = FloatBorder.fg,
-            --     bg = FloatBorder.bg
-            -- })
-            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderSearch', {
-            --     fg = FloatBorder.fg,
-            --     bg = FloatBorder.bg
-            -- })
-            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderLua', {
-            --     fg = FloatBorder.fg,
-            --     bg = FloatBorder.bg
-            -- })
-            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderHelp', {
-            --     fg = FloatBorder.fg,
-            --     bg = FloatBorder.bg
-            -- })
-            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderInput', {
-            --     fg = FloatBorder.fg,
-            --     bg = FloatBorder.bg
-            -- })
-            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderFilter', {
-            --     fg = FloatBorder.fg,
-            --     bg = FloatBorder.bg
-            -- })
-            -- vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderCalculator', {
-            --     fg = FloatBorder.fg,
-            --     bg = FloatBorder.bg
-            -- })
+            if vim.g.neovide then
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopup', {
+                    fg = NormalFloat.fg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorder', {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderCmdline', {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderSearch', {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderLua', {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderHelp', {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderInput', {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderFilter', {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupBorderCalculator', {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+            end
             vim.api.nvim_set_hl(0, 'NoiceCmdlinePopupTitleCmdline', {
                 fg = Normal.bg,
                 bg = DiagnosticSignInfo.fg,
@@ -284,6 +304,17 @@ return {
                 fg = Normal.bg,
                 bg = DiagnosticSignInfo.fg,
             })
+            if vim.o.background == 'dark' then
+                vim.api.nvim_set_hl(0, 'NoiceHoverBorder', {
+                    fg = colorutil.reduce_value(Normal.bg, 0.1),
+                    bg = NormalFloat.bg
+                })
+            else
+                vim.api.nvim_set_hl(0, 'NoiceHoverBorder', {
+                    fg = colorutil.reduce_value(Normal.bg, 0.1),
+                    bg = NormalFloat.bg
+                })
+            end
         end
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "*",

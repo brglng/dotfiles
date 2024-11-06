@@ -9,12 +9,12 @@ return {
     opts = {
         disable_commit_confirmation = true,
         graph_style = 'unicode',
-        kind = 'split',
+        -- kind = 'split',
         integrations = {
             diffview = true
         },
         log_view = {
-            kind = 'split'
+            -- kind = 'split'
         }
     },
     config = function(_, opts)
@@ -25,6 +25,6 @@ return {
     end,
     keys = {
         { '<Leader>gg', '<Cmd>Neogit<CR>', desc = 'Neogit' },
-        { '<Leader>gl', '<Cmd>Neogit log<CR>', desc = 'Neogit' },
+        { '<Leader>gl', '<Cmd>Neogit log<CR>', desc = 'Neogit Log' },
     }
 }

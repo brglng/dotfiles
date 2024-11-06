@@ -8,6 +8,10 @@ if !has('nvim')
     let &runtimepath = &runtimepath . ',/usr/local/share/vim/vimfiles'
 endif
 
+if exists('g:neovide') && !has('win32')
+    let $PATH = $HOME . '/.local/bin:' . $HOME . '/.cargo/bin:' . $PATH
+endif
+
 if has('nvim')
     let s:viewdir = $HOME . '/.cache/nvim/view'
 else
@@ -301,6 +305,10 @@ endif
 
 let g:plug_timeout = 300
 
+if has('win32')
+    " let g:plug_threads = 1
+endif
+
 call plug#begin('~/.local/share/vim/plugged')
 
 function! VimOnly(...)
@@ -523,6 +531,6 @@ function! s:load_local_config()
         endif
     endif
 endfunction
-call s:load_local_config()
+" call s:load_local_config()
 
 " vim: ts=8 sts=4 sw=4 et

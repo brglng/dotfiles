@@ -1,3 +1,8 @@
+function! s:setup_coc_explorer()
+    wincmd H
+endfunction
+autocmd FileType,BufWinEnter * if &filetype ==# 'coc-explorer' | call s:setup_coc_explorer() | endif
+
   " \ 'coc-explorer': {
   " \     'position': 'left',
   " \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'coc-explorer'},
@@ -24,6 +29,35 @@ function s:open_help()
         help
     endif
 endfunction
+function! s:setup_help_window()
+    wincmd L
+    execute string(float2nr(&columns * 0.4)) . 'wincmd |'
+    setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap
+    nnoremap <silent> <buffer> q <C-w>q
+    execute "nnoremap <buffer> <silent> gO :call sidebar#close_side_except('bottom', 'loclist')<CR>" . maparg('gO', 'n') |
+endfunction
+autocmd FileType,BufWinEnter * if &l:buftype ==# 'help' | call s:setup_help_window() | endif
+
+function! s:setup_man_window()
+    wincmd L
+    execute string(float2nr(&columns * 0.4)) . 'wincmd |'
+    setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap bufhidden nobuflisted noswapfile
+    nnoremap <silent> <buffer> q <C-w>q
+endfunction
+autocmd FileType,BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
+
+autocmd FileType toggleterm normal i
+
+function! s:setup_quickfix_window()
+    wincmd J
+    execute string(float2nr(&lines * 0.4)) . 'wincmd _'
+    setlocal wrap foldcolumn=0 colorcolumn= signcolumn=no cursorline nobuflisted
+    nnoremap <silent> <buffer> q <C-w>q
+endfunction
+autocmd FileType,BufWinEnter * if &filetype ==# 'qf' | call s:setup_quickfix_window() | endif
+
+autocmd QuickFixCmdPost [^l]* call sidebar#open('quickfix')
+autocmd QuickFixCmdPost l*    call sidebar#open('loclist')
 
 let g:sidebars = {
   \ 'neo-tree-filesystem': {
@@ -68,14 +102,8 @@ let g:sidebars = {
   \ },
   \ 'trouble-document-diagnostics': {
   \     'position': 'bottom',
-  \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'Trouble' && luaeval('require("trouble.config").options.mode') ==# 'document_diagnostics'},
-  \     'open': 'Trouble document_diagnostics',
-  \     'close': 'TroubleClose'
-  \ },
-  \ 'trouble-workspace-diagnostics': {
-  \     'position': 'bottom',
-  \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'Trouble' && luaeval('require("trouble.config").options.mode') ==# 'workspace_diagnostics'},
-  \     'open': 'Trouble workspace_diagnostics',
+  \     'check_win': {nr -> getwinvar(nr, '&filetype') ==# 'Trouble' && luaeval('require("trouble.config").options.mode') ==# 'diagnostics'},
+  \     'open': 'Trouble diagnostics',
   \     'close': 'TroubleClose'
   \ },
   \ 'trouble-lsp-references': {
@@ -135,11 +163,5 @@ let g:sidebars = {
   \ }
 
 " let g:sidebar_close_tab_on_closing_last_buffer = 1
-
-autocmd QuickFixCmdPost asyncrun call sidebar#open('quickfix')
-
-autocmd BufWinEnter * if &l:buftype ==# 'help' |
-  \ execute "nnoremap <buffer> <silent> gO :call sidebar#close_side_except('bottom', 'loclist')<CR>" . maparg('gO', 'n') |
-  \ endif
 
 " vim: ts=8 sts=4 sw=4 et

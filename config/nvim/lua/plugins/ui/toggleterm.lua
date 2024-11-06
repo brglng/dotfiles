@@ -2,6 +2,13 @@ return {
     'akinsho/toggleterm.nvim',
     version = "*",
     opts = {
+        size = function(term)
+            if term.direction == "horizontal" then
+                return vim.o.lines * 0.4
+            else
+                return vim.o.columns * 0.4
+            end
+        end,
         hide_numbers = false,
         shade_terminals = false,
         start_in_insert = true,

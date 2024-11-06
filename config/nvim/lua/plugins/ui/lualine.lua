@@ -12,8 +12,9 @@ return {
         require('lualine').setup {
             options = {
                 globalstatus = true,
-                -- section_separators = { left = '', right = '' },
-                -- component_separators = { left = '', right = '' }
+                -- component_separators = "│",
+                component_separators = "|",
+                section_separators = { left = '', right = '' },
             },
             -- extensions = {
             --     "lazy",
@@ -22,6 +23,7 @@ return {
             --     "trouble"
             -- },
             sections = {
+                -- lualine_a =  { separator = { left = '' }, right_padding = 2 },
                 lualine_b = {
                     "branch",
                     "diff",

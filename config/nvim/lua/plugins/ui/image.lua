@@ -1,8 +1,9 @@
 return {
     "3rd/image.nvim",
-    -- dependencies = {
-    --     "vhyrro/luarocks.nvim"
-    -- },
+    enabled = not vim.g.neovide,
+    dependencies = {
+        "vhyrro/luarocks.nvim"
+    },
     lazy = true,
     opts = {
         backend = "kitty",

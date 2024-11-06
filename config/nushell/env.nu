@@ -106,5 +106,11 @@ $env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
 mkdir ~/.cache/carapace
 carapace _carapace nushell | save --force ~/.cache/carapace/init.nu
 
-$env._ZO_RESOLVE_SYMLINKS = '0'
-zoxide init nushell | save -f ~/.zoxide.nu
+# $env._ZO_RESOLVE_SYMLINKS = '0'
+# zoxide init nushell | save -f ~/.zoxide.nu
+
+if (uname | get operating-system) =~ 'MS/Windows' {
+    luajit ((scoop prefix z.lua) + '/z.lua') --init nushell | save -f ~/.cache/zlua.nu
+} else {
+    luajit ((brew --prefix) + '/share/z.lua/z.lua') --init nushell | save -f ~/.cache/zlua.nu
+}

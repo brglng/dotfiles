@@ -1,64 +1,61 @@
 [core]
-    autocrlf = false
-    excludesfile = ~/.gitignore_global
-    filemodes = true
-    fileMode = true
-    ; pager = cat
-    quotePath = false
-    precomposeunicode = true
+	autocrlf = false
+	excludesfile = ~/.gitignore_global
+	filemodes = true
+	fileMode = true
+	; pager = cat
+	quotePath = false
+	precomposeunicode = true
 [http]
-    postBuffer = 524288000
+	postBuffer = 524288000
 [push]
-    default = simple
-    recurseSubmodules = on-demand
+	default = simple
+	recurseSubmodules = on-demand
 [pull]
-    rebase = false
+	rebase = false
 [gc]
-    autoDetach = false
+	autoDetach = false
 [format]
-    pretty = oneline
+	pretty = oneline
 [color]
-    ui = true
+	ui = true
 [filter "lfs"]
-    clean = git lfs clean %f
-    smudge = git lfs smudge %f
-    required = true
+	clean = git lfs clean %f
+	smudge = git lfs smudge %f
+	required = true
 [diff]
-    tool = nvim-dirdiff
-    guitool = bc3
+	tool = nvim
+	guitool = neovide
 [difftool]
-    prompt = false
-[difftool "nvimdiff"]
-    cmd = "nvim -R -d -c \"wincmd l\" -d \"$LOCAL\" \"$REMOTE\""
-    trustExitCode = true
-[difftool "vim-dirdiff"]
-    cmd = vim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE
-    trustExitCode = true
-[difftool "nvim-dirdiff"]
-    cmd = nvim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE
-    trustExitCode = true
+	prompt = false
+	keepBackup = false
+[difftool "nvim"]
+	cmd = nvim -n -c "DiffviewOpen" 
+[difftool "neovide"]
+	cmd = neovide -- -n -c "DiffviewOpen"
 [merge]
-    tool = nvimdiff
-    guitool = bc3
+	tool = nvim
+	guitool = neovide
 [mergetool]
-    conflictstyle = diff3
-    prompt = false
-[mergetool "nvimdiff"]
-    cmd = "nvim -d -c \"4wincmd w | wincmd J\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"  \"$MERGED\""
-    trustExitCode = true
+	prompt = false
+	keepBackup = false
+[mergetool "nvim"]
+	cmd = nvim -n -c "DiffviewOpen" "$MERGE"
+[mergetool "neovide"]
+	cmd = neovide -- -n -c "DiffviewOpen" "$MERGE"
 [mergetool "kdiff3-noauto"]
-    cmd = kdiff3 --L1 \"$MERGED (Base)\" --L2 \"$MERGED (Local)\" --L3 \"$MERGED (Remote)\" -o \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
-    trustExitCode = true
+	cmd = kdiff3 --L1 \"$MERGED (Base)\" --L2 \"$MERGED (Local)\" --L3 \"$MERGED (Remote)\" -o \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+	trustExitCode = true
 [alias]
-    lg = log --pretty=format:'%C(yellow)%h %Cgreen%ad %Cblue%an<%ae> %Creset%s' --abbrev-commit --date=local --color --graph --decorate --all
-    ci = commit
-    co = checkout
-    st = status
-    br = branch
-    df = difftool --dir-diff
-    dg = difftool --gui --dir-diff
-    change-commits = "!f() { VAR1=$1; VAR='$'$1; OLD=$2; NEW=$3; echo \"Are you sure for replace $VAR  $OLD => $NEW ?(Y/N)\";read OK;if [ \"$OK\" = 'Y' ] ; then shift 3; git filter-branch  --env-filter \"if [ \\\"${VAR}\\\" = '$OLD' ]; then export $VAR1='$NEW';echo 'to $NEW'; fi\" $@; fi;};  f "
+	lg = log --pretty=format:'%C(yellow)%h %Cgreen%ad %Cblue%an<%ae> %Creset%s' --abbrev-commit --date=local --color --graph --decorate --all
+	ci = commit
+	co = checkout
+	st = status
+	br = branch
+	df = difftool --dir-diff
+	dg = difftool --gui --dir-diff
+	change-commits = "!f() { VAR1=$1; VAR='$'$1; OLD=$2; NEW=$3; echo \"Are you sure for replace $VAR  $OLD => $NEW ?(Y/N)\";read OK;if [ \"$OK\" = 'Y' ] ; then shift 3; git filter-branch  --env-filter \"if [ \\\"${VAR}\\\" = '$OLD' ]; then export $VAR1='$NEW';echo 'to $NEW'; fi\" $@; fi;};  f "
 [difftool "bc3"]
-    trustExitCode = true
+	trustExitCode = true
 [mergetool "bc3"]
-    trustExitCode = true
+	trustExitCode = true

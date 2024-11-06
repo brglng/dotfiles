@@ -1,6 +1,6 @@
 let g:Lf_ShortcutF = ''
 let g:Lf_ShortcutB = ''
-let g:Lf_WindowPosition = 'bottom'
+let g:Lf_WindowPosition = 'popup'
 let g:Lf_WindowHeight = 0.3
 let g:Lf_CursorBlink = 0
 let g:Lf_FollowLinks = 1
@@ -15,15 +15,13 @@ let g:Lf_CtagsFuncOpts = {
         \ }
 let g:Lf_PreviewCode = 0
 let g:Lf_UseVersionControlTool = 0
-let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0}
 " let g:Lf_RememberLastSearch = 1
 let g:Lf_UseCache = 0
 let g:Lf_WorkingDirectoryMode = 'Ac'
 let g:Lf_CommandMap = {
-            \ '<C-K>': ['<Up>', '<C-k>'],
-            \ '<C-J>': ['<Down>', '<C-j>'],
-            \ '<Up>': ['<C-p>'],
-            \ '<Down>': ['<C-n>'],
+            \ '<C-K>': ['<Up>', '<S-TAB>'],
+            \ '<C-J>': ['<Down>', '<TAB>'],
+            \ '<Tab>': ['<C-o>'],
             \ '<Home>': ['<Home>', '<C-a>'],
             \ '<End>': ['<End>', '<C-e>'],
             \ '<C-Up>': ['<C-Up>', '<PageUp>'],
@@ -32,10 +30,10 @@ let g:Lf_CommandMap = {
 " let g:Lf_HideHelp = 1
 let g:Lf_ShowHidden = 1
 let g:Lf_IgnoreCurrentBufferName = 1
-let g:Lf_PreviewInPopup = 0
+let g:Lf_PreviewInPopup = 1
 let g:Lf_MruEnableFrecency = 1
-let g:Lf_PopupPreviewPosition = 'bottom'
-let g:Lf_PopupShowBorder = 1
+let g:Lf_PopupPreviewPosition = 'right'
+let g:Lf_PopupShowBorder = 0
 let g:Lf_PopupPalette = {
   \ 'light': {
   \     'Lf_hl_cursorline': {
@@ -60,18 +58,18 @@ let g:Lf_PopupPalette = {
   \     }
   \ }
   \ }
-let g:Lf_PreviewResult = {
-  \ 'File': 0,
-  \ 'Buffer': 0,
-  \ 'Mru': 0,
-  \ 'Tag': 0,
-  \ 'BufTag': 0,
-  \ 'Function': 0,
-  \ 'Line': 0,
-  \ 'Colorscheme': 1,
-  \ 'Rg': 0,
-  \ 'Gtags': 0
-  \ }
+" let g:Lf_PreviewResult = {
+"   \ 'File': 0,
+"   \ 'Buffer': 0,
+"   \ 'Mru': 0,
+"   \ 'Tag': 0,
+"   \ 'BufTag': 0,
+"   \ 'Function': 0,
+"   \ 'Line': 0,
+"   \ 'Colorscheme': 1,
+"   \ 'Rg': 0,
+"   \ 'Gtags': 0
+"   \ }
 
 if executable('fd')
     let g:Lf_ExternalCommand = 'fd -t f "%s"'

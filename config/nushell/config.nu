@@ -1,6 +1,8 @@
-# Nushell Config File
-#
-# version = "0.94.2"
+if (uname).operating-system =~ 'MS/Windows' {
+    $env.TERM = 'xterm-256color'
+} else if (^infocmp $env.TERM | complete).exit_code != 0 {
+    $env.TERM = 'xterm-256color'
+}
 
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
@@ -196,7 +198,7 @@ $env.config = {
         max_size: 100_000 # Session has to be reloaded for this to take effect
         sync_on_enter: true # Enable to share history between multiple sessions, else you have to close the session to write history to file
         file_format: "plaintext" # "sqlite" or "plaintext"
-        isolation: false # only available with sqlite file_format. true enables history isolation, false disables it. true will allow the history to be isolated to the current session using up/down arrows. false will allow the history to be shared across all sessions.
+        isolation: true # only available with sqlite file_format. true enables history isolation, false disables it. true will allow the history to be isolated to the current session using up/down arrows. false will allow the history to be shared across all sessions.
     }
 
     completions: {
@@ -224,8 +226,7 @@ $env.config = {
     }
 
     color_config: $dark_theme # if you want a more interesting theme, you can replace the empty record with `$dark_theme`, `$light_theme` or another custom record
-    use_grid_icons: true
-    footer_mode: "25" # always, never, number_of_rows, auto
+    footer_mode: 25 # always, never, number_of_rows, auto
     float_precision: 2 # the precision for displaying floats in tables
     buffer_editor: "" # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
     use_ansi_coloring: true
@@ -260,7 +261,7 @@ $env.config = {
         reset_application_mode: true
     }
     render_right_prompt_on_last_line: false # true or false to enable or disable right prompt to be rendered on last line of the prompt.
-    use_kitty_protocol: false # enables keyboard enhancement protocol implemented by kitty console, only if your terminal support this.
+    use_kitty_protocol: true # enables keyboard enhancement protocol implemented by kitty console, only if your terminal support this.
     highlight_resolved_externals: false # true enables highlighting of external commands in the repl resolved by which.
     recursion_limit: 50 # the maximum number of times nushell allows recursion before stopping it
 
@@ -895,35 +896,60 @@ $env.config = {
     ]
 }
 
-use ~/.cache/starship/init.nu
-source ~/.cache/carapace/init.nu
-source ~/.zoxide.nu
-
-let zoxide_completer = {|spans|
-    $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+if (uname).operating-system =~ 'MS/Windows' {
+    $env.config.shell_integration.osc133 = false
 }
+
+use ~/.cache/starship/init.nu
+
+source ~/.cache/carapace/init.nu
 
 $env.config.completions.external.completer = {|spans|
     match $spans.0 {
-        z => $zoxide_completer
-        zi => $zoxide_completer
-        __zoxide_z => $zoxide_completer
-        __zoxide_zi => $zoxide_completer
         _ => $carapace_completer
     } | do $in $spans
 }
+
+# source ~/.zoxide.nu
+
+# let zoxide_completer = {|spans|
+#     $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+# }
+#
+# $env.config.completions.external.completer = {|spans|
+#     match $spans.0 {
+#         z => $zoxide_completer
+#         zi => $zoxide_completer
+#         __zoxide_z => $zoxide_completer
+#         __zoxide_zi => $zoxide_completer
+#         _ => $carapace_completer
+#     } | do $in $spans
+# }
+
+source ~/.cache/zlua.nu
+
+alias z = _zlua
+alias zc = _zlua -c
+alias zi = _zlua -i
+alias zf = _zlua -I
+alias zb = _zlua -b
+alias zbi = _zlua -b -i
+alias zbf = _zlua -b -I
+alias zh = _zlua -I -t .
 
 alias la = ls -al
 alias ll = ls -l
 alias wsl = wsl.exe
 alias winget = winget.exe
 
-alias orig-ssh = ssh
-def ssh [ ...args ] {
-    with-env { TERM: xterm-256color } { orig-ssh ...$args }
+def --wrapped ssh [ ...args ] {
+    with-env { TERM: xterm-256color } { ^ssh ...$args }
 }
 
-alias nu-open = open
-if (uname | get kernel-name) == 'Darwin' {
-    alias open = ^open
+def 'vpn on' [] {
+    sudo systemctl start openconnect.service
+}
+
+def 'vpn off' [] {
+    sudo systemctl stop openconnect.service
 }

@@ -1,5 +1,6 @@
 return {
     "lewis6991/gitsigns.nvim",
+    event = "VeryLazy",
     opts = {
         on_attach = function(bufnr)
             local gs = package.loaded.gitsigns
@@ -40,9 +41,29 @@ return {
             map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
         end,
         preview_config = {
-            border = "rounded",
+            border = (function()
+                if vim.g.neovide then
+                    return {
+                        { " ", "NormalFloat" },
+                        { " ", "NormalFloat" },
+                    }
+                else
+                    return "rounded"
+                end
+            end)(),
             -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
             -- focusable = true,
         }
+    },
+    keys = {
+        { "<Leader>hs", mode = "n", function() require("gitsigns").stage_hunk() end, desc = "Stage Hunk" },
+        { "<Leader>hr", mode = "n", function() require("gitsigns").reset_hunk() end, desc = "Reset Hunk" },
+        { "<Leader>hu", mode = "n", function() require("gitsigns").undo_stage_hunk() end, desc = "Undo Stage Hunk" },
+        { "<Leader>hS", mode = "n", function() require("gitsigns").stage_buffer() end, desc = "Stage Buffer" },
+        { "<Leader>hR", mode = "n", function() require("gitsigns").reset_buffer() end, desc = "Reset Buffer" },
+        { "<Leader>hp", mode = "n", function() require("gitsigns").preview_hunk() end, desc = "Preview Hunk" },
+        { "<Leader>hb", mode = "n", function() require("gitsigns").blame_line() end, desc = "Blame Line" },
+        { "<Leader>hB", mode = "n", function() require("gitsigns").toggle_current_line_blame() end, desc = "Toggle Blame for Current Line" },
+        { "<Leader>hd", mode = "n", function() require("gitsigns").toggle_deleted() end, desc = "Toggle Deleted" }
     }
 }

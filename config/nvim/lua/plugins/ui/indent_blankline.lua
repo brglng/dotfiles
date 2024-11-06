@@ -13,5 +13,17 @@ return {
         exclude = {
             filetypes = { "startify" }
         }
+    },
+    keys = {
+        {
+            "<Leader>i",
+            mode = "n",
+            function()
+                require("ibl").setup_buffer(0, {
+                    enabled = not require("ibl.config").get_config(0).enabled
+                })
+            end,
+            desc = "Toggle Indent Lines"
+        }
     }
 }

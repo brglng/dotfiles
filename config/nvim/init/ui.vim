@@ -313,44 +313,6 @@ else
     set signcolumn=yes
 endif
 
-" QuickFix and Location windows
-autocmd FileType tagbar nnoremap <silent> <buffer> q <C-w>q
-
-function! s:setup_quickfix_window()
-    wincmd J
-    if &lines >= 30
-        15wincmd _
-    endif
-    setlocal wrap foldcolumn=0 colorcolumn= signcolumn=no cursorline nobuflisted
-    nnoremap <silent> <buffer> q <C-w>q
-endfunction
-autocmd FileType,BufWinEnter * if &filetype ==# 'qf' | call s:setup_quickfix_window() | endif
-
-autocmd QuickFixCmdPost [^l]* nested botright cwindow
-autocmd QuickFixCmdPost l*    nested botright lwindow
-
-function! s:setup_coc_explorer()
-    wincmd H
-    40wincmd |
-endfunction
-autocmd FileType,BufWinEnter * if &filetype ==# 'coc-explorer' | call s:setup_coc_explorer() | endif
-
-function! s:setup_help_window()
-    wincmd L
-    setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap nonumber
-    nnoremap <silent> <buffer> q <C-w>q
-endfunction
-autocmd FileType,BufWinEnter * if &l:buftype ==# 'help' | call s:setup_help_window() | endif
-
-function! s:setup_man_window()
-    wincmd L
-    setlocal foldcolumn=0 signcolumn=no colorcolumn= wrap bufhidden nobuflisted noswapfile nonumber
-    nnoremap <silent> <buffer> q <C-w>q
-endfunction
-autocmd FileType,BufWinEnter * if &filetype ==# 'man' | call s:setup_man_window() | endif
-
-autocmd FileType toggleterm normal i
-
 if has('nvim')
     autocmd FileType python lua require("ibl").setup_buffer(0, {enabled = true})
 endif

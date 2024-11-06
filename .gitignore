@@ -27,3 +27,5 @@ doc/tags
 
 .mypy_cache/
 *.zwc
+*.log
+/config/nushell/history.txt

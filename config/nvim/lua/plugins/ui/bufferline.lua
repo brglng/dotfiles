@@ -14,9 +14,10 @@ return {
                 delay = 20,
                 reveal = {'close'}
             },
-            numbers = function(opts)
-                return string.format('%s:%s', opts.ordinal, opts.id)
-            end,
+            -- numbers = function(opts)
+            --     return string.format('%s:%s', opts.ordinal, opts.id)
+            -- end,
+            numbers = 'buffer_id',
             offsets = {
                 {
                     filetype = "coc-explorer",
@@ -43,12 +44,14 @@ return {
                     separator = false
                 }
             },
+            -- separator_style = { '', '' }
+            -- separator_style = 'slant'
         },
         highlights = {
-    	  buffer_selected = { italic = false },
+    	    buffer_selected = { italic = false },
             numbers_selected = { italic = false },
-    	  diagnostic_selected = { italic = false },
-    	  hint_selected = { italic = false },
+    	    diagnostic_selected = { italic = false },
+    	    hint_selected = { italic = false },
             hint_diagnostic_selected = { italic = false },
             info_selected = { italic = false },
             info_diagnostic_selected = { italic = false },
@@ -59,9 +62,9 @@ return {
             duplicate_selected = { italic = false },
             duplicate_visible = { italic = false },
             duplicate = { italic = false },
-    	  pick_selected = { italic = false },
-    	  pick_visible = { italic = false },
-    	  pick = { italic = false },
+    	    pick_selected = { italic = false },
+    	    pick_visible = { italic = false },
+    	    pick = { italic = false },
         }
     }
 }

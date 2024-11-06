@@ -1,0 +1,102 @@
+;; Home row mods QWERTY example with more complexity.
+;; Some of the changes from the basic example:
+;; - when a home row mod activates tap, the home row mods are disabled
+;;   while continuing to type rapidly
+;; - tap-hold-release helps make the hold action more responsive
+;; - pressing another key on the same half of the keyboard
+;;   as the home row mod will activate an early tap action
+
+(defcfg
+  process-unmapped-keys yes
+  ;; windows-altgr add-lctl-release
+  windows-altgr cancel-lctl-press
+  macos-dev-names-include (
+    "Apple Internal Keyboard / Trackpad"
+    "M75-BT1-5.0"
+  )
+)
+(defsrc
+  1 2 3 4 5 6 7 8 9 0 - = bspc
+  e
+  caps a   s   d   f   h   j   k   l   ;
+  spc
+)
+(defvar
+  ;; Note: consider using different time values for your different fingers.
+  ;; For example, your pinkies might be slower to release keys and index
+  ;; fingers faster.
+  tap-time 200
+  hold-time 200
+
+  left-hand-keys (
+    esc
+    grv 1 2 3 4 5
+    tab q w e r t
+    caps a s d f g
+    z x c v b
+  )
+  right-hand-keys (
+    esc
+    6 7 8 9 0 - = bspc
+    y u i o p [ ] \
+    caps h j k l ; ' ret
+    n m , . /
+  )
+)
+;; (deffakekeys
+;;   to-base (layer-switch base)
+;; )
+(defalias
+  ;; tap (multi
+  ;;   (layer-switch nomods)
+  ;;   (on-idle-fakekey to-base tap 20)
+  ;; )
+
+  caps esc
+
+  a (tap-hold-release-keys $tap-time $hold-time a (layer-while-held fn-left) $left-hand-keys)
+  s (tap-hold-release-keys $tap-time $hold-time s lmet $left-hand-keys)
+  d (tap-hold-release-keys $tap-time $hold-time d lalt $left-hand-keys)
+  f (tap-hold-release-keys $tap-time $hold-time f lctl $left-hand-keys)
+  j (tap-hold-release-keys $tap-time $hold-time j rctl $right-hand-keys)
+  k (tap-hold-release-keys $tap-time $hold-time k ralt $right-hand-keys)
+  l (tap-hold-release-keys $tap-time $hold-time l rmet $right-hand-keys)
+  ; (tap-hold-release-keys $tap-time $hold-time ; (layer-while-held fn-right) $right-hand-keys)
+  spc (tap-hold-release-keys 0 $hold-time spc lsft (esc caps))
+
+  ;; a (tap-hold-release-keys $tap-time $hold-time (multi a @tap) (layer-while-held fn-left) $left-hand-keys)
+  ;; s (tap-hold-release-keys $tap-time $hold-time (multi s @tap) lmet $left-hand-keys)
+  ;; d (tap-hold-release-keys $tap-time $hold-time (multi d @tap) lalt $left-hand-keys)
+  ;; f (tap-hold-release-keys $tap-time $hold-time (multi f @tap) lctl $left-hand-keys)
+  ;; j (tap-hold-release-keys $tap-time $hold-time (multi j @tap) rctl $right-hand-keys)
+  ;; k (tap-hold-release-keys $tap-time $hold-time (multi k @tap) ralt $right-hand-keys)
+  ;; l (tap-hold-release-keys $tap-time $hold-time (multi l @tap) rmet $right-hand-keys)
+  ;; ; (tap-hold-release-keys $tap-time $hold-time (multi ; @tap) (layer-while-held fn-right) $right-hand-keys)
+  ;; spc (tap-hold-release-keys 0 $hold-time (multi spc @tap) lsft (esc caps))
+)
+(deflayer base
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _
+  @caps @a  @s  @d  @f  h  @j  @k  @l  @;
+  @spc
+)
+(deflayer nomods
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _
+  @caps _   _   _   _   _   _   _   _   _
+  _
+)
+(deflayer fn-left
+  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 del
+  _
+  @caps _ _ _ _ left down up right _
+  _
+)
+(deflayer fn-right
+  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 del
+  end
+  @caps home _ _ _ _ _ _ _ _
+  _
+)
+
+;; vim: ft=lisp sw=2 sts=4 ts=8 et

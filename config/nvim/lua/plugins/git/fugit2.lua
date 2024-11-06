@@ -1,5 +1,6 @@
 return {
     "SuperBo/fugit2.nvim",
+    enabled = false,
     dependencies = {
         'MunifTanjim/nui.nvim',
         'nvim-tree/nvim-web-devicons',

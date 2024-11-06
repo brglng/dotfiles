@@ -13,10 +13,16 @@ return {
         floating_window_off_x = 0,
         floating_window_off_y = 0,
         handler_opts = {
-            border = "rounded",
-            -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
+            border = (function()
+                if vim.g.neovide then
+                    return "solid"
+                else
+                    -- return { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
+                    return "solid"
+                end
+            end)(),
             focusable = true,
-            -- winhighlight = 'NormalFloat:Normal'
+            winhighlight = 'FloatBorder:LspSignatureFloatBorder'
         },
         -- transparency = 20,
         hint_enable = false,
@@ -39,5 +45,29 @@ return {
             end
             return float_bufnr, win_id
         end
+        local set_lsp_signature_colors = function()
+            local colorutil = require('brglng.colorutil')
+            local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+            local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
+            local WinSeparator = vim.api.nvim_get_hl(0, { name = "WinSeparator", link = false })
+            local border_fg
+            if vim.o.background == 'dark' then
+                border_fg = colorutil.reduce_value(Normal.bg, 0.005)
+            else
+                border_fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.2)
+            end
+            vim.api.nvim_set_hl(0, "LspSignatureFloatBorder", {
+                fg = border_fg,
+                bg = NormalFloat.bg,
+            })
+        end
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            pattern = "*",
+            callback = set_lsp_signature_colors
+        })
+        vim.api.nvim_create_autocmd("OptionSet", {
+            pattern = "background",
+            callback = set_lsp_signature_colors
+        })
     end
 }

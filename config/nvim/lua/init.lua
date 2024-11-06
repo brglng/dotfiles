@@ -1,7 +1,23 @@
 vim.o.mousemoveevent = true
 vim.o.splitkeep = "screen"
-vim.o.termsync = false
+-- vim.o.termsync = false
 vim.g.maplocalleader = ","
+
+if vim.g.neovide then
+    if vim.uv.os_uname().sysname == "Windows_NT" then
+        vim.o.guifont = "Maple Mono NF CN:h10"
+    else
+        vim.o.guifont = "Maple Mono NF CN:h14"
+        -- vim.env.PATH = vim.env.HOME .. "/.local/bin:" .. vim.env.HOME .. "/.cargo/bin:" .. vim.env.PATH
+    end
+    vim.g.neovide_hide_mouse_when_typing = true
+    -- vim.g.experimental_layer_grouping = true
+    vim.g.neovide_input_macos_option_key_is_meta = 'both'
+    vim.g.neovide_floating_corner_radius = 0.1
+    -- vim.g.neovide_cursor_trail_size = 0.2
+    vim.g.neovide_cursor_vfx_mode = "torpedo"
+    vim.g.neovide_cursor_vfx_particle_density = 10.0
+end
 
 vim.filetype.add {
     extension = {
@@ -20,21 +36,13 @@ vim.filetype.add {
         },
     },
 }
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-    pattern = { "*.nu" },
-    command = "setfiletype nu | TSBufEnable highlight"
-})
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-    pattern = { "*.norg" },
-    command = "setfiletype norg | TSBufEnable highlight"
-})
 vim.api.nvim_create_autocmd({"FileType"}, {
     pattern = { "norg", "markdown" },
     command = "set conceallevel=3"
 })
 vim.api.nvim_create_autocmd({"FileType"}, {
     pattern = { "markdown" },
-    command = "set shiftwidth=2 softtabstop=2 expandtab"
+    command = "set shiftwidth=2 softtabstop=4 expandtab"
 })
 
 local signs = { Error = " ", Warn = " ", Info = " ", Hint = "󰌶 " }
@@ -66,6 +74,11 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins", {
     lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
+    -- concurrency = (function()
+    --     if vim.uv.os_uname().sysname == 'Windows_NT' then
+    --         return 1
+    --     end
+    -- end)(),
     change_detection = {
         enabled = false,
     },

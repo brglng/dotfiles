@@ -1,3 +1,7 @@
+if ! infocmp $TERM &> /dev/null; then
+    export TERM=xterm-256color
+fi
+
 path_append() {
     if [[ ":$PATH:" != *":$1:"* ]]; then
         export PATH="${PATH:+"$PATH:"}$1"
@@ -32,7 +36,7 @@ update_environment() {
 }
 
 if [[ "`uname -s`" = Darwin ]]; then
-    for minor in {0..20}; do
+    for minor in {0..100}; do
         [[ -d ~/Library/Python/3.${minor}/bin ]] && path_prepend ~/Library/Python/3.${minor}/bin
     done
 fi

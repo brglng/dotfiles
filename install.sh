@@ -19,7 +19,7 @@ install_apt() {
 
 install_pacman() {
     sudo pacman -Sy
-    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm go cmake ruby rubygems zsh nushell starship tmux fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git zoxide
+    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm go cmake ruby rubygems zsh nushell starship tmux fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git z.lua
 }
 
 install_linux() {
@@ -127,7 +127,7 @@ scripts/setup_python3.sh --no-setup-proxy
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git rustup-init go cmake zsh tmux nushell starship zoxide fzf ripgrep-all fd vim colordiff nvm dasht luajit luarocks direnv
+    brew install git rustup-init go cmake zsh tmux nushell starship z.lua fzf ripgrep-all fd vim colordiff nvm dasht luajit luarocks direnv
 
     brew tap rsteube/homebrew-tap
     brew install rsteube/tap/carapace

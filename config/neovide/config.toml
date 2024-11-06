@@ -1,0 +1,7 @@
+maximized = true
+tabs = false
+
+[font]
+normal = ["Maple Mono NF CN"]
+hinting = "none"
+size = 10.0

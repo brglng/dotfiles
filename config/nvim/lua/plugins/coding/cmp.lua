@@ -15,15 +15,7 @@ return {
         "davidsierradz/cmp-conventionalcommits",
         "FelipeLema/cmp-async-path",
         "onsails/lspkind.nvim",
-        {
-            "Exafunction/codeium.nvim",
-            init = function()
-                vim.env.DEBUG_CODEIUM = "error"
-            end,
-            dependencies = {
-                "nvim-lua/plenary.nvim"
-            }
-        },
+        "Exafunction/codeium.nvim",
     },
     enabled = true,
     config = function ()
@@ -40,7 +32,6 @@ return {
                 Codeium = ""
             },
         }
-        require("codeium").setup {}
 
         local has_words_before = function()
             unpack = unpack or table.unpack
@@ -57,8 +48,24 @@ return {
         -- window_bordered.winblend = 20
 
         local function set_cmp_colors()
+            local colorutil = require('brglng.colorutil')
+            local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
             local Comment = vim.api.nvim_get_hl(0, { name = 'Comment', link = false })
+            local Pmenu = vim.api.nvim_get_hl(0, { name = 'Pmenu', link = false })
+            local PmenuSel = vim.api.nvim_get_hl(0, { name = 'PmenuSel', link = false })
+            local bg, sel_bg
+            if vim.o.background == 'dark' then
+                bg = colorutil.add_value(Pmenu.bg, 0.02)
+                sel_bg = colorutil.add_value(PmenuSel.bg, 0.02)
+            else
+                bg = colorutil.reduce_value(Pmenu.bg, 0.02)
+                sel_bg = colorutil.reduce_value(PmenuSel.bg, 0.02)
+            end
+            -- vim.api.nvim_set_hl(0, 'NormalFloat', { fg = NormalFloat.fg, bg = NormalFloat.bg })
             vim.api.nvim_set_hl(0, 'CmpItemMenu', { fg = Comment.fg, bg = nil })
+            -- vim.api.nvim_set_hl(0, 'Pmenu', { bg = bg })
+            -- vim.api.nvim_set_hl(0, 'PmenuSel', { bg = sel_bg })
+            -- vim.api.nvim_set_hl(0, 'PmenuSbar', { bg = bg })
         end
         vim.api.nvim_create_autocmd('ColorScheme', { pattern = '*', callback = set_cmp_colors })
         vim.api.nvim_create_autocmd('OptionSet', { pattern = 'background', callback = set_cmp_colors })
@@ -66,12 +73,12 @@ return {
 
         cmp.setup {
             window = {
-                -- completion = {
-                --     col_offset = -3,
-                --     side_padding = 1
-                -- },
-                completion = window_bordered,
-                documentation = window_bordered,
+                completion = {
+                    col_offset = -3,
+                    side_padding = 1,
+                },
+                -- completion = window_bordered,
+                -- documentation = window_bordered,
             },
             -- view = {
             --     entries = {
@@ -103,9 +110,17 @@ return {
                         local strings = vim.split(kind.kind, "%s", { trimempty = true })
                         kind.kind = vim.trim(strings[1]) or ""
                         if string.sub(kind.abbr or "", -1) == "~" and (kind.menu or "") ~= "" then
-                            kind.abbr = string.sub(vim.trim(kind.abbr or ""), 1, -2) .. vim.trim(kind.menu or "")
+                            if string.sub(kind.menu or "", 1)== '(' then
+                                kind.abbr = string.sub(vim.trim(kind.abbr or ""), 1, -2) .. vim.trim(kind.menu or "")
+                            else
+                                kind.abbr = vim.trim(kind.abbr or "") .. " " .. vim.trim(kind.menu or "")
+                            end
                         else
-                            kind.abbr = vim.trim(kind.abbr or "") .. vim.trim(kind.menu or "")
+                            if vim.trim(kind.abbr or "") == vim.trim(kind.menu or "") then
+                                kind.abbr = vim.trim(kind.abbr or "")
+                            else
+                                kind.abbr = vim.trim(kind.abbr or "") .. " " ..  vim.trim(kind.menu or "")
+                            end
                         end
                         kind.menu = vim.trim(strings[2]) or ""
                         return kind
@@ -132,16 +147,49 @@ return {
             }),
             mapping = cmp.mapping.preset.insert({
                 ['<C-x><C-x>'] = cmp.mapping.complete(),
-                ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-                ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-                -- ['<C-n>'] = cmp.mapping({
-                --     i = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-                --     c = cmp.config.disable,
-                -- }),
-                -- ['<C-p>'] = cmp.mapping({
-                --     i = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-                --     c = cmp.config.disable,
-                -- }),
+                ['<Tab>'] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                    elseif luasnip.locally_jumpable(1) then
+                        luasnip.jump(1)
+                    else
+                        fallback()
+                    end
+                end, { 'i', 's' }),
+                ['<S-Tab>'] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                    elseif luasnip.locally_jumpable(-1) then
+                        luasnip.jump(-1)
+                    else
+                        fallback()
+                    end
+                end, { 'i', 's' }),
+                ["<CR>"] = cmp.mapping(function(fallback)
+                    if cmp.visible() and cmp.get_active_entry() then
+                        cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+                    else
+                        fallback()
+                    end
+                end, { "i", "s", "c" }),
+                ["<C-n>"] = cmp.mapping({
+                    i = function(fallback)
+                        if cmp.visible() then
+                            cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                        else
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'i', true)
+                        end
+                    end,
+                }),
+                ["<C-p>"] = cmp.mapping({
+                    i = function(fallback)
+                        if cmp.visible() then
+                            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                        else
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'i', true)
+                        end
+                    end,
+                }),
                 ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
                 ['<C-d>'] = cmp.mapping.scroll_docs(4),  -- Down
                 ['<C-j>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert, count = 10 }),
@@ -154,7 +202,7 @@ return {
                             if vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
                                 fallback()
                             else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'n', true)
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'i', true)
                             end
                         end
                     end,
@@ -170,43 +218,6 @@ return {
                         end
                     end
                 }),
-                ["<CR>"] = cmp.mapping({
-                    i = function(fallback)
-                        if cmp.visible() and cmp.get_active_entry() then
-                            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-                        else
-                            fallback()
-                        end
-                    end,
-                    c = function(fallback)
-                        if cmp.visible() and cmp.get_active_entry() then
-                            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-                        else
-                            fallback()
-                        end
-                    end,
-                    s = function(fallback)
-                        if cmp.visible() and cmp.get_active_entry() then
-                            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-                        else
-                            fallback()
-                        end
-                    end,
-                }),
-                ['<Tab>'] = cmp.mapping(function(fallback)
-                    if luasnip.expand_or_jumpable() then
-                        luasnip.expand_or_jump()
-                    else
-                        fallback()
-                    end
-                end, { 'i', 's' }),
-                ['<S-Tab>'] = cmp.mapping(function(fallback)
-                    if luasnip.jumpable(-1) then
-                        luasnip.jump(-1)
-                    else
-                        fallback()
-                    end
-                end, { 'i', 's' }),
             }),
             experimental = {
                 ghost_text = false,

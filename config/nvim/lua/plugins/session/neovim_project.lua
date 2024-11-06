@@ -5,9 +5,11 @@ return {
             "~/Syncthing/vps/dotfiles",
             "~/Syncthing/sync/work/loostone/fdn_reverb",
             "~/Syncthing/sync/work/loostone/pm-audio-lib/*",
-            "~/Syncthing/sync/notes",
-            "~/Syncthing/sync/Projects/*",
-            "~/Syncthing/sync/Projects/vim-plugins/*",
+            "~/Syncthing/notes",
+            "~/Syncthing/projects/*",
+            "~/Syncthing/projects/vim-plugins/*",
+            "/mnt/c/bose/github/*",
+            "C:/bose/github/*"
         },
         dashboard_mode = false,
         last_session_on_startup = false

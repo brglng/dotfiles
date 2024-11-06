@@ -13,11 +13,11 @@ return {
         diagnostic = {
             virtual_text = false,
             float = {
-                border = "rounded",
-                -- border = {
-                --     { " ", "NormalFloat" },
-                --     { " ", "NormalFloat" },
-                -- }
+                -- border = "none",
+                border = {
+                    { " ", "NormalFloat" },
+                    { " ", "NormalFloat" },
+                },
                 -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
                 focusable = false,
                 -- winhighlight = 'NormalFloat:Normal'
@@ -31,6 +31,7 @@ return {
             enabled = true,
         },
         servers = {
+            cmake = {},
             clangd = {
                 cmd = {
                     "clangd",
@@ -49,6 +50,7 @@ return {
                     offsetEncoding = 'utf-8'
                 }
             },
+            jsonls = {},
             lua_ls = {},
             -- lua_ls = {
             --     cmd = { "lua-language-server", "--logpath=" .. vim.fn.stdpath("log") .. "/luals" },
@@ -80,15 +82,19 @@ return {
             --         return true
             --     end,
             -- },
+            marksman = {},
+            matlab_ls = {},
             nushell = {},
+            perlnavigator = {},
             pyright = {},
-            tsserver = {},
+            ts_ls = {},
             -- rust_analyzer = {
             --     settings = {
             --         ['rust_analyzer'] = {}
             --     }
             -- },
-            vimls = {}
+            vimls = {},
+            yamlls = {}
         }
     },
     config = function(_, opts)
@@ -138,6 +144,20 @@ return {
         --     }
         -- )
 
+        if vim.uv.os_uname().sysname == 'Windows_NT' then
+            opts.servers.clangd.cmd[1] = 'clangd.cmd'
+            opts.servers.cmake.cmd = { 'cmake-language-server.cmd' }
+            opts.servers.jsonls.cmd = { 'vscode-json-language-server.cmd' }
+            opts.servers.lua_ls.cmd = { 'lua-language-server.cmd' }
+            opts.servers.marksman.cmd = { 'marksman.cmd', 'server' }
+            opts.servers.matlab_ls.cmd = { 'matlab-language-server.cmd', '--stdio' }
+            opts.servers.perlnavigator.cmd = { 'perlnavigator.cmd' }
+            opts.servers.pyright.cmd = { 'pyright-langserver.cmd', '--stdio' }
+            opts.servers.ts_ls.cmd = { 'typescript-language-server.cmd', '--stdio' }
+            opts.servers.vimls.cmd = { 'vim-language-server.cmd', '--stdio' }
+            opts.servers.yamlls.cmd = { 'yaml-language-server.cmd', '--stdio' }
+        end
+
         for server, server_opts in pairs(opts.servers) do
             server_opts = vim.tbl_deep_extend('force',
                 {
@@ -180,7 +200,7 @@ return {
                 local opts = { buffer = ev.buf }
                 vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
                 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-                vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+                -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
                 vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
                 vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
                 -- vim.keymap.set('n', '<leader>xn', vim.lsp.buf.rename, opts)
@@ -199,7 +219,9 @@ return {
         })
     end,
     keys = {
-        { '<Leader>e', mode = { 'n' }, vim.diagnostic.open_float, desc = 'Show Diagnostic' },
+        { '<Leader>e', mode = { 'n' }, vim.diagnostic.open_float, desc = "Show Diagnostics" },
+        { "<Leader>ce", vim.diagnostic.open_float, desc = "Show Diagnostics" },
+        { "<Leader>cf", function() vim.lsp.buf.format { async = true } end, desc = "Format Buffer" },
         { '[d', mode = { 'n' }, vim.diagnostic.goto_prev, desc = 'Previous Diagnostic' },
         { ']d', mode = { 'n' }, vim.diagnostic.goto_next, desc = 'Next Diagnostic' }
     }

@@ -95,6 +95,12 @@ return {
         { "<F9>", mode = "n", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
         { "<F10>", mode = "n", function() require("dap").step_over() end, desc = "Step Over" },
         { "<F11>", mode = "n", function() require("dap").step_into() end, desc = "Step Into" },
-        { "<F12>", mode = "n", function() require("dap").step_out() end, desc = "Step Out" }
+        { "<F12>", mode = "n", function() require("dap").step_out() end, desc = "Step Out" },
+        { "<Leader>db", mode = "n", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+        { "<Leader>df", mode = "n", function() require("dap").step_out() end, desc = "Step Out" },
+        { "<Leader>dn", mode = "n", function() require("dap").step_over() end, desc = "Step Over" },
+        { "<Leader>ds", mode = "n", function() require("dap").step_into() end, desc = "Step Into" },
+        { "<Leader>d[", mode = "n", function() require("dap").up() end, desc = "Frame Up" },
+        { "<Leader>d]", mode = "n", function() require("dap").down() end, desc = "Frame Down" },
     }
 }

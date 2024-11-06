@@ -10,5 +10,8 @@ return {
         lsp = {
             auto_attach = true
         }
+    },
+    keys = {
+        { "<Leader>cn", mode = "n", "<Cmd>Navbuddy<CR>", desc = "Navigate" },
     }
 }

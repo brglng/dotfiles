@@ -25,6 +25,17 @@ return {
         },
         ui = {
             -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
+            border = "solid"
         }
+    },
+    event = "LspAttach",
+    keys = {
+        { "<Leader>cc", "<Cmd>Lspsaga incomping_calls<CR>", mode = "n", desc = "Callers" },
+        { "<Leader>cC", "<Cmd>Lspsaga outgoing_calls<CR>", mode = "n", desc = "Callees" },
+        { "<Leader>cD", "<Cmd>Lspsaga peek_definition<CR>", mode = "n", desc = "Peek Definitions" },
+        { "<Leader>ch", "<Cmd>Lspsaga hover_doc<CR>", mode = "n", desc = "Hover Doc" },
+        { "<Leader>co", "<Cmd>Lspsaga outline<CR>", mode = "n", desc = "Outline" },
+        { "<Leader>cR", "<Cmd>Lspsaga rename<CR>", mode = "n", desc = "Rename" },
+        { "K", "<Cmd>Lspsaga hover_doc<CR>", mode = "n", desc = "Hover Doc" },
     }
 }

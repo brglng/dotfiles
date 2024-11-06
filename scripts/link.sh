@@ -82,6 +82,7 @@ function link_common() {
     link "$PWD/vimrc"                           "$HOME/.vimrc"
     link "$PWD/config/nvim"                     "$HOME/.vim"
     link "$PWD/config/nvim"                     "$HOME/.config/nvim"
+    link "$PWD/zimrc"                           "$HOME/.zimrc"
     link "$PWD/zprofile"                        "$HOME/.zprofile"
     update_zshrc
     update_alacritty_toml

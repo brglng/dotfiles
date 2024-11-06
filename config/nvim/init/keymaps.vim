@@ -157,8 +157,8 @@ endif
 noremap <silent> <M-6> :call sidebar#toggle('quickfix')<CR>
 noremap <silent> <M-7> :call sidebar#toggle('loclist')<CR>
 noremap <silent> <M-5> :call sidebar#toggle('undotree')<CR>
+noremap <silent> <M-=> :call sidebar#toggle('terminal')<CR>
 noremap <silent> <M-]> :call sidebar#toggle('help')<CR>
-noremap <silent> <M-\> :call sidebar#toggle('terminal')<CR>
 if has('nvim')
     tnoremap <silent> <M-1> <C-\><C-n>:call sidebar#toggle('neo-tree-filesystem')<CR>
     tnoremap <silent> <M-2> <C-\><C-n>:call sidebar#toggle('neo-tree-document-symbols')<CR>
@@ -168,19 +168,18 @@ if has('nvim')
     tnoremap <silent> <M-6> <C-\><C-n>:call sidebar#toggle('quickfix')<CR>
     tnoremap <silent> <M-7> <C-\><C-n>:call sidebar#toggle('loclist')<CR>
     tnoremap <silent> <M-8> <C-\><C-n>:call sidebar#toggle('trouble-document-diagnostics')<CR>
-    tnoremap <silent> <M-9> <C-\><C-n>:call sidebar#toggle('trouble-workspace-diagnostics')<CR>
-    tnoremap <silent> <M-0> <C-\><C-n>:call sidebar#toggle('trouble-lsp-references')<CR>
-    tnoremap <silent> <M--> <C-\><C-n>:call sidebar#toggle('trouble-lsp-definitions')<CR>
-    tnoremap <silent> <M-=> <C-\><C-n>:call sidebar#toggle('trouble-lsp-type-definitions')<CR>
+    tnoremap <silent> <M-9> <C-\><C-n>:call sidebar#toggle('trouble-lsp-references')<CR>
+    tnoremap <silent> <M-0> <C-\><C-n>:call sidebar#toggle('trouble-lsp-definitions')<CR>
+    tnoremap <silent> <M--> <C-\><C-n>:call sidebar#toggle('trouble-lsp-type-definitions')<CR>
+    tnoremap <silent> <M-=> <C-\><C-n>:call sidebar#toggle('terminal')<CR>
     tnoremap <silent> <M-]> <C-\><C-n>:call sidebar#toggle('help')<CR>
-    tnoremap <silent> <M-\> <C-\><C-n>:call sidebar#toggle('terminal')<CR>
 else
     tnoremap <silent> <M-2> <C-_>:call sidebar#toggle('vista')<CR>
     tnoremap <silent> <M-5> <C-_>:call sidebar#toggle('undotree')<CR>
     tnoremap <silent> <M-6> <C-_>:call sidebar#toggle('quickfix')<CR>
     tnoremap <silent> <M-7> <C-_>:call sidebar#toggle('loclist')<CR>
+    tnoremap <silent> <M-=> <C-_>:call sidebar#toggle('terminal')<CR>
     tnoremap <silent> <M-]> <C-_>:call sidebar#toggle('help')<CR>
-    tnoremap <silent> <M-\> <C-_>:call sidebar#toggle('terminal')<CR>
 endif
 
 if has('nvim')

@@ -5,7 +5,18 @@ local MAC = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_tri
 
 local config = wezterm.config_builder()
 
+if WINDOWS then
+    config.set_environment_variables = {
+        TERMINFO_DIRS = wezterm.home_dir .. '/.terminfo',
+        WSLENV = 'TERMINFO_DIRS',
+    }
+end
+
 config.term = "wezterm"
+
+if wezterm.hostname():find('^APSH-') then
+    config.hyperlink_rules = {}
+end
 
 -- Colors
 
@@ -52,27 +63,67 @@ config.tab_bar_style = {
 }
 config.window_padding = {
     left = 0,
-    right = '1.5cell',
+    right = '1cell',
     top = 0,
     bottom = 0
 }
 
-
 local function tab_title(tab_info)
-    local title = tab_info.tab_title
-    -- if the tab title is explicitly set, take that
-    if title and #title > 0 then
-        return title
+    local pane = tab_info.active_pane
+    local title = ""
+    if pane.domain_name == 'local' then
+    elseif pane.domain_name == 'Mux' then
+    elseif pane.domain_name ~= nil then
+        title = title .. pane.domain_name .. " "
     end
-    -- Otherwise, use the title from the active pane
-    -- in that tab
-    return tab_info.active_pane.title
+    if pane.current_working_dir.file_path ~= nil then
+        local cwd, home_dir
+        if WINDOWS then
+            cwd = string.gsub(pane.current_working_dir.file_path, '^/(%u:)/', '%1/')
+            home_dir = string.gsub(wezterm.home_dir, '\\', '/')
+        else
+            cwd = pane.current_working_dir.file_path
+            home_dir = wezterm.home_dir
+        end
+        cwd = string.gsub(cwd, '^' .. home_dir, '~')
+        title = title .. string.gsub(cwd, '(.*[/\\])([^/\\]*)', '%2')
+    end
+    if title ~= '' then
+        title = title .. ' '
+    end
+    if pane.foreground_process_name ~= '' then
+        title = title .. string.gsub(pane.foreground_process_name, '(.*[/\\])([^/\\]*)', '%2')
+    else
+        local process_name = string.gsub(pane.title, '^[^>]+> (.*)$', '%1')
+        if process_name ~= pane.title then
+            title = title .. process_name
+        end
+    end
+
+    title = string.gsub(title, '(.*)%.exe', '%1')
+
+    if #title == 0 then
+        title = tab_info.title
+        if #tab_info.title == 0 then
+            title = tab_info.active_pane.title
+        end
+    end
+
+    return title
+    -- local title = tab_info.tab_title
+    -- -- if the tab title is explicitly set, take that
+    -- if title and #title > 0 then
+    --     return title
+    -- end
+    -- -- Otherwise, use the title from the active pane
+    -- -- in that tab
+    -- return tab_info.active_pane.title
 end
 
 wezterm.on(
     'format-tab-title',
     function(tab, tabs, panes, config, hover, max_width)
-        local title = tostring(tab.tab_id) .. ':' .. tab_title(tab)
+        local title = tostring(tab.tab_index + 1) .. '  ' .. tab_title(tab)
 
         local fg_separator_active, fg_separator_inactive, fg_active, fg_inactive
         if get_appearance():find('Dark') then
@@ -80,41 +131,43 @@ wezterm.on(
             fg_inactive = '#c1a78e'
             fg_separator_active = '#34302c'
             fg_separator_inactive = '#161412'
+            bg_active = '#292522'
         else
             fg_active = '#54433a'
             fg_inactive = '#7d6658'
             fg_separator_active = '#e9e1db'
             fg_separator_inactive = '#c0c0c0'
+            bg_active = '#f1f1f1'
         end
 
         -- ensure that the titles fit in the available space,
         -- and that we have room for the edges.
-        title = wezterm.truncate_right(title, max_width - 4) .. '  '
+        title = ' ' .. wezterm.truncate_right(title, max_width)
 
         if tab.is_active then
             return {
                 { Foreground = { Color = fg_separator_active } },
-                { Text = '▎ ' },
+                { Text = '▎' },
                 { Foreground = { Color = fg_active } },
-                { Text = title },
+                { Text = title .. '  ' },
             }
         else
             return {
                 { Foreground = { Color = fg_separator_inactive } },
-                { Text = '▎ ' },
+                { Text = '▎' },
                 { Foreground = { Color = fg_inactive } },
-                { Text = title },
+                { Text = title .. '  ' },
             }
         end
     end
 )
 
-config.status_update_interval = 300
+config.status_update_interval = 100
 wezterm.on("update-status", function(window, pane)
     local fg, bg, leader, modes
     if get_appearance():find('Dark') then
         fg = '#34302c'
-        bg = '#c1a78e'
+        bg = '#161412'
         leader = { text = ' 󱐋 ', fg = '#34302c', bg = '#d47766' }
         modes = {
             copy_mode = { text = " 󰆏 ", fg = '#34302c', bg = '#ebc06d' },
@@ -125,7 +178,7 @@ wezterm.on("update-status", function(window, pane)
         }
     else
         fg = '#e9e1db'
-        bg = '#7d6658'
+        bg = '#c0c0c0'
         leader = { text = ' 󱐋 ', fg = '#e9e1db', bg = '#bf0021' }
         modes = {
             copy_mode = { text = " 󰆏 ", fg = '#e9e1db', bg = '#a06d00' },
@@ -242,14 +295,15 @@ config.enable_kitty_graphics = true
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 5000 }
 
 config.keys = {
-    { mods = 'LEADER|CTRL', key = 'a', action = wezterm.action.SendKey { key = 'a', mods = 'CTRL' } },
-    { mods = 'LEADER', key = 'c', action = wezterm.action.SpawnTab('CurrentPaneDomain') },
+    { mods = 'CTRL | SHIFT', key = ':', action = wezterm.action.ShowLauncherArgs { flags = 'FUZZY | COMMANDS' } },
+    { mods = 'LEADER | CTRL', key = 'a', action = wezterm.action.SendKey { key = 'a', mods = 'CTRL' } },
+    { mods = 'LEADER', key = 'b', action = wezterm.action.ShowLauncherArgs { flags = 'FUZZY | TABS' } },
+    { mods = 'LEADER', key = 'c', action = wezterm.action.ShowLauncherArgs { flags = 'FUZZY | LAUNCH_MENU_ITEMS' } },
     { mods = 'LEADER', key = 'd', action = wezterm.action.DetachDomain('CurrentPaneDomain') },
     { mods = 'LEADER', key = 'h', action = wezterm.action.ActivatePaneDirection('Left') },
     { mods = 'LEADER', key = 'j', action = wezterm.action.ActivatePaneDirection('Down') },
     { mods = 'LEADER', key = 'k', action = wezterm.action.ActivatePaneDirection('Up') },
     { mods = 'LEADER', key = 'l', action = wezterm.action.ActivatePaneDirection('Right') },
-    { mods = 'LEADER|CTRL', key = 'l', action = wezterm.action.ShowLauncher },
     { mods = 'LEADER', key = 'n', action = wezterm.action.ActivateTabRelative(1) },
     { mods = 'LEADER', key = 'o', action = wezterm.action.TogglePaneZoomState },
     { mods = 'LEADER', key = 'p', action = wezterm.action.ActivateTabRelative(-1) },
@@ -257,9 +311,9 @@ config.keys = {
     { mods = 'LEADER', key = 's', action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' } },
     { mods = 'LEADER', key = 'v', action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' } },
     { mods = 'LEADER', key = '[', action = wezterm.action.ActivateCopyMode },
-    { mods = 'LEADER|CTRL', key = '[', action = wezterm.action.ActivateCopyMode },
+    { mods = 'LEADER | CTRL', key = '[', action = wezterm.action.ActivateCopyMode },
     { mods = 'LEADER', key = ']', action = wezterm.action.PasteFrom('PrimarySelection') },
-    { mods = 'LEADER|CTRL', key = ']', action = wezterm.action.PasteFrom('PrimarySelection') },
+    { mods = 'LEADER | CTRL', key = ']', action = wezterm.action.PasteFrom('PrimarySelection') },
     { mods = 'LEADER', key = '1', action = wezterm.action.ActivateTab(0), },
     { mods = 'LEADER', key = '2', action = wezterm.action.ActivateTab(1), },
     { mods = 'LEADER', key = '3', action = wezterm.action.ActivateTab(2), },
@@ -280,6 +334,8 @@ config.keys = {
     { mods = 'ALT', key = '8', action = wezterm.action.SendKey { key = '8', mods = 'ALT' } },
     { mods = 'ALT', key = '9', action = wezterm.action.SendKey { key = '9', mods = 'ALT' } },
     { mods = 'ALT', key = '0', action = wezterm.action.SendKey { key = '0', mods = 'ALT' } },
+    { mods = 'ALT', key = 'b', action = wezterm.action.SendKey { key = 'b', mods = 'ALT' } },
+    { mods = 'ALT', key = 'f', action = wezterm.action.SendKey { key = 'f', mods = 'ALT' } },
     { mods = 'ALT', key = '-', action = wezterm.action.SendKey { key = '-', mods = 'ALT' } },
     { mods = 'ALT', key = '=', action = wezterm.action.SendKey { key = '=', mods = 'ALT' } },
     { mods = 'ALT', key = ']', action = wezterm.action.SendKey { key = ']', mods = 'ALT' } },
@@ -293,24 +349,46 @@ config.keys = {
 
 -- Launcher
 
+config.unix_domains = {
+    { name = 'Mux' }
+}
+
+config.ssh_domains = {
+    {
+        name = 'SSH VPS',
+        remote_address = '3.112.158.72',
+        username = 'ubuntu',
+        multiplexing = 'None'
+    },
+    {
+        name = 'SSH Mux VPS',
+        remote_address = '3.112.158.72',
+        username = 'ubuntu',
+    }
+}
+
+config.default_domain = 'local'
+
 config.launch_menu = {}
-config.ssh_domains = {}
-config.unix_domains = {}
 
 if WINDOWS then
     table.insert(config.ssh_domains, {
-        name = 'SSH:WSL:Ubuntu',
+        name = 'SSH WSL Ubuntu',
         remote_address = 'localhost',
-        username = 'brglng'
+        username = 'brglng',
+        multiplexing = 'None',
+        default_prog = { '/bin/bash', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then zsh -l -i; else bash -i; fi' }
     })
-    table.insert(config.launch_menu, {
-        label = 'Ubuntu',
-        domain = { DomainName = 'WSL:Ubuntu' }
+    table.insert(config.ssh_domains, {
+        name = 'SSH WSL Mux Ubuntu',
+        remote_address = 'localhost',
+        username = 'brglng',
     })
+
     table.insert(config.launch_menu, {
-        label = 'Window Nushell',
+        label = 'Windows Nushell',
         domain = { DomainName = "local" },
-        args = { 'nu', '-i' },
+        args = { 'nu', '-i', '-l' },
     })
     table.insert(config.launch_menu, {
         label = 'Windows PowerShell',
@@ -318,8 +396,9 @@ if WINDOWS then
         args = { 'powershell.exe', '-NoLogo' },
     })
     table.insert(config.launch_menu, {
-        label = "Command Prompt",
-        domain = { DomainName = "local" }
+        label = "Windows Command Prompt",
+        domain = { DomainName = "local", },
+        args = { 'cmd.exe' }
     })
     table.insert(config.launch_menu, {
         label = "Bose Cygwin 6.0",
@@ -330,81 +409,109 @@ if WINDOWS then
             "C:/cygwin64/Cygwin.bat"
         }
     })
-
-    config.default_domain = "SSH:WSL:Ubuntu"
-
-    -- Find installed visual studio version(s) and add their compilation
-    -- environment command prompts to the menu
-    local vsdirs = {}
-    for _, vsvers in ipairs(wezterm.glob('Microsoft Visual Studio/20*/Community', 'C:/Program Files')) do
-        local year = vsvers:gsub('Microsoft Visual Studio/', '')
-        table.insert(config.launch_menu, {
-            label = 'Developer Command Prompt for VS ' .. year,
-            domain = { DomainName = "local" },
-            args = {
-                'cmd.exe',
-                '/k',
-                'C:/Program Files/' .. vsvers .. '/Common7/Tools/VsDevCmd.bat',
-                '-startdir=none',
-                '-arch=x64',
-                '-host_arch=x64',
-            },
-        })
-        table.insert(config.launch_menu, {
-            label = 'Developer Powershell for VS ' .. year,
-            domain = { DomainName = "local" },
-            args = {
-                'powershell.exe',
-                '-NoExit',
-                '-Command',
-                '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
-            },
-        })
-    end
-else
-    table.insert(config.unix_domains, {
-        name = 'unix'
+    table.insert(config.launch_menu, {
+        label = 'SSH WSL Ubuntu',
+        domain = { DomainName = 'SSH WSL Ubuntu' }
     })
-    config.default_domain = 'unix'
+    table.insert(config.launch_menu, {
+        label = 'SSH WSL Mux Ubuntu',
+        domain = { DomainName = 'SSH WSL Mux Ubuntu' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'WSL Ubuntu',
+        domain = { DomainName = 'WSL:Ubuntu' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'Developer Command Prompt for VS 2022 Community',
+        domain = { DomainName = "local" },
+        args = {
+            'cmd.exe',
+            '/k',
+            'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat',
+            '-startdir=none',
+            '-arch=x64',
+            '-host_arch=x64',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Developer Powershell for VS 2022 Community',
+        domain = { DomainName = "local" },
+        args = {
+            'powershell.exe',
+            '-NoExit',
+            '-Command',
+            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Developer Command Prompt for VS 2022 Professional',
+        domain = { DomainName = "local" },
+        args = {
+            'cmd.exe',
+            '/k',
+            'C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/VsDevCmd.bat',
+            '-startdir=none',
+            '-arch=x64',
+            '-host_arch=x64',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Developer Powershell for VS 2022 Professional',
+        domain = { DomainName = "local" },
+        args = {
+            'powershell.exe',
+            '-NoExit',
+            '-Command',
+            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+        },
+    })
 
-    config.set_environment_variables = {
-        BRGLNG_ZSH_DISABLE_PLUGINS = '1'
-    }
-
+    config.default_prog = { "nu.exe", "-i", "-l" }
+else
     if MAC then
         if #wezterm.glob('/opt/homebrew/bin/zsh') ~= 0 then
-            config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else BRGLNG_ZSH_DISABLE_PLUGINS=0 /opt/homebrew/bin/zsh -l -i; fi' }
+            config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else /opt/homebrew/bin/zsh -l -i; fi' }
         elseif #wezterm.glob('/usr/local/bin/zsh') ~= 0 then
-            config.default_prog = { '/usr/local/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else BRGLNG_ZSH_DISABLE_PLUGINS=0 /usr/local/bin/zsh -l -i; fi' }
+            config.default_prog = { '/usr/local/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else /usr/local/bin/zsh -l -i; fi' }
         else
-            config.default_prog = { '/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else BRGLNG_ZSH_DISABLE_PLUGINS=0 /bin/zsh -l -i; fi' }
+            config.default_prog = { '/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else /bin/zsh -l -i; fi' }
         end
     else
-        config.default_prog = { '/bin/bash', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then BRGLNG_ZSH_DISABLE_PLUGINS=0 zsh -l -i; else bash -i; fi' }
+        config.default_prog = { '/bin/bash', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then zsh -l -i; else bash -i; fi' }
     end
+    table.insert(config.launch_menu, {
+        label = 'local',
+        domain = { DomainName = 'local' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'Mux',
+        domain = { DomainName = 'Mux' }
+    })
 end
 
-table.insert(config.ssh_domains, {
-    name = 'vps',
-    remote_address = '3.112.158.72',
-    username = 'ubuntu',
-    -- multiplexing = 'None'
+table.insert(config.launch_menu, {
+    label = 'SSH VPS',
+    domain = { DomainName = 'SSH VPS' }
+})
+table.insert(config.launch_menu, {
+    label = 'SSH Mux VPS',
+    domain = { DomainName = 'SSH Mux VPS' }
 })
 
 config.initial_rows = 48
 config.initial_cols = 160
 
-wezterm.on("gui-attached", function()
-    -- maximize all displayed windows on startup
-    local workspace = wezterm.mux.get_active_workspace()
-    for _, window in ipairs(wezterm.mux.all_windows()) do
-        if window:get_workspace() == workspace then
-            window:gui_window():maximize()
-        end
-    end
-end)
+-- wezterm.on("gui-attached", function()
+--     -- maximize all displayed windows on startup
+--     local workspace = wezterm.mux.get_active_workspace()
+--     for _, window in ipairs(wezterm.mux.all_windows()) do
+--         if window:get_workspace() == workspace then
+--             window:gui_window():maximize()
+--         end
+--     end
+-- end)
 
-config.exit_behavior = 'CloseOnCleanExit'
+-- config.exit_behavior = 'CloseOnCleanExit'
 
 return config
 -- vim: ts=4 sts=4 sw=4 et
