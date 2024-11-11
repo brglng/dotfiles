@@ -8,6 +8,7 @@ return {
             "~/Syncthing/notes",
             "~/Syncthing/projects/*",
             "~/Syncthing/projects/vim-plugins/*",
+            "~/Syncthing/bose/github/*",
             "/mnt/c/bose/github/*",
             "C:/bose/github/*"
         },

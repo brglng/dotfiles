@@ -1,6 +1,6 @@
 return {
     'nvimdev/dashboard-nvim',
-    enabled = true,
+    enabled = false,
     event = 'VimEnter',
     opts = {
         theme = 'hyper',
@@ -21,7 +21,7 @@ return {
             shortcut = {
                 { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
                 {
-                    icon = ' ',
+                    icon = ' ',
                     -- icon_hl = '@variable',
                     desc = 'New File',
                     -- group = 'Label',
@@ -29,8 +29,8 @@ return {
                     key = 'e',
                 },
                 {
-                    icon = ' ',
-                    icon_hl = '@variable',
+                    icon = ' ',
+                    -- icon_hl = '@variable',
                     desc = 'Files',
                     group = 'Label',
                     action = 'Telescope find_files',
@@ -41,12 +41,6 @@ return {
                     desc = 'Projects',
                     action = 'Telescope neovim-project',
                     key = 'p',
-                },
-                {
-                    icon = '󰙅 ',
-                    desc = 'Recent Project',
-                    action = 'NeovimProjectLoadRecent',
-                    key = 'r'
                 },
                 {
                     icon = '󰔛 ',

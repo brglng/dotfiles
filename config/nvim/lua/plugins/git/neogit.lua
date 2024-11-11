@@ -8,7 +8,7 @@ return {
     },
     opts = {
         disable_commit_confirmation = true,
-        graph_style = 'unicode',
+        graph_style = 'kitty',
         -- kind = 'split',
         integrations = {
             diffview = true

@@ -277,9 +277,10 @@ end
 config.allow_square_glyphs_to_overflow_width = "Always"
 config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
 config.freetype_load_target = "Normal"
-config.font = wezterm.font {
-    family = "Maple Mono NF CN",
-    weight = "Regular"
+config.font = wezterm.font_with_fallback {
+    "Maple Mono NF CN",
+    "Flog Symbols",
+
 }
 
 if WINDOWS then

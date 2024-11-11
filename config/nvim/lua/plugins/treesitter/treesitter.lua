@@ -1,7 +1,7 @@
 return {
     "nvim-treesitter/nvim-treesitter",
     dependencies = {
-        { "nushell/tree-sitter-nu", lazy = true, ft = 'nu' }
+        { "nushell/tree-sitter-nu", lazy = true, ft = 'nu' },
     },
     build = ":TSUpdate",
     lazy = false,
@@ -48,7 +48,7 @@ return {
             "toml",
             "tsx",
             "typescript",
-            "vala",
+            -- "vala",
             "vue",
             "vim",
             "vimdoc",

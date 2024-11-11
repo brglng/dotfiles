@@ -5,7 +5,8 @@ return {
     },
     cmd = "Spectre",
     opts = {
-        open_cmd = "botright split new"
+        open_cmd = "botright split new",
+        live_update = false,
     },
     keys = {
         { "<Leader>ss", mode = "n", function() require("spectre").toggle() end, desc = "Toggle Search UI" },

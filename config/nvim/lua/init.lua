@@ -5,11 +5,12 @@ vim.g.maplocalleader = ","
 
 if vim.g.neovide then
     if vim.uv.os_uname().sysname == "Windows_NT" then
-        vim.o.guifont = "Maple Mono NF CN:h10"
+        vim.o.guifont = "Maple Mono NF CN:Flog Symbols:h10:#h-none"
     else
-        vim.o.guifont = "Maple Mono NF CN:h14"
+        vim.o.guifont = "Maple Mono NF CN:Flog Symbols:h14:#h-none"
         -- vim.env.PATH = vim.env.HOME .. "/.local/bin:" .. vim.env.HOME .. "/.cargo/bin:" .. vim.env.PATH
     end
+    vim.o.linespace = -1
     vim.g.neovide_hide_mouse_when_typing = true
     -- vim.g.experimental_layer_grouping = true
     vim.g.neovide_input_macos_option_key_is_meta = 'both'

@@ -3,6 +3,7 @@ return {
     cmd = "Telescope",
     dependencies = {
         'nvim-lua/plenary.nvim',
+        "nvim-telescope/telescope-file-browser.nvim",
         'GustavoKatel/telescope-asynctasks.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
     },
@@ -148,6 +149,9 @@ return {
                     layout_config = {
                         width = 0.62
                     }
+                },
+                file_browser = {
+                    hijack_netrw = false
                 }
             }
         }
@@ -246,6 +250,7 @@ return {
         { '<Leader>f;', mode = 'n', function() require('telescope.builtin').commands() end, desc = 'Commands' },
         { '<M-x>', mode = 'i', function() require('telescope.builtin').commands() end, desc = 'Commands' },
         { '<Leader>fc', mode = 'n', function() require('telescope.builtin').colorscheme() end, desc = 'Color Schemes' },
+        { '<Leader>fd', mode = 'n', function() require('telescope').extensions.file_browser.file_browser() end, desc = 'Browser' },
         { '<Leader>ff', mode = 'n', function() require('telescope.builtin').find_files() end, desc = 'Files' },
         { '<Leader>fg', mode = 'n', function() require('telescope.builtin').live_grep() end, desc = 'Grep' },
         { '<Leader>fh', mode = 'n', function() require('telescope.builtin').help_tags() end, desc = 'Help Tags' },
