@@ -1,5 +1,7 @@
 return {
     "Exafunction/codeium.nvim",
+    cmd = "Codeium",
+    build = ":Codeium Auth",
     init = function()
         vim.env.DEBUG_CODEIUM = "error"
     end,

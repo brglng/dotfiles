@@ -11,6 +11,10 @@ return {
     config = function()
         require('lualine').setup {
             options = {
+                disabled_filetypes = {
+                    statusline = { "alpha" },
+                    winbar = { "alpha" },
+                },
                 globalstatus = true,
                 -- component_separators = "│",
                 component_separators = "|",

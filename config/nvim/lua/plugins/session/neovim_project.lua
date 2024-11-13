@@ -1,5 +1,6 @@
 return {
     "coffebar/neovim-project",
+    event = "VeryLazy",
     opts = {
         projects = { -- define project roots
             "~/Syncthing/vps/dotfiles",
@@ -21,7 +22,7 @@ return {
     end,
     dependencies = {
         { "nvim-lua/plenary.nvim" },
-        { "nvim-telescope/telescope.nvim" },
+        -- { "nvim-telescope/telescope.nvim" },
         { "Shatur/neovim-session-manager" },
     },
     lazy = false,

@@ -533,4 +533,12 @@ function! s:load_local_config()
 endfunction
 " call s:load_local_config()
 
+if exists('g:neovide') && argc(-1) == 0
+    if has('win32')
+        execute 'chdir ' . $USERPROFILE
+    else
+        execute 'chdir ' . $HOME
+    endif
+endif
+
 " vim: ts=8 sts=4 sw=4 et

@@ -1,9 +1,8 @@
 return {
-    {
-        "folke/tokyonight.nvim",
-        priority = 1000,
-        opts = {
-            style = "night",
-        }
+    "folke/tokyonight.nvim",
+    enabled = false,
+    priority = 1000,
+    opts = {
+        style = "night",
     }
 }

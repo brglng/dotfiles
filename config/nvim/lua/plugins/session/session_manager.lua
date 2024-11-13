@@ -1,10 +1,6 @@
 return {
     "Shatur/neovim-session-manager",
-    event = "VimEnter",
-    dependencies = {
-        "nvim-treesitter/nvim-treesitter",
-        "s1n7ax/nvim-window-picker"
-    },
+    event = "VeryLazy",
     opts = {},
     -- config = function(_, opts)
     --     require("session_manager").setup(opts)

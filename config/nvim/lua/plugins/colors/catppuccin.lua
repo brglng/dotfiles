@@ -1,8 +1,7 @@
 return {
-    {
-        "catppuccin/nvim",
-        name = "catppuccin",
-        config = true,
-        priority = 1000
-    }
+    "catppuccin/nvim",
+    name = "catppuccin",
+    enabled = false,
+    config = true,
+    priority = 1000
 }

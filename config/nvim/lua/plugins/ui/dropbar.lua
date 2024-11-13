@@ -1,5 +1,6 @@
 return {
     'Bekaboo/dropbar.nvim',
+    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     opts = {
         sources = {
             path = {
