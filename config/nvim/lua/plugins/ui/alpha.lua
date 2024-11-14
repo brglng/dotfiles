@@ -8,6 +8,8 @@ return {
         "nvim-lua/plenary.nvim"
     },
     config = function()
+        local fortune = require("alpha.fortune")()
+
         local if_nil = vim.F.if_nil
         local fnamemodify = vim.fn.fnamemodify
         local filereadable = vim.fn.filereadable
@@ -373,9 +375,7 @@ return {
                 },
                 {
                     type = "text",
-                    val = function()
-                        return require("alpha.fortune")()
-                    end,
+                    val = fortune,
                     opts = {
                         position = "center",
                         hl = "String"
@@ -388,6 +388,9 @@ return {
                         {
                             type = "button",
                             val = "  New File",
+                            on_press = function()
+                                vim.cmd("enew")
+                            end,
                             opts = {
                                 shortcut = "e",
                                 keymap = { "n", "e", "<Cmd>enew<CR>", { noremap = true, silent = true, nowait = true } },
@@ -396,6 +399,9 @@ return {
                         {
                             type = "button",
                             val = "  Find Files",
+                            on_press = function()
+                                require("telescope.builtin").find_files()
+                            end,
                             opts = {
                                 shortcut = "f",
                                 keymap  = { "n", "f", function() require("telescope.builtin").find_files() end, { noremap = true, silent = true, nowait = true } },
@@ -404,6 +410,9 @@ return {
                         {
                             type = "button",
                             val = "  Browse",
+                            on_press = function()
+                                require("telescope").extensions.file_browser.file_browser()
+                            end,
                             opts = {
                                 shortcut = "b",
                                 keymap = { "n", "b", function() require("telescope").extensions.file_browser.file_browser() end, { noremap = true, silent = true, nowait = true  } },
@@ -412,6 +421,9 @@ return {
                         {
                             type = "button",
                             val = "  Update Plugins",
+                            on_press = function()
+                                vim.cmd("Lazy update")
+                            end,
                             opts = {
                                 shortcut = "u",
                                 keymap = { "n", "u", "<Cmd>Lazy update<CR>", { noremap = true, silent = true, nowait = true } },
@@ -420,6 +432,9 @@ return {
                         {
                             type = "button",
                             val = "  Plugin Profile",
+                            on_press = function()
+                                vim.cmd("Lazy profile")
+                            end,
                             opts = {
                                 shortcut = "t",
                                 keymap = { "n", "t", "<Cmd>Lazy profile<CR>", { noremap = true, silent = true, nowait = true } },
@@ -428,6 +443,9 @@ return {
                         {
                             type = "button",
                             val = "󰿅  Quit",
+                            on_press = function()
+                                vim.cmd("qa")
+                            end,
                             opts = {
                                 shortcut = "q",
                                 keymap = { "n", "q", "<Cmd>qa<CR>", { noremap = true, silent = true, nowait = true } },
@@ -450,6 +468,7 @@ return {
                 { type = "padding", val = 1 },
             },
             opts = {
+                noautocmd = true
             }
         }
 
