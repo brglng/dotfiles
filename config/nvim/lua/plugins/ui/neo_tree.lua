@@ -21,12 +21,15 @@ return {
             modified = ""
         },
         filesystem = {
-            bind_to_cwd = false,
+            bind_to_cwd = true,
             follow_current_file = {
                 enabled = true,
                 -- leave_dirs_open = true
             },
             use_libuv_file_watcher = true
+        },
+        document_symbols = {
+            follow_cursor = true,
         },
         source_selector = {
             winbar = true,

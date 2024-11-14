@@ -482,15 +482,18 @@ runtime init/keymaps.vim
 runtime init/ui.vim
 
 function! s:find_project_root()
-    let found = v:false
-    let marker = ''
-    let project_root = getcwd()
     if has('win32')
         let sep = '\\'
     else
         let sep = '/'
     endif
+    let found = v:false
+    let marker = ''
+    let project_root = getcwd()
     while v:true
+        if project_root ==# '/' || project_root =~# '^\a:\\$'
+            break
+        endif
         if !empty(glob(project_root . sep . '.vim', v:true, v:true))
             let found = v:true
             let marker = '.vim'

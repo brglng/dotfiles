@@ -67,7 +67,7 @@ return {
             local opts = {
                 position = "center",
                 shortcut = sc,
-                cursor = 1,
+                cursor = 3,
                 width = math.min(vim.fn.winwidth(0), 160) - 18,
                 align_shortcut = "right",
                 hl_shortcut = { { "Number", 0, 1 } },
@@ -160,9 +160,9 @@ return {
             for _, proj in ipairs(results) do
                 local short_proj
                 if utf8_len(proj) > math.min(vim.fn.winwidth(0), 160) - 24 then
-                    short_proj = "   …" .. string.sub(proj, utf8_len(proj) - math.min(vim.fn.winwidth(0), 160) - 23, utf8_len(proj))
+                    short_proj = "  …" .. string.sub(proj, utf8_len(proj) - math.min(vim.fn.winwidth(0), 160) - 23, utf8_len(proj))
                 else
-                    short_proj = "   " .. proj
+                    short_proj = "  " .. proj
                 end
                 local sc = next_key()
                 table.insert(tbl, {
@@ -176,7 +176,7 @@ return {
                         align_shortcut = "right",
                         hl = { { "Directory", 0, 1 }, { "Normal", 1, -1 } },
                         hl_shortcut = "Number",
-                        cursor = 1,
+                        cursor = 3,
                         width = math.min(vim.fn.winwidth(0), 160) - 18,
                     }
                 })
@@ -387,7 +387,7 @@ return {
                     val = {
                         {
                             type = "button",
-                            val = "  New File",
+                            val = "  New File",
                             on_press = function()
                                 vim.cmd("enew")
                             end,
@@ -409,7 +409,7 @@ return {
                         },
                         {
                             type = "button",
-                            val = "  Browse",
+                            val = "  Browse",
                             on_press = function()
                                 require("telescope").extensions.file_browser.file_browser()
                             end,
@@ -442,7 +442,7 @@ return {
                         },
                         {
                             type = "button",
-                            val = "󰿅  Quit",
+                            val = "󰅗  Quit",
                             on_press = function()
                                 vim.cmd("qa")
                             end,
@@ -459,7 +459,8 @@ return {
                             align_shortcut = "right",
                             width = 50,
                             hl = { { "Tag", 0, 1 }, { "Normal", 1, -1 } },
-                            hl_shortcut = "Number"
+                            hl_shortcut = "Number",
+                            cursor = 3,
                         }
                     }
                 },

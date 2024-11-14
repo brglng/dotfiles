@@ -5,9 +5,10 @@ vim.g.maplocalleader = ","
 
 if vim.g.neovide then
     if vim.uv.os_uname().sysname == "Windows_NT" then
-        vim.o.guifont = "Maple Mono NF CN:Flog Symbols:h10:#h-none"
+        -- vim.o.guifont = "Flog Symbols:Maple Mono NF CN:h10:#h-none"
+        vim.g.neovide_scale_factor = 10.0 / 14.0
     else
-        vim.o.guifont = "Maple Mono NF CN:Flog Symbols:h14:#h-none"
+        -- vim.o.guifont = "Maple Mono NF CN:Flog Symbols:h14:#h-none"
         -- vim.env.PATH = vim.env.HOME .. "/.local/bin:" .. vim.env.HOME .. "/.cargo/bin:" .. vim.env.PATH
     end
     vim.o.linespace = -1
@@ -53,12 +54,12 @@ for type, icon in pairs(signs) do
 end
 vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focus = false })]]
 
-local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-    opts = opts or {}
-    opts.border = opts.border or "rounded"
-    return orig_util_open_floating_preview(contents, syntax, opts, ...)
-end
+-- local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+-- function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+--     opts = opts or {}
+--     opts.border = opts.border or "rounded"
+--     return orig_util_open_floating_preview(contents, syntax, opts, ...)
+-- end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
