@@ -88,7 +88,7 @@ return {
             -- vim.api.nvim_set_hl(0, 'NotifyDEBUGTitle', { link = 'DiagnosticInfo' })
             -- vim.api.nvim_set_hl(0, 'NotifyTRACETitle', { link = 'DiagnosticInfo' })
         end
-
+        set_notify_colors()
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "*",
             callback = set_notify_colors

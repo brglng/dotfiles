@@ -67,5 +67,11 @@ return {
     	    pick_visible = { italic = false },
     	    pick = { italic = false },
         }
-    }
+    },
+    config = function(_, opts)
+        require("bufferline").setup(opts)
+        if vim.o.ft == "alpha" then
+            vim.o.showtabline = 0
+        end
+    end
 }

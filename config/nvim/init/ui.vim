@@ -281,7 +281,7 @@ function! s:on_colorscheme()
         call lightline#update()
     endif
     " syntax on
-    call s:set_leaderf_highlights()
+    " call s:set_leaderf_highlights()
 endfunction
 
 function! s:on_set_background()
@@ -292,8 +292,8 @@ function! s:on_set_background()
             call lightline#enable()
         endif
     endif
-    syntax on
-    call s:set_leaderf_highlights()
+    " syntax on
+    " call s:set_leaderf_highlights()
 endfunction
 
 augroup ZpanColorScheme
@@ -302,10 +302,6 @@ augroup ZpanColorScheme
     autocmd ColorScheme * call s:on_colorscheme()
     autocmd OptionSet background call s:on_set_background()
 augroup END
-
-if exists('g:gui_oni') || exists('g:gui_gonvim')
-    set laststatus=0
-endif
 
 if has('nvim')
     set signcolumn=yes:1

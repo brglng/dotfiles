@@ -1,5 +1,6 @@
 return {
     "mrcjkb/rustaceanvim",
+    ft = "rust",
     init = function()
         vim.g.rustaceanvim = {
             server = {

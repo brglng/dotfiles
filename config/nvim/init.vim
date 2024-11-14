@@ -347,9 +347,9 @@ Plug 'mbbill/fencview'
 Plug 'mbbill/undotree'
 " Plug 'mhinz/vim-startify'
 " Plug 'liuchengxu/vim-which-key'
-Plug 'Yggdroot/LeaderF'
-Plug 'Yggdroot/LeaderF-marks'
-Plug 'tamago324/LeaderF-filer'
+Plug 'Yggdroot/LeaderF', VimOnly()
+Plug 'Yggdroot/LeaderF-marks', VimOnly()
+Plug 'tamago324/LeaderF-filer', VimOnly()
 Plug 'brglng/vim-sidebar-manager'
 
 " Moving Plugins
@@ -372,7 +372,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
 Plug 'bootleq/vim-cycle'
-Plug 'mg979/vim-visual-multi'
+" Plug 'mg979/vim-visual-multi'
 
 " FileType Plugins
 " Plug 'PProvost/vim-ps1'
@@ -450,7 +450,9 @@ runtime init/plugins/im_select.vim
 if !has('nvim')
     runtime init/plugins/indent_line.vim
 endif
-runtime init/plugins/leaderf.vim
+if !has('nvim')
+    runtime init/plugins/leaderf.vim
+endif
 if !has('nvim')
     runtime init/plugins/lightline.vim
 endif
@@ -462,7 +464,7 @@ runtime init/plugins/sidebar_manager.vim
 runtime init/plugins/startify.vim
 " runtime init/plugins/terminal_help.vim
 runtime init/plugins/undotree.vim
-runtime init/plugins/vim_visual_multi.vim
+" runtime init/plugins/vim_visual_multi.vim
 runtime init/plugins/vista.vim
 
 runtime init/plugins/ayu.vim
@@ -483,19 +485,24 @@ function! s:find_project_root()
     let found = v:false
     let marker = ''
     let project_root = getcwd()
+    if has('win32')
+        let sep = '\\'
+    else
+        let sep = '/'
+    endif
     while v:true
-        if !empty(glob(project_root . '/.vim', v:true, v:true))
+        if !empty(glob(project_root . sep . '.vim', v:true, v:true))
             let found = v:true
             let marker = '.vim'
             break
         endif
-        if !empty(glob(project_root . '/.nvim', v:true, v:true))
+        if !empty(glob(project_root . sep . '.nvim', v:true, v:true))
             let found = v:true
             let marker = '.nvim'
             break
         endif
-        let parentdir = simplify(project_root . '/..')
-        if parentdir ==# project_root || parentdir ==# '/'
+        let parentdir = simplify(project_root . sep . '..')
+        if parentdir ==# project_root || parentdir ==# '/' || parentdir =~# '^\a:\\$'
             break
         endif
         let project_root = parentdir
@@ -505,21 +512,26 @@ endfunction
 
 function! s:load_local_config()
     let [found, project_root, marker] = s:find_project_root()
+    if has('win32')
+        let sep = '\\'
+    else
+        let sep = '/'
+    endif
     if found
-        let project_runtime = project_root . '/' . marker
+        let project_runtime = project_root . sep . marker
         if isdirectory(project_runtime)
             let allrtp = split(&runtimepath, ',')
             for i in range(len(allrtp))
                 let allrtp[i] = resolve(allrtp[i])
             endfor
             if index(allrtp, resolve(project_runtime)) < 0
-                let &runtimepath = project_runtime . ',' . &runtimepath . ',' . project_runtime . '/after'
-                if has('nvim') && !empty(glob(project_runtime . '/init.lua', v:true, v:true))
-                    let init_script = project_runtime . '/init.lua'
+                let &runtimepath = project_runtime . ',' . &runtimepath . ',' . project_runtime . sep . 'after'
+                if has('nvim') && !empty(glob(project_runtime . sep . 'init.lua', v:true, v:true))
+                    let init_script = project_runtime . sep . 'init.lua'
                     echomsg 'Loading ' . init_script
                     execute 'source ' . init_script
-                elseif !empty(glob(project_runtime . '/init.vim', v:true, v:true))
-                    let init_script = project_runtime . '/init.vim'
+                elseif !empty(glob(project_runtime . sep . 'init.vim', v:true, v:true))
+                    let init_script = project_runtime . sep . 'init.vim'
                     echomsg 'Loading ' . init_script
                     execute 'source ' . init_script
                 endif
@@ -529,16 +541,12 @@ function! s:load_local_config()
             execute 'source ' . project_runtime
             execute 'chdir ' . project_root
         endif
+    else
+        if exists('g:neovide') && argc(-1) == 0
+            chdir ~
+        endif
     endif
 endfunction
-" call s:load_local_config()
-
-if exists('g:neovide') && argc(-1) == 0
-    if has('win32')
-        execute 'chdir ' . $USERPROFILE
-    else
-        execute 'chdir ' . $HOME
-    endif
-endif
+autocmd VimEnter * call s:load_local_config()
 
 " vim: ts=8 sts=4 sw=4 et

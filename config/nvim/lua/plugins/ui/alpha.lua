@@ -3,7 +3,7 @@ return {
     enabled = true,
     event = "VimEnter",
     dependencies = {
-        -- "coffebar/neovim-project",
+        "coffebar/neovim-project",
         "nvim-tree/nvim-web-devicons",
         "nvim-lua/plenary.nvim"
     },
