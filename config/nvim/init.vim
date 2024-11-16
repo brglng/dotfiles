@@ -18,7 +18,7 @@ else
     let s:viewdir = $HOME . '/.cache/vim/view'
 endif
 if !isdirectory(s:viewdir)
-    if !zpan#is_sudo()
+    if !brglng#is_sudo()
         silent call mkdir(s:viewdir, 'p')
         let &viewdir = s:viewdir
     endif
@@ -75,7 +75,7 @@ set nocompatible                " turn of vi compatible mode
 set winaltkeys=no
 "set helplang=cn                 " Chinese help
 set autoread                    " auto read files modified outside vim
-if has('win32') || !zpan#is_sudo()
+if has('win32') || !brglng#is_sudo()
     set nobackup                  " do not create backups before editing
     set nowritebackup
 endif
@@ -88,7 +88,7 @@ else
     let s:backupdir = $HOME . '/.cache/vim/backup'
 endif
 if !isdirectory(s:backupdir)
-    if !zpan#is_sudo()
+    if !brglng#is_sudo()
         silent call mkdir(s:backupdir, 'p')
         let &backupdir = s:backupdir
     endif
@@ -103,7 +103,7 @@ else
     let s:directory = $HOME . '/.cache/vim/swap'
 endif
 if !isdirectory(s:directory)
-    if !zpan#is_sudo()
+    if !brglng#is_sudo()
         silent call mkdir(s:directory, 'p')
         let &directory = s:directory
     endif
@@ -220,7 +220,7 @@ else
     let s:undodir = $HOME . '/.cache/vim/undo'
 endif
 if !isdirectory(s:undodir)
-    if !zpan#is_sudo()
+    if !brglng#is_sudo()
         silent call mkdir(s:undodir, 'p')
         let &undodir = s:undodir
     endif
@@ -402,7 +402,7 @@ runtime init/plugins/colors/init.vim
 
 call plug#end()
 
-call zpan#install_missing_plugins(v:true)
+call brglng#install_missing_plugins(v:true)
 
 if has('nvim')
     runtime lua/init.lua

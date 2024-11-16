@@ -41,7 +41,7 @@ if !has('nvim')
     endfunction
 
     function! LightlineFugitive() abort
-        if exists('*fugitive#head') && !zpan#is_tool_window()
+        if exists('*fugitive#head') && !brglng#is_tool_window()
             let branch = fugitive#head()
             return branch !=# '' ? ''. branch : ''
         endif
@@ -49,7 +49,7 @@ if !has('nvim')
     endfunction
 
     function! LightlineCocGit() abort
-        if exists('g:coc_git_status') && !zpan#is_tool_window()
+        if exists('g:coc_git_status') && !brglng#is_tool_window()
             return g:coc_git_status
         else
             return ''
@@ -70,19 +70,19 @@ if !has('nvim')
     endfunction
 
     function! LightlineFileFormat()
-        return !zpan#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &fileformat : ''
+        return !brglng#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &fileformat : ''
     endfunction
 
     function! LightlineFiletype()
-        return !zpan#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &filetype !=# '' ? &filetype : 'no ft' : ''
+        return !brglng#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &filetype !=# '' ? &filetype : 'no ft' : ''
     endfunction
 
     function! LightlineFileEncoding()
-        return !zpan#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &fileencoding : ''
+        return !brglng#is_tool_window() && &filetype !=# 'startify' && winwidth(0) > 70 ? &fileencoding : ''
     endfunction
 
     function! LightlineReadonly()
-        return &readonly && !zpan#is_tool_window() ? '' : ''
+        return &readonly && !brglng#is_tool_window() ? '' : ''
     endfunction
 
     function! LightlineTag()

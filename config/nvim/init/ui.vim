@@ -296,7 +296,7 @@ function! s:on_set_background()
     " call s:set_leaderf_highlights()
 endfunction
 
-augroup ZpanColorScheme
+augroup brglng_colorscheme
     autocmd!
     autocmd VimEnter * call s:on_colorscheme()
     autocmd ColorScheme * call s:on_colorscheme()

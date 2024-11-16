@@ -1,12 +1,12 @@
-if !has('nvim') && !zpan#is_sudo()
+if !has('nvim') && !brglng#is_sudo()
     " Use `[c` and `]c` to navigate diagnostics
     nmap <silent> [q <Plug>(coc-diagnostic-prev)
     nmap <silent> ]q <Plug>(coc-diagnostic-next)
 
     " Highlight symbol under cursor on CursorHold
-    autocmd CursorHold * if !zpan#is_tool_window() | silent! call CocActionAsync('highlight') | endif
+    autocmd CursorHold * if !brglng#is_tool_window() | silent! call CocActionAsync('highlight') | endif
 
-    augroup zpan_coc
+    augroup brglng_coc
         autocmd!
 
         " Setup formatexpr specified filetype(s).
@@ -90,7 +90,7 @@ if !has('nvim') && !zpan#is_sudo()
     " autocmd User CocOpenFloat silent! setlocal winblend=15
 
     " inoremap <silent> <expr> <TAB>
-    "   \ zpan#pumselected()
+    "   \ brglng#pumselected()
     "   \ ? coc#pum#confirm()
     "   \ : coc#expandableOrJumpable() ?
     "   \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>"
@@ -99,7 +99,7 @@ if !has('nvim') && !zpan#is_sudo()
     " function s:expand_ultimate_autopair_cr()
     "     return luaeval("require('ultimate-autopair.core').run(vim.api.nvim_replace_termcodes('<CR>', true, true, true))")
     " endfunction
-    " inoremap <silent> <expr> <CR> zpan#pumselected() ? coc#pum#confirm() : "\<C-g>u" . <SID>expand_ultimate_autopair_cr() . "\<C-r>=coc#on_enter()\<CR>\<C-r>=EndwiseDiscretionary()<CR>"
+    " inoremap <silent> <expr> <CR> brglng#pumselected() ? coc#pum#confirm() : "\<C-g>u" . <SID>expand_ultimate_autopair_cr() . "\<C-r>=coc#on_enter()\<CR>\<C-r>=EndwiseDiscretionary()<CR>"
 
     " inoremap <silent> <expr> <Esc> coc#pum#visible() ? "\<C-o>:call coc#pum#cancel()\<CR>\<Esc>" : "\<Esc>"
 

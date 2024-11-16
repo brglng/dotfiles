@@ -1,8 +1,8 @@
-function! zpan#is_sudo() abort
+function! brglng#is_sudo() abort
     return $SUDO_USER !=# '' && $USER !=# $SUDO_USER && $HOME !=# expand('~'.$USER)
 endfunction
 
-function! zpan#rstrip(str, chars) abort
+function! brglng#rstrip(str, chars) abort
     if strlen(a:str) > 0 && strlen(a:chars) > 0
         let i = strlen(a:str) - 1
         while i >= 0
@@ -21,7 +21,7 @@ function! zpan#rstrip(str, chars) abort
     endif
 endfunction
 
-function! zpan#pumselected() abort
+function! brglng#pumselected() abort
     " if exists('*complete_info')
     "     return complete_info()['selected'] >= 0
     " else
@@ -29,7 +29,7 @@ function! zpan#pumselected() abort
     " endif
 endfunction
 
-function! zpan#is_tool_window(...) abort
+function! brglng#is_tool_window(...) abort
     if len(a:000) == 0
         return index(['coc-explorer', 'defx', 'denite', 'gitv', 'help', 'man', 'qf', 'undotree'], &filetype) >= 0 || expand('%:t') =~ '__Tagbar__\|__vista__'
     elseif len(a:000) == 1
@@ -43,8 +43,8 @@ function! zpan#is_tool_window(...) abort
     endif
 endfunction
 
-function! zpan#install_missing_plugins(sync) abort
-    if zpan#is_sudo()
+function! brglng#install_missing_plugins(sync) abort
+    if brglng#is_sudo()
         return
     endif
 
@@ -97,11 +97,11 @@ function! s:win_restore_view()
     endif
 endfunction
 
-function! zpan#save_view()
+function! brglng#save_view()
     noautocmd windo call s:win_save_view()
 endfunction
 
-function! zpan#restore_view()
+function! brglng#restore_view()
     noautocmd windo call s:win_restore_view()
 endfunction
 
