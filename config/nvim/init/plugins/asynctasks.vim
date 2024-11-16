@@ -14,3 +14,5 @@ elseif has('wsl')
 endif
 
 let g:asynctasks_config_name = '.vim/tasks.ini'
+
+Plug 'skywind3000/asynctasks.vim'

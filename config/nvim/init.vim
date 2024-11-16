@@ -305,10 +305,6 @@ endif
 
 let g:plug_timeout = 300
 
-if has('win32')
-    " let g:plug_threads = 1
-endif
-
 call plug#begin('~/.local/share/vim/plugged')
 
 function! VimOnly(...)
@@ -328,151 +324,85 @@ function! NeovimOnly(...)
 endfunction
 
 " Generic Plugins
-" Plug 'roxma/nvim-yarp', VimOnly()
-" Plug 'roxma/vim-hug-neovim-rpc', VimOnly()
-" Plug 'tmux-plugins/vim-tmux-focus-events', NeovimOnly()
-" Plug 'roxma/vim-tmux-clipboard'
-Plug 'brglng/vim-im-select'
+runtime init/plugins/cppman.vim
+" runtime init/plugins/nvim_yarp.vim
+" runtime init/plugins/hug_neovim_rpc.vim
+" runtime init/plugins/tmux_focus_events.vim
+" runtime init/plugins/tmux_clipboard.vim
+runtime init/plugins/im_select.vim
 
 " Documentation
-Plug 'skywind3000/vim-cppman'
-" Plug 'kkoomen/vim-doge'
+" runtime init/plugins/doge.vim
+" runtime init/plugins/dasht.vim
 
 " UI Plugins
-Plug 'ryanoasis/vim-devicons', VimOnly()
-" Plug 'justinmk/vim-dirvish'
-Plug 'itchyny/lightline.vim', VimOnly()
-Plug 'mengelbrecht/lightline-bufferline', VimOnly()
-Plug 'mbbill/fencview'
-Plug 'mbbill/undotree'
-" Plug 'mhinz/vim-startify'
-" Plug 'liuchengxu/vim-which-key'
-Plug 'Yggdroot/LeaderF', VimOnly()
-Plug 'Yggdroot/LeaderF-marks', VimOnly()
-Plug 'tamago324/LeaderF-filer', VimOnly()
-Plug 'brglng/vim-sidebar-manager'
+runtime init/plugins/devicons.vim
+" runtime init/plugins/dirvish.vim
+runtime init/plugins/lightline.vim
+" runtime init/plugins/fencview.vim
+runtime init/plugins/undotree.vim
+" runtime init/plugins/startify.vim
+" runtime init/plugins/which_key.vim
+runtime init/plugins/sidebar_manager.vim
+" runtime init/plugins/defx.vim
+" runtime init/plugins/netrw.vim
+" runtime init/plugins/terminal_help.vim
+runtime init/plugins/vista.vim
+" runtime init/plugins/dein_ui.vim
+" runtime init/plugins/indent_line.vim
+
+" Fuzzy Finder
+" runtime init/plugins/denite.vim
+runtime init/plugins/leaderf.vim
+" runtime init/plugins/clap.vim
 
 " Moving Plugins
-Plug 'rhysd/clever-f.vim', VimOnly()
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-surround', VimOnly()
-Plug 'wellle/targets.vim'
-Plug 'andymass/vim-matchup', VimOnly()
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-indent'
-Plug 'kana/vim-textobj-syntax', VimOnly()
-Plug 'kana/vim-textobj-function', VimOnly()
-Plug 'sgur/vim-textobj-parameter', VimOnly()
+runtime init/plugins/clever_f.vim
+runtime init/plugins/unimpaired.vim
+runtime init/plugins/surround.vim
+runtime init/plugins/targets.vim
+runtime init/plugins/matchup.vim
+runtime init/plugins/textobj.vim
 
 " Editing Plugins
-Plug 'tomtom/tcomment_vim', VimOnly()
-Plug 'junegunn/vim-easy-align'
-" Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-abolish'
-Plug 'bootleq/vim-cycle'
-" Plug 'mg979/vim-visual-multi'
+" runtime init/plugins/nerd_commenter.vim
+runtime init/plugins/tcomment.vim
+runtime init/plugins/easy_align.vim
+" runtime init/plugins/endwise.vim
+runtime init/plugins/sleuth.vim
+runtime init/plugins/repeat.vim
+runtime init/plugins/abolish.vim
+runtime init/plugins/cycle.vim
+" runtime init/plugins/vim_visual_multi.vim
 
 " FileType Plugins
-" Plug 'PProvost/vim-ps1'
-Plug 'aklt/plantuml-syntax'
-" Plug 'hynek/vim-python-pep8-indent'
-" Plug 'sheerun/vim-polyglot'
-" Plug 'tmux-plugins/vim-tmux'
+" runtime init/plugins/ps1.vim
+runtime init/plugins/plantuml_syntax.vim
+" runtime init/plugins/python_pep8_indent.vim
+" runtime init/plugins/polyglot.vim
+" runtime init/plugins/tmux.vim
 
 " Source Control Plugins
-Plug 'tpope/vim-fugitive'
+runtime init/plugins/fugitive.vim
 
 " Project management
-Plug 'skywind3000/asyncrun.vim'
-Plug 'skywind3000/asynctasks.vim'
+runtime init/plugins/asyncrun.vim
+runtime init/plugins/asynctasks.vim
 
-" Language Semantic
-" Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':silent! UpdateRemotePlugins'}
-" Plug 'honza/vim-snippets'
-Plug 'liuchengxu/vista.vim', VimOnly()
+" LSP
+" runtime init/plugins/coc.vim
+" runtime init/plugins/coc_explorer.vim
+" runtime init/plugins/coc_smartf.vim
+" runtime init/plugins/snippets.vim
+" runtime init/plugins/any_jump.vim
+" runtime init/plugins/neoformat.vim
 
 " ColorSchemes
-Plug 'lifepillar/vim-solarized8'
-Plug 'iCyMind/NeoSolarized'
-Plug 'sickill/vim-monokai'
-Plug 'chriskempson/vim-tomorrow-theme'
-Plug 'chriskempson/base16-vim'
-Plug 'junegunn/seoul256.vim'
-Plug 'nanotech/jellybeans.vim'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'joshdick/onedark.vim'
-Plug 'rakr/vim-one'
-Plug 'arcticicestudio/nord-vim'
-Plug 'soft-aesthetic/soft-era-vim'
-Plug 'sainnhe/lightline_foobar.vim', VimOnly()
-Plug 'Luxed/ayu-vim'
-" Plug 'nightsense/snow'
-Plug 'cocopon/iceberg.vim'
-Plug 'tyrannicaltoucan/vim-quantum'
-Plug 'hzchirs/vim-material'
-Plug 'KeitaNakamura/neodark.vim'
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
-Plug 'sainnhe/gruvbox-material'
-Plug 'sainnhe/forest-night'
-Plug 'sainnhe/edge'
-Plug 'sainnhe/sonokai'
-Plug 'zeis/vim-kolor'
-Plug 'EdenEast/nightfox.nvim'
-Plug 'wuelnerdotexe/vim-enfocado'
+runtime init/plugins/colors/init.vim
 
 call plug#end()
 
 call zpan#install_missing_plugins(v:true)
-
-" runtime init/plugins/which_key.vim
-" runtime init/plugins/any_jump.vim
-runtime init/plugins/asyncrun.vim
-runtime init/plugins/asynctasks.vim
-" runtime init/plugins/clap.vim
-if !zpan#is_sudo()
-    " runtime init/plugins/coc.vim
-    " runtime init/plugins/coc_explorer.vim
-    " runtime init/plugins/coc_smartf.vim
-endif
-runtime init/plugins/cppman.vim
-runtime init/plugins/cycle.vim
-runtime init/plugins/dasht.vim
-runtime init/plugins/doge.vim
-" runtime init/plugins/defx.vim
-" runtime init/plugins/dein_ui.vim
-" runtime init/plugins/denite.vim
-runtime init/plugins/devicons.vim
-runtime init/plugins/easy_align.vim
-" runtime init/plugins/endwise.vim
-runtime init/plugins/im_select.vim
-if !has('nvim')
-    runtime init/plugins/indent_line.vim
-endif
-if !has('nvim')
-    runtime init/plugins/leaderf.vim
-endif
-if !has('nvim')
-    runtime init/plugins/lightline.vim
-endif
-runtime init/plugins/matchup.vim
-runtime init/plugins/nerd_commenter.vim
-" runtime init/plugins/neoformat.vim
-" runtime init/plugins/netrw.vim
-runtime init/plugins/sidebar_manager.vim
-runtime init/plugins/startify.vim
-" runtime init/plugins/terminal_help.vim
-runtime init/plugins/undotree.vim
-" runtime init/plugins/vim_visual_multi.vim
-runtime init/plugins/vista.vim
-
-runtime init/plugins/ayu.vim
-runtime init/plugins/gruvbox_material.vim
-runtime init/plugins/one.vim
-runtime init/plugins/quantum.vim
-runtime init/plugins/sonokai.vim
-runtime init/plugins/everforest.vim
 
 if has('nvim')
     runtime lua/init.lua

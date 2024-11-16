@@ -162,5 +162,6 @@ let g:which_key_map['='] = [':lua vim.lsp.buf.format { async = true }', 'Format'
 "   \ 'd': ["y:<C-U>call Dasht(getreg(0), '!')", 'search-all-docsets-for-selection']
 "   \ }
 
+Plug 'liuchengxu/vim-which-key'
 
 " vim: sw=4 sts=4 ts=8 et

@@ -22,4 +22,6 @@ let g:startify_session_savevars = [
   \ ]
 let g:startify_session_savecmds = ['call sidebar#load_session()']
 
+Plug 'mhinz/vim-startify'
+
 " vim: ts=8 sts=4 sw=4 et

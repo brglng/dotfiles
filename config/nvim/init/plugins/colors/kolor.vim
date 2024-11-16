@@ -1,0 +1,1 @@
+Plug 'zeis/vim-kolor'

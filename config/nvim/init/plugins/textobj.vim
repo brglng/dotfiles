@@ -1,0 +1,5 @@
+Plug 'kana/vim-textobj-user', VimOnly()
+Plug 'kana/vim-textobj-indent', VimOnly()
+Plug 'kana/vim-textobj-syntax', VimOnly()
+Plug 'kana/vim-textobj-function', VimOnly()
+Plug 'sgur/vim-textobj-parameter', VimOnly()

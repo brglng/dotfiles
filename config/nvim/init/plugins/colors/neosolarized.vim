@@ -1,0 +1,1 @@
+Plug 'iCyMind/NeoSolarized'

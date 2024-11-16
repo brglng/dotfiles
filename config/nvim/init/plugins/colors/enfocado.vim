@@ -1,0 +1,1 @@
+Plug 'wuelnerdotexe/vim-enfocado'

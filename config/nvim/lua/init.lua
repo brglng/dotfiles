@@ -5,11 +5,7 @@ vim.g.maplocalleader = ","
 
 if vim.g.neovide then
     if vim.uv.os_uname().sysname == "Windows_NT" then
-        -- vim.o.guifont = "Flog Symbols:Maple Mono NF CN:h10:#h-none"
         vim.g.neovide_scale_factor = 10.0 / 14.0
-    else
-        -- vim.o.guifont = "Maple Mono NF CN:Flog Symbols:h14:#h-none"
-        -- vim.env.PATH = vim.env.HOME .. "/.local/bin:" .. vim.env.HOME .. "/.cargo/bin:" .. vim.env.PATH
     end
     vim.o.linespace = -1
     vim.g.neovide_hide_mouse_when_typing = true

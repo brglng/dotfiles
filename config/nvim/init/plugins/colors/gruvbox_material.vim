@@ -9,3 +9,5 @@ let g:gruvbox_material_diagnostic_text_highlight = 0
 let g:gruvbox_material_diagnostic_line_highlight = 0
 let g:gruvbox_material_diagnostic_virtual_text = 'colored'
 " let g:gruvbox_material_statusline_style = 'original'
+
+Plug 'sainnhe/gruvbox-material'

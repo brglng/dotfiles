@@ -160,7 +160,7 @@ return {
             for _, proj in ipairs(results) do
                 local short_proj
                 if utf8_len(proj) > math.min(vim.fn.winwidth(0), 160) - 24 then
-                    short_proj = "  …" .. string.sub(proj, utf8_len(proj) - math.min(vim.fn.winwidth(0), 160) - 23, utf8_len(proj))
+                    short_proj = "  …" .. string.sub(proj, #proj - math.min(vim.fn.winwidth(0), 160) - 23, #proj)
                 else
                     short_proj = "  " .. proj
                 end
@@ -226,7 +226,7 @@ return {
                 end
                 -- vim.notify(tostring(vim.fn.winwidth(0)))
                 if utf8_len(short_fn) > math.min(vim.fn.winwidth(0), 160) - 24 then
-                    short_fn = "…" .. string.sub(short_fn, utf8_len(short_fn) - math.min(vim.fn.winwidth(0), 160) - 23, utf8_len(short_fn))
+                    short_fn = "…" .. string.sub(short_fn, #short_fn - math.min(vim.fn.winwidth(0), 160) - 23, #short_fn)
                 end
                 local file_button_el = file_button(fn, next_key(), short_fn, opts.autocd)
                 tbl[i] = file_button_el
@@ -422,7 +422,7 @@ return {
                             type = "button",
                             val = "  Update Plugins",
                             on_press = function()
-                                vim.cmd("Lazy update")
+                                require("lazy").update()
                             end,
                             opts = {
                                 shortcut = "u",
@@ -431,9 +431,11 @@ return {
                         },
                         {
                             type = "button",
-                            val = "  Plugin Profile",
+                            -- val = "  Plugin Profile",
+                            -- val = "  Plugin Profile",
+                            val = "  Plugin Profile",
                             on_press = function()
-                                vim.cmd("Lazy profile")
+                                require("lazy").profile()
                             end,
                             opts = {
                                 shortcut = "t",
@@ -442,7 +444,7 @@ return {
                         },
                         {
                             type = "button",
-                            val = "󰅗  Quit",
+                            val = "  Quit",
                             on_press = function()
                                 vim.cmd("qa")
                             end,
