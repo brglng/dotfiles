@@ -5,6 +5,8 @@ local MAC = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_tri
 
 local config = wezterm.config_builder()
 
+config.front_end = "WebGpu"
+
 if WINDOWS then
     config.set_environment_variables = {
         TERMINFO_DIRS = wezterm.home_dir .. '/.terminfo',
@@ -337,6 +339,7 @@ config.keys = {
     { mods = 'ALT', key = '0', action = wezterm.action.SendKey { key = '0', mods = 'ALT' } },
     { mods = 'ALT', key = 'b', action = wezterm.action.SendKey { key = 'b', mods = 'ALT' } },
     { mods = 'ALT', key = 'f', action = wezterm.action.SendKey { key = 'f', mods = 'ALT' } },
+    { mods = 'ALT', key = 'q', action = wezterm.action.SendKey { key = 'q', mods = 'ALT' } },
     { mods = 'ALT', key = '-', action = wezterm.action.SendKey { key = '-', mods = 'ALT' } },
     { mods = 'ALT', key = '=', action = wezterm.action.SendKey { key = '=', mods = 'ALT' } },
     { mods = 'ALT', key = ']', action = wezterm.action.SendKey { key = ']', mods = 'ALT' } },
@@ -346,6 +349,7 @@ config.keys = {
     { mods = 'ALT|SHIFT', key = '}', action = wezterm.action.ActivateTabRelative(1) },
     { mods = 'ALT|SHIFT', key = 'H', action = wezterm.action.MoveTabRelative(-1) },
     { mods = 'ALT|SHIFT', key = 'L', action = wezterm.action.MoveTabRelative(1) },
+    { mods = 'ALT|SHIFT', key = 'P', action = wezterm.action.SendKey { key = 'P', mods = 'ALT|SHIFT' } },
 }
 
 -- Launcher

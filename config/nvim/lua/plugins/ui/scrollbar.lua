@@ -1,7 +1,7 @@
 return {
     "petertriho/nvim-scrollbar",
     dependencies = "lewis6991/gitsigns.nvim",
-    enabled = false,
+    cond = false,
     opts = {
         handlers = {
             gitsigns = true

@@ -1,5 +1,5 @@
 return {
     "olimorris/onedarkpro.nvim",
-    enabled = false,
+    cond = false,
     priority = 1000
 }

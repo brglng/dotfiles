@@ -1,6 +1,6 @@
 return {
     "ellisonleao/gruvbox.nvim",
-    enabled = false,
+    cond = false,
     priority = 1000,
     opts = {
         contrast = "hard",

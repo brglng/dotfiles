@@ -1,6 +1,6 @@
 return {
     "3rd/image.nvim",
-    enabled = not vim.g.neovide,
+    cond = not vim.g.neovide,
     dependencies = {
         "vhyrro/luarocks.nvim"
     },

@@ -1,6 +1,6 @@
 return {
     "dstein64/nvim-scrollview",
-    enabled = false,
+    cond = false,
     config = function ()
         require("scrollview").setup {
             winblend = 50,

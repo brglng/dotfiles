@@ -1,5 +1,6 @@
 return {
     "Exafunction/codeium.nvim",
+    cond = vim.fn.hostname() ~= 'APSH-1315',
     cmd = "Codeium",
     build = ":Codeium Auth",
     init = function()
