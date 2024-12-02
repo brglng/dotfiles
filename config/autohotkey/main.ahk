@@ -1,5 +1,13 @@
 #Requires AutoHotKey 2
 #SingleInstance Force
+InstallKeybdHook
+; InstallMouseHook
+#UseHook True
+; #MaxThreadsPerHotkey 10
+; A_MaxHotkeysPerInterval := 20000
+SendMode "Event"
+SetKeyDelay -1, -1
+ProcessSetPriority "High"
 SetWorkingDir A_ScriptDir
 
 ; FullCommandLine := DllCall("GetCommandLine", "str")
@@ -29,7 +37,7 @@ CapsLock::{
 
 CapsLock Up::{
     global CapsLockDownTime
-    if A_TickCount - CapsLockDownTime < 200 {
+    if A_PriorKey = "CapsLock" and A_TickCount - CapsLockDownTime < 200 {
         Send "{Esc}"
     } else {
         Send "{LWin Down}{Space}{LWin Up}"
@@ -50,7 +58,7 @@ modtap := ModTapManager(Map(
     "RControl", "j",
     "RAlt", "k",
     "RWin", "l",
-))  
+))
 
 $*LShift::modtap.onModKeyDown("LShift")
 $*LShift up::modtap.onModKeyUp("LShift", () => kl.toggleKeyboardLayout())
@@ -69,20 +77,20 @@ $*LWin up::modtap.onModKeyUp("LWin")
 $*RWin::modtap.onModKeyDown("RWin")
 $*RWin up::modtap.onModKeyUp("RWin")
 
-$*Space::return
-$*Space up::modtap.onAlternateModUp("Space", ["f", "d", "s", "j", "k", "l"])
-$*f::return
-$*f up::modtap.onAlternateModUp("f", ["Space", "j", "k", "l"])
-$*d::return
-$*d up::modtap.onAlternateModUp("d", ["Space", "j", "k", "l"])
-$*s::return
-$*s up::modtap.onAlternateModUp("s", ["Space", "j", "k", "l"])
-$*j::return
-$*j up::modtap.onAlternateModUp("j", ["Space", "f", "d", "s"])
-$*k::return
-$*k up::modtap.onAlternateModUp("k", ["Space", "f", "d", "s"])
-$*l::return
-$*l up::modtap.onAlternateModUp("l", ["Space", "f", "d", "s"])
+$*Space::modtap.onExtraMod("Space", ["f", "d", "s", "j", "k", "l"])
+$*Space up::modtap.onExtraModUp("Space")
+$*f::modtap.onExtraMod("f", ["Space", "j", "k", "l"])
+$*f up::modtap.onExtraModUp("f")
+$*d::modtap.onExtraMod("d", ["Space", "j", "k", "l"])
+$*d up::modtap.onExtraModUp("d")
+$*s::modtap.onExtraMod("s", ["Space", "j", "k", "l"])
+$*s up::modtap.onExtraModUp("s")
+$*j::modtap.onExtraMod("j", ["Space", "f", "d", "s"])
+$*j up::modtap.onExtraModUp("j")
+$*k::modtap.onExtraMod("k", ["Space", "f", "d", "s"])
+$*k up::modtap.onExtraModUp("k")
+$*l::modtap.onExtraMod("l", ["Space", "f", "d", "s"])
+$*l up::modtap.onExtraModUp("l")
 
 $*`::modtap.onOtherKey("``", ["Space", "j", "k", "l"])
 $*1::modtap.onOtherKey("1", ["Space", "j", "k", "l"])

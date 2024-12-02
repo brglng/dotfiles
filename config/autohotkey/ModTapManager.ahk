@@ -1,109 +1,129 @@
+arrayHasElement(arr, elem) {
+    for e in arr {
+        if e = elem {
+            return true
+        }
+    }
+    return false
+}
+
 class ModTapManager {
-    __new(modMap, tapTimeout := 200) {
+    __new(modMap, modTapTimeout := 200, tapModTimeout := 150) {
         this.modMap := Map(
-            "LShift", {
-                key: "",
-                isDown: false,
-                downTime: 0
-            },
-            "RShift", {
-                key: "",
-                isDown: false,
-                downTime: 0
-            },
-            "LControl", {
-                key: "",
-                isDown: false,
-                downTime: 0
-            },
-            "RControl", {
-                key: "",
-                isDown: false,
-                downTime: 0
-            },
-            "LAlt", {
-                key: "",
-                isDown: false,
-                downTime: 0
-            },
-            "RAlt", {
-                key: "",
-                isDown: false,
-                downTime: 0
-            },
-            "LWin", {
-                key: "",
-                isDown: false,
-                downTime: 0
-            },
-            "RWin", {
-                key: "",
-                isDown: false,
-                downTime: 0
-            }
+            "LShift", { extraMod: "", downTime: 0 },
+            "RShift", { extraMod: "", downTime: 0 },
+            "LControl", { extraMod: "", downTime: 0 },
+            "RControl", { extraMod: "", downTime: 0 },
+            "LAlt", { extraMod: "", downTime: 0 },
+            "RAlt", { extraMod: "", downTime: 0 },
+            "LWin", { extraMod: "", downTime: 0 },
+            "RWin", { extraMod: "", downTime: 0 }
         )
-        this.keyToModMap := Map()
-        for modKey, alternateKey in modMap {
-            if alternateKey != "" {
-                this.modMap[modKey].key := alternateKey
-                this.keyToModMap[alternateKey] := modKey
+        this.extraModMap := Map()
+        for modKey, extraMod in modMap {
+            if extraMod != "" {
+                this.modMap[modKey].extraMod := extraMod
+                this.extraModMap[extraMod] := { modKey: modKey, downTime: 0, tapInOtherKey: false }
             }
         }
+        this.modTapTimeout := modTapTimeout
+        this.tapModTimeout := tapModTimeout
+        this.sentKeys := ""
     }
 
     onModKeyDown(modKey) {
+        Critical "On"
         if this.modMap[modKey].downTime = 0 {
             this.modMap[modKey].downTime := A_TickCount
         }
-        Send "{" modKey " down}"
+        this.sendKey(modKey, "down", "mod down: " modKey)
+        Critical "Off"
     }
 
     onModKeyUp(modKey, onTap := "") {
-        if A_TickCount - this.modMap[modKey].downTime < 200 and A_PriorKey = modKey {
+        Critical "On"
+        if A_PriorKey = modKey and A_TickCount - this.modMap[modKey].downTime < this.modTapTimeout {
             if onTap != "" {
                 onTap()
             }
         }
-        Send "{" modKey " up}"
+        this.sendKey(modKey, "up", "mod up: " modKey)
         this.modMap[modKey].downTime := 0
-        if this.modMap[modKey].isDown {
-            this.modMap[modKey].isDown := false
+        Critical "Off"
+    }
+
+    onExtraMod(extraMod, allowedExtraMods) {
+        Critical "On"
+        if this.extraModMap[extraMod].downTime = 0 {
+            this.extraModMap[extraMod].downTime := A_TickCount
+        }
+        Critical "Off"
+        for extraMod in allowedExtraMods {
+            modKey := this.extraModMap[extraMod].modKey
+            Critical "On"
+            if GetKeyState(extraMod, "P") and not GetKeyState(modKey) {
+                this.sendKey(modKey, "down" , "extraMod: " extraMod)
+            }
+            Critical "Off"
         }
     }
 
-    onAlternateModUp(alternateKey, allowedAlternateMods) {
-        for alternateKey in allowedAlternateMods {
-            modKey := this.keyToModMap[alternateKey]
-            if GetKeyState(alternateKey, "P") and not this.modMap[modKey].isDown {
-                this.modMap[modKey].isDown := true
-                Send "{" modKey " down}"
-            }
-        }
-        modKey := this.keyToModMap[alternateKey]
-        if this.modMap[modKey].isDown {
-            Send "{" modKey " up}"
-            this.modMap[modKey].isDown := false
+    onExtraModUp(extraMod) {
+        modKey := this.extraModMap[extraMod].modKey
+        Critical "On"
+        if GetKeyState(modKey) {
+            this.sendKey(modKey, "up", "extraMod up: " extraMod)
         } else {
-            if strlen(alternateKey) > 1 {
-                Send "{" alternateKey "}"
+            if A_TickCount - this.extraModMap[extraMod].downTime > this.tapModTimeout {
+                this.sendKey(modKey)
+                this.sendKey(modKey, "up")
             } else {
-                Send alternateKey
+                if not this.extraModMap[extraMod].tapInOtherKey {
+                    this.sendKey(extraMod, , "extraMod up: " extraMod)
+                }
+                this.extraModMap[extraMod].tapInOtherKey := false
             }
         }
+        this.extraModMap[extraMod].downTime := 0
+        Critical "Off"
     }
 
-    onOtherKey(otherKey, allowedAlternateMods) {
-        for alternateKey in allowedAlternateMods {
-            modKey := this.keyToModMap[alternateKey]
-            if GetKeyState(alternateKey, "P") and not this.modMap[modKey].isDown {
-                this.modMap[modKey].isDown := true
-                Send "{" modKey " down}"
+    onOtherKey(otherKey, allowedExtraMods) {
+        for modKey, modProps in this.modMap {
+            if modProps.extraMod = ""
+                continue
+            extraMod := modProps.extraMod
+            if arrayHasElement(allowedExtraMods, extraMod) {
+                Critical "On"
+                if GetKeyState(extraMod, "P") and not GetKeyState(modKey) and
+                    A_TickCount - this.extraModMap[extraMod].downTime > this.tapModTimeout {
+                    this.sendKey(modKey, "down", "otherKey: " otherKey)
+                }
+                Critical "Off"
+            } else {
+                Critical "On"
+                if GetKeyState(extraMod, "P") and not this.extraModMap[extraMod].tapInOtherKey {
+                    this.extraModMap[extraMod].tapInOtherKey := true
+                    this.sendKey(extraMod, , "otherKey: " otherKey)
+                }
+                Critical "Off"
             }
         }
-        if strlen(otherKey) > 1 {
-            Send "{" otherKey "}"
+        this.sendKey(otherKey)
+    }
+
+    sendKey(key, state := "", msg := "") {
+        if state != "" {
+            Send "{" key " " state "}"
         } else {
-            Send otherKey
+            if strlen(key) > 1 {
+                Send "{" key "}"
+            } else {
+                Send key
+            }
         }
+
+        ; this.sentKeys := this.sentKeys "`n" key " " state " " msg
+        ; Tooltip this.sentKeys
     }
 }
