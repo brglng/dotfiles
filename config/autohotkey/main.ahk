@@ -37,7 +37,7 @@ CapsLock::{
 
 CapsLock Up::{
     global CapsLockDownTime
-    if A_PriorKey = "CapsLock" and A_TickCount - CapsLockDownTime < 200 {
+    if A_PriorKey = "CapsLock" and A_TickCount - CapsLockDownTime < 300 {
         Send "{Esc}"
     } else {
         Send "{LWin Down}{Space}{LWin Up}"
@@ -50,14 +50,13 @@ CapsLock Up::{
 kl := KeyboardLayoutManager()
 
 modtap := ModTapManager(Map(
-    "LShift", "Space",
-    "RShift", "",
-    "LControl", "f",
-    "LAlt", "d",
-    "LWin", "s",
-    "RControl", "j",
-    "RAlt", "k",
-    "RWin", "l",
+    "Space", { modKey: "LShift", repeatTimeout: 0 },
+    "f", { modKey: "LControl" },
+    "d", { modKey: "LAlt" },
+    "s", { modKey: "LWin" },
+    "j", { modKey: "RControl" },
+    "k", { modKey: "RAlt" },
+    "l", { modKey: "RWin" }
 ))
 
 $*LShift::modtap.onModKeyDown("LShift")
