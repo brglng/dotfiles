@@ -245,7 +245,7 @@ return {
         })
     end,
     keys = {
-        { '<Leader>b', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
+        -- { '<Leader>b', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
         { '<Leader>fb', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
         { '<Leader>f;', mode = 'n', function() require('telescope.builtin').commands() end, desc = 'Commands' },
         { '<M-x>', mode = 'i', function() require('telescope.builtin').commands() end, desc = 'Commands' },

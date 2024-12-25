@@ -1,6 +1,7 @@
 return {
     "williamboman/mason.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
+    lazy = false,
     opts = {
         ensure_installed = {
             "bash-language-server",

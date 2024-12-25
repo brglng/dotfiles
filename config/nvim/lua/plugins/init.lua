@@ -3,6 +3,7 @@ return {
     { import = "plugins.lsp" },
     { import = "plugins.treesitter" },
     { import = "plugins.coding" },
+    { import = "plugins.lang" },
     -- { import = "plugins.formatter" },
     -- { import = "plugins.lint" },
     { import = "plugins.ai" },

@@ -17,11 +17,15 @@ return {
                     return "solid"
                 else
                     -- return { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
-                    return "solid"
+                    return "rounded"
                 end
             end)(),
             focusable = true,
-            winhighlight = 'FloatBorder:LspSignatureFloatBorder'
+            winhighlight = (function()
+                if not vim.g.neovide then
+                    return 'FloatBorder:LspSignatureFloatBorder,NormalFloat:Normal'
+                end
+            end)()
         },
         -- transparency = 20,
         hint_enable = false,
@@ -29,44 +33,5 @@ return {
     },
     config = function(_, opts)
         require("lsp_signature").setup(opts)
-        local orig_open_floating_preview = vim.lsp.util.open_floating_preview
-        vim.lsp.util.open_floating_preview = function(contents, syntax, opts_)
-            local float_bufnr, win_id = orig_open_floating_preview(contents, syntax, opts_)
-            if win_id ~= nil then
-                if opts.handler_opts.winhighlight ~= nil then
-                    vim.api.nvim_set_option_value('winhighlight', opts.handler_opts.winhighlight, { win = win_id })
-                end
-                vim.api.nvim_set_option_value('filetype', 'markdown', { buf = float_bufnr })
-                vim.api.nvim_set_option_value('conceallevel', 3, { win = win_id })
-                if opts.handler_opts.focusable ~= nil then
-                    vim.api.nvim_win_set_config(win_id, { focusable = opts.handler_opts.focusable })
-                end
-            end
-            return float_bufnr, win_id
-        end
-        local set_lsp_signature_colors = function()
-            local colorutil = require('brglng.colorutil')
-            local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-            local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
-            local WinSeparator = vim.api.nvim_get_hl(0, { name = "WinSeparator", link = false })
-            local border_fg
-            if vim.o.background == 'dark' then
-                border_fg = colorutil.reduce_value(Normal.bg, 0.005)
-            else
-                border_fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.2)
-            end
-            vim.api.nvim_set_hl(0, "LspSignatureFloatBorder", {
-                fg = border_fg,
-                bg = NormalFloat.bg,
-            })
-        end
-        vim.api.nvim_create_autocmd("ColorScheme", {
-            pattern = "*",
-            callback = set_lsp_signature_colors
-        })
-        vim.api.nvim_create_autocmd("OptionSet", {
-            pattern = "background",
-            callback = set_lsp_signature_colors
-        })
     end
 }

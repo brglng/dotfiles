@@ -123,6 +123,15 @@ if has('nvim')
     nnoremap <RightMouse> <Nop>
     inoremap <RightMouse> <Nop>
     vnoremap <RightMouse> <Nop>
+    nnoremap <2-RightMouse> <Nop>
+    inoremap <2-RightMouse> <Nop>
+    vnoremap <2-RightMouse> <Nop>
+    nnoremap <3-RightMouse> <Nop>
+    inoremap <3-RightMouse> <Nop>
+    vnoremap <3-RightMouse> <Nop>
+    nnoremap <4-RightMouse> <Nop>
+    inoremap <4-RightMouse> <Nop>
+    vnoremap <4-RightMouse> <Nop>
 endif
 
 " nnoremap ; :

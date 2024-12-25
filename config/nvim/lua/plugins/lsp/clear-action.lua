@@ -1,6 +1,6 @@
 return {
     "luckasRanarison/clear-action.nvim",
-    event = 'VeryLazy',
+    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     opts = {
         popup = {
             highlights = {
@@ -16,5 +16,9 @@ return {
                 }
             }
         }
-    }
+    },
+    config = function(_, opts)
+        require("clear-action").setup(opts)
+
+    end
 }

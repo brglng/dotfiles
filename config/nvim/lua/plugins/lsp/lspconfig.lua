@@ -14,16 +14,57 @@ return {
             virtual_text = false,
             float = {
                 -- border = "none",
-                border = {
-                    { " ", "NormalFloat" },
-                    { " ", "NormalFloat" },
-                },
+                border = (function()
+                    if vim.g.neovide then
+                        return {
+                            { " ", "NormalFloat" },
+                            { " ", "NormalFloat" },
+                        }
+                    else
+                        return "rounded"
+                    end
+                end)(),
                 -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
                 focusable = false,
-                -- winhighlight = 'NormalFloat:Normal'
+                winhighlight = (function()
+                    if vim.g.neovide then
+                        return nil
+                    else
+                        return 'NormalFloat:Normal'
+                    end
+                end)()
             }
         },
-
+        hover = (function()
+            if vim.g.neovide then
+                return {
+                    border = {
+                        { " ", "NormalFloat" },
+                        { " ", "NormalFloat" },
+                    },
+                    silent = false
+                }
+            else
+                return {
+                    border = "rounded",
+                    winhighlight = "NormalFloat:Normal",
+                    silent = false
+                }
+            end
+        end)(),
+        -- This controls the appearance of both the hover and signature floating windows
+        floating_preview = (function()
+            if vim.g.neovide then
+                return {
+                    focusable = true,
+                }
+            else
+                return {
+                    focusable = true,
+                    winhighlight = "FloatBorder:LspFloatingPreviewBorder,NormalFloat:Normal"
+                }
+            end
+        end)(),
         inlay_hint = {
             enabled = true
         },
@@ -99,23 +140,26 @@ return {
     },
     config = function(_, opts)
         local lspconfig = require('lspconfig')
+        local colorutil = require('brglng.colorutil')
 
         if opts.diagnostic ~= nil then
             vim.diagnostic.config(opts.diagnostic)
         end
-        local orig_open_float = vim.diagnostic.open_float
-        vim.diagnostic.open_float = function(open_float_opts)
-            local float_bufnr, win_id = orig_open_float(open_float_opts)
-            if win_id ~= nil then
-                if opts.diagnostic.float.winhighlight ~= nil then
-                    vim.api.nvim_set_option_value('winhighlight', opts.diagnostic.float.winhighlight, { win = win_id })
-                end
-                if opts.diagnostic.float.focusable ~= nil then
-                    vim.api.nvim_win_set_config(win_id, { focusable = opts.diagnostic.float.focusable })
-                end
-            end
-            return float_bufnr, win_id
-        end
+        vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focus = false })]]
+
+        -- local orig_open_float = vim.diagnostic.open_float
+        -- vim.diagnostic.open_float = function(open_float_opts)
+        --     local float_bufnr, win_id = orig_open_float(open_float_opts)
+        --     if win_id ~= nil then
+        --         if opts.diagnostic.float.winhighlight ~= nil then
+        --             vim.api.nvim_set_option_value('winhighlight', opts.diagnostic.float.winhighlight, { win = win_id })
+        --         end
+        --         if opts.diagnostic.float.focusable ~= nil then
+        --             vim.api.nvim_win_set_config(win_id, { focusable = opts.diagnostic.float.focusable })
+        --         end
+        --     end
+        --     return float_bufnr, win_id
+        -- end
 
         if opts.log_level ~= nil then
             vim.lsp.set_log_level(opts.log_level)
@@ -125,24 +169,54 @@ return {
             vim.lsp.inlay_hint.enable(opts.inlay_hint.enabled)
         end
 
-        -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-        --     vim.lsp.handlers.hover, {
-        --         border = "none",
-        --         -- border = "rounded",
-        --         -- border = {
-        --         --     { " ", "NormalFloat" },
-        --         --     { " ", "NormalFloat" },
-        --         -- },
-        --         silent = false
-        --     }
-        -- )
-        -- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        --     vim.lsp.handlers.signature_help, {
-        --         border = "rounded",
-        --         silent = false,
-        --         focusable = false
-        --     }
-        -- )
+        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, opts.hover)
+
+        local orig_open_floating_preview = vim.lsp.util.open_floating_preview
+        vim.lsp.util.open_floating_preview = function(contents, syntax, opts_)
+            if opts_ == nil then
+                opts_ = opts.floating_preview
+            else
+                opts_ = vim.tbl_deep_extend("force", opts_, opts.floating_preview)
+            end
+            local float_bufnr, win_id = orig_open_floating_preview(contents, syntax, opts_)
+            if win_id ~= nil then
+                if opts_.winhighlight ~= nil then
+                    vim.api.nvim_set_option_value('winhighlight', opts_.winhighlight, { win = win_id })
+                end
+                vim.api.nvim_set_option_value('filetype', 'markdown', { buf = float_bufnr })
+                vim.api.nvim_set_option_value('conceallevel', 3, { win = win_id })
+                if opts_.focusable ~= nil then
+                    vim.api.nvim_win_set_config(win_id, { focusable = opts_.focusable })
+                end
+            end
+            return float_bufnr, win_id
+        end
+
+        local set_lsp_floating_preview_colors = function()
+            local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+            local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
+            local WinSeparator = vim.api.nvim_get_hl(0, { name = "WinSeparator", link = false })
+            local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
+            local border_fg
+            if vim.o.background == 'dark' then
+                border_fg = colorutil.reduce_value(Normal.bg, 0.005)
+            else
+                border_fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.2)
+            end
+            vim.api.nvim_set_hl(0, "LspFloatingPreviewBorder", {
+                fg = FloatBorder.fg,
+                bg = Normal.bg,
+            })
+        end
+        set_lsp_floating_preview_colors()
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            pattern = "*",
+            callback = set_lsp_floating_preview_colors
+        })
+        vim.api.nvim_create_autocmd("OptionSet", {
+            pattern = "background",
+            callback = set_lsp_floating_preview_colors
+        })
 
         if vim.uv.os_uname().sysname == 'Windows_NT' then
             opts.servers.clangd.cmd[1] = 'clangd.cmd'

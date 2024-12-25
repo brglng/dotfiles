@@ -14,12 +14,13 @@ return {
                 if vim.g.neovide then
                     return "none"
                 else
-                    return {"▔", "▔" ,"▔", " ", " ", " ", " ", " " }
+                    -- return {"▔", "▔" ,"▔", " ", " ", " ", " ", " " }
+                    return {"─", "─" ,"─", " ", " ", " ", " ", " " }
                 end
             end)(),
             -- border = {"", "" ,"", "", "", "", "", "" },
             -- border = 'rounded'
-            title = false,
+            title = true,
             title_pos = "center",
         },
         layout = {
@@ -34,22 +35,29 @@ return {
 
         local colorutil = require('brglng.colorutil')
         local set_which_key_color = function()
-            local WinSeparator = vim.api.nvim_get_hl(0, { name = 'WinSeparator', link = false })
-            -- local WhichKeyFloat = vim.api.nvim_get_hl(0, { name = 'WhichKeyFloat', link = false })
-            local WhichKeyFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
-            local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
-            if vim.o.background == 'dark' then
-                vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                    fg = colorutil.reduce_value(Normal.bg, 0.002),
-                    bg = WhichKeyFloat.bg
-                })
-            else
-                vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                    fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.2),
-                    bg = WhichKeyFloat.bg
+            if not vim.g.neovide then
+                -- local WinSeparator = vim.api.nvim_get_hl(0, { name = 'WinSeparator', link = false })
+                -- local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
+                local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
+                local FloatTitle = vim.api.nvim_get_hl(0, { name = 'FloatTitle', link = false })
+                -- if vim.o.background == 'dark' then
+                --     vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
+                --         fg = colorutil.reduce_value(Normal.bg, 0.002),
+                --         bg = NormalFloat.bg
+                --     })
+                -- else
+                --     vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
+                --         fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.2),
+                --         bg = NormalFloat.bg
+                --     })
+                -- end
+                vim.api.nvim_set_hl(0, 'WhichKeyBorder', { link = 'WinSeparator' })
+                vim.api.nvim_set_hl(0, 'WhichKeyNormal', { link = 'Normal' })
+                vim.api.nvim_set_hl(0, "WhichKeyTitle", {
+                    fg = FloatTitle.fg,
+                    bg = Normal.bg
                 })
             end
-            -- vim.api.nvim_set_hl(0, 'WhichKeyFloat', { link = 'Normal' })
         end
         set_which_key_color()
         vim.api.nvim_create_autocmd("ColorScheme", {

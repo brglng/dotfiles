@@ -15,7 +15,8 @@ return {
         "davidsierradz/cmp-conventionalcommits",
         "FelipeLema/cmp-async-path",
         "onsails/lspkind.nvim",
-        "Exafunction/codeium.nvim",
+        -- "Exafunction/codeium.nvim",
+        "MeanderingProgrammer/render-markdown.nvim",
     },
     enabled = true,
     config = function ()
@@ -28,9 +29,9 @@ return {
 
         local lspkind = require('lspkind')
         lspkind.init {
-            symbol_map = {
-                Codeium = ""
-            },
+            -- symbol_map = {
+            --     Codeium = ""
+            -- },
         }
 
         local has_words_before = function()
@@ -40,11 +41,11 @@ return {
         end
 
         local window_bordered = cmp.config.window.bordered()
-        -- window_bordered.border = 'single'
+        window_bordered.border = 'rounded'
         -- window_bordered.border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
         window_bordered.col_offset = -4
         window_bordered.side_padding = 1
-        window_bordered.winhighlight = 'Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None'
+        -- window_bordered.winhighlight = 'Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None'
         -- window_bordered.winblend = 20
 
         local function set_cmp_colors()
@@ -72,14 +73,21 @@ return {
         set_cmp_colors()
 
         cmp.setup {
-            window = {
-                completion = {
-                    col_offset = -3,
-                    side_padding = 1,
-                },
-                -- completion = window_bordered,
-                -- documentation = window_bordered,
-            },
+            window = (function()
+                if vim.g.neovide then
+                    return {
+                        completion = {
+                            col_offset = -3,
+                            side_padding = 1,
+                        },
+                    }
+                else
+                    return {
+                        completion = window_bordered,
+                        documentation = window_bordered,
+                    }
+                end
+            end)(),
             -- view = {
             --     entries = {
             --         follow_cursor = true,
@@ -141,9 +149,10 @@ return {
                         disable_omnifuncs = { 'v:lua.vim.lsp.omnifunc' }
                     }
                 },
-                { name = "codeium" },
+                -- { name = "codeium" },
                 { name = "async_path" },
                 { name = "buffer" },
+                { name = "render-markdown" }
             }),
             mapping = cmp.mapping.preset.insert({
                 ['<C-x><C-x>'] = cmp.mapping.complete(),
@@ -196,7 +205,7 @@ return {
                 ['<C-k>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert, count = 10 }),
                 ['<C-e>'] = cmp.mapping({
                     i = function(fallback)
-                        if cmp.visible() and cmp.get_active_entry() then
+                        if cmp.visible() then
                             cmp.abort()
                         else
                             if vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
@@ -207,7 +216,7 @@ return {
                         end
                     end,
                     c = function(fallback)
-                        if cmp.visible() and cmp.get_active_entry() then
+                        if cmp.visible() then
                             cmp.abort()
                         else
                             if vim.fn.getcmdpos() > vim.fn.strlen(vim.fn.getcmdline()) then
@@ -228,7 +237,7 @@ return {
                 { name = "conventionalcommits" },
                 { name = "async_path" },
                 { name = 'git' },
-                { name = "codeium" },
+                -- { name = "codeium" },
                 { name = 'buffer' },
             })
         })
@@ -243,7 +252,7 @@ return {
                         disable_omnifuncs = { "v:lua.vim.lsp.omnifunc" }
                     }
                 },
-                { name = "codeium" },
+                -- { name = "codeium" },
                 { name = "async_path" },
                 { name = "buffer" }
             })
@@ -258,7 +267,7 @@ return {
                     }
                 },
                 { name = "crates" },
-                { name = "codeium" },
+                -- { name = "codeium" },
                 { name = "async_path" },
                 { name = "buffer" }
             )

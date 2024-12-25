@@ -29,11 +29,11 @@ return {
                 view = "lsp_progress"
             },
             -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-            override = {
-                -- ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                -- ["vim.lsp.util.stylize_markdown"] = true,
-                -- ["cmp.entry.get_documentation"] = true,
-            },
+            -- override = {
+            --     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            --     ["vim.lsp.util.stylize_markdown"] = true,
+            --     ["cmp.entry.get_documentation"] = true,
+            -- },
             signature = {
                 enabled = false,
             },
@@ -52,10 +52,17 @@ return {
         views = {
             mini = {
                 border = {
-                    style = {' ', ' ', ' ', '▕', '🭿', '▁', ' ', ' ' },
+                    -- style = {' ', ' ', ' ', '▕', '🭿', '▁', ' ', ' ' },
                     -- style = {'🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
                     -- style = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
                     -- style = {' ', ' ', ' ', ' ', ' ', '▁', ' ', ' ' },
+                    style = (function()
+                        if vim.g.neovide then
+                            return "solid"
+                        else
+                            return 'rounded'
+                        end
+                    end)(),
                 },
                 position = {
                     row = -2
@@ -91,26 +98,39 @@ return {
                     end
                 end)()
             },
-            hover = {
-                border = {
-                    style = "none",
-                    -- style = { ' ', ' ', ' ', '▕', '🭿', '▁', ' ', ' ' },
-                    -- style = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
-                    padding = {
-                        top = 1,
-                        bottom = 1,
-                        left = 1,
-                        right = 1,
+            hover = (function()
+                if vim.g.neovide then
+                    return {
+                        border = {
+                            style = "none",
+                            -- style = { ' ', ' ', ' ', '▕', '🭿', '▁', ' ', ' ' },
+                            -- style = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
+                            padding = {
+                                top = 1,
+                                bottom = 1,
+                                left = 1,
+                                right = 1,
+                            }
+                        },
+                        position = {
+                            row = 2,
+                            col = 1
+                        },
+                        win_options = {
+                            winhighlight = 'FloatBorder:NoiceHoverBorder'
+                        }
                     }
-                },
-                position = {
-                    row = 2,
-                    col = 1
-                },
-                win_options = {
-                    winhighlight = 'FloatBorder:NoiceHoverBorder'
-                }
-            },
+                else
+                    return {
+                        border = {
+                            style = "rounded"
+                        },
+                        win_options = {
+                            winhighlight = 'NormalFloat:Normal'
+                        }
+                    }
+                end
+            end)(),
             lsp_progress = {
                 backend = "notify",
                 fallback = "mini",
@@ -316,6 +336,7 @@ return {
                 })
             end
         end
+        set_noice_color()
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "*",
             callback = set_noice_color
@@ -324,7 +345,6 @@ return {
             pattern = "background",
             callback = set_noice_color
         })
-        set_noice_color()
 
         local format = require("noice.lsp.format")
         local hacks = require("noice.util.hacks")

@@ -282,7 +282,6 @@ config.freetype_load_target = "Normal"
 config.font = wezterm.font_with_fallback {
     "Maple Mono NF CN",
     "Flog Symbols",
-
 }
 
 if WINDOWS then
@@ -360,19 +359,19 @@ config.unix_domains = {
 
 config.ssh_domains = {
     {
+        name = 'SSH Mux VPS',
+        remote_address = '3.112.158.72',
+        username = 'ubuntu',
+    },
+    {
         name = 'SSH VPS',
         remote_address = '3.112.158.72',
         username = 'ubuntu',
         multiplexing = 'None'
-    },
-    {
-        name = 'SSH Mux VPS',
-        remote_address = '3.112.158.72',
-        username = 'ubuntu',
     }
 }
 
-config.default_domain = 'Mux'
+config.default_domain = 'local'
 
 config.launch_menu = {}
 
@@ -390,30 +389,6 @@ if WINDOWS then
         username = 'brglng',
     })
 
-    table.insert(config.launch_menu, {
-        label = 'Mux Windows Nushell',
-        domain = { DomainName = "Mux" },
-        args = { 'nu', '-i', '-l' },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Mux Windows PowerShell',
-        domain = { DomainName = "Mux" },
-        args = { 'powershell.exe', '-NoLogo' },
-    })
-    table.insert(config.launch_menu, {
-        label = "Mux Windows Command Prompt",
-        domain = { DomainName = "Mux", },
-        args = { 'cmd.exe' }
-    })
-    table.insert(config.launch_menu, {
-        label = "Mux Bose Cygwin 6.0",
-        domain = { DomainName = "Mux" },
-        args = {
-            "cmd.exe",
-            "/c",
-            "C:/cygwin64/Cygwin.bat"
-        }
-    })
     table.insert(config.launch_menu, {
         label = 'Windows Nushell',
         domain = { DomainName = "local" },
@@ -439,60 +414,8 @@ if WINDOWS then
         }
     })
     table.insert(config.launch_menu, {
-        label = 'SSH WSL Mux Ubuntu',
-        domain = { DomainName = 'SSH WSL Mux Ubuntu' }
-    })
-    table.insert(config.launch_menu, {
         label = 'SSH WSL Ubuntu',
         domain = { DomainName = 'SSH WSL Ubuntu' }
-    })
-    table.insert(config.launch_menu, {
-        label = 'WSL Ubuntu',
-        domain = { DomainName = 'WSL:Ubuntu' }
-    })
-    table.insert(config.launch_menu, {
-        label = 'Mux Developer Command Prompt for VS 2022 Community',
-        domain = { DomainName = "Mux" },
-        args = {
-            'cmd.exe',
-            '/k',
-            'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat',
-            '-startdir=none',
-            '-arch=x64',
-            '-host_arch=x64',
-        },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Mux Developer Powershell for VS 2022 Community',
-        domain = { DomainName = "Mux" },
-        args = {
-            'powershell.exe',
-            '-NoExit',
-            '-Command',
-            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
-        },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Mux Developer Command Prompt for VS 2022 Professional',
-        domain = { DomainName = "Mux" },
-        args = {
-            'cmd.exe',
-            '/k',
-            'C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/VsDevCmd.bat',
-            '-startdir=none',
-            '-arch=x64',
-            '-host_arch=x64',
-        },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Mux Developer Powershell for VS 2022 Professional',
-        domain = { DomainName = "Mux" },
-        args = {
-            'powershell.exe',
-            '-NoExit',
-            '-Command',
-            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
-        },
     })
     table.insert(config.launch_menu, {
         label = 'Developer Command Prompt for VS 2022 Community',
@@ -539,6 +462,83 @@ if WINDOWS then
         },
     })
 
+    table.insert(config.launch_menu, {
+        label = 'Mux Windows Nushell',
+        domain = { DomainName = "Mux" },
+        args = { 'nu', '-i', '-l' },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Mux Windows PowerShell',
+        domain = { DomainName = "Mux" },
+        args = { 'powershell.exe', '-NoLogo' },
+    })
+    table.insert(config.launch_menu, {
+        label = "Mux Windows Command Prompt",
+        domain = { DomainName = "Mux", },
+        args = { 'cmd.exe' }
+    })
+    table.insert(config.launch_menu, {
+        label = "Mux Bose Cygwin 6.0",
+        domain = { DomainName = "Mux" },
+        args = {
+            "cmd.exe",
+            "/c",
+            "C:/cygwin64/Cygwin.bat"
+        }
+    })
+    table.insert(config.launch_menu, {
+        label = 'SSH WSL Mux Ubuntu',
+        domain = { DomainName = 'SSH WSL Mux Ubuntu' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'Mux Developer Command Prompt for VS 2022 Community',
+        domain = { DomainName = "Mux" },
+        args = {
+            'cmd.exe',
+            '/k',
+            'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat',
+            '-startdir=none',
+            '-arch=x64',
+            '-host_arch=x64',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Mux Developer Powershell for VS 2022 Community',
+        domain = { DomainName = "Mux" },
+        args = {
+            'powershell.exe',
+            '-NoExit',
+            '-Command',
+            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Mux Developer Command Prompt for VS 2022 Professional',
+        domain = { DomainName = "Mux" },
+        args = {
+            'cmd.exe',
+            '/k',
+            'C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/VsDevCmd.bat',
+            '-startdir=none',
+            '-arch=x64',
+            '-host_arch=x64',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Mux Developer Powershell for VS 2022 Professional',
+        domain = { DomainName = "Mux" },
+        args = {
+            'powershell.exe',
+            '-NoExit',
+            '-Command',
+            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'WSL Ubuntu',
+        domain = { DomainName = 'WSL:Ubuntu' }
+    })
+
     config.default_prog = { "nu.exe", "-i", "-l" }
 else
     if MAC then
@@ -563,12 +563,12 @@ else
 end
 
 table.insert(config.launch_menu, {
-    label = 'SSH VPS',
-    domain = { DomainName = 'SSH VPS' }
-})
-table.insert(config.launch_menu, {
     label = 'SSH Mux VPS',
     domain = { DomainName = 'SSH Mux VPS' }
+})
+table.insert(config.launch_menu, {
+    label = 'SSH VPS',
+    domain = { DomainName = 'SSH VPS' }
 })
 
 config.initial_rows = 48

@@ -236,10 +236,8 @@ return {
 
         local function projects_and_mru()
             local keys = {
-                "a", "c", "d", "h", "i", "l", "m", "n", "o", "r", "s", "v", "w", "x", "y", "z",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-                ";", "'", "[", "]", "<", ">", "/", "\\", "-", "=",
-                "A", "B", "C", "D", "E", "F", "H", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+                "a", "s", "d", "h", "l", ";", "'", "w", "r", "y", "i", "o", "[", "]", "\\", "z", "x", "c", "v", "n", "m", ",", ".", "/",
+                "A", "S", "D", "H", "L", "\"", "W", "R", "Y", "I", "O", "{", "}", "|", "Z", "X", "C", "V", "N", "M", "<", ">", "?",
             }
             local next_key_idx = 1
             local function next_key()
@@ -416,6 +414,17 @@ return {
                             opts = {
                                 shortcut = "b",
                                 keymap = { "n", "b", function() require("telescope").extensions.file_browser.file_browser() end, { noremap = true, silent = true, nowait = true  } },
+                            }
+                        },
+                        {
+                            type = "button",
+                            val = "  Projects",
+                            on_press = function()
+                                vim.cmd("NeovimProjectDiscover")
+                            end,
+                            opts = {
+                                shortcut = "p",
+                                keymap = { "n", "p", "<Cmd>NeovimProjectDiscover<CR>", { noremap = true, silent = true, nowait = true  } },
                             }
                         },
                         {

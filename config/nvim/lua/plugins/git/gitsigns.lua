@@ -42,14 +42,14 @@ return {
         end,
         preview_config = {
             border = (function()
-                -- if vim.g.neovide then
+                if vim.g.neovide then
                     return {
                         { " ", "NormalFloat" },
                         { " ", "NormalFloat" },
                     }
-                -- else
-                --     return "rounded"
-                -- end
+                else
+                    return "rounded"
+                end
             end)(),
             -- border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' },
             -- focusable = true,

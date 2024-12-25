@@ -13,8 +13,8 @@ if vim.g.neovide then
     vim.g.neovide_input_macos_option_key_is_meta = 'both'
     -- vim.g.neovide_floating_corner_radius = 0.1
     -- vim.g.neovide_cursor_trail_size = 0.2
-    -- vim.g.neovide_cursor_vfx_mode = "torpedo"
-    -- vim.g.neovide_cursor_vfx_particle_density = 10.0
+    vim.g.neovide_cursor_vfx_mode = "torpedo"
+    vim.g.neovide_cursor_vfx_particle_density = 20.0
 end
 
 vim.filetype.add {
@@ -45,17 +45,9 @@ vim.api.nvim_create_autocmd({"FileType"}, {
 
 local signs = { Error = " ", Warn = " ", Info = " ", Hint = "󰌶 " }
 for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
-vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focus = false })]]
-
--- local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
--- function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
---     opts = opts or {}
---     opts.border = opts.border or "rounded"
---     return orig_util_open_floating_preview(contents, syntax, opts, ...)
--- end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
