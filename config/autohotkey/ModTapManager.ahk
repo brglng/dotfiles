@@ -8,7 +8,7 @@ ArrayHasElement(arr, elem) {
 }
 
 class ModTapManager {
-    __new(extraModMap, modMap := Map()) {
+    __new(extraModMap, modMap := Map(), logging := false) {
         this.modMap := Map(
             "LShift", { extraMod: "", tapTimeout: 200, downTime: 0, upTime: 0 },
             "RShift", { extraMod: "", tapTimeout: 200, downTime: 0, upTime: 0 },
@@ -34,177 +34,19 @@ class ModTapManager {
                 downTime: 0,
                 upTime: 0,
                 repeating: false,
-                isAnyModDown: false,
             }
         }
         this.otherKeyMap := Map()
+        this.logging := logging
+        this.keyQueue := []
         this.sentKeys := ""
     }
 
-    onModKeyDown(modKey) {
-        Critical "On"
-        if this.modMap[modKey].downTime == 0 {
-            this.modMap[modKey].downTime := A_TickCount
+    addTooltip(msg) {
+        if this.logging {
+            this.sentKeys := this.sentKeys "`n" msg
+            Tooltip this.sentKeys
         }
-        this.sendKey(modKey, "down", "onModKeyDown: " modKey)
-        Critical "Off"
-    }
-
-    onModKeyUp(modKey, onTap := "") {
-        Critical "On"
-        if A_PriorKey = modKey and A_TickCount - this.modMap[modKey].downTime < this.modMap[modKey].tapTimeout {
-            if onTap != "" {
-                onTap()
-            }
-        }
-        this.sendKey(modKey, "up", "onModKeyUp: " modKey)
-        this.modMap[modKey].downTime := 0
-        this.modMap[modKey].upTime := A_TickCount
-        Critical "Off"
-    }
-
-    onExtraMod(extraMod, allowedOtherExtraMods) {
-        Critical "On"
-        if this.extraModMap[extraMod].downTime == 0 {
-            this.extraModMap[extraMod].downTime := A_TickCount
-        }
-        for modKey, modProps in this.modMap {
-            if GetKeyState(modKey, "P") {
-                this.extraModMap[extraMod].isAnyModDown := true
-                this.sendKey(extraMod, "down", "onExtraMod 1: " extraMod)
-                break
-            }
-        }
-        if not this.extraModMap[extraMod].isAnyModDown {
-            if this.extraModMap[extraMod].repeating == true {
-                this.sendKey(extraMod, , "onExtraMod 2: " extraMod)
-            } else {
-                if A_PriorKey = extraMod
-                    and A_TickCount - this.extraModMap[extraMod].upTime < this.extraModMap[extraMod].repeatTimeout {
-                    this.extraModMap[extraMod].repeating := true
-                }
-                if not this.extraModMap[extraMod].repeating {
-                    for otherExtraMod in allowedOtherExtraMods {
-                        modKey := this.extraModMap[otherExtraMod].modKey
-                        if GetKeyState(otherExtraMod, "P") and not GetKeyState(modKey)
-                            and A_TickCount - this.extraModMap[otherExtraMod].downTime > this.extraModMap[extraMod].modTimeout {
-                            this.sendKey(modKey, "down" , "onExtraMod 3: " extraMod)
-                        }
-                    }
-                } else {
-                    this.sendKey(extraMod, , "onExtraMod 4: " extraMod)
-                }
-            }
-        }
-        Critical "Off"
-    }
-
-    onExtraModUp(extraMod) {
-        Critical "On"
-        if this.extraModMap[extraMod].isAnyModDown {
-            this.sendKey(extraMod, "up", "onExtraModUp 1: " extraMod)
-        } else {
-            modKey := this.extraModMap[extraMod].modKey
-            if GetKeyState(modKey) and not GetKeyState(modKey, "P") {
-                this.sendKey(modKey, "up", "onExtraModUp 2: " extraMod)
-            } else {
-                if not this.extraModMap[extraMod].repeating and A_PriorKey = extraMod {
-                    if A_TickCount - this.extraModMap[extraMod].downTime > this.extraModMap[extraMod].modTapTimeout {
-                        this.sendKey(modKey, "down", "onExtraModUp 3: " extraMod)
-                        this.sendKey(modKey, "up", "onExtraModUp 4: " extraMod)
-                    } else {
-                        this.sendKey(extraMod, , "onExtraModUp 5: " extraMod)
-                    }
-                }
-            }
-        }
-        this.extraModMap[extraMod].downTime := 0
-        this.extraModMap[extraMod].upTime := A_TickCount
-        this.extraModMap[extraMod].repeating := false
-        this.extraModMap[extraMod].isAnyModDown := false
-        Critical "Off"
-    }
-
-    onOtherKey(otherKey, allowedExtraMods) {
-        Critical "On"
-        if not this.otherKeyMap.has(otherKey) {
-            this.otherKeyMap[otherKey] := {
-                repeating: false,
-                extraModsDown: [],
-                downTime: A_TickCount,
-                upTime: 0
-            }
-        }
-        if this.otherKeyMap[otherKey].repeating {
-            this.sendKey(otherKey, "down", "onOtherKey 1: " otherKey)
-        } else {
-            isAnyModDown := false
-            for modKey, modProps in this.modMap {
-                if GetKeyState(modKey, "P") {
-                    isAnyModDown := true
-                    break
-                }
-                if modProps.extraMod = ""
-                    continue
-                extraMod := modProps.extraMod
-                if ArrayHasElement(allowedExtraMods, extraMod) and GetKeyState(extraMod, "P") {
-                    this.otherKeyMap[otherKey].extraModsDown.push(extraMod)
-                } else {
-                    if GetKeyState(extraMod, "P") {
-                        this.sendKey(extraMod, , "onOtherKey 2: " otherKey)
-                    }
-                    this.extraModMap[extraMod].repeating := false
-                }
-            }
-            if A_PriorKey = otherKey and this.otherKeyMap[otherKey].downTime > this.otherKeyMap[otherKey].upTime {
-                this.otherKeyMap[otherKey].repeating := true
-                for extraMod in this.otherKeyMap[otherKey].extraModsDown {
-                    modKey := this.extraModMap[extraMod].modKey
-                    if GetKeyState(extraMod, "P") and not GetKeyState(modKey)
-                        and A_TickCount - this.extraModMap[extraMod].downTime > this.extraModMap[extraMod].modTimeout {
-                        this.sendKey(modKey, "down", "onOtherKey 3: " otherKey)
-                    }
-                }
-                this.otherKeyMap[otherKey].extraModsDown := []
-                this.sendKey(otherKey, "down", "onOtherKey 4: " otherKey)
-                this.sendKey(otherKey, "down", "onOtherKey 5: " otherKey)
-            } else {
-                if isAnyModDown or this.otherKeyMap[otherKey].extraModsDown.length == 0 {
-                    this.sendKey(otherKey, , "onOtherKey 6: " otherKey)
-                }
-            }
-        }
-        this.otherKeyMap[otherKey].downTime := A_TickCount
-        Critical "Off"
-    }
-
-    onOtherKeyUp(otherKey) {
-        Critical "On"
-        if not this.otherKeyMap[otherKey].repeating {
-            for extraMod in this.otherKeyMap[otherKey].extraModsDown {
-                modKey := this.extraModMap[extraMod].modKey
-                if GetKeyState(extraMod, "P") {
-                    if not GetKeyState(modKey) {
-                        if A_TickCount - this.extraModMap[extraMod].downTime > this.extraModMap[extraMod].modTimeout {
-                            this.sendKey(modKey, "down", "onOtherKeyUp 1: " otherKey)
-                        } else {
-                            this.sendKey(extraMod, , "onOtherKeyUp 2: " otherKey)
-                        }
-                    }
-                } else {
-                    this.sendKey(extraMod, , "onOtherKeyUp 3: " otherKey)
-                }
-            }
-            if this.otherKeyMap[otherKey].extraModsDown.length != 0 {
-                this.sendKey(otherKey, , "onOtherKeyUp 4: " otherKey)
-            }
-        } else {
-            this.sendKey(otherKey, "up", "onOtherKeyUp 5: " otherKey)
-        }
-        this.otherKeyMap[otherKey].extraModsDown := []
-        this.otherKeyMap[otherKey].repeating := false
-        this.otherKeyMap[otherKey].upTime := A_TickCount
-        Critical "Off"
     }
 
     sendKey(key, state := "", msg := "") {
@@ -217,8 +59,262 @@ class ModTapManager {
                 Send key
             }
         }
+        this.addTooltip(msg ": sent " key " " state)
+    }
 
-        ; this.sentKeys := this.sentKeys "`n" key " " state " " msg
-        ; Tooltip this.sentKeys
+    isKeyQueued(key) {
+        for k in this.keyQueue {
+            if k = key {
+                return true
+            }
+        }
+        return false
+    }
+
+    isAnyKeyQueued(keys) {
+        for key in keys {
+            if this.isKeyQueued(key) {
+                return true
+            }
+        }
+        return false
+    }
+
+    isAnyModDown() {
+        for modKey, modProps in this.modMap {
+            if GetKeyState(modKey, "P") {
+                return true
+            }
+        }
+        return false
+    }
+
+    isAnyKeyDown(keys) {
+        for key in keys {
+            if GetKeyState(key, "P") {
+                return true
+            }
+        }
+        return false
+    }
+
+    onModKeyDown(modKey) {
+        Critical "On"
+        if this.modMap[modKey].downTime == 0 {
+            this.modMap[modKey].downTime := A_TickCount
+        }
+        this.sendKey(modKey, "down", "onModKeyDown(" modKey ")")
+        Critical "Off"
+    }
+
+    onModKeyUp(modKey, onTap := "") {
+        Critical "On"
+        if A_PriorKey = modKey
+            and A_TickCount - this.modMap[modKey].downTime < this.modMap[modKey].tapTimeout
+            and onTap != ""
+        {
+            onTap()
+        }
+        this.sendKey(modKey, "up", "onModKeyUp(" modKey ")")
+        this.modMap[modKey].downTime := 0
+        this.modMap[modKey].upTime := A_TickCount
+        Critical "Off"
+    }
+
+    logQueue(msg := "") {
+        txt := "[ "
+        for key in this.keyQueue {
+            txt := txt key " "
+        }
+        txt := txt "]"
+        this.addTooltip(msg ": keyQueue: " txt)
+    }
+
+    onExtraMod(extraMod) {
+        Critical "On"
+
+        for otherExtraMod, otherExtraModProps in this.extraModMap {
+            if otherExtraMod != extraMod {
+                otherExtraModProps.repeating := false
+            }
+        }
+        for otherKey, otherKeyProps in this.otherKeyMap {
+            otherKeyProps.repeating := false
+        }
+
+        if this.extraModMap[extraMod].repeating {
+            this.sendKey(extraMod, , "onExtraMod(" extraMod ") 1")
+        } else {
+            if this.extraModMap[extraMod].downTime == 0 {
+                this.extraModMap[extraMod].downTime := A_TickCount
+                if this.isAnyModDown() {
+                    this.sendKey(extraMod, "down", "onExtraMod(" extraMod ") 2")
+                } else {
+                    if A_PriorKey = extraMod
+                        and A_TickCount - this.extraModMap[extraMod].upTime <= this.extraModMap[extraMod].repeatTimeout
+                    {
+                        this.sendKey(extraMod, , "onExtraMod(" extraMod ") 3")
+                        this.extraModMap[extraMod].repeating := true
+                    } else {
+                        this.keyQueue.push(extraMod)
+                        this.logQueue("onExtraMod(" extraMod ") 4")
+                    }
+                }
+            }
+        }
+
+        Critical "Off"
+    }
+
+    onExtraModUp(extraMod, allowedOtherExtraMods) {
+        Critical "On"
+        if not this.extraModMap[extraMod].repeating 
+            and this.keyQueue.length > 0 and this.keyQueue[this.keyQueue.length] == extraMod
+        {
+            modsSent := []
+            for key in this.keyQueue {
+                if ArrayHasElement(allowedOtherExtraMods, key) {
+                    modKey := this.extraModMap[key].modKey
+                    if GetKeyState(key, "P") {
+                        if not GetKeyState(modKey)
+                            and A_TickCount - this.extraModMap[key].downTime >= this.extraModMap[key].modTimeout
+                        {
+                            this.sendKey(modKey, "down", "onExtraModUp(" extraMod ") 1")
+                            modsSent.push(modKey)
+                        } else {
+                            this.sendKey(key, , "onExtraModUp(" extraMod ") 2")
+                        }
+                    } else {
+                        this.sendKey(key, , "onExtraModUp(" extraMod ") 3")
+                    }
+                } else if key = extraMod
+                    and A_TickCount - this.extraModMap[key].downTime >= this.extraModMap[key].modTapTimeout
+                {
+                    modKey := this.extraModMap[key].modKey
+                    this.sendKey(modKey, "down", "onExtraModUp(" extraMod ") 4")
+                    this.sendKey(modKey, "up", "onExtraModUp(" extraMod ") 5")
+                } else {
+                    this.sendKey(key, , "onExtraModUp(" extraMod ") 6")
+                }
+
+            }
+            this.keyQueue := []
+            while modsSent.length > 0 {
+                modKey := modsSent.pop()
+                if not GetKeyState(this.modMap[modKey].extraMod, "P") {
+                    this.sendKey(modKey, "up", "onExtraModUp(" extraMod ") 7")
+                }
+            }
+        }
+        if GetKeyState(this.extraModMap[extraMod].modKey) {
+            this.sendKey(this.extraModMap[extraMod].modKey, "up", "onExtraModUp(" extraMod ") 8")
+        }
+        this.extraModMap[extraMod].downTime := 0
+        this.extraModMap[extraMod].upTime := A_TickCount
+        this.extraModMap[extraMod].repeating := false
+        Critical "Off"
+    }
+
+    onOtherKey(otherKey, allowedExtraMods) {
+        Critical "On"
+        if not this.otherKeyMap.has(otherKey) {
+            this.otherKeyMap[otherKey] := {
+                handleUpEvent: true,
+                repeating: false
+            }
+        }
+
+        for extraMod, extraModProps in this.extraModMap {
+            extraModProps.repeating := false
+        }
+        for otherOtherKey, otherOtherKeyProps in this.otherKeyMap {
+            if otherOtherKey != otherKey {
+                otherOtherKeyProps.repeating := false
+            }
+        }
+
+        if this.isAnyModDown() {
+            this.sendKey(otherKey, , "onOtherKey(" otherKey ") 1")
+            this.otherKeyMap[otherKey].handleUpEvent := true
+        } else if this.otherKeyMap[otherKey].repeating or this.keyQueue.length > 0
+            and this.keyQueue[this.keyQueue.length] = otherKey
+        {
+            for key in this.keyQueue {
+                if ArrayHasElement(allowedExtraMods, key) {
+                    modKey := this.extraModMap[key].modKey
+                    if GetKeyState(key, "P") {
+                        if not GetKeyState(modKey)
+                            and A_TickCount - this.extraModMap[key].downTime >= this.extraModMap[key].modTimeout
+                        {
+                            this.sendKey(modKey, "down", "onOtherKey(" otherKey ") 2")
+                        } else {
+                            this.sendKey(key, , "onOtherKey(" otherKey ") 3")
+                        }
+                    } else {
+                        this.sendKey(key, , "onOtherKey(" otherKey ") 4")
+                    }
+                } else {
+                    this.sendKey(key, , "onOtherKey(" otherKey ") 5")
+                }
+            }
+            this.sendKey(otherKey, , "onOtherKey(" otherKey ") 6")
+            this.keyQueue := []
+            this.otherKeyMap[otherKey].repeating := true
+            this.otherKeyMap[otherKey].handleUpEvent := false
+        } else if this.isAnyKeyQueued(allowedExtraMods) {
+            this.keyQueue.push(otherKey)
+            this.logQueue("onOtherKey(" otherKey ") 7")
+            this.otherKeyMap[otherKey].handleUpEvent := true
+        } else {
+            for key in this.keyQueue {
+                this.sendKey(key, , "onOtherKey(" otherKey ") 8")
+            }
+            this.keyQueue := []
+            this.sendKey(otherKey, , "onOtherKey(" otherKey ") 9")
+            this.otherKeyMap[otherKey].handleUpEvent := false
+        }
+        Critical "Off"
+    }
+
+    onOtherKeyUp(otherKey, allowedExtraMods) {
+        Critical "On"
+        if not this.otherKeyMap.has(otherKey) {
+            this.otherKeyMap[otherKey] := {
+                handleUpEvent: false,
+                repeating: false
+            }
+        }
+        if this.otherKeyMap[otherKey].handleUpEvent {
+            modsSent := []
+            for key in this.keyQueue {
+                if ArrayHasElement(allowedExtraMods, key) {
+                    modKey := this.extraModMap[key].modKey
+                    if GetKeyState(key, "P") {
+                        if not GetKeyState(modKey)
+                            and A_TickCount - this.extraModMap[key].downTime >= this.extraModMap[key].modTimeout
+                        {
+                            this.sendKey(modKey, "down", "onOtherKeyUp(" otherKey ") 1")
+                            modsSent.push(modKey)
+                        } else {
+                            this.sendKey(key, , "onOtherKeyUp(" otherKey ") 2")
+                        }
+                    } else {
+                        this.sendKey(key, , "onOtherKeyUp(" otherKey ") 3")
+                    }
+                } else {
+                    this.sendKey(key, , "onOtherKeyUp(" otherKey ") 4")
+                }
+            }
+            while modsSent.length > 0 {
+                modKey := modsSent.pop()
+                if not GetKeyState(this.modMap[modKey].extraMod, "P") {
+                    this.sendKey(modKey, "up", "onOtherKeyUp(" otherKey ") 5")
+                }
+            }
+            this.keyQueue := []
+        }
+        this.otherKeyMap[otherKey].repeating := false
+        this.otherKeyMap[otherKey].handleUpEvent := true
+        Critical "Off"
     }
 }
