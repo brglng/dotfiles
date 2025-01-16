@@ -22,6 +22,7 @@ readline_history.txt
 /vim/sessions
 /config/nvim/sessions
 /config/nvim/autoload/plug.vim.old
+/config/nvim/lua/brglng/private_projects.lua
 doc/tags
 *.pyc
 
