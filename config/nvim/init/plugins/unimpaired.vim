@@ -1,1 +1,1 @@
-Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-unimpaired', VimOnly()

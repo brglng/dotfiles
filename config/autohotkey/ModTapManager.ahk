@@ -28,9 +28,9 @@ class ModTapManager {
             this.modMap[extraModProps.modKey].extraMod := extraMod
             this.extraModMap[extraMod] := {
                 modKey: extraModProps.modKey,
-                modTimeout: extraModProps.hasOwnProp("modTimeout") ? extraModProps.modTimeout : 50,
+                modTimeout: extraModProps.hasOwnProp("modTimeout") ? extraModProps.modTimeout : 0,
                 modTapTimeout: extraModProps.hasOwnProp("modTapTimeout") ? extraModProps.modTapTimeout : 200,
-                repeatTimeout: extraModProps.hasOwnProp("repeatTimeout") ? extraModProps.repeatTimeout : 70,
+                repeatTimeout: extraModProps.hasOwnProp("repeatTimeout") ? extraModProps.repeatTimeout : 80,
                 downTime: 0,
                 upTime: 0,
                 repeating: false,

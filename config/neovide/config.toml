@@ -1,7 +1,8 @@
 maximized = true
 tabs = false
+wsl = true
 
 [font]
 normal = ["Maple Mono NF CN", "Flog Symbols"]
 hinting = "none"
-size = 14.0
+size = 10.0

@@ -4,9 +4,9 @@ vnoremap <BS> d
 " Don't copy the contents of an overwritten selection.
 " vnoremap <silent> <expr> p match(mode()[0], '^\(V\|S\|\|\)') ? "\"_dP" : (col('.') > strlen(getline('.')) ? "\"_dp" : "\"_dP")
 
-noremap <silent> <C-s> :update<CR>
-vnoremap <silent> <C-s> <C-c>:update<CR>
-inoremap <silent> <C-s> <C-o>:update<CR>
+" noremap <silent> <C-s> :update<CR>
+" vnoremap <silent> <C-s> <C-c>:update<CR>
+" inoremap <silent> <C-s> <C-o>:update<CR>
 noremap <silent> <M-s> :update<CR>
 vnoremap <silent> <M-s> <C-c>:update<CR>
 inoremap <silent> <M-s> <C-o>:update<CR>
@@ -115,10 +115,6 @@ nnoremap <silent>   <M-Right>   <C-i>
 
 nnoremap <silent> <expr> Q tabpagenr('$') > 1 ? ":tabclose\<CR>" : ":confirm qall\<CR>"
 
-" buffer
-nnoremap <silent>   <C-Tab>     :bp<CR>
-nnoremap <silent>   <C-S-Tab>   :bn<CR>
-
 if has('nvim')
     nnoremap <RightMouse> <Nop>
     inoremap <RightMouse> <Nop>
@@ -134,6 +130,7 @@ if has('nvim')
     vnoremap <4-RightMouse> <Nop>
 endif
 
-" nnoremap ; :
+nnoremap <M-x> :
+inoremap <M-x> <C-o>:
 
 " vim: sw=4 ts=8 sts=4 et

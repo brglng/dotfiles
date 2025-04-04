@@ -2,6 +2,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     dependencies = {
         { "nushell/tree-sitter-nu", lazy = true, ft = 'nu' },
+        "RRethy/nvim-treesitter-endwise",
     },
     build = ":TSUpdate",
     event = { "BufReadPost", "BufWritePost", "BufNewFile", "VeryLazy" },
@@ -45,6 +46,7 @@ return {
             "markdown",
             "markdown_inline",
             "matlab",
+            "nickel",
             "ninja",
             "norg",
             "nu",
@@ -73,6 +75,9 @@ return {
             -- additional_vim_regex_highlighting = false
         },
         indent = {
+            enable = true,
+        },
+        endwise = {
             enable = true,
         }
     },

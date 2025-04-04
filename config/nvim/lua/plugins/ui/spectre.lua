@@ -9,8 +9,24 @@ return {
         live_update = false,
     },
     keys = {
-        { "<Leader>ss", mode = "n", function() require("spectre").toggle() end, desc = "Toggle Search UI" },
-        { "<Leader>sw", mode = "n", function() require("spectre").open_visual({ select_word = true }) end, desc = "Search Cursor Word" },
-        { "<Leader>sw", mode = "v", function() require("spectre").open_visual() end, desc = "Search Cursor Word" },
+        { "<Leader>ss", mode = "n", "<Cmd>SidebarToggle spectre<CR>", desc = "Toggle Search UI" },
+        {
+            "<Leader>sw",
+            mode = "n",
+            function()
+                require("spectre").open_visual({ select_word = true })
+                vim.fn.call("sidebar#close_side_except", { "bottom", "spectre" })
+            end,
+            desc = "Search Cursor Word"
+        },
+        {
+            "<Leader>sw",
+            mode = "v",
+            function()
+                require("spectre").open_visual()
+                vim.fn.call("sidebar#close_side_except", { "bottom", "spectre" })
+            end,
+            desc = "Search Cursor Word"
+        },
     }
 }

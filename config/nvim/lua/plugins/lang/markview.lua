@@ -3,7 +3,7 @@ return {
     enabled = false,
     dependencies = {
         "nvim-treesitter/nvim-treesitter",
-        "nvim-tree/nvim-web-devicons"
+        "echasnovski/mini.icons"
     },
     opts = {
         filetypes = { "markdown", "quarto", "rmd", "Avante" },

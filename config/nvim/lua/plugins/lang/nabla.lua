@@ -1,5 +1,6 @@
 return {
     "jbyuki/nabla.nvim",
+    enabled = false,
     keys = {
         {
             "<Leader>p",

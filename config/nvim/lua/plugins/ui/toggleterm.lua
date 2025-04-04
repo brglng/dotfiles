@@ -23,7 +23,7 @@ return {
             end
         end)(),
         winbar = {
-            enabled = true,
+            enabled = false,
             name_formatter = function(term)
                 return ' ' .. term.name
             end
@@ -44,5 +44,8 @@ return {
         end
 
         vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-    end
+    end,
+    keys = {
+        { "<Leader>wt", "<Cmd>SidebarToggle terminal<CR>", mode = "n", desc = "Terminal" },
+    }
 }

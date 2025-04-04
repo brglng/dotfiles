@@ -309,8 +309,4 @@ else
     set signcolumn=yes
 endif
 
-if has('nvim')
-    autocmd FileType python lua require("ibl").setup_buffer(0, {enabled = true})
-endif
-
 " vim: ts=8 sts=4 sw=4 et

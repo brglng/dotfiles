@@ -1,6 +1,6 @@
 return {
     "rose-pine/neovim",
     name = "rose-pine",
-    cond = false,
+    cond = true,
     priority = 1000
 }

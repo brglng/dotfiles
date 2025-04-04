@@ -1,5 +1,6 @@
 return {
     "RRethy/vim-illuminate",
+    enabled = true,
     event = "VeryLazy",
     opts = {
         filetypes_denylist = {

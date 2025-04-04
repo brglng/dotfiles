@@ -73,9 +73,7 @@ config.window_padding = {
 local function tab_title(tab_info)
     local pane = tab_info.active_pane
     local title = ""
-    if pane.domain_name == 'local' then
-    elseif pane.domain_name == 'Mux' then
-    elseif pane.domain_name ~= nil then
+    if pane.domain_name ~= config.default_domain then
         title = title .. pane.domain_name .. " "
     end
     if pane.current_working_dir.file_path ~= nil then
@@ -127,7 +125,7 @@ wezterm.on(
     function(tab, tabs, panes, config, hover, max_width)
         local title = tostring(tab.tab_index + 1) .. '  ' .. tab_title(tab)
 
-        local fg_separator_active, fg_separator_inactive, fg_active, fg_inactive
+        local fg_separator_active, fg_separator_inactive, fg_active, fg_inactive, bg_active
         if get_appearance():find('Dark') then
             fg_active = '#ece1d7'
             fg_inactive = '#c1a78e'
@@ -277,8 +275,10 @@ end
 -- Fonts
 
 config.allow_square_glyphs_to_overflow_width = "Always"
+-- config.freetype_interpreter_version = 40
 config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
-config.freetype_load_target = "Normal"
+config.freetype_load_target = "Light"
+config.freetype_render_target = "Light"
 config.font = wezterm.font_with_fallback {
     "Maple Mono NF CN",
     "Flog Symbols",
@@ -325,6 +325,9 @@ config.keys = {
     { mods = 'LEADER', key = '7', action = wezterm.action.ActivateTab(6), },
     { mods = 'LEADER', key = '8', action = wezterm.action.ActivateTab(7), },
     { mods = 'LEADER', key = '9', action = wezterm.action.ActivateTab(8), },
+    { mods = 'LEADER', key = '0', action = wezterm.action.ActivateTab(9), },
+    { mods = 'LEADER', key = '-', action = wezterm.action.ActivateTab(10), },
+    { mods = 'LEADER', key = '=', action = wezterm.action.ActivateTab(11), },
     { mods = 'ALT', key = '`', action = wezterm.action.SendKey { key = '`', mods = 'ALT' } },
     { mods = 'ALT', key = '1', action = wezterm.action.SendKey { key = '1', mods = 'ALT' } },
     { mods = 'ALT', key = '2', action = wezterm.action.SendKey { key = '2', mods = 'ALT' } },
@@ -354,7 +357,10 @@ config.keys = {
 -- Launcher
 
 config.unix_domains = {
-    { name = 'Mux' }
+    {
+        name = 'Mux',
+        -- local_echo_threshold_ms = 300
+    }
 }
 
 config.ssh_domains = {
@@ -370,8 +376,6 @@ config.ssh_domains = {
         multiplexing = 'None'
     }
 }
-
-config.default_domain = 'local'
 
 config.launch_menu = {}
 
@@ -389,79 +393,12 @@ if WINDOWS then
         username = 'brglng',
     })
 
-    table.insert(config.launch_menu, {
-        label = 'Windows Nushell',
-        domain = { DomainName = "local" },
-        args = { 'nu', '-i', '-l' },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Windows PowerShell',
-        domain = { DomainName = "local" },
-        args = { 'powershell.exe', '-NoLogo' },
-    })
-    table.insert(config.launch_menu, {
-        label = "Windows Command Prompt",
-        domain = { DomainName = "local", },
-        args = { 'cmd.exe' }
-    })
-    table.insert(config.launch_menu, {
-        label = "Bose Cygwin 6.0",
-        domain = { DomainName = "local" },
-        args = {
-            "cmd.exe",
-            "/c",
-            "C:/cygwin64/Cygwin.bat"
-        }
-    })
-    table.insert(config.launch_menu, {
-        label = 'SSH WSL Ubuntu',
-        domain = { DomainName = 'SSH WSL Ubuntu' }
-    })
-    table.insert(config.launch_menu, {
-        label = 'Developer Command Prompt for VS 2022 Community',
-        domain = { DomainName = "local" },
-        args = {
-            'cmd.exe',
-            '/k',
-            'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat',
-            '-startdir=none',
-            '-arch=x64',
-            '-host_arch=x64',
-        },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Developer Powershell for VS 2022 Community',
-        domain = { DomainName = "local" },
-        args = {
-            'powershell.exe',
-            '-NoExit',
-            '-Command',
-            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
-        },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Developer Command Prompt for VS 2022 Professional',
-        domain = { DomainName = "local" },
-        args = {
-            'cmd.exe',
-            '/k',
-            'C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/VsDevCmd.bat',
-            '-startdir=none',
-            '-arch=x64',
-            '-host_arch=x64',
-        },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Developer Powershell for VS 2022 Professional',
-        domain = { DomainName = "local" },
-        args = {
-            'powershell.exe',
-            '-NoExit',
-            '-Command',
-            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
-        },
-    })
+    config.default_domain = 'SSH WSL Mux Ubuntu'
 
+    table.insert(config.launch_menu, {
+        label = 'SSH WSL Mux Ubuntu',
+        domain = { DomainName = 'SSH WSL Mux Ubuntu' }
+    })
     table.insert(config.launch_menu, {
         label = 'Mux Windows Nushell',
         domain = { DomainName = "Mux" },
@@ -481,21 +418,15 @@ if WINDOWS then
         label = "Mux Bose Cygwin 6.0",
         domain = { DomainName = "Mux" },
         args = {
-            "cmd.exe",
-            "/c",
+            "cmd.exe", "/c",
             "C:/cygwin64/Cygwin.bat"
         }
-    })
-    table.insert(config.launch_menu, {
-        label = 'SSH WSL Mux Ubuntu',
-        domain = { DomainName = 'SSH WSL Mux Ubuntu' }
     })
     table.insert(config.launch_menu, {
         label = 'Mux Developer Command Prompt for VS 2022 Community',
         domain = { DomainName = "Mux" },
         args = {
-            'cmd.exe',
-            '/k',
+            'cmd.exe', '/k',
             'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat',
             '-startdir=none',
             '-arch=x64',
@@ -516,8 +447,7 @@ if WINDOWS then
         label = 'Mux Developer Command Prompt for VS 2022 Professional',
         domain = { DomainName = "Mux" },
         args = {
-            'cmd.exe',
-            '/k',
+            'cmd.exe', '/k',
             'C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/VsDevCmd.bat',
             '-startdir=none',
             '-arch=x64',
@@ -534,6 +464,74 @@ if WINDOWS then
             '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
         },
     })
+
+    table.insert(config.launch_menu, {
+        label = 'SSH WSL Ubuntu',
+        domain = { DomainName = 'SSH WSL Ubuntu' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'Windows Nushell',
+        domain = { DomainName = "local" },
+        args = { 'nu', '-i', '-l' },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Windows PowerShell',
+        domain = { DomainName = "local" },
+        args = { 'powershell.exe', '-NoLogo' },
+    })
+    table.insert(config.launch_menu, {
+        label = "Windows Command Prompt",
+        domain = { DomainName = "local", },
+        args = { 'cmd.exe' }
+    })
+    table.insert(config.launch_menu, {
+        label = "Bose Cygwin 6.0",
+        domain = { DomainName = "local" },
+        args = { "cmd.exe", "/c", "C:/cygwin64/Cygwin.bat" }
+    })
+    table.insert(config.launch_menu, {
+        label = 'Developer Command Prompt for VS 2022 Community',
+        domain = { DomainName = "local" },
+        args = {
+            'cmd.exe', '/k',
+            'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat',
+            '-startdir=none',
+            '-arch=x64',
+            '-host_arch=x64',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Developer Powershell for VS 2022 Community',
+        domain = { DomainName = "local" },
+        args = {
+            'powershell.exe',
+            '-NoExit',
+            '-Command',
+            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Developer Command Prompt for VS 2022 Professional',
+        domain = { DomainName = "local" },
+        args = {
+            'cmd.exe', '/k',
+            'C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/VsDevCmd.bat',
+            '-startdir=none',
+            '-arch=x64',
+            '-host_arch=x64',
+        },
+    })
+    table.insert(config.launch_menu, {
+        label = 'Developer Powershell for VS 2022 Professional',
+        domain = { DomainName = "local" },
+        args = {
+            'powershell.exe',
+            '-NoExit',
+            '-Command',
+            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+        },
+    })
+
     table.insert(config.launch_menu, {
         label = 'WSL Ubuntu',
         domain = { DomainName = 'WSL:Ubuntu' }
@@ -541,6 +539,8 @@ if WINDOWS then
 
     config.default_prog = { "nu.exe", "-i", "-l" }
 else
+    config.default_domain = 'Mux'
+
     if MAC then
         if #wezterm.glob('/opt/homebrew/bin/zsh') ~= 0 then
             config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else /opt/homebrew/bin/zsh -l -i; fi' }
@@ -553,12 +553,12 @@ else
         config.default_prog = { '/bin/bash', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then zsh -l -i; else bash -i; fi' }
     end
     table.insert(config.launch_menu, {
-        label = 'local',
-        domain = { DomainName = 'local' }
-    })
-    table.insert(config.launch_menu, {
         label = 'Mux',
         domain = { DomainName = 'Mux' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'local',
+        domain = { DomainName = 'local' }
     })
 end
 
@@ -571,7 +571,7 @@ table.insert(config.launch_menu, {
     domain = { DomainName = 'SSH VPS' }
 })
 
-config.initial_rows = 48
+config.initial_rows = 40
 config.initial_cols = 160
 
 -- wezterm.on("gui-attached", function()

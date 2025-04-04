@@ -23,7 +23,7 @@ SetWorkingDir A_ScriptDir
 
 DetectHiddenWindows true
 
-#include "KeyboardLayoutManager.ahk"
+#include "Imm32.ahk"
 #include "ModTapManager.ahk"
 
 global CapsLockDownTime := 0
@@ -47,7 +47,7 @@ CapsLock Up::{
 
 *CapsLock::return
 
-kl := KeyboardLayoutManager()
+imm := Imm32()
 
 modtap := ModTapManager(Map(
     "Space", { modKey: "LShift", repeatTimeout: 0 },
@@ -60,9 +60,9 @@ modtap := ModTapManager(Map(
 ), , false)
 
 $*LShift::modtap.onModKeyDown("LShift")
-$*LShift up::modtap.onModKeyUp("LShift", () => kl.toggleKeyboardLayout())
+$*LShift up::modtap.onModKeyUp("LShift", () => Send("{LWin Down}{Space}{LWin Up}"))
 $*RShift::modtap.onModKeyDown("RShift")
-$*RShift up::modtap.onModKeyUp("RShift", () => kl.toggleKeyboardLayout())
+$*RShift up::modtap.onModKeyUp("RShift", () => Send("{LWin Down}{Space}{LWin Up}"))
 $*LControl::modtap.onModKeyDown("LControl")
 $*LControl up::modtap.onModKeyUp("LControl")
 $*RControl::modtap.onModKeyDown("RControl")

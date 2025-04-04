@@ -2,7 +2,7 @@ return {
     "nvimdev/lspsaga.nvim",
     dependencies = {
         'nvim-treesitter/nvim-treesitter',
-        'nvim-tree/nvim-web-devicons'
+        'echasnovski/mini.icons'
     },
     event = "LspAttach",
     opts = {
@@ -33,8 +33,8 @@ return {
         }
     },
     keys = {
-        { "<Leader>cc", "<Cmd>Lspsaga incomping_calls<CR>", mode = "n", desc = "Callers" },
-        { "<Leader>cC", "<Cmd>Lspsaga outgoing_calls<CR>", mode = "n", desc = "Callees" },
+        -- { "<Leader>cc", "<Cmd>Lspsaga incomping_calls<CR>", mode = "n", desc = "Callers" },
+        -- { "<Leader>cC", "<Cmd>Lspsaga outgoing_calls<CR>", mode = "n", desc = "Callees" },
         { "<Leader>cD", "<Cmd>Lspsaga peek_definition<CR>", mode = "n", desc = "Peek Definitions" },
         { "<Leader>ch", "<Cmd>Lspsaga hover_doc<CR>", mode = "n", desc = "Hover Doc" },
         { "<Leader>co", "<Cmd>Lspsaga outline<CR>", mode = "n", desc = "Outline" },

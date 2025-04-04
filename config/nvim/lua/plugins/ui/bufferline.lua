@@ -1,13 +1,14 @@
 return {
     "akinsho/bufferline.nvim",
-    enabled = false,
+    enabled = true,
     version = "*",
     dependencies = {
-        "nvim-tree/nvim-web-devicons",
+        "echasnovski/mini.icons",
     },
     event =  "VeryLazy",
     opts = {
         options = {
+            max_name_length = 40,
             diagnostics = "nvim_lsp",
             show_tab_indicators = true,
             always_show_bufferline = true,
@@ -25,25 +26,25 @@ return {
                     filetype = "coc-explorer",
                     text = "CocExplorer",
                     text_align = "center",
-                    separator = false
+                    separator = true,
                 },
                 {
                     filetype = "vista",
                     text = "Vista",
                     text_align = "center",
-                    separator = false
+                    separator = true
                 },
                 {
                     filetype = "undotree",
                     text = "UndoTree",
                     text_align = "center",
-                    separator = false
+                    separator = true
                 },
                 {
                     filetype = "neo-tree",
                     text = "NeoTree",
                     text_align = "center",
-                    separator = false
+                    separator = true
                 }
             },
             -- separator_style = { '', '' }
@@ -64,9 +65,22 @@ return {
             duplicate_selected = { italic = false },
             duplicate_visible = { italic = false },
             duplicate = { italic = false },
-    	    pick_selected = { italic = false },
-    	    pick_visible = { italic = false },
-    	    pick = { italic = false },
+
+    	    pick_selected = {
+    	        fg = "red",
+    	        bold = true,
+    	        italic = false
+    	    },
+    	    pick_visible = {
+    	        fg = "red",
+    	        bold = true,
+    	        italic = false
+    	    },
+    	    pick = {
+    	        fg = "red",
+    	        bold = true,
+    	        italic = false
+    	    },
         }
     },
     config = function(_, opts)
@@ -74,5 +88,14 @@ return {
         if vim.o.ft == "alpha" then
             vim.o.showtabline = 0
         end
-    end
+    end,
+    keys = {
+        { '[b', mode = 'n', "<Cmd>BufferLineCyclePrev<CR>", desc = 'Previous Buffer' },
+        { ']b', mode = 'n', "<Cmd>BufferLineCycleNext<CR>", desc = 'Next Buffer' },
+        -- { "<Leader>b", mode = "n",  desc = "Buffer" },
+        -- { "<Leader>bb", mode = "n",  "<Cmd>BufferLinePick<CR>", desc = "Buffer Pick" },
+        -- { "<Leader>bd", mode = "n",  "<Cmd>BufferLinePickClose<CR>", desc = "Buffer Pick Close" },
+        -- { "<Leader>bh", mode = "n",  "<Cmd>BufferLineMovePrev<CR>", desc = "Buffer Move Left" },
+        -- { "<Leader>bl", mode = "n",  "<Cmd>BufferLineMoveNext<CR>", desc = "Buffer Move Right" },
+    }
 }

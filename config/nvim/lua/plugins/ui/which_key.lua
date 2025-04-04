@@ -70,7 +70,9 @@ return {
         })
 
         require("which-key").add {
+            { "<Leader>b", group = "Buffer" },
             { "<Leader>c", group = "Code" },
+            { "<Leader>cc", group = "Call Hierarchy" },
             { "<Leader>d", group = "Debug" },
             { "<Leader>f", group = "Fuzzy Finder" },
             { "<Leader>g", group = "Git" },

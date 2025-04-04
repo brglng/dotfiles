@@ -6,5 +6,6 @@ return {
         "github/copilot.vim"
     },
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
+    enabled = true,
     config = true
 }

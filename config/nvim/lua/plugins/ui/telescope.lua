@@ -12,41 +12,54 @@ return {
         require('telescope').load_extension('asynctasks')
         require('telescope').load_extension('fzf')
 
-        -- require('telescope.pickers.layout_strategies').brglng = function(picker, columns, lines, layout_config)
-        --     local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
-        --     config.prompt.width = config.results.width + 1
-        --     config.results.height = config.results.height + 1
-        --     config.results.width = config.results.width + 1
-        --     config.results.line = config.results.line - 1
-        --     return config
-        -- end
-        -- require('telescope.pickers.layout_strategies').brglng_nopreview = function(picker, columns, lines, layout_config)
-        --     local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
-        --     config.results.height = config.results.height + 1
-        --     config.results.line = config.results.line - 1
-        --     return config
-        -- end
+        require('telescope.pickers.layout_strategies').brglng_term = function(picker, columns, lines, layout_config)
+            local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
+            config.prompt.width = config.results.width + 1
+            config.results.height = config.results.height + 1
+            config.results.width = config.results.width + 1
+            config.results.line = config.results.line - 1
+            return config
+        end
+        require('telescope.pickers.layout_strategies').brglng_term_nopreview = function(picker, columns, lines, layout_config)
+            local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
+            config.results.height = config.results.height + 1
+            config.results.line = config.results.line - 1
+            return config
+        end
 
         require("telescope").setup {
             defaults = {
                 sorting_strategy = "ascending",
                 -- layout_strategy = 'brglng',
+                layout_strategy = (function()
+                    if not vim.g.neovide then
+                        return 'brglng_term'
+                    end
+                end)(),
                 layout_config = {
                     prompt_position = "top",
                     width = 0.62,
                     height = 0.62,
                     preview_width = 0.5
                 },
-                -- border = {
-                --     prompt = { 1, 1, 1, 1 },
-                --     results = { 1, 1, 1, 1 },
-                --     preview = { 1, 1, 1, 1 },
-                -- },
-                -- borderchars = {
-                --     prompt = { "─", "│", "─", "│", "╭", "─", "─", "├" },
-                --     results = { "─", "│", "─", "│", "├", "┤", "┴", "╰" },
-                --     preview = { "─", "│", "─", "│", "┬", "╮", "╯", "┴" },
-                -- },
+                border = (function()
+                    if not vim.g.neovide then
+                        return {
+                            prompt = { 1, 1, 1, 1 },
+                            results = { 1, 1, 1, 1 },
+                            preview = { 1, 1, 1, 1 },
+                        }
+                    end
+                end)(),
+                borderchars = (function()
+                    if not vim.g.neovide then
+                        return {
+                            prompt = { "─", "│", "─", "│", "╭", "─", "─", "├" },
+                            results = { "─", "│", "─", "│", "├", "┤", "┴", "╰" },
+                            preview = { "─", "│", "─", "│", "┬", "╮", "╯", "┴" },
+                        }
+                    end
+                end)(),
                 results_title = false,
                 -- borderchars = { "", "", "", "", "", "", "", "" },
                 -- borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
@@ -56,14 +69,14 @@ return {
                 mappings = {
                     i = {
                         ["<Esc>"] = actions.close,
-                        ["<C-o>"] = { "<Esc>", type = "command" },
-                        ["<TAB>"] = actions.move_selection_next,
-                        ["<S-TAB>"] = actions.move_selection_previous
+                        ["<TAB>"] = { "<Esc>", type = "command" },
+                        -- ["<TAB>"] = actions.move_selection_next,
+                        -- ["<S-TAB>"] = actions.move_selection_previous
                     },
                     n = {
                         ["<Space>"] = actions.toggle_selection,
-                        ["<TAB>"] = actions.move_selection_next,
-                        ["<S-TAB>"] = actions.move_selection_previous
+                        -- ["<TAB>"] = actions.move_selection_next,
+                        -- ["<S-TAB>"] = actions.move_selection_previous
                     }
                 }
             },
@@ -106,20 +119,20 @@ return {
                         -- width = 0.62
                     },
                     -- hidden = true,
-                    -- find_command = {
-                    --     "fd",
-                    --     "-H",
-                    --     "-I",
-                    --     "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder}",
-                    --     "--strip-cwd-prefix",
-                    -- },
                     find_command = {
-                        "bfind",
+                        "fd",
                         "-H",
                         "-I",
-                        ".DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder",
-                        "--strip-cwd-prefix"
+                        "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder}",
+                        "--strip-cwd-prefix",
                     },
+                    -- find_command = {
+                    --     "bfind",
+                    --     "-H",
+                    --     "-I",
+                    --     ".DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder",
+                    --     "--strip-cwd-prefix"
+                    -- },
                 },
                 help_tags = {
                     mappings = {
@@ -194,47 +207,58 @@ return {
                 preview_bg = colorutil.add_value(NormalFloat.bg, 0.05)
             end
             preview_title_bg = colorutil.transparency(NormalFloat.fg, preview_bg, 0.6)
-            vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
-                fg = prompt_fg,
-                bg = prompt_bg
-            })
-            vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
-                fg = prompt_bg,
-                bg = prompt_bg
-            })
             vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
                 fg = Normal.bg,
                 bg = DiagnosticOk.fg
             })
-            vim.api.nvim_set_hl(0, "TelescopeNormal", {
-                fg = NormalFloat.fg,
-                bg = NormalFloat.bg
-            })
-            vim.api.nvim_set_hl(0, "TelescopeBorder", {
-                fg = NormalFloat.bg,
-                bg = NormalFloat.bg
+            vim.api.nvim_set_hl(0, "TelescopePreviewTitle", {
+                fg = Normal.bg,
+                bg = DiagnosticInfo.fg
             })
             vim.api.nvim_set_hl(0, "TelescopeSelection", {
                 fg = PmenuSel.fg,
                 bg = PmenuSel.bg
             })
             vim.api.nvim_set_hl(0, "TelescopeMatching", { link = "Search" })
-            vim.api.nvim_set_hl(0, "TelescopePreviewNormal", {
-                fg = NormalFloat.fg,
-                bg = preview_bg
-            })
-            vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
-                fg = preview_bg,
-                bg = preview_bg
-            })
-            vim.api.nvim_set_hl(0, "TelescopePreviewTitle", {
-                fg = Normal.bg,
-                bg = DiagnosticInfo.fg
-            })
+            if vim.g.neovide then
+                vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
+                    fg = prompt_fg,
+                    bg = prompt_bg
+                })
+                vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
+                    fg = prompt_bg,
+                    bg = prompt_bg
+                })
+                vim.api.nvim_set_hl(0, "TelescopeNormal", {
+                    fg = NormalFloat.fg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, "TelescopeResultsBorder", {
+                    fg = NormalFloat.bg,
+                    bg = NormalFloat.bg
+                })
+                vim.api.nvim_set_hl(0, "TelescopePreviewNormal", {
+                    fg = NormalFloat.fg,
+                    bg = preview_bg
+                })
+                vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
+                    fg = preview_bg,
+                    bg = preview_bg
+                })
+            else
+                vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
+                    fg = FloatBorder.fg,
+                })
+                vim.api.nvim_set_hl(0, "TelescopeResultsBorder", {
+                    fg = FloatBorder.fg,
+                })
+                vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
+                    fg = FloatBorder.fg,
+                })
+            end
         end
 
         set_telescope_colors()
-
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "*",
             callback = set_telescope_colors,
@@ -245,10 +269,9 @@ return {
         })
     end,
     keys = {
-        -- { '<Leader>b', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
+        { '<Leader>b', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
         { '<Leader>fb', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
         { '<Leader>f;', mode = 'n', function() require('telescope.builtin').commands() end, desc = 'Commands' },
-        { '<M-x>', mode = 'i', function() require('telescope.builtin').commands() end, desc = 'Commands' },
         { '<Leader>fc', mode = 'n', function() require('telescope.builtin').colorscheme() end, desc = 'Color Schemes' },
         { '<Leader>fd', mode = 'n', function() require('telescope').extensions.file_browser.file_browser() end, desc = 'Browser' },
         { '<Leader>ff', mode = 'n', function() require('telescope.builtin').find_files() end, desc = 'Files' },

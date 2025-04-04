@@ -2,6 +2,7 @@ return {
     "nvim-neorg/neorg",
     dependencies = {
         "3rd/image.nvim",
+        -- "folke/snacks.nvim",
     },
     lazy = true, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
     version = "*", -- Pin Neorg to the latest stable release
@@ -45,7 +46,7 @@ return {
         }
     },
     config = function(_, opts)
-        if vim.g.neovide then
+        if vim.g.neovide or vim.uv.os_uname().sysname == "Windows_NT" then
             opts.load["core.defaults"].config.disable = {
                 "core.integrations.image",
                 "core.latex.renderer"
@@ -54,11 +55,8 @@ return {
             opts.load["core.integrations.image"] = {}
             opts.load["core.latex.renderer"] = {
                 config = {
-                    conceal = false,
-                    -- debounce_ms = 30,
-                    -- dpi = 720,
+                    conceal = true,
                     render_on_enter = true,
-                    scale = 1
                 }
             }
         end

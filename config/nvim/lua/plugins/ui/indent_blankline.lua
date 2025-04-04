@@ -1,5 +1,6 @@
 return {
     "lukas-reineke/indent-blankline.nvim",
+    enabled = true,
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     main = "ibl",
     opts = {
@@ -15,6 +16,17 @@ return {
             filetypes = { "startify" }
         }
     },
+    config = function(_, opts)
+        require("ibl").setup(opts)
+        vim.api.nvim_create_autocmd("Filetype", {
+            pattern = "python",
+            callback = function()
+                require("indent_blankline").setup_buffer(0, {
+                    enabled = true
+                })
+            end
+        })
+    end,
     keys = {
         {
             "<Leader>i",

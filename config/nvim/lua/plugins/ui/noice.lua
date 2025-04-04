@@ -5,7 +5,8 @@ return {
         "MunifTanjim/nui.nvim",
         "rcarriga/nvim-notify",
     },
-    event = "VeryLazy",
+    -- event = "VeryLazy",
+    lazy = false,
     opts = {
         cmdline = {
             enabled = true,
@@ -25,19 +26,22 @@ return {
         },
         lsp = {
             progress = {
-                enabled = true,
+                enabled = false,
                 view = "lsp_progress"
             },
             -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-            -- override = {
-            --     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-            --     ["vim.lsp.util.stylize_markdown"] = true,
-            --     ["cmp.entry.get_documentation"] = true,
-            -- },
+            override = {
+                ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
+                ["vim.lsp.util.stylize_markdown"] = false,
+                ["cmp.entry.get_documentation"] = false,
+            },
+            hover = {
+                enabled = false,
+            },
             signature = {
                 enabled = false,
             },
-            hover = {
+            message = {
                 enabled = false,
             }
         },
@@ -236,6 +240,46 @@ return {
                     event = "msg_show",
                     kind = "",
                     find = "%d+ lines indented"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "written"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "已写入"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "yanked"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = "<ed"
+                },
+                opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "msg_show",
+                    kind = "",
+                    find = ">ed"
                 },
                 opts = { skip = true }
             },

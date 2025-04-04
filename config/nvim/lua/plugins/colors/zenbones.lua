@@ -1,6 +1,6 @@
 return {
     "mcchrish/zenbones.nvim",
-    cond = false,
+    cond = true,
     priority = 1000,
     dependencies = {
         "rktjmp/lush.nvim"

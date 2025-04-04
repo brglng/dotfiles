@@ -6,7 +6,7 @@ return {
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     cmd = { "TodoTrouble", "TodoTelescope" },
     keys = {
-        { "<Leader>wt", "<Cmd>TodoTrouble<CR>", desc = "TODO" }
+        { "<Leader>cT", "<Cmd>SidebarToggle trouble_todo<CR>", desc = "TODO" }
     },
     opts = {},
 }

@@ -1,6 +1,6 @@
 return {
     "ellisonleao/gruvbox.nvim",
-    cond = false,
+    cond = true,
     priority = 1000,
     opts = {
         contrast = "hard",
@@ -25,11 +25,11 @@ return {
             SignColumn = { bg = "NONE" },
             FoldColumn = { bg = "NONE" },
             WinBarNC = { bg = "NONE" },
-            IncSearch = {
-                fg = "black",
-                bg = "darkorange",
-                reverse = false
-            }
+            -- IncSearch = {
+            --     fg = "black",
+            --     bg = "darkorange",
+            --     reverse = false
+            -- }
         }
     }
 }

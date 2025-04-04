@@ -7,14 +7,16 @@ if vim.g.neovide then
     if vim.uv.os_uname().sysname == "Windows_NT" then
         vim.g.neovide_scale_factor = 10.0 / 14.0
     end
-    vim.o.linespace = -1
+    -- vim.o.linespace = -0
     vim.g.neovide_hide_mouse_when_typing = true
-    -- vim.g.experimental_layer_grouping = true
+    vim.g.experimental_layer_grouping = true
     vim.g.neovide_input_macos_option_key_is_meta = 'both'
-    -- vim.g.neovide_floating_corner_radius = 0.1
+    -- vim.g.neovide_floating_corner_radius = 0.2
+    -- vim.g.neovide_refresh_rate_idle = 60
+    -- vim.g.neovide_no_idle = true
     -- vim.g.neovide_cursor_trail_size = 0.2
     vim.g.neovide_cursor_vfx_mode = "torpedo"
-    vim.g.neovide_cursor_vfx_particle_density = 20.0
+    -- vim.g.neovide_cursor_vfx_particle_density = 20.0
 end
 
 vim.filetype.add {
@@ -42,12 +44,6 @@ vim.api.nvim_create_autocmd({"FileType"}, {
     pattern = { "markdown" },
     command = "set shiftwidth=2 softtabstop=4 expandtab"
 })
-
-local signs = { Error = " ", Warn = " ", Info = " ", Hint = "󰌶 " }
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then

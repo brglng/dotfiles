@@ -1,10 +1,10 @@
 return {
     "goolord/alpha-nvim",
     enabled = true,
-    event = "VimEnter",
+    -- event = "VimEnter",
+    lazy = false,
     dependencies = {
-        "coffebar/neovim-project",
-        "nvim-tree/nvim-web-devicons",
+        "echasnovski/mini.icons",
         "nvim-lua/plenary.nvim"
     },
     config = function()
@@ -18,7 +18,7 @@ return {
         local function utf8_len(s, pos)
             local byte = string.byte(s, pos)
             if not byte then
-            return nil
+                return nil
             end
             return (byte < 0x80 and 1) or (byte < 0xE0 and 2) or (byte < 0xF0 and 3) or (byte < 0xF8 and 4) or 1
         end
@@ -80,7 +80,7 @@ return {
 
             local function on_press()
                 local key = vim.api.nvim_replace_termcodes(keybind .. "<Ignore>", true, false, true)
-                vim.api.nvim_feedkeys(key, "t", false)
+                vim.api.nvim_feedkeys(key, "n", false)
             end
 
             return {
@@ -145,43 +145,69 @@ return {
             return file_button_el
         end
 
-        --- @param next_key function
-        local function projects(next_key)
-            local path = require("neovim-project.utils.path")
-            local history = require("neovim-project.utils.history")
-            local project = require("neovim-project.project")
-            local results = history.get_recent_projects()
-            results = path.fix_symlinks_for_history(results)
-            -- Reverse results
-            for i = 1, math.floor(#results / 2) do
-                results[i], results[#results - i + 1] = results[#results - i + 1], results[i]
+        local projects_loaded = false
+        local projects_tbl = {
+            {
+                type = "text",
+                val = "(Loading projects...)",
+                opts = {
+                    position = "center",
+                    hl = "Comment",
+                }
+            }
+        }
+        local function projects()
+            local keys = {
+                "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"
+            }
+            local next_key_idx = 1
+            local function next_key()
+                local k = keys[next_key_idx]
+                next_key_idx = next_key_idx + 1
+                return k
             end
-            local tbl = {}
-            for _, proj in ipairs(results) do
-                local short_proj
-                if utf8_len(proj) > math.min(vim.fn.winwidth(0), 160) - 24 then
-                    short_proj = "  …" .. string.sub(proj, #proj - math.min(vim.fn.winwidth(0), 160) - 23, #proj)
-                else
-                    short_proj = "  " .. proj
-                end
-                local sc = next_key()
-                table.insert(tbl, {
-                    type = "button",
-                    val = short_proj,
-                    on_press = function() project.switch_project(proj) end,
-                    opts = {
-                        keymap = { "n", sc, function() project.switch_project(proj) end },
-                        position = "center",
-                        shortcut = sc,
-                        align_shortcut = "right",
-                        hl = { { "Directory", 0, 1 }, { "Normal", 1, -1 } },
-                        hl_shortcut = "Number",
-                        cursor = 3,
-                        width = math.min(vim.fn.winwidth(0), 160) - 18,
-                    }
-                })
+            if not projects_loaded then
+                projects_loaded = true
+                -- vim.defer_fn(function()
+                    local path = require("neovim-project.utils.path")
+                    local history = require("neovim-project.utils.history")
+                    local project = require("neovim-project.project")
+                    local results = history.get_recent_projects()
+                    -- Reverse results
+                    for i = 1, math.floor(#results / 2) do
+                        results[i], results[#results - i + 1] = results[#results - i + 1], results[i]
+                    end
+                    results = vim.list_slice(results, 1, math.min(10, #results))
+                    results = path.fix_symlinks_for_history(results)
+                    projects_tbl = {}
+                    for _, proj in ipairs(results) do
+                        local short_proj
+                        if utf8_len(proj) > math.min(vim.fn.winwidth(0), 160) - 24 then
+                            short_proj = "  …" .. string.sub(proj, #proj - math.min(vim.fn.winwidth(0), 160) - 23, #proj)
+                        else
+                            short_proj = "  " .. proj
+                        end
+                        local sc = next_key()
+                        table.insert(projects_tbl, {
+                            type = "button",
+                            val = short_proj,
+                            on_press = function() project.switch_project(proj) end,
+                            opts = {
+                                keymap = { "n", sc, function() project.switch_project(proj) end },
+                                position = "center",
+                                shortcut = sc,
+                                align_shortcut = "right",
+                                hl = { { "Directory", 0, 1 }, { "Normal", 1, -1 } },
+                                hl_shortcut = "Number",
+                                cursor = 3,
+                                width = math.min(vim.fn.winwidth(0), 160) - 18,
+                            }
+                        })
+                    end
+                    -- vim.schedule(function () require("alpha").redraw() end)
+                -- end, 300)
             end
-            return tbl
+            return projects_tbl
         end
 
         local default_mru_ignore = { "gitcommit" }
@@ -236,8 +262,7 @@ return {
 
         local function projects_and_mru()
             local keys = {
-                "a", "s", "d", "h", "l", ";", "'", "w", "r", "y", "i", "o", "[", "]", "\\", "z", "x", "c", "v", "n", "m", ",", ".", "/",
-                "A", "S", "D", "H", "L", "\"", "W", "R", "Y", "I", "O", "{", "}", "|", "Z", "X", "C", "V", "N", "M", "<", ">", "?",
+                "a", "b", "c", "d", "e", "f", "g", "h", "i", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
             }
             local next_key_idx = 1
             local function next_key()
@@ -247,13 +272,14 @@ return {
             end
             return {
                 { type = "text", val = "Recent Projects", opts = { hl = "Title" } },
+                { type = "padding", val = 1 },
                 {
                     type = "group",
                     val = function()
-                        return projects(next_key)
+                        return projects()
                     end
                 },
-                { type = "padding", val = 2 },
+                { type = "padding", val = 1 },
                 {
                     type = "text",
                     val = function()
@@ -272,10 +298,10 @@ return {
                         return mru(next_key, vim.fn.getcwd(), 10)
                     end
                 },
-                { type = "padding", val = 2 },
+                { type = "padding", val = 1 },
                 {
                     type = "text",
-                    val = "Recent Files in All",
+                    val = "All Recent Files",
                     opts = {
                         hl = "Title"
                     }
@@ -363,7 +389,6 @@ return {
                             "",
                             "Startuptime: " .. stats.startuptime .. " ms",
                             "Plugins: " .. stats.loaded .. " loaded / " .. stats.count .. " installed",
-                            "",
                         }
                     end,
                     opts = {
@@ -379,7 +404,7 @@ return {
                         hl = "String"
                     }
                 },
-                { type = "padding", val = 2 },
+                { type = "padding", val = 1 },
                 {
                     type = "group",
                     val = {
@@ -390,8 +415,8 @@ return {
                                 vim.cmd("enew")
                             end,
                             opts = {
-                                shortcut = "e",
-                                keymap = { "n", "e", "<Cmd>enew<CR>", { noremap = true, silent = true, nowait = true } },
+                                shortcut = "N",
+                                keymap = { "n", "N", "<Cmd>enew<CR>", { noremap = true, silent = true, nowait = true } },
                             }
                         },
                         {
@@ -401,8 +426,8 @@ return {
                                 require("telescope.builtin").find_files()
                             end,
                             opts = {
-                                shortcut = "f",
-                                keymap  = { "n", "f", function() require("telescope.builtin").find_files() end, { noremap = true, silent = true, nowait = true } },
+                                shortcut = "F",
+                                keymap  = { "n", "F", function() require("telescope.builtin").find_files() end, { noremap = true, silent = true, nowait = true } },
                             }
                         },
                         {
@@ -412,8 +437,8 @@ return {
                                 require("telescope").extensions.file_browser.file_browser()
                             end,
                             opts = {
-                                shortcut = "b",
-                                keymap = { "n", "b", function() require("telescope").extensions.file_browser.file_browser() end, { noremap = true, silent = true, nowait = true  } },
+                                shortcut = "B",
+                                keymap = { "n", "B", function() require("telescope").extensions.file_browser.file_browser() end, { noremap = true, silent = true, nowait = true  } },
                             }
                         },
                         {
@@ -423,8 +448,8 @@ return {
                                 vim.cmd("NeovimProjectDiscover")
                             end,
                             opts = {
-                                shortcut = "p",
-                                keymap = { "n", "p", "<Cmd>NeovimProjectDiscover<CR>", { noremap = true, silent = true, nowait = true  } },
+                                shortcut = "P",
+                                keymap = { "n", "P", "<Cmd>NeovimProjectDiscover<CR>", { noremap = true, silent = true, nowait = true  } },
                             }
                         },
                         {
@@ -434,21 +459,21 @@ return {
                                 require("lazy").update()
                             end,
                             opts = {
-                                shortcut = "u",
-                                keymap = { "n", "u", "<Cmd>Lazy update<CR>", { noremap = true, silent = true, nowait = true } },
+                                shortcut = "U",
+                                keymap = { "n", "U", "<Cmd>Lazy update<CR>", { noremap = true, silent = true, nowait = true } },
                             }
                         },
                         {
                             type = "button",
                             -- val = "  Plugin Profile",
-                            -- val = "  Plugin Profile",
-                            val = "  Plugin Profile",
+                            val = "  Plugin Profile",
+                            -- val = "  Plugin Profile",
                             on_press = function()
                                 require("lazy").profile()
                             end,
                             opts = {
-                                shortcut = "t",
-                                keymap = { "n", "t", "<Cmd>Lazy profile<CR>", { noremap = true, silent = true, nowait = true } },
+                                shortcut = "T",
+                                keymap = { "n", "T", "<Cmd>Lazy profile<CR>", { noremap = true, silent = true, nowait = true } },
                             }
                         },
                         {
@@ -458,8 +483,8 @@ return {
                                 vim.cmd("qa")
                             end,
                             opts = {
-                                shortcut = "q",
-                                keymap = { "n", "q", "<Cmd>qa<CR>", { noremap = true, silent = true, nowait = true } },
+                                shortcut = "Q",
+                                keymap = { "n", "Q", "<Cmd>qa<CR>", { noremap = true, silent = true, nowait = true } },
                             }
                         }
                     },
@@ -475,7 +500,6 @@ return {
                         }
                     }
                 },
-                { type = "padding", val = 1 },
                 { type = "group", val = projects_and_mru, opts = { inherit = { position = "center" } } },
                 { type = "padding", val = 1 },
             },

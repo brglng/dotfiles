@@ -14,25 +14,14 @@ return {
         "petertriho/cmp-git",
         "davidsierradz/cmp-conventionalcommits",
         "FelipeLema/cmp-async-path",
-        "onsails/lspkind.nvim",
-        -- "Exafunction/codeium.nvim",
+        "xzbdmw/colorful-menu.nvim",
         "MeanderingProgrammer/render-markdown.nvim",
     },
     enabled = true,
     config = function ()
         local cmp = require('cmp')
-        local types = require("cmp.types")
-        local str = require("cmp.utils.str")
-        local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-
+        -- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
         local luasnip = require('luasnip')
-
-        local lspkind = require('lspkind')
-        lspkind.init {
-            -- symbol_map = {
-            --     Codeium = ""
-            -- },
-        }
 
         local has_words_before = function()
             unpack = unpack or table.unpack
@@ -40,100 +29,79 @@ return {
             return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
         end
 
-        local window_bordered = cmp.config.window.bordered()
-        window_bordered.border = 'rounded'
-        -- window_bordered.border = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
-        window_bordered.col_offset = -4
-        window_bordered.side_padding = 1
-        -- window_bordered.winhighlight = 'Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None'
-        -- window_bordered.winblend = 20
-
-        local function set_cmp_colors()
-            local colorutil = require('brglng.colorutil')
-            local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
-            local Comment = vim.api.nvim_get_hl(0, { name = 'Comment', link = false })
-            local Pmenu = vim.api.nvim_get_hl(0, { name = 'Pmenu', link = false })
-            local PmenuSel = vim.api.nvim_get_hl(0, { name = 'PmenuSel', link = false })
-            local bg, sel_bg
-            if vim.o.background == 'dark' then
-                bg = colorutil.add_value(Pmenu.bg, 0.02)
-                sel_bg = colorutil.add_value(PmenuSel.bg, 0.02)
-            else
-                bg = colorutil.reduce_value(Pmenu.bg, 0.02)
-                sel_bg = colorutil.reduce_value(PmenuSel.bg, 0.02)
-            end
-            -- vim.api.nvim_set_hl(0, 'NormalFloat', { fg = NormalFloat.fg, bg = NormalFloat.bg })
-            vim.api.nvim_set_hl(0, 'CmpItemMenu', { fg = Comment.fg, bg = nil })
-            -- vim.api.nvim_set_hl(0, 'Pmenu', { bg = bg })
-            -- vim.api.nvim_set_hl(0, 'PmenuSel', { bg = sel_bg })
-            -- vim.api.nvim_set_hl(0, 'PmenuSbar', { bg = bg })
-        end
-        vim.api.nvim_create_autocmd('ColorScheme', { pattern = '*', callback = set_cmp_colors })
-        vim.api.nvim_create_autocmd('OptionSet', { pattern = 'background', callback = set_cmp_colors })
-        set_cmp_colors()
-
         cmp.setup {
-            window = (function()
-                if vim.g.neovide then
-                    return {
-                        completion = {
-                            col_offset = -3,
-                            side_padding = 1,
-                        },
-                    }
-                else
-                    return {
-                        completion = window_bordered,
-                        documentation = window_bordered,
-                    }
-                end
-            end)(),
+            preselect = cmp.PreselectMode.None,
+            window = {
+                completion = cmp.config.window.bordered({
+                    border = (function()
+                        if vim.g.neovide then
+                            return "none"
+                            -- return { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
+                        else
+                            return "rounded"
+                        end
+                    end)(),
+                    col_offset = (function() if vim.g.neovide then return -3 else return -4 end end)(),
+                    side_padding = 1,
+                    winhighlight = 'Normal:CmpNormal,NormalFloat:CmpNormal,FloatBorder:CmpBorder,CursorLine:PmenuSel',
+                }),
+                documentation = cmp.config.window.bordered({
+                    border = (function()
+                        if vim.g.neovide then
+                            -- return "none"
+                            return { '', '', '', ' ', '', '', '', ' ' }
+                        else
+                            return "rounded"
+                        end
+                    end)(),
+                    side_padding = 1,
+                    winhighlight = 'Normal:CmpDocNormal,NormalFloat:CmpDocNormal,FloatBorder:CmpDocBorder',
+                })
+            },
             -- view = {
             --     entries = {
             --         follow_cursor = true,
             --     }
             -- },
+
             formatting = {
                 fields = {
                     cmp.ItemField.Kind,
                     cmp.ItemField.Abbr,
                     cmp.ItemField.Menu,
                 },
-                format = lspkind.cmp_format({
-                    mode = "symbol_text",
-                    maxwidth = 50,
-                    ellipsis_char = '…',
-                    before = function(entry, vim_item)
-                        local kind = require("lspkind").cmp_format({
-                            mode = "symbol_text",
-                            maxwidth = 50,
-                            ellipsis_char = '…',
-                            show_labelDetails = true
-                        })(entry, vim_item)
-                        -- if string.sub(vim.fn.mode(), 1, 1) == "c" then
-                        --     cmp.setup({ window = { completion = { side_padding = 0, col_offset = -3 } } })
-                        -- else
-                        --     cmp.setup({ window = { completion = { side_padding = 0, col_offset = -3 } } })
-                        -- end
-                        local strings = vim.split(kind.kind, "%s", { trimempty = true })
-                        kind.kind = vim.trim(strings[1]) or ""
-                        if string.sub(kind.abbr or "", -1) == "~" and (kind.menu or "") ~= "" then
-                            if string.sub(kind.menu or "", 1)== '(' then
-                                kind.abbr = string.sub(vim.trim(kind.abbr or ""), 1, -2) .. vim.trim(kind.menu or "")
-                            else
-                                kind.abbr = vim.trim(kind.abbr or "") .. " " .. vim.trim(kind.menu or "")
-                            end
-                        else
-                            if vim.trim(kind.abbr or "") == vim.trim(kind.menu or "") then
-                                kind.abbr = vim.trim(kind.abbr or "")
-                            else
-                                kind.abbr = vim.trim(kind.abbr or "") .. " " ..  vim.trim(kind.menu or "")
-                            end
-                        end
-                        kind.menu = vim.trim(strings[2]) or ""
-                        return kind
+                format = function(entry, vim_item)
+                    local icon, icon_hl, _ = MiniIcons.get('lsp', vim_item.kind)
+                    -- if string.sub(vim_item.abbr or "", -1) == "~" and (vim_item.menu or "") ~= "" then
+                    --     if string.sub(vim_item.menu or "", 1)== '(' then
+                    --         vim_item.abbr = string.sub(vim.trim(vim_item.abbr or ""), 1, -2) .. vim.trim(vim_item.menu or "")
+                    --     else
+                    --         vim_item.abbr = vim.trim(vim_item.abbr or "") .. " " .. vim.trim(vim_item.menu or "")
+                    --     end
+                    -- else
+                    --     if vim.trim(vim_item.abbr or "") == vim.trim(vim_item.menu or "") then
+                    --         vim_item.abbr = vim.trim(vim_item.abbr or "")
+                    --     else
+                    --         vim_item.abbr = vim.trim(vim_item.abbr or "") .. " " ..  vim.trim(vim_item.menu or "")
+                    --     end
+                    -- end
+                    vim_item.menu = "  " .. (vim_item.kind or "")
+                    vim_item.kind = icon
+                    vim_item.kind_hl_group = icon_hl
+
+                    local highlights_info = require("colorful-menu").cmp_highlights(entry)
+
+                    -- if highlight_info==nil, which means missing ts parser, let's fallback to use default `vim_item.abbr`.
+                    -- What this plugin offers is two fields: `vim_item.abbr_hl_group` and `vim_item.abbr`.
+                    if highlights_info ~= nil then
+                        vim_item.abbr_hl_group = highlights_info.highlights
+                        vim_item.abbr = highlights_info.text
                     end
-                })
+
+                    vim_item.abbr = " " .. vim.trim(vim_item.abbr or "")
+
+                    return vim_item
+                end
             },
             snippet = {
                 expand = function(args)
@@ -149,7 +117,6 @@ return {
                         disable_omnifuncs = { 'v:lua.vim.lsp.omnifunc' }
                     }
                 },
-                -- { name = "codeium" },
                 { name = "async_path" },
                 { name = "buffer" },
                 { name = "render-markdown" }
@@ -157,18 +124,14 @@ return {
             mapping = cmp.mapping.preset.insert({
                 ['<C-x><C-x>'] = cmp.mapping.complete(),
                 ['<Tab>'] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                    elseif luasnip.locally_jumpable(1) then
+                    if luasnip.locally_jumpable(1) then
                         luasnip.jump(1)
                     else
                         fallback()
                     end
                 end, { 'i', 's' }),
                 ['<S-Tab>'] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                    elseif luasnip.locally_jumpable(-1) then
+                    if luasnip.locally_jumpable(-1) then
                         luasnip.jump(-1)
                     else
                         fallback()
@@ -186,7 +149,7 @@ return {
                         if cmp.visible() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'i', true)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'n', true)
                         end
                     end,
                 }),
@@ -195,7 +158,7 @@ return {
                         if cmp.visible() then
                             cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'i', true)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'n', true)
                         end
                     end,
                 }),
@@ -211,7 +174,7 @@ return {
                             if vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
                                 fallback()
                             else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'i', true)
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'n', true)
                             end
                         end
                     end,
@@ -237,7 +200,6 @@ return {
                 { name = "conventionalcommits" },
                 { name = "async_path" },
                 { name = 'git' },
-                -- { name = "codeium" },
                 { name = 'buffer' },
             })
         })
@@ -252,7 +214,6 @@ return {
                         disable_omnifuncs = { "v:lua.vim.lsp.omnifunc" }
                     }
                 },
-                -- { name = "codeium" },
                 { name = "async_path" },
                 { name = "buffer" }
             })
@@ -267,7 +228,6 @@ return {
                     }
                 },
                 { name = "crates" },
-                -- { name = "codeium" },
                 { name = "async_path" },
                 { name = "buffer" }
             )
@@ -290,9 +250,56 @@ return {
             })
         })
 
-        cmp.event:on(
-            'confirm_done',
-            cmp_autopairs.on_confirm_done()
-        )
+        -- cmp.event:on(
+        --     'confirm_done',
+        --     cmp_autopairs.on_confirm_done()
+        -- )
+
+        local function set_cmp_colors()
+            local colorutil = require('brglng.colorutil')
+            local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
+            local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
+            local FloatBorder = vim.api.nvim_get_hl(0, { name = 'FloatBorder', link = false })
+            local Comment = vim.api.nvim_get_hl(0, { name = 'Comment', link = false })
+            local Pmenu = vim.api.nvim_get_hl(0, { name = 'Pmenu', link = false })
+            local PmenuSel = vim.api.nvim_get_hl(0, { name = 'PmenuSel', link = false })
+            local bg, sel_bg, doc_bg
+            if NormalFloat.fg == nil then
+                NormalFloat.fg = Normal.fg
+            end
+            if FloatBorder.fg == nil then
+                FloatBorder.fg = NormalFloat.fg
+            end
+            if vim.o.background == 'dark' then
+                bg = colorutil.add_value(Pmenu.bg, 0.02)
+                sel_bg = colorutil.add_value(PmenuSel.bg, 0.02)
+                doc_bg = colorutil.add_value(NormalFloat.bg, 0.05)
+            else
+                bg = colorutil.reduce_value(Pmenu.bg, 0.02)
+                sel_bg = colorutil.reduce_value(PmenuSel.bg, 0.02)
+                doc_bg = colorutil.reduce_value(NormalFloat.bg, 0.03)
+            end
+            if vim.g.neovide then
+                vim.api.nvim_set_hl(0, 'CmpNormal', { fg = NormalFloat.fg, bg = NormalFloat.bg })
+                vim.api.nvim_set_hl(0, 'CmpBorder', { fg = FloatBorder.fg, bg = NormalFloat.bg })
+                vim.api.nvim_set_hl(0, 'CmpItemMenu', { fg = Comment.fg, bg = nil })
+                vim.api.nvim_set_hl(0, 'CmpDocNormal', { fg = NormalFloat.fg, bg = doc_bg })
+                vim.api.nvim_set_hl(0, 'CmpDocBorder', { fg = FloatBorder.fg, bg = NormalFloat.bg })
+            else
+                vim.api.nvim_set_hl(0, 'CmpNormal', { fg = NormalFloat.fg, bg = Normal.bg })
+                vim.api.nvim_set_hl(0, 'CmpBorder', { fg = FloatBorder.fg, bg = Normal.bg })
+                vim.api.nvim_set_hl(0, 'CmpItemMenu', { fg = Comment.fg, bg = nil })
+                vim.api.nvim_set_hl(0, "PmenuThumb", { bg = FloatBorder.fg })
+                vim.api.nvim_set_hl(0, 'CmpDocNormal', { fg = NormalFloat.fg, bg = Normal.bg })
+                vim.api.nvim_set_hl(0, 'CmpDocBorder', { fg = FloatBorder.fg, bg = Normal.bg })
+            end
+            -- vim.api.nvim_set_hl(0, 'Pmenu', { bg = bg })
+            -- vim.api.nvim_set_hl(0, 'PmenuSel', { bg = sel_bg })
+            -- vim.api.nvim_set_hl(0, 'PmenuSbar', { bg = bg })
+        end
+        vim.api.nvim_create_autocmd('ColorScheme', { pattern = '*', callback = set_cmp_colors })
+        vim.api.nvim_create_autocmd('OptionSet', { pattern = 'background', callback = set_cmp_colors })
+        set_cmp_colors()
+
     end
 }

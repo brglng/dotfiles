@@ -2,6 +2,16 @@ return {
     'nvimdev/dashboard-nvim',
     enabled = false,
     lazy = false,
+    dependencies = {
+        { 'echasnovski/mini.icons' },
+        {
+            "rubiin/fortune.nvim",
+            opts = {
+                display_format = "long",
+                content_type = "mixed"
+            }
+        }
+    },
     opts = {
         theme = 'hyper',
         config = {
@@ -66,14 +76,4 @@ return {
             end
         }
     },
-    dependencies = {
-        { 'nvim-tree/nvim-web-devicons' },
-        {
-            "rubiin/fortune.nvim",
-            opts = {
-                display_format = "long",
-                content_type = "mixed"
-            }
-        }
-    }
 }

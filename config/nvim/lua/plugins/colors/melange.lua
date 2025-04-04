@@ -3,6 +3,9 @@ return {
     priority = 1000,
     config = function()
         local set_melange_color = function ()
+            if vim.g.colors_name ~= "melange" then
+                return
+            end
             local colorutil = require('brglng.colorutil')
             local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
@@ -13,6 +16,12 @@ return {
             local Pmenu = vim.api.nvim_get_hl(0, { name = 'Pmenu', link = false })
             local PmenuSel = vim.api.nvim_get_hl(0, { name = 'PmenuSel', link = false })
             local PmenuThumb = vim.api.nvim_get_hl(0, { name = 'PmenuThumb', link = false })
+            if NormalFloat.fg == nil then
+                NormalFloat.fg = Normal.fg
+            end
+            if FloatBorder.fg == nil then
+                FloatBorder.fg = NormalFloat.fg
+            end
             -- vim.api.nvim_set_hl(0, 'PmenuThumb', {
             --     fg = FloatBorder.bg,
             --     bg = WinSeparator.fg
@@ -44,24 +53,10 @@ return {
                     bg = colorutil.reduce_value(PmenuThumb.bg, 0.015)
                 })
             end ]]
-            if not vim.g.neovide then
-                if vim.o.background == 'dark' then
-                    vim.api.nvim_set_hl(0, 'FloatBorder', {
-                        fg = colorutil.reduce_value(Normal.bg, 0.3),
-                        bg = Normal.bg
-                    })
-                else
-                    vim.api.nvim_set_hl(0, 'FloatBorder', {
-                        fg = colorutil.transparency(FloatTitle.fg, Normal.bg, 0.5),
-                        bg = Normal.bg
-                    })
-                end
-            else
-                vim.api.nvim_set_hl(0, 'FloatBorder', {
-                    fg = colorutil.transparency(FloatTitle.fg, NormalFloat.bg, 0.5),
-                    bg = NormalFloat.bg
-                })
-            end
+            vim.api.nvim_set_hl(0, 'FloatBorder', {
+                fg = colorutil.transparency(FloatBorder.fg, NormalFloat.bg, 0.7),
+                bg = NormalFloat.bg
+            })
             -- vim.api.nvim_set_hl(0, 'PmenuThumb', {
             --     fg = PmenuThumb.fg,
             --     bg = (function()

@@ -19,11 +19,12 @@ return {
             "~/Syncthing/projects/*",
             "~/Syncthing/projects/vim-plugins/*",
         },
+        follow_symlinks = "partial",
         dashboard_mode = false,
         last_session_on_startup = false
     },
     config = function(_, opts)
-        local private_projects = vim.fn.expand("~/Syncthing/vps/dotfiles/config/nvim/lua/brglng/private_projects.lua")
+        local private_projects = vim.fn.stdpath('config') .. "/lua/brglng/private_projects.lua"
         local local_projects = vim.fn.stdpath("data") .. "/neovim-project/projects.lua"
         if vim.uv.fs_open(private_projects, "r", 438) then
             vim.list_extend(opts.projects, dofile(private_projects))

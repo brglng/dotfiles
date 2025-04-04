@@ -1,8 +1,9 @@
 return {
     "romgrk/barbar.nvim",
+    enabled = false,
     dependencies = {
         'lewis6991/gitsigns.nvim',
-        'nvim-tree/nvim-web-devicons',
+        'echasnovski/mini.icons',
     },
     event = { "VeryLazy" },
     init = function() vim.g.barbar_auto_setup = false end,
@@ -21,7 +22,7 @@ return {
         { '<Leader>b', mode = 'n', "<Cmd>BufferPick<CR>", desc = 'Buffer Pick' },
         { '<Leader>B', mode = 'n', "<Cmd>BufferPickDelete<CR>", desc = 'Buffer Pick Delete' },
         { '[b', mode = 'n', "<Cmd>BufferPrevious<CR>", desc = 'Previous Buffer' },
-        { '[b', mode = 'n', "<Cmd>BufferPrevious<CR>", desc = 'Next Buffer' },
+        { ']b', mode = 'n', "<Cmd>BufferNext<CR>", desc = 'Next Buffer' },
     },
     config = function(_, opts)
         local colorutil = require('brglng.colorutil')
