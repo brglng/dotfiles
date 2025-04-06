@@ -4,7 +4,7 @@ vim.o.splitkeep = "screen"
 vim.g.maplocalleader = ","
 
 if vim.g.neovide then
-    if vim.uv.os_uname().sysname == "Windows_NT" then
+    if vim.uv.os_uname().sysname == "Windows_NT" or vim.fn.has("wsl") then
         vim.g.neovide_scale_factor = 10.0 / 14.0
     end
     -- vim.o.linespace = -0
@@ -17,6 +17,28 @@ if vim.g.neovide then
     -- vim.g.neovide_cursor_trail_size = 0.2
     vim.g.neovide_cursor_vfx_mode = "torpedo"
     -- vim.g.neovide_cursor_vfx_particle_density = 20.0
+
+    -- local function my_set_ime(args)
+    --     if args.event:match("Enter$") then
+    --         vim.g.neovide_input_ime = true
+    --     else
+    --         vim.g.neovide_input_ime = false
+    --     end
+    -- end
+    --
+    -- local my_ime_input = vim.api.nvim_create_augroup("my_ime_input", { clear = true })
+    --
+    -- vim.api.nvim_create_autocmd({ "InsertEnter", "InsertLeave" }, {
+    --     group = my_ime_input,
+    --     pattern = "*",
+    --     callback = my_set_ime
+    -- })
+    --
+    -- vim.api.nvim_create_autocmd({ "CmdlineEnter", "CmdlineLeave" }, {
+    --     group = my_ime_input,
+    --     pattern = "[/\\?]",
+    --     callback = my_set_ime
+    -- })
 end
 
 vim.filetype.add {
@@ -79,4 +101,4 @@ require("lazy").setup("plugins", {
     }
 })
 
-vim.cmd [[ colorscheme melange ]]
+vim.cmd.colorscheme("rose-pine")

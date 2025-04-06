@@ -164,7 +164,6 @@ return {
         },
         config = function(_, opts)
             local lspconfig = require('lspconfig')
-            local colorutil = require('brglng.colorutil')
 
             if opts.diagnostic ~= nil then
                 vim.diagnostic.config(opts.diagnostic)
@@ -227,6 +226,7 @@ return {
             end
 
             local set_lsp_colors = function()
+                local brglng = require("brglng")
                 local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
                 local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
                 local DiagnosticVirtualTextError = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualTextError", link = false })
@@ -248,39 +248,39 @@ return {
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", {
                     fg = DiagnosticVirtualTextError.fg,
-                    bg = colorutil.transparency(DiagnosticVirtualTextError.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(DiagnosticVirtualTextError.fg, Normal.bg, 0.2),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", {
                     fg = DiagnosticVirtualTextWarn.fg,
-                    bg = colorutil.transparency(DiagnosticVirtualTextWarn.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(DiagnosticVirtualTextWarn.fg, Normal.bg, 0.2),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", {
                     fg = DiagnosticVirtualTextInfo.fg,
-                    bg = colorutil.transparency(DiagnosticVirtualTextInfo.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(DiagnosticVirtualTextInfo.fg, Normal.bg, 0.2),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", {
                     fg = DiagnosticVirtualTextHint.fg,
-                    bg = colorutil.transparency(DiagnosticVirtualTextHint.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(DiagnosticVirtualTextHint.fg, Normal.bg, 0.2),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesError", {
                     fg = DiagnosticVirtualLinesError.fg,
-                    bg = colorutil.transparency(DiagnosticVirtualLinesError.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(DiagnosticVirtualLinesError.fg, Normal.bg, 0.2),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesWarn", {
                     fg = DiagnosticVirtualLinesWarn.fg,
-                    bg = colorutil.transparency(DiagnosticVirtualLinesWarn.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(DiagnosticVirtualLinesWarn.fg, Normal.bg, 0.2),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesInfo", {
                     fg = DiagnosticVirtualLinesInfo.fg,
-                    bg = colorutil.transparency(DiagnosticVirtualLinesInfo.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(DiagnosticVirtualLinesInfo.fg, Normal.bg, 0.2),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesHint", {
                     fg = DiagnosticVirtualLinesHint.fg,
-                    bg = colorutil.transparency(DiagnosticVirtualLinesHint.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(DiagnosticVirtualLinesHint.fg, Normal.bg, 0.2),
                 })
                 vim.api.nvim_set_hl(0, "LspInlayHint", {
                     fg = LspInlayHint.fg,
-                    bg = colorutil.transparency(LspInlayHint.fg, Normal.bg, 0.2),
+                    bg = brglng.color.transparency(LspInlayHint.fg, Normal.bg, 0.2),
                 })
             end
             set_lsp_colors()

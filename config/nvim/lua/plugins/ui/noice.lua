@@ -295,8 +295,8 @@ return {
     config = function(_, opts)
         require("noice").setup(opts)
 
-        local colorutil = require('brglng.colorutil')
         local set_noice_color = function()
+            local brglng = require("brglng")
             local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
             local FloatBorder = vim.api.nvim_get_hl(0, { name = 'FloatBorder', link = false })
@@ -370,12 +370,12 @@ return {
             })
             if vim.o.background == 'dark' then
                 vim.api.nvim_set_hl(0, 'NoiceHoverBorder', {
-                    fg = colorutil.reduce_value(Normal.bg, 0.1),
+                    fg = brglng.color.reduce_value(Normal.bg, 0.1),
                     bg = NormalFloat.bg
                 })
             else
                 vim.api.nvim_set_hl(0, 'NoiceHoverBorder', {
-                    fg = colorutil.reduce_value(Normal.bg, 0.1),
+                    fg = brglng.color.reduce_value(Normal.bg, 0.1),
                     bg = NormalFloat.bg
                 })
             end

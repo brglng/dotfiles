@@ -65,10 +65,10 @@ return {
     },
     config = function(_, opts)
         require('neo-tree').setup(opts)
+        local brglng = require("brglng")
 
         -- NeoTreeFloatBorder NeoTreeTitleBar
         local function set_neo_tree_colors()
-            local colorutil = require('brglng.colorutil')
             local Comment = vim.api.nvim_get_hl(0, { name = "Comment", link = false })
             local NeoTreeNormal = vim.api.nvim_get_hl(0, { name = "NeoTreeNormal", link = false })
             local FloatTitle = vim.api.nvim_get_hl(0, { name = "FloatTitle", link = false })
@@ -78,15 +78,15 @@ return {
             })
             vim.api.nvim_set_hl(0, 'NeoTreeTabInactive', {
                 fg = Comment.fg,
-                bg = colorutil.reduce_value(NeoTreeNormal.bg, 0.1)
+                bg = brglng.color.reduce_value(NeoTreeNormal.bg, 0.1)
             })
             vim.api.nvim_set_hl(0, 'NeoTreeTabSeparatorActive', {
-                fg = colorutil.reduce_value(NeoTreeNormal.bg, 0.2),
+                fg = brglng.color.reduce_value(NeoTreeNormal.bg, 0.2),
                 bg = NeoTreeNormal.bg
             })
             vim.api.nvim_set_hl(0, 'NeoTreeTabSeparatorInactive', {
-                fg = colorutil.reduce_value(NeoTreeNormal.bg, 0.2),
-                bg = colorutil.reduce_value(NeoTreeNormal.bg, 0.1)
+                fg = brglng.color.reduce_value(NeoTreeNormal.bg, 0.2),
+                bg = brglng.color.reduce_value(NeoTreeNormal.bg, 0.1)
             })
             vim.api.nvim_set_hl(0, 'NeoTreeWinSeparator', { link = 'WinSeparator' })
             vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { link = "FloatBorder" })
@@ -103,9 +103,9 @@ return {
         set_neo_tree_colors()
     end,
     keys = {
-        { "<Leader>wf", "<Cmd>SidebarToggle neo_tree_filesystem<CR>", mode = "n", desc = "File Tree" },
-        { "<Leader>ws", "<Cmd>SidebarToggle neo_tree_document_symbols<CR>", mode = "n", desc = "Symbols" },
-        { "<Leader>wb", "<Cmd>SidebarToggle neo_tree_buffers<CR>", mode = "n", desc = "Buffers" },
-        { "<Leader>wg", "<Cmd>SidebarToggle neo_tree_git_status<CR>", mode = "n", desc = "Git Status" },
+        { "<M-1>", "<Cmd>SidebarToggle neo_tree_filesystem<CR>", mode = { "n", "i", "t" }, desc = "File Tree" },
+        { "<M-2>", "<Cmd>SidebarToggle neo_tree_document_symbols<CR>", mode = { "n", "i", "t" }, desc = "Symbols" },
+        { "<M-3>", "<Cmd>SidebarToggle neo_tree_buffers<CR>", mode = { "n", "i", "t" }, desc = "Buffers" },
+        { "<M-4>", "<Cmd>SidebarToggle neo_tree_git_status<CR>", mode = { "n", "i", "t" }, desc = "Git Status" },
     }
 }

@@ -256,7 +256,7 @@ return {
         -- )
 
         local function set_cmp_colors()
-            local colorutil = require('brglng.colorutil')
+            local brglng = require('brglng')
             local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
             local FloatBorder = vim.api.nvim_get_hl(0, { name = 'FloatBorder', link = false })
@@ -271,13 +271,13 @@ return {
                 FloatBorder.fg = NormalFloat.fg
             end
             if vim.o.background == 'dark' then
-                bg = colorutil.add_value(Pmenu.bg, 0.02)
-                sel_bg = colorutil.add_value(PmenuSel.bg, 0.02)
-                doc_bg = colorutil.add_value(NormalFloat.bg, 0.05)
+                bg = brglng.color.add_value(Pmenu.bg, 0.02)
+                sel_bg = brglng.color.add_value(PmenuSel.bg, 0.02)
+                doc_bg = brglng.color.add_value(NormalFloat.bg, 0.05)
             else
-                bg = colorutil.reduce_value(Pmenu.bg, 0.02)
-                sel_bg = colorutil.reduce_value(PmenuSel.bg, 0.02)
-                doc_bg = colorutil.reduce_value(NormalFloat.bg, 0.03)
+                bg = brglng.color.reduce_value(Pmenu.bg, 0.02)
+                sel_bg = brglng.color.reduce_value(PmenuSel.bg, 0.02)
+                doc_bg = brglng.color.reduce_value(NormalFloat.bg, 0.03)
             end
             if vim.g.neovide then
                 vim.api.nvim_set_hl(0, 'CmpNormal', { fg = NormalFloat.fg, bg = NormalFloat.bg })

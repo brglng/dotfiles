@@ -2,11 +2,11 @@ return {
     "savq/melange-nvim",
     priority = 1000,
     config = function()
-        local set_melange_color = function ()
-            if vim.g.colors_name ~= "melange" then
+        local set_melange_color = function (is_autocmd)
+            if is_autocmd and vim.g.colors_name ~= "melange" then
                 return
             end
-            local colorutil = require('brglng.colorutil')
+            local brglng = require("brglng")
             local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
             local FloatTitle = vim.api.nvim_get_hl(0, { name = 'FloatTitle', link = false })
@@ -29,53 +29,53 @@ return {
             --[[ if vim.o.background == 'dark' then
                 vim.api.nvim_set_hl(0, 'Pmenu', {
                     fg = Pmenu.fg,
-                    bg = colorutil.add_value(Pmenu.bg, 0.02),
+                    bg = brglng.color.add_value(Pmenu.bg, 0.02),
                 })
                 vim.api.nvim_set_hl(0, 'PmenuSel', {
                     fg = PmenuSel.fg,
-                    bg = colorutil.add_value(PmenuSel.bg, 0.02),
+                    bg = brglng.color.add_value(PmenuSel.bg, 0.02),
                 })
                 vim.api.nvim_set_hl(0, 'PmenuThumb', {
                     fg = PmenuThumb.fg,
-                    bg = colorutil.add_value(PmenuThumb.bg, 0.02),
+                    bg = brglng.color.add_value(PmenuThumb.bg, 0.02),
                 })
             else
                 vim.api.nvim_set_hl(0, 'Pmenu', {
                     fg = Pmenu.fg,
-                    bg = colorutil.reduce_value(Pmenu.bg, 0.015)
+                    bg = brglng.color.reduce_value(Pmenu.bg, 0.015)
                 })
                 vim.api.nvim_set_hl(0, 'PmenuSel', {
                     fg = PmenuSel.fg,
-                    bg = colorutil.reduce_value(PmenuSel.bg, 0.015)
+                    bg = brglng.color.reduce_value(PmenuSel.bg, 0.015)
                 })
                 vim.api.nvim_set_hl(0, 'PmenuThumb', {
                     fg = PmenuThumb.fg,
-                    bg = colorutil.reduce_value(PmenuThumb.bg, 0.015)
+                    bg = brglng.color.reduce_value(PmenuThumb.bg, 0.015)
                 })
             end ]]
             vim.api.nvim_set_hl(0, 'FloatBorder', {
-                fg = colorutil.transparency(FloatBorder.fg, NormalFloat.bg, 0.7),
+                fg = brglng.color.transparency(FloatBorder.fg, NormalFloat.bg, 0.7),
                 bg = NormalFloat.bg
             })
             -- vim.api.nvim_set_hl(0, 'PmenuThumb', {
             --     fg = PmenuThumb.fg,
             --     bg = (function()
             --         if vim.o.background == 'dark' then
-            --             return colorutil.add_value(PmenuThumb.bg, 0.1)
+            --             return brglng.color.add_value(PmenuThumb.bg, 0.1)
             --         else
-            --             return colorutil.reduce_value(PmenuThumb.bg, 0.1)
+            --             return brglng.color.reduce_value(PmenuThumb.bg, 0.1)
             --         end
             --     end)()
             -- })
         end
+        set_melange_color()
         vim.api.nvim_create_autocmd("ColorScheme", {
             pattern = "melange",
-            callback = set_melange_color,
+            callback = function() set_melange_color(true) end,
         })
         vim.api.nvim_create_autocmd("OptionSet", {
             pattern = "background",
-            callback = set_melange_color
+            callback = function() set_melange_color(true) end,
         })
-        set_melange_color()
     end
 }

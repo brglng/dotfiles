@@ -543,14 +543,14 @@ else
 
     if MAC then
         if #wezterm.glob('/opt/homebrew/bin/zsh') ~= 0 then
-            config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else /opt/homebrew/bin/zsh -l -i; fi' }
+            config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i' }
         elseif #wezterm.glob('/usr/local/bin/zsh') ~= 0 then
-            config.default_prog = { '/usr/local/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else /usr/local/bin/zsh -l -i; fi' }
+            config.default_prog = { '/usr/local/bin/zsh', '-l', '-i' }
         else
-            config.default_prog = { '/bin/zsh', '-l', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; else /bin/zsh -l -i; fi' }
+            config.default_prog = { '/bin/zsh', '-l', '-i' }
         end
     else
-        config.default_prog = { '/bin/bash', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then zsh -l -i; else bash -i; fi' }
+        config.default_prog = { '/bin/bash', '-i', '-c', 'if type zsh &> /dev/null; then zsh -l -i; else bash -i; fi' }
     end
     table.insert(config.launch_menu, {
         label = 'Mux',

@@ -32,8 +32,8 @@ return {
     },
     config = function(_, opts)
         require('which-key').setup(opts)
+        local brglng = require("brglng")
 
-        local colorutil = require('brglng.colorutil')
         local set_which_key_color = function()
             if not vim.g.neovide then
                 -- local WinSeparator = vim.api.nvim_get_hl(0, { name = 'WinSeparator', link = false })
@@ -42,12 +42,12 @@ return {
                 local FloatTitle = vim.api.nvim_get_hl(0, { name = 'FloatTitle', link = false })
                 -- if vim.o.background == 'dark' then
                 --     vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                --         fg = colorutil.reduce_value(Normal.bg, 0.002),
+                --         fg = brglng.color.reduce_value(Normal.bg, 0.002),
                 --         bg = NormalFloat.bg
                 --     })
                 -- else
                 --     vim.api.nvim_set_hl(0, 'WhichKeyBorder', {
-                --         fg = colorutil.transparency(WinSeparator.fg, Normal.bg, 0.2),
+                --         fg = brglng.color.transparency(WinSeparator.fg, Normal.bg, 0.2),
                 --         bg = NormalFloat.bg
                 --     })
                 -- end

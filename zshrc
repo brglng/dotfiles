@@ -13,6 +13,11 @@ fi
 ZSH_DISABLE_COMPFIX="true"
 
 zstyle ':zim:zmodule' use 'degit'
+
+zstyle ':zim:termtitle' hooks 'preexec' 'precmd'
+zstyle ':zim:termtitle:preexec' format '%~ ${${(A)=1}[1]}'
+zstyle ':zim:termtitle:precmd' format '%~ zsh'
+
 ZIM_HOME=~/.zim
 
 # Download zimfw plugin manager if missing.

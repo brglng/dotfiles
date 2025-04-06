@@ -25,8 +25,8 @@ return {
         { ']b', mode = 'n', "<Cmd>BufferNext<CR>", desc = 'Next Buffer' },
     },
     config = function(_, opts)
-        local colorutil = require('brglng.colorutil')
         local set_barbar_color = function()
+            local brglng = require("brglng")
             local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
             local DiagnosticError = vim.api.nvim_get_hl(0, { name = 'DiagnosticError', link = false })
@@ -35,13 +35,13 @@ return {
 
             local fill_bg, inactive_bg, visible_bg
             if vim.o.background == "dark" then
-                fill_bg = colorutil.reduce_value(Normal.bg, 0.12)
-                inactive_bg = colorutil.reduce_value(Normal.bg, 0.06)
-                visible_bg = colorutil.reduce_value(Normal.bg, 0.02)
+                fill_bg = brglng.color.reduce_value(Normal.bg, 0.12)
+                inactive_bg = brglng.color.reduce_value(Normal.bg, 0.06)
+                visible_bg = brglng.color.reduce_value(Normal.bg, 0.02)
             else
-                fill_bg = colorutil.reduce_value(Normal.bg, 0.24)
-                inactive_bg = colorutil.reduce_value(Normal.bg, 0.12)
-                visible_bg = colorutil.reduce_value(Normal.bg, 0.05)
+                fill_bg = brglng.color.reduce_value(Normal.bg, 0.24)
+                inactive_bg = brglng.color.reduce_value(Normal.bg, 0.12)
+                visible_bg = brglng.color.reduce_value(Normal.bg, 0.05)
             end
 
             vim.api.nvim_set_hl(0, "TabLineFill", {
@@ -82,7 +82,7 @@ return {
             })
             vim.api.nvim_set_hl(0, 'BufferVisible', {
                 fg = Comment.fg,
-                bg = colorutil.reduce_value(Normal.bg, 0.03),
+                bg = brglng.color.reduce_value(Normal.bg, 0.03),
             })
             vim.api.nvim_set_hl(0, 'BufferVisibleSign', {
                 fg = fill_bg,

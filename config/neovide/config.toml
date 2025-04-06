@@ -5,4 +5,7 @@ wsl = true
 [font]
 normal = ["Maple Mono NF CN", "Flog Symbols"]
 hinting = "none"
-size = 10.0
+size = 14.0
+
+[box-drawing]
+mode = "native"

@@ -169,8 +169,8 @@ return {
             }
         }
 
-        local colorutil = require("brglng.colorutil")
         local set_telescope_colors = function()
+            local brglng = require("brglng")
             local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
             local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
@@ -191,22 +191,22 @@ return {
             end
             -- vim.notify(string.format("NormalFloat = { fg = %s, bg = %s }", NormalFloat.fg, NormalFloat.bg))
             -- vim.notify(string.format("PmenuSel = { fg = %s, bg = %s, reverse = %s }", PmenuSel.fg, PmenuSel.bg, PmenuSel.reverse))
-            -- local prompt_bg = colorutil.transparency(PmenuSel.bg, Normal.bg, 0.3)
+            -- local prompt_bg = brglng.color.transparency(PmenuSel.bg, Normal.bg, 0.3)
             local prompt_bg
             if vim.o.background == 'dark' then
-                prompt_bg = colorutil.reduce_value(NormalFloat.bg, 0.07)
+                prompt_bg = brglng.color.reduce_value(NormalFloat.bg, 0.07)
             else
-                prompt_bg = colorutil.add_value(NormalFloat.bg, 0.05)
+                prompt_bg = brglng.color.add_value(NormalFloat.bg, 0.05)
             end
             local prompt_fg = NormalFloat.fg
-            local prompt_counter_fg = colorutil.transparency(prompt_fg, prompt_bg, 0.5)
+            local prompt_counter_fg = brglng.color.transparency(prompt_fg, prompt_bg, 0.5)
             local preview_bg, preview_title_bg
             if vim.o.background == "light" then
-                preview_bg = colorutil.reduce_value(NormalFloat.bg, 0.03)
+                preview_bg = brglng.color.reduce_value(NormalFloat.bg, 0.03)
             else
-                preview_bg = colorutil.add_value(NormalFloat.bg, 0.05)
+                preview_bg = brglng.color.add_value(NormalFloat.bg, 0.05)
             end
-            preview_title_bg = colorutil.transparency(NormalFloat.fg, preview_bg, 0.6)
+            preview_title_bg = brglng.color.transparency(NormalFloat.fg, preview_bg, 0.6)
             vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
                 fg = Normal.bg,
                 bg = DiagnosticOk.fg
@@ -246,14 +246,29 @@ return {
                     bg = preview_bg
                 })
             else
+                vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
+                    fg = NormalFloat.fg,
+                    bg = nil
+                })
                 vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
                     fg = FloatBorder.fg,
+                    bg = nil
+                })
+                vim.api.nvim_set_hl(0, "TelescopeNormal", {
+                    fg = NormalFloat.fg,
+                    bg = nil
                 })
                 vim.api.nvim_set_hl(0, "TelescopeResultsBorder", {
                     fg = FloatBorder.fg,
+                    bg = nil,
+                })
+                vim.api.nvim_set_hl(0, "TelescopePreviewNormal", {
+                    fg = NormalFloat.fg,
+                    bg = nil,
                 })
                 vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
                     fg = FloatBorder.fg,
+                    bg = nil
                 })
             end
         end

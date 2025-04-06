@@ -60,9 +60,9 @@ modtap := ModTapManager(Map(
 ), , false)
 
 $*LShift::modtap.onModKeyDown("LShift")
-$*LShift up::modtap.onModKeyUp("LShift", () => Send("{LWin Down}{Space}{LWin Up}"))
+$*LShift up::modtap.onModKeyUp("LShift", () => imm.toggleKeyboardLayout())
 $*RShift::modtap.onModKeyDown("RShift")
-$*RShift up::modtap.onModKeyUp("RShift", () => Send("{LWin Down}{Space}{LWin Up}"))
+$*RShift up::modtap.onModKeyUp("RShift", () => imm.toggleKeyboardLayout())
 $*LControl::modtap.onModKeyDown("LControl")
 $*LControl up::modtap.onModKeyUp("LControl")
 $*RControl::modtap.onModKeyDown("RControl")

@@ -14,6 +14,4 @@ return {
     { import = "plugins.session" },
     { import = "plugins.org" },
     { import = "plugins.colors" },
-    -- { import = "plugins.colors.melange" },
-    -- { import = "plugins.ui.telescope" },
 }

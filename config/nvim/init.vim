@@ -12,18 +12,20 @@ if exists('g:neovide') && !has('win32')
     let $PATH = $HOME . '/.local/bin:' . $HOME . '/.cargo/bin:' . $PATH
 endif
 
-if has('nvim')
-    let s:viewdir = $HOME . '/.cache/nvim/view'
-else
-    let s:viewdir = $HOME . '/.cache/vim/view'
-endif
-if !isdirectory(s:viewdir)
-    if !brglng#is_sudo()
-        silent call mkdir(s:viewdir, 'p')
+if !has('nvim')
+    if has('win32')
+        let s:viewdir = $LOCALAPPDATA . '/vim-data/view'
+    else
+        let s:viewdir = $HOME . '/.local/state/vim/view'
+    endif
+    if !isdirectory(s:viewdir)
+        if !brglng#is_sudo()
+            silent call mkdir(s:viewdir, 'p')
+            let &viewdir = s:viewdir
+        endif
+    else
         let &viewdir = s:viewdir
     endif
-else
-    let &viewdir = s:viewdir
 endif
 
 if has("patch-8.1.0360")
@@ -75,7 +77,7 @@ set nocompatible                " turn of vi compatible mode
 set winaltkeys=no
 "set helplang=cn                 " Chinese help
 set autoread                    " auto read files modified outside vim
-if has('win32') || !brglng#is_sudo()
+if !brglng#is_sudo()
     set nobackup                  " do not create backups before editing
     set nowritebackup
 endif
@@ -83,9 +85,13 @@ set backup
 set writebackup
 set backupcopy=yes
 if has('nvim')
-    let s:backupdir = $HOME . '/.cache/nvim/backup'
+    let s:backupdir = stdpath('state') . '/backup'
 else
-    let s:backupdir = $HOME . '/.cache/vim/backup'
+    if has('win32')
+        let s:backupdir = $LOCALAPPDATA . '/vim-data/backup'
+    else
+        let s:backupdir = $HOME . '/.local/state/vim/backup'
+    endif
 endif
 if !isdirectory(s:backupdir)
     if !brglng#is_sudo()
@@ -97,18 +103,20 @@ else
 endif
 
 set swapfile
-if has('nvim')
-    let s:directory = $HOME . '/.cache/nvim/swap'
-else
-    let s:directory = $HOME . '/.cache/vim/swap'
-endif
-if !isdirectory(s:directory)
-    if !brglng#is_sudo()
-        silent call mkdir(s:directory, 'p')
+if !has('nvim')
+    if has('win32')
+        let s:directory = $LOCALAPPDATA . '/vim-data/swap'
+    else
+        let s:directory = $HOME . '/.local/state/vim/swap'
+    endif
+    if !isdirectory(s:directory)
+        if !brglng#is_sudo()
+            silent call mkdir(s:directory, 'p')
+            let &directory = s:directory
+        endif
+    else
         let &directory = s:directory
     endif
-else
-    let &directory = s:directory
 endif
 
 set showcmd                   " show commands in normal mode at the right-bottom
@@ -214,18 +222,20 @@ let g:vim_indent_cont = 0
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 " autocmd BufRead,BufNewFile *.md set spell
 
-if has('nvim')
-    let s:undodir = $HOME . '/.cache/nvim/undo'
-else
-    let s:undodir = $HOME . '/.cache/vim/undo'
-endif
-if !isdirectory(s:undodir)
-    if !brglng#is_sudo()
-        silent call mkdir(s:undodir, 'p')
+if !has('nvim')
+    if has('win32')
+        let s:undodir = $LOCALAPPDATA . '/vim-data/undo'
+    else
+        let s:undodir = $HOME . '/.local/state/vim/undo'
+    endif
+    if !isdirectory(s:undodir)
+        if !brglng#is_sudo()
+            silent call mkdir(s:undodir, 'p')
+            let &undodir = s:undodir
+        endif
+    else
         let &undodir = s:undodir
     endif
-else
-    let &undodir = s:undodir
 endif
 set undofile
 
@@ -305,7 +315,8 @@ endif
 
 let g:plug_timeout = 300
 
-call plug#begin('~/.local/share/vim/plugged')
+let s:plugdir = has('win32') ? $LOCALAPPDATA .. '/vim-data/plugged' : '~/.local/state/vim/plugged'
+call plug#begin(s:plugdir)
 
 function! VimOnly(...)
     if a:0 > 1

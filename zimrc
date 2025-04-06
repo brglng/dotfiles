@@ -56,3 +56,4 @@ zmodule z-shell/F-Sy-H --branch main
 # zmodule lukechilds/zsh-better-npm-completion
 zmodule zsh-users/zsh-completions --fpath src
 zmodule completion
+zmodule zimfw/termtitle

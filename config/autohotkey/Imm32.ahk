@@ -21,41 +21,16 @@ class Imm32 {
         if this.prevKeyboardLayout := Imm32.EN_US {
             this.prevKeyboardLayout := this.getFirstNonEnglishKeyboardLayout()
         }
-        this.hImcOld := DllCall("Imm32\ImmGetContext", "Ptr", WinExist("A"))
+        ; this.hImc := DllCall("Imm32\ImmGetContext", "Ptr", WinExist("A"))
     }
 
     ImmGetDefaultIMEWnd(hWnd) {
         return DllCall(this.pImmGetDefaultIMEWnd, "Ptr", hWnd)
     }
 
-    enableIME() {
-        hwnd := WinExist("A")
-        if this.hImcOld != 0 {
-            DllCall("Imm32\ImmAssociateContextEx", "Ptr", hwnd, "Ptr", 0, "UInt", this.hImcOld)
-        }
-        Tooltip("IME enabled")
-    }
-
-    disableIME() {
-        hwnd := WinExist("A")
-        this.hImcOld := DllCall("Imm32\ImmGetContext", "Ptr", hwnd)
-        DllCall("Imm32\ImmAssociateContextEx", "Ptr", hwnd, "Ptr", 0, "UInt", 0)
-        Tooltip("IME disabled")
-    }
-
     toggleIME() {
-        hwnd := WinExist("A")
-        hImc := DllCall("Imm32\ImmGetContext", "Ptr", hwnd)
-        if hImc == 0 {
-            if this.hImcOld != 0 {
-                DllCall("Imm32\ImmAssociateContextEx", "Ptr", hwnd, "Ptr", 0, "UInt", this.hImcOld)
-                Tooltip("IME enabled")
-            }
-        } else {
-            this.hImcOld := hImc
-            DllCall("Imm32\ImmAssociateContextEx", "Ptr", hwnd, "Ptr", 0, "UInt", 0)
-            Tooltip("IME disabled")
-        }
+        ; hWnd := WinExist("A")
+        ; this.hImc := DllCall("Imm32\ImmAssociateContext", "Ptr", hWnd, "UInt", this.hImc)
     }
 
     getCurrentKeyboardLayout() {

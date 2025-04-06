@@ -161,10 +161,18 @@ let g:sidebar.spectre = #{
 " \   execute "nnoremap <buffer> <silent> gO :call sidebar#close_side_except('bottom', 'loclist')<CR>" . maparg('gO', 'n') |
 " \ endif
 
-noremap <silent> <Leader>wq :call sidebar#toggle('quickfix')<CR>
-noremap <silent> <Leader>wl :call sidebar#toggle('loclist')<CR>
-noremap <silent> <Leader>wu :call sidebar#toggle('undotree')<CR>
-noremap <silent> <Leader>wh :call sidebar#toggle('help')<CR>
+noremap <silent> <M-5> :call sidebar#toggle('undotree')<CR>
+noremap <silent> <M-6> :call sidebar#toggle('quickfix')<CR>
+noremap <silent> <M-7> :call sidebar#toggle('loclist')<CR>
+noremap <silent> <M-]> :call sidebar#toggle('help')<CR>
+inoremap <silent> <M-5> <C-o>:call sidebar#toggle('undotree')<CR>
+inoremap <silent> <M-6> <C-o>:call sidebar#toggle('quickfix')<CR>
+inoremap <silent> <M-7> <C-o>:call sidebar#toggle('loclist')<CR>
+inoremap <silent> <M-]> <C-o>:call sidebar#toggle('help')<CR>
+tnoremap <silent> <M-5> <C-\><C-o>:call sidebar#toggle('undotree')<CR>
+tnoremap <silent> <M-6> <C-\><C-o>:call sidebar#toggle('quickfix')<CR>
+tnoremap <silent> <M-7> <C-\><C-o>:call sidebar#toggle('loclist')<CR>
+tnoremap <silent> <M-]> <C-\><C-o>:call sidebar#toggle('help')<CR>
 
 Plug 'brglng/vim-sidebar-manager'
 

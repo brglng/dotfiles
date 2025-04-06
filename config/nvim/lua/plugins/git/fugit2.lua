@@ -24,22 +24,16 @@ return {
     },
     config = function(_, opts)
         require('fugit2').setup(opts)
-        local function set_fugit2_colors()
-            if not vim.g.neovide then
-                vim.api.nvim_set_hl(0, 'NormalFloat', { bg = nil })
-                vim.api.nvim_set_hl(0, 'FloatBorder', { bg = nil })
-            end
-        end
-        set_fugit2_colors()
-        vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
+        vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+            pattern = { '*' },
             callback = function()
-                set_fugit2_colors()
-            end,
-        })
-        vim.api.nvim_create_autocmd({ 'OptionSet' }, {
-            pattern = { 'background' },
-            callback = function()
-                set_fugit2_colors()
+                if vim.o.filetype:find("^fugit2.*") then
+                    if vim.g.neovide then
+                        vim.o.winhighlight = "Normal:NormalFloat"
+                    else
+                        vim.o.winhighlight = "NormalFloat:Normal,FloatBorder:Normal"
+                    end
+                end
             end,
         })
     end,

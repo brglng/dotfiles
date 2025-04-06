@@ -73,7 +73,6 @@ return {
         local notify = require("notify")
         notify.setup(opts)
         local set_notify_colors = function()
-            local colorutil = require('brglng.colorutil')
             local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
             local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
             local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
@@ -174,6 +173,31 @@ return {
                 vim.api.nvim_set_hl(0, 'NotifyWARNTitle', { link = 'DiagnosticWarn' })
                 vim.api.nvim_set_hl(0, 'NotifyERRORIcon', { link = 'DiagnosticError' })
                 vim.api.nvim_set_hl(0, 'NotifyERRORTitle', { link = 'DiagnosticError' })
+                vim.api.nvim_set_hl(0, "NotifyERRORBorder", {
+                    fg = DiagnosticError.fg,
+                    bg = nil
+                })
+                vim.api.nvim_set_hl(0, "NotifyWARNBorder", {
+                    fg = DiagnosticWarn.fg,
+                    bg = nil
+                })
+                vim.api.nvim_set_hl(0, "NotifyINFOBorder", {
+                    fg = DiagnosticInfo.fg,
+                    bg = nil
+                })
+                vim.api.nvim_set_hl(0, "NotifyDEBUGBorder", {
+                    fg = FloatBorder.fg,
+                    bg = nil
+                })
+                vim.api.nvim_set_hl(0, "NotifyTRACEBorder", {
+                    fg = FloatBorder.fg,
+                    bg = nil
+                })
+                vim.api.nvim_set_hl(0, 'NotifyERRORBody', { link = 'Normal' })
+                vim.api.nvim_set_hl(0, 'NotifyWARNBody', { link = 'Normal' })
+                vim.api.nvim_set_hl(0, 'NotifyINFOBody', { link = 'Normal' })
+                vim.api.nvim_set_hl(0, 'NotifyDEBUGBody', { link = 'Normal' })
+                vim.api.nvim_set_hl(0, 'NotifyTRACEBody', { link = 'Normal' })
             end
 
         end
