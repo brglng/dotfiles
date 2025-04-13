@@ -4,10 +4,8 @@ return {
         event = { "BufReadPost", "BufWritePost", "BufNewFile" },
         dependencies = {
             "williamboman/mason.nvim",
-            "hrsh7th/nvim-cmp",
             "ray-x/lsp_signature.nvim",
             "folke/neoconf.nvim",
-            "p00f/clangd_extensions.nvim"
         },
         opts = {
             -- log_level = 'debug'
@@ -22,10 +20,11 @@ return {
                     -- border = "none",
                     border = (function()
                         if vim.g.neovide then
-                            return {
-                                { " ", "NormalFloat" },
-                                { " ", "NormalFloat" },
-                            }
+                            -- return {
+                            --     { " ", "NormalFloat" },
+                            --     { " ", "NormalFloat" },
+                            -- }
+                            return "none"
                         else
                             return "rounded"
                         end
@@ -83,8 +82,11 @@ return {
                 enabled = true,
             },
             servers = {
-                cmake = {},
+                cmake = {
+                    enabled = true
+                },
                 clangd = {
+                    enabled = true,
                     cmd = {
                         "clangd",
                         "--background-index",
@@ -102,8 +104,12 @@ return {
                         offsetEncoding = 'utf-8'
                     }
                 },
-                jsonls = {},
-                lua_ls = {},
+                jsonls = {
+                    enabled = true,
+                },
+                lua_ls = {
+                    enabled = true
+                },
                 -- lua_ls = {
                 --     cmd = { "lua-language-server", "--logpath=" .. vim.fn.stdpath("log") .. "/luals" },
                 --     on_init = function(client)
@@ -134,8 +140,11 @@ return {
                 --         return true
                 --     end,
                 -- },
-                marksman = {},
+                marksman = {
+                    enabled = true
+                },
                 matlab_ls = {
+                    enabled = true,
                     settings = {
                         MATLAB = {
                             installPath = (function()
@@ -149,17 +158,29 @@ return {
                     },
                     single_file_support = true
                 },
-                nushell = {},
-                perlnavigator = {},
-                pyright = {},
-                ts_ls = {},
+                nushell = {
+                    enabled = true
+                },
+                perlnavigator = {
+                    enabled = true
+                },
+                pyright = {
+                    enabled = true
+                },
+                ts_ls = {
+                    enabled = true
+                },
                 -- rust_analyzer = {
                 --     settings = {
                 --         ['rust_analyzer'] = {}
                 --     }
                 -- },
-                vimls = {},
-                yamlls = {}
+                vimls = {
+                    enabled = true
+                },
+                yamlls = {
+                    enabled = true
+                }
             }
         },
         config = function(_, opts)
@@ -203,6 +224,13 @@ return {
                 end
                 return orig_hover(config)
             end
+
+            -- vim.api.nvim_create_autocmd({ "CursorHoldI", "CursorMovedI" }, {
+            --     pattern = "*",
+            --     callback = function ()
+            --         vim.lsp.buf.signature_help({ focus = false, focusable = false, silent = true })
+            --     end
+            -- })
 
             local orig_open_floating_preview = vim.lsp.util.open_floating_preview
             vim.lsp.util.open_floating_preview = function(contents, syntax, opts_)
@@ -313,7 +341,15 @@ return {
                         capabilities = vim.tbl_deep_extend('force',
                             vim.lsp.protocol.make_client_capabilities(),
                             require('cmp_nvim_lsp').default_capabilities(),
-                            server_opts.capabilities or {}
+                            server_opts.capabilities or {},
+                            {
+                                textDocument = {
+                                    foldingRange = {
+                                        dynamicRegistration = false,
+                                        lineFoldingOnly = true
+                                    }
+                                }
+                            }
                         )
                     },
                     server_opts
@@ -333,7 +369,8 @@ return {
                         end
                     end
                 end
-                lspconfig[server].setup(server_opts)
+                vim.lsp.config(server, server_opts)
+                vim.lsp.enable(server, server_opts.enabled)
             end
 
             -- Use LspAttach autocommand to only map the following keys
@@ -347,11 +384,11 @@ return {
                     -- Buffer local mappings.
                     -- See `:help vim.lsp.*` for documentation on any of the below functions
                     local opts = { buffer = ev.buf }
-                    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-                    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+                    -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+                    -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
                     -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-                    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-                    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+                    -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+                    -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
                     -- vim.keymap.set('n', '<leader>xn', vim.lsp.buf.rename, opts)
                     -- vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, opts)
                     -- vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, opts)

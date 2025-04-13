@@ -13,15 +13,15 @@ return {
         hide_numbers = false,
         shade_terminals = false,
         start_in_insert = true,
-        -- shell = (function()
-        --     if vim.fn.executable('nu') then
-        --         return vim.fn.exepath('nu')
-        --     elseif vim.fn.executable('zsh') then
-        --         return vim.fn.exepath('zsh')
-        --     else
-        --         return vim.fn.exepath('bash')
-        --     end
-        -- end)(),
+        shell = (function()
+            if vim.fn.executable('nu') then
+                return vim.fn.exepath('nu')
+            elseif vim.fn.executable('zsh') then
+                return vim.fn.exepath('zsh')
+            else
+                return vim.fn.exepath('bash')
+            end
+        end)(),
         winbar = {
             enabled = false,
             name_formatter = function(term)

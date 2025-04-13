@@ -76,48 +76,50 @@ local function tab_title(tab_info)
     if pane.domain_name ~= config.default_domain then
         title = title .. pane.domain_name .. " "
     end
-    if pane.current_working_dir.file_path ~= nil then
-        local cwd, home_dir
-        if WINDOWS then
-            cwd = string.gsub(pane.current_working_dir.file_path, '^/(%u:)/', '%1/')
-            home_dir = string.gsub(wezterm.home_dir, '\\', '/')
-        else
-            cwd = pane.current_working_dir.file_path
-            home_dir = wezterm.home_dir
-        end
-        cwd = string.gsub(cwd, '^' .. home_dir, '~')
-        title = title .. string.gsub(cwd, '(.*[/\\])([^/\\]*)', '%2')
-    end
-    if title ~= '' then
-        title = title .. ' '
-    end
-    if pane.foreground_process_name ~= '' then
-        title = title .. string.gsub(pane.foreground_process_name, '(.*[/\\])([^/\\]*)', '%2')
-    else
-        local process_name = string.gsub(pane.title, '^[^>]+> (.*)$', '%1')
-        if process_name ~= pane.title then
-            title = title .. process_name
-        end
-    end
-
-    title = string.gsub(title, '(.*)%.exe', '%1')
-
-    if #title == 0 then
-        title = tab_info.title
-        if #tab_info.title == 0 then
-            title = tab_info.active_pane.title
-        end
-    end
-
-    return title
-    -- local title = tab_info.tab_title
-    -- -- if the tab title is explicitly set, take that
-    -- if title and #title > 0 then
-    --     return title
+    -- if pane.current_working_dir.file_path ~= nil then
+    --     local cwd, home_dir
+    --     if WINDOWS then
+    --         cwd = string.gsub(pane.current_working_dir.file_path, '^/(%u:)/', '%1/')
+    --         home_dir = string.gsub(wezterm.home_dir, '\\', '/')
+    --     else
+    --         cwd = pane.current_working_dir.file_path
+    --         home_dir = wezterm.home_dir
+    --     end
+    --     cwd = string.gsub(cwd, '^' .. home_dir, '~')
+    --     title = title .. string.gsub(cwd, '(.*[/\\])([^/\\]*)', '%2')
     -- end
-    -- -- Otherwise, use the title from the active pane
-    -- -- in that tab
-    -- return tab_info.active_pane.title
+    -- if title ~= '' then
+    --     title = title .. ' '
+    -- end
+    -- if pane.foreground_process_name ~= '' then
+    --     title = title .. string.gsub(pane.foreground_process_name, '(.*[/\\])([^/\\]*)', '%2')
+    -- else
+    --     local process_name = string.gsub(pane.title, '^[^>]+> (.*)$', '%1')
+    --     if process_name ~= pane.title then
+    --         title = title .. process_name
+    --     end
+    -- end
+    --
+    -- title = string.gsub(title, '(.*)%.exe', '%1')
+    --
+    -- if #title == 0 then
+    --     title = tab_info.title
+    --     if #tab_info.title == 0 then
+    --         title = tab_info.active_pane.title
+    --     end
+    -- end
+    --
+    -- return title
+
+    -- if the tab title is explicitly set, take that
+    if tab_info.tab_title and #tab_info.tab_title > 0 then
+        title = title .. tab_info.tab_title
+    else
+        -- Otherwise, use the title from the active pane
+        -- in that tab
+        title = title .. tab_info.active_pane.title
+    end
+    return title
 end
 
 wezterm.on(
@@ -542,7 +544,11 @@ else
     config.default_domain = 'Mux'
 
     if MAC then
-        if #wezterm.glob('/opt/homebrew/bin/zsh') ~= 0 then
+        if #wezterm.glob('/opt/homebrew/bin/nu') ~= 0 then
+            config.default_prog = { '/opt/homebrew/bin/nu', '-l', '-i' }
+        elseif #wezterm.glob('/usr/local/bin/nu') ~= 0 then
+            config.default_prog = { '/usr/local/bin/nu', '-l', '-i' }
+        elseif #wezterm.glob('/opt/homebrew/bin/zsh') ~= 0 then
             config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i' }
         elseif #wezterm.glob('/usr/local/bin/zsh') ~= 0 then
             config.default_prog = { '/usr/local/bin/zsh', '-l', '-i' }
@@ -550,7 +556,13 @@ else
             config.default_prog = { '/bin/zsh', '-l', '-i' }
         end
     else
-        config.default_prog = { '/bin/bash', '-i', '-c', 'if type zsh &> /dev/null; then zsh -l -i; else bash -i; fi' }
+        if #wezterm.glob(wezterm.home_dir .. "/.local/bin/nu") ~= 0 then
+            config.default_prog = { wezterm.home_dir .. "/.local/bin/nu", "-i", "-l" }
+        elseif #wezterm.glob("~/.local/bin/zsh") ~= 0 then
+            config.default_prog = { wezterm.home_dir .. "/.local/bin/zsh", "-i", "-l" }
+        else
+            config.default_prog = { "/usr/bin/bash", "-i", "-l" }
+        end
     end
     table.insert(config.launch_menu, {
         label = 'Mux',

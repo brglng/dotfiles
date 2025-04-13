@@ -67,6 +67,13 @@ vim.api.nvim_create_autocmd({"FileType"}, {
     command = "set shiftwidth=2 softtabstop=4 expandtab"
 })
 
+vim.api.nvim_create_autocmd("TextYankPost", {
+    pattern = "*",
+    callback = function()
+        vim.hl.on_yank { higroup = "CurSearch", timeout = 300 }
+    end
+})
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({

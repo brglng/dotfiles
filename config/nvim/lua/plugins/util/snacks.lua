@@ -6,6 +6,9 @@ return {
     event = "VeryLazy",
     -- @type snacks.Config
     opts = {
+        bigfile = {
+            enabled = true,
+        },
         indent = {
             enabled = false,
             only_current = true,
@@ -17,7 +20,7 @@ return {
             enabled = true,
         },
         input = {
-            enabled = true
+            enabled = true,
         },
         statuscolumn = {
             enabled = false,
@@ -36,6 +39,11 @@ return {
                 patterns = { "GitSign", "MiniDiffSign" },
             },
         },
+        styles = {
+            input = {
+                row = 0.5
+            }
+        }
     },
     keys = {
         -- {

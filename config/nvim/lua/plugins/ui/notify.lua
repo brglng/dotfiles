@@ -7,7 +7,7 @@ return {
         on_open = function(win)
             local win_border
             if vim.g.neovide then
-                win_border = { ' ', ' ', ' ', ' ', '▁', '▁', '▁', ' ' }
+                win_border = { '', ' ', '', '', '', '▁', '', '' }
             else
                 -- return { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
                 win_border = "rounded"
@@ -39,32 +39,44 @@ return {
             local win_title
             if vim.g.neovide then
                 win_title = {
-                    { " " .. notif.icon, highlights.icon },
+                    { " " .. notif.icon .. " ", highlights.icon },
                 }
             else
                 win_title = {
-                    { "─" .. notif.icon, highlights.icon },
+                    { "╴" .. notif.icon .. " ", highlights.icon },
                 }
             end
 
             if type(title) == "string" and notif.duplicates then
-                table.insert(win_title, { string.format("  %s x%d", title, #notif.duplicates), highlights.title })
+                if vim.g.neovide then
+                    table.insert(win_title, { string.format(" %s x%d ", title, #notif.duplicates), highlights.title })
+                else
+                    table.insert(win_title, { string.format(" %s x%d╶", title, #notif.duplicates), highlights.title })
+                end
             elseif type(title) == "string" and #title > 0 then
-                table.insert(win_title, { " " .. title, highlights.title })
+                if vim.g.neovide then
+                    table.insert(win_title, { title .. " ", highlights.title })
+                else
+                    table.insert(win_title, { title .. "╶", highlights.title })
+                end
             end
 
             vim.api.nvim_buf_set_var(bufnr, "__notify_title__", win_title)
 
             local message = {}
             for _, msg in ipairs(notif.message) do
-                table.insert(message, " " .. msg .. " ")
+                if vim.g.neovide then
+                    table.insert(message, "  " .. msg .. " ")
+                else
+                    table.insert(message, " " .. msg .. " ")
+                end
             end
 
             vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, message)
 
             vim.api.nvim_buf_set_extmark(bufnr, namespace, 0, 0, {
                 hl_group = highlights.body,
-                end_line = #message,
+                end_row = #message,
                 priority = 50,
             })
         end
@@ -82,44 +94,44 @@ return {
             local DiagnosticError = vim.api.nvim_get_hl(0, { name = "DiagnosticError", link = false })
             if vim.g.neovide then
                 vim.api.nvim_set_hl(0, "NotifyERRORIcon", {
-                    fg = DiagnosticError.fg,
-                    bg = NormalFloat.bg
+                    bg = DiagnosticError.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyWARNIcon", {
-                    fg = DiagnosticWarn.fg,
-                    bg = NormalFloat.bg
+                    bg = DiagnosticWarn.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyINFOIcon", {
-                    fg = DiagnosticInfo.fg,
-                    bg = NormalFloat.bg
+                    bg = DiagnosticInfo.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyDEBUGIcon", {
-                    fg = FloatBorder.fg,
-                    bg = NormalFloat.bg
+                    bg = FloatBorder.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyTRACEIcon", {
-                    fg = FloatBorder.fg,
-                    bg = NormalFloat.bg
+                    bg = FloatBorder.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyERRORTitle", {
-                    fg = DiagnosticError.fg,
-                    bg = NormalFloat.bg
+                    bg = DiagnosticError.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyWARNTitle", {
-                    fg = DiagnosticWarn.fg,
-                    bg = NormalFloat.bg
+                    bg = DiagnosticWarn.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyINFOTitle", {
-                    fg = DiagnosticInfo.fg,
-                    bg = NormalFloat.bg
+                    bg = DiagnosticInfo.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyDEBUGTitle", {
-                    fg = FloatBorder.fg,
-                    bg = NormalFloat.bg
+                    bg = FloatBorder.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyTRACETitle", {
-                    fg = FloatBorder.fg,
-                    bg = NormalFloat.bg
+                    bg = FloatBorder.fg,
+                    fg = NormalFloat.bg
                 })
                 vim.api.nvim_set_hl(0, "NotifyERRORBorder", {
                     fg = DiagnosticError.fg,
@@ -211,69 +223,156 @@ return {
             callback = set_notify_colors
         })
 
-        -- Utility functions shared between progress reports for LSP and DAP
+        -- LSP Progress Notifications
 
-        local client_notifs = {}
-        local function get_notif_data(client_id, token)
-            if not client_notifs[client_id] then
-                client_notifs[client_id] = {}
+        local client_tbl = {}
+
+        local function get_client_data(client_id)
+            if not client_tbl[client_id] then
+                client_tbl[client_id] = {
+                    current_notif_data = {
+                        last_update_time = 0,
+                        msg_data_list = {},
+                        notification = nil
+                    },
+                    token_msg_data_tbl = {}
+                }
             end
-            if not client_notifs[client_id][token] then
-                client_notifs[client_id][token] = {}
-            end
-            return client_notifs[client_id][token]
+            return client_tbl[client_id]
         end
 
-        local function format_message(title, message, percentage)
-            if title ~= nil and #title > 0 then
-                return title .. ": " .. (percentage and percentage .. "%\t" or "") .. (message or "")
+        local function get_msg_data(client_data, token)
+            local notif_data
+            if vim.uv.now() - client_data.current_notif_data.last_update_time < 2000 then
+                notif_data = client_data.current_notif_data
             else
-                return (percentage and percentage .. "%\t" or "") .. (message or "")
+                notif_data = {
+                    last_update_time = vim.uv.now(),
+                    msg_data_list = {},
+                    notification = nil
+                }
+                client_data.current_notif_data = notif_data
+            end
+
+            if client_data.token_msg_data_tbl[token] then
+                return client_data.token_msg_data_tbl[token]
+            else
+                local msg_data = {
+                    token = token,
+                    title = nil,
+                    msg = nil,
+                    percentage_start = nil,
+                    percentage_end = nil,
+                    notif_data = notif_data,
+                    notification = notif_data.notification
+                }
+                table.insert(notif_data.msg_data_list, msg_data)
+                client_data.token_msg_data_tbl[token] = msg_data
+                return msg_data
             end
         end
 
-        -- LSP integration
-
-        vim.lsp.handlers["$/progress"] = function(_, result, ctx)
-            local client_id = ctx.client_id
-
-            local val = result.value
-
-            if not val.kind then
-                return
+        local function draw_percentage(percentage, len)
+            if not percentage then
+                -- return vim.fn["repeat"]("░", len)
+                -- return vim.fn["repeat"]("─", len)
+                return ""
             end
+            local left_count = math.floor(percentage / 100 * len)
+            local half
+            local right_count
+            if percentage / 100 * len - left_count < 0.5 then
+                half = ""
+                right_count = len - left_count
+            else
+                half = "╸"
+                right_count = len - left_count - 1
+            end
+            -- return vim.fn["repeat"]("█", count) .. vim.fn["repeat"]("░", len - count)
+            -- return vim.fn["repeat"]("━", count) .. vim.fn["repeat"]("─", len - count)
+            return vim.fn["repeat"]("━", left_count) .. half .. vim.fn["repeat"](" ", right_count)
+        end
 
-            local client_name = vim.lsp.get_client_by_id(client_id).name
-            local notif_data = get_notif_data(client_id, result.token)
+        local function format_message(title, message, percentage, is_end)
+            if title ~= nil and #title > 0 then
+                title = title .. " "
+            else
+                title = ""
+            end
+            if is_end then
+                percentage = ""
+                message = message or "✔"
+            else
+                percentage = draw_percentage(percentage, 20) .. " "
+                message = message or ""
+            end
+            return title .. percentage .. message, #title + 1, #title + 1 + #percentage
+        end
 
-            if val.kind == "begin" then
-                notif_data.title = val.title
-                notif_data = get_notif_data(client_id, result.token)
-                notif_data.notification = vim.notify(format_message(val.title, val.message, val.percentage), vim.log.levels.INFO, {
-                    title = client_name,
-                    timeout = false,
-                    hide_from_history = true,
-                })
-                notif_data.last_update_time = vim.loop.now()
-            elseif val.kind == "report" then
-                if vim.uv.now() - notif_data.last_update_time > 100 then
-                    notif_data.notification = vim.notify(format_message(val.title or notif_data.title, val.message, val.percentage), vim.log.levels.INFO, {
-                        title = client_name,
-                        replace = notif_data.notification,
-                        timeout = false,
-                        hide_from_history = true,
-                    })
-                    notif_data.last_update_time = vim.uv.now()
+        vim.api.nvim_create_autocmd("LspProgress", {
+            pattern = "*",
+            callback = function (ev)
+                local client_id = ev.data.client_id
+                local params = ev.data.params
+                local val = params.value
+                if not val.kind then
+                    return
                 end
-            elseif val.kind == "end" then
-                vim.notify(format_message(val.title or notif_data.title, val.message or "✔"), vim.log.levels.INFO, {
-                    title = client_name,
+                local client_data = get_client_data(client_id)
+                local msg_data = get_msg_data(client_data, params.token)
+                local notif_data = msg_data.notif_data
+                if val.title then
+                    if #val.title >= 3 and val.title:sub(#val.title - 2, #val.title) == "..." then
+                        val.title = val.title:sub(1, #val.title - 3)
+                    end
+                    msg_data.title = val.title
+                end
+                if val.kind == "begin" then
+                    msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
+                elseif val.kind == "report" then
+                    if vim.uv.now() - notif_data.last_update_time < 200 then
+                        return
+                    end
+                    msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
+                elseif val.kind == "end" then
+                    msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, true)
+                    client_data.token_msg_data_tbl[params.token] = nil
+                end
+                local msg = ""
+                for _, data in ipairs(notif_data.msg_data_list) do
+                    if data.msg ~= "" then
+                        if msg == "" then
+                            msg = data.msg
+                        else
+                            msg = msg .. "\n" .. data.msg
+                        end
+                    end
+                end
+                notif_data.notification = vim.notify(msg, vim.log.levels.INFO, {
+                    title = vim.lsp.get_client_by_id(client_id).name,
+                    timeout = 5000,
                     replace = notif_data.notification,
-                    timeout = 3000,
-                    hide_from_history = false,
+                    hide_from_history = (val.kind == "report"),
+                    render = function(buf, notif, highlights, config)
+                        opts.render(buf, notif, highlights, config)
+                        local base = require("notify.render.base")
+                        local namespace = base.namespace()
+                        local row = 0
+                        for _, data in ipairs(notif_data.msg_data_list) do
+                            if data.msg ~= "" then
+                                vim.api.nvim_buf_set_extmark(buf, namespace, row, data.percentage_start, {
+                                    hl_group = "DiagnosticInfo",
+                                    end_col = data.percentage_end,
+                                    priority = 50,
+                                })
+                                row = row + 1
+                            end
+                        end
+                    end
                 })
+                notif_data.last_update_time = vim.uv.now()
             end
-        end
+        })
 
         -- table from lsp severity to vim severity.
         local severity = {

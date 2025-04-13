@@ -142,6 +142,7 @@ return {
                     timeout = 5000,
                     hide_from_history = false,
                 })
+                client_notifs[body.progressId] = nil
             end
         end,
         keys = {

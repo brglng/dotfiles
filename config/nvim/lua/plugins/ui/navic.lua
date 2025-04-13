@@ -1,11 +1,7 @@
 return {
     "SmiteshP/nvim-navic",
     enabled = true,
-    -- event = { "BufReadPost", "BufWritePost", "BufNewFile" },
-    lazy = true,
-    dependencies = {
-        "neovim/nvim-lspconfig"
-    },
+    event = { "LspAttach" },
     opts = {
         lsp = {
             auto_attach = true

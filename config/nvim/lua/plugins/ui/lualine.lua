@@ -36,41 +36,41 @@ return {
             },
             lualine_c = {
                 {
-                    function() return require("noice").api.status.search.get end,
-                    cond = function() return require("noice").api.status.search.has end,
+                    function()
+                        local clients = vim.lsp.get_clients()
+                        local buf = vim.api.nvim_get_current_buf()
+                        clients = vim.iter(clients)
+                            :filter(function(client)
+                                return client.attached_buffers[buf]
+                            end)
+                            :filter(function(client)
+                                return client.name ~= "Codeium"
+                            end)
+                            :filter(function(client)
+                                return client.name ~= "Github Copilot"
+                            end)
+                            :map(function(client)
+                                return client.name
+                            end)
+                            :totable()
+                        local info = table.concat(clients, ", ")
+                        return info
+                    end
                 },
                 -- {
                 --     function()
-                --         local clients = vim.lsp.get_clients()
-                --         local buf = vim.api.nvim_get_current_buf()
-                --         clients = vim.iter(clients)
-                --             :filter(function(client)
-                --                 return client.attached_buffers[buf]
-                --             end)
-                --             :filter(function(client)
-                --                 return client.name ~= "Codeium"
-                --             end)
-                --             :filter(function(client)
-                --                 return client.name ~= "Github Copilot"
-                --             end)
-                --             :map(function(client)
-                --                 return client.name
-                --             end)
-                --             :totable()
-                --         local info = table.concat(clients, ", ")
-                --         return info
+                --         return require('lsp-progress').progress()
                 --     end
-                -- },
+                -- }
                 {
-                    function()
-                        return require('lsp-progress').progress()
-                    end
-                }
+                    require("noice").api.status.search.get,
+                    cond = require("noice").api.status.search.has
+                },
             },
             lualine_x = {
                 {
-                    function() return require("noice").api.status.command.get end,
-                    cond = function() return require("noice").api.status.command.has end,
+                    require("noice").api.status.command.get,
+                    cond = require("noice").api.status.command.has,
                     separator = '',
                     padding = { right = 3 }
                 },
@@ -107,7 +107,7 @@ return {
     config = function(_, opts)
         require("lualine").setup(opts)
         -- listen lsp-progress event and refresh lualine
-        vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
+        -- vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
         -- vim.api.nvim_create_autocmd("User", {
         --     group = "lualine_augroup",
         --     pattern = "LspProgressStatusUpdated",

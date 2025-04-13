@@ -1,8 +1,8 @@
 return {
     "ray-x/lsp_signature.nvim",
     enabled = true,
-    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
-    dependencies = { "neovim/nvim-lspconfig" },
+    cond = false,
+    event = { "LspAttach" },
     opts = {
         bind = true,
         doc_lines = 50,
@@ -14,7 +14,7 @@ return {
         handler_opts = {
             border = (function()
                 if vim.g.neovide then
-                    return "solid"
+                    return "none"
                 else
                     -- return { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }
                     return "rounded"
@@ -29,7 +29,7 @@ return {
         },
         -- transparency = 20,
         hint_enable = false,
-        padding = " "
+        -- padding = " "
     },
     config = function(_, opts)
         require("lsp_signature").setup(opts)

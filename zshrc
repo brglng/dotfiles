@@ -12,11 +12,16 @@ fi
 
 ZSH_DISABLE_COMPFIX="true"
 
-zstyle ':zim:zmodule' use 'degit'
+_cursor_bar() {
+    echo -ne "\e[6 q"
+}
 
+zstyle ':zim:zmodule' use 'degit'
 zstyle ':zim:termtitle' hooks 'preexec' 'precmd'
-zstyle ':zim:termtitle:preexec' format '%~ ${${(A)=1}[1]}'
-zstyle ':zim:termtitle:precmd' format '%~ zsh'
+zstyle ':zim:termtitle:preexec' format '%1~: ${${(A)=1}[1]}'
+zstyle ':zim:termtitle:precmd' format '%1~: zsh'
+
+precmd_functions+=(_cursor_bar)
 
 ZIM_HOME=~/.zim
 
@@ -36,7 +41,10 @@ source ${ZIM_HOME}/init.zsh
 
 bindkey -e
 
+alias -s bat=cmd.exe
+alias -s bash=/bin/bash
 alias -s c=$EDITOR
+alias -s cmd=cmd.exe
 alias -s conf=$EDITOR
 alias -s h=$EDITOR
 alias -s cc=$EDITOR
@@ -47,6 +55,7 @@ alias -s cxx=$EDITOR
 alias -s hxx=$EDITOR
 alias -s txt=$EDITOR
 alias -s rs=$EDITOR
+alias -s sh=/bin/bash
 alias -s vim=$EDITOR
 
 setopt BANG_HIST                # Treat the '!' character specially during expansion.

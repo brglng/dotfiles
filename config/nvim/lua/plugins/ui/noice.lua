@@ -39,7 +39,7 @@ return {
                 enabled = false,
             },
             signature = {
-                enabled = false,
+                enabled = true,
             },
             message = {
                 enabled = false,

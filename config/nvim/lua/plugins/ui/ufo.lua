@@ -3,7 +3,6 @@ return {
     dependencies = {
         "kevinhwang91/promise-async",
         'nvim-treesitter/nvim-treesitter',
-        "luukvbaal/statuscol.nvim"
     },
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     init = function()

@@ -99,6 +99,45 @@ $env.NU_PLUGIN_DIRS = [
 # To load from a custom file you can use:
 # source ($nu.default-config-dir | path join 'custom.nu')
 
+$env.PATH = ($env.PATH | split row (char esep))
+
+def --env path_prepend [path: string] {
+    $env.PATH = ($env.PATH | filter {|p| $p != $path} | prepend $path)
+}
+
+def --env path_append [path: string] {
+    $env.PATH = ($env.PATH | filter {|p| $p != $path} | append $path)
+}
+
+def --env setup_wsl_env [] {
+    let winpath = do {
+        cd /mnt/c
+        ((^/mnt/c/Windows/System32/cmd.exe /c 'echo %PATH:\\=/%') | split row ";")
+    }
+    for p in $winpath {
+        path_append (/usr/bin/wslpath -u $"($p)")
+    }
+    $env.DISPLAY = ":0"
+    $env.WAYLAND_DISPLAY = "wayland-0"
+}
+
+if (uname | get operating-system) == "Darwin" {
+    path_prepend "/usr/local/bin"
+    if (uname | get machine) =~ "^arm64" {
+        path_prepend "/opt/homebrew/bin"
+    }
+}
+
+path_prepend $"($env.HOME)/.local/bin"
+
+if (which brew | length) > 0 {
+    $"eval (brew shellenv)\nenv | grep '^HOMEBREW\\|^MANPATH\\|^INFOPATH'" | sh | parse "{k}={v}" | transpose -r -d | load-env
+}
+
+# do again to make it first
+path_prepend $"($env.HOME)/.local/bin"
+path_prepend $"($env.HOME)/.cargo/bin"
+
 mkdir ~/.cache/starship
 starship init nu | save -f ~/.cache/starship/init.nu
 
@@ -113,4 +152,8 @@ if (uname | get operating-system) =~ 'MS/Windows' {
     luajit ((scoop prefix z.lua) + '/z.lua') --init nushell | save -f ~/.cache/zlua.nu
 } else {
     luajit ((brew --prefix) + '/share/z.lua/z.lua') --init nushell | save -f ~/.cache/zlua.nu
+}
+
+if (which "/mnt/c/Windows/System32/cmd.exe" | length) > 0 {
+    setup_wsl_env
 }

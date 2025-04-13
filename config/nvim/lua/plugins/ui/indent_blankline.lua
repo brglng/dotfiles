@@ -1,7 +1,8 @@
 return {
     "lukas-reineke/indent-blankline.nvim",
     enabled = true,
-    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
+    -- event = { "BufReadPost", "BufWritePost", "BufNewFile" },
+    ft = { "make", "python" },
     main = "ibl",
     opts = {
         enabled = false,

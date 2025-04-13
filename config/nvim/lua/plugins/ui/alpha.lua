@@ -1,8 +1,8 @@
 return {
     "goolord/alpha-nvim",
     enabled = true,
-    -- event = "VimEnter",
-    lazy = false,
+    event = "VimEnter",
+    -- lazy = false,
     dependencies = {
         "echasnovski/mini.icons",
         "nvim-lua/plenary.nvim"
@@ -68,7 +68,7 @@ return {
                 position = "center",
                 shortcut = sc,
                 cursor = 3,
-                width = math.min(vim.fn.winwidth(0), 160) - 18,
+                width = math.min(vim.fn.winwidth(0) - 2, 150),
                 align_shortcut = "right",
                 hl_shortcut = { { "Number", 0, 1 } },
                 shrink_margin = false,
@@ -145,7 +145,8 @@ return {
             return file_button_el
         end
 
-        local projects_loaded = false
+        local projects_load_state = 0
+        local project_list = {}
         local projects_tbl = {
             {
                 type = "text",
@@ -153,6 +154,7 @@ return {
                 opts = {
                     position = "center",
                     hl = "Comment",
+                    width = math.min(vim.fn.winwidth(0) - 2, 150),
                 }
             }
         }
@@ -166,47 +168,50 @@ return {
                 next_key_idx = next_key_idx + 1
                 return k
             end
-            if not projects_loaded then
-                projects_loaded = true
-                -- vim.defer_fn(function()
+            if projects_load_state == 0 then
+                -- vim.schedule(function ()
+                    projects_load_state = 1
                     local path = require("neovim-project.utils.path")
                     local history = require("neovim-project.utils.history")
-                    local project = require("neovim-project.project")
-                    local results = history.get_recent_projects()
+                    project_list = history.get_recent_projects()
                     -- Reverse results
-                    for i = 1, math.floor(#results / 2) do
-                        results[i], results[#results - i + 1] = results[#results - i + 1], results[i]
+                    for i = 1, math.floor(#project_list / 2) do
+                        project_list[i], project_list[#project_list - i + 1] = project_list[#project_list - i + 1], project_list[i]
                     end
-                    results = vim.list_slice(results, 1, math.min(10, #results))
-                    results = path.fix_symlinks_for_history(results)
-                    projects_tbl = {}
-                    for _, proj in ipairs(results) do
-                        local short_proj
-                        if utf8_len(proj) > math.min(vim.fn.winwidth(0), 160) - 24 then
-                            short_proj = "  …" .. string.sub(proj, #proj - math.min(vim.fn.winwidth(0), 160) - 23, #proj)
-                        else
-                            short_proj = "  " .. proj
-                        end
-                        local sc = next_key()
-                        table.insert(projects_tbl, {
-                            type = "button",
-                            val = short_proj,
-                            on_press = function() project.switch_project(proj) end,
-                            opts = {
-                                keymap = { "n", sc, function() project.switch_project(proj) end },
-                                position = "center",
-                                shortcut = sc,
-                                align_shortcut = "right",
-                                hl = { { "Directory", 0, 1 }, { "Normal", 1, -1 } },
-                                hl_shortcut = "Number",
-                                cursor = 3,
-                                width = math.min(vim.fn.winwidth(0), 160) - 18,
-                            }
-                        })
-                    end
-                    -- vim.schedule(function () require("alpha").redraw() end)
-                -- end, 300)
+                    project_list = vim.list_slice(project_list, 1, math.min(10, #project_list))
+                    project_list = path.fix_symlinks_for_history(project_list)
+                    projects_load_state = 2
+                --     vim.schedule(function () require("alpha").redraw() end)
+                -- end)
             end
+            -- elseif projects_load_state == 2 then
+                local project = require("neovim-project.project")
+                projects_tbl = {}
+                for _, proj in ipairs(project_list) do
+                    local short_proj
+                    if vim.fn.strdisplaywidth(proj) > math.min(vim.fn.winwidth(0) - 2, 150) - 5 then
+                        short_proj = "  ..." .. string.sub(proj, #proj - (math.min(vim.fn.winwidth(0) - 2, 150) - 8) + 1, #proj)
+                    else
+                        short_proj = "  " .. proj
+                    end
+                    local sc = next_key()
+                    table.insert(projects_tbl, {
+                        type = "button",
+                        val = short_proj,
+                        on_press = function() project.switch_project(proj) end,
+                        opts = {
+                            keymap = { "n", sc, function() project.switch_project(proj) end },
+                            position = "center",
+                            shortcut = sc,
+                            align_shortcut = "right",
+                            hl = { { "Directory", 0, 1 }, { "Normal", 1, -1 } },
+                            hl_shortcut = "Number",
+                            cursor = 3,
+                            width = math.min(vim.fn.winwidth(0) - 2, 150),
+                        }
+                    })
+                end
+            -- end
             return projects_tbl
         end
 
@@ -248,11 +253,14 @@ return {
                 if cwd then
                     short_fn = fnamemodify(fn, ":.")
                 else
-                    short_fn = fnamemodify(fn, ":~")
+                    short_fn = fn
+                end
+                if vim.fn.isabsolutepath(short_fn) then
+                    short_fn = fnamemodify(short_fn, ":~")
                 end
                 -- vim.notify(tostring(vim.fn.winwidth(0)))
-                if utf8_len(short_fn) > math.min(vim.fn.winwidth(0), 160) - 24 then
-                    short_fn = "…" .. string.sub(short_fn, #short_fn - math.min(vim.fn.winwidth(0), 160) - 23, #short_fn)
+                if vim.fn.strdisplaywidth(short_fn) > math.min(vim.fn.winwidth(0) - 2, 150) - 5 then
+                    short_fn = "..." .. string.sub(short_fn, #short_fn - (math.min(vim.fn.winwidth(0) - 2, 150) - 8) + 1, #short_fn)
                 end
                 local file_button_el = file_button(fn, next_key(), short_fn, opts.autocd)
                 tbl[i] = file_button_el
@@ -401,7 +409,7 @@ return {
                     val = fortune,
                     opts = {
                         position = "center",
-                        hl = "String"
+                        hl = "DiagnosticHint"
                     }
                 },
                 { type = "padding", val = 1 },
@@ -504,7 +512,7 @@ return {
                 { type = "padding", val = 1 },
             },
             opts = {
-                noautocmd = true
+                -- noautocmd = true
             }
         }
 
@@ -513,6 +521,7 @@ return {
             pattern = "LazyVimStarted",
             callback = function()
                 require("alpha").redraw()
+                -- vim.cmd [[ AlphaRedraw ]]
             end
         })
 
