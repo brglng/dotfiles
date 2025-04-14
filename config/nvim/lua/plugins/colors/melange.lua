@@ -29,41 +29,41 @@ return {
             --[[ if vim.o.background == 'dark' then
                 vim.api.nvim_set_hl(0, 'Pmenu', {
                     fg = Pmenu.fg,
-                    bg = brglng.color.add_value(Pmenu.bg, 0.02),
+                    bg = brglng.color.lighten(Pmenu.bg, 0.02),
                 })
                 vim.api.nvim_set_hl(0, 'PmenuSel', {
                     fg = PmenuSel.fg,
-                    bg = brglng.color.add_value(PmenuSel.bg, 0.02),
+                    bg = brglng.color.lighten(PmenuSel.bg, 0.02),
                 })
                 vim.api.nvim_set_hl(0, 'PmenuThumb', {
                     fg = PmenuThumb.fg,
-                    bg = brglng.color.add_value(PmenuThumb.bg, 0.02),
+                    bg = brglng.color.lighten(PmenuThumb.bg, 0.02),
                 })
             else
                 vim.api.nvim_set_hl(0, 'Pmenu', {
                     fg = Pmenu.fg,
-                    bg = brglng.color.reduce_value(Pmenu.bg, 0.015)
+                    bg = brglng.color.darken(Pmenu.bg, 0.015)
                 })
                 vim.api.nvim_set_hl(0, 'PmenuSel', {
                     fg = PmenuSel.fg,
-                    bg = brglng.color.reduce_value(PmenuSel.bg, 0.015)
+                    bg = brglng.color.darken(PmenuSel.bg, 0.015)
                 })
                 vim.api.nvim_set_hl(0, 'PmenuThumb', {
                     fg = PmenuThumb.fg,
-                    bg = brglng.color.reduce_value(PmenuThumb.bg, 0.015)
+                    bg = brglng.color.darken(PmenuThumb.bg, 0.015)
                 })
             end ]]
             vim.api.nvim_set_hl(0, 'FloatBorder', {
-                fg = brglng.color.transparency(FloatBorder.fg, NormalFloat.bg, 0.7),
+                fg = brglng.color.blend(FloatBorder.fg, NormalFloat.bg, 0.7),
                 bg = NormalFloat.bg
             })
             -- vim.api.nvim_set_hl(0, 'PmenuThumb', {
             --     fg = PmenuThumb.fg,
             --     bg = (function()
             --         if vim.o.background == 'dark' then
-            --             return brglng.color.add_value(PmenuThumb.bg, 0.1)
+            --             return brglng.color.lighten(PmenuThumb.bg, 0.1)
             --         else
-            --             return brglng.color.reduce_value(PmenuThumb.bg, 0.1)
+            --             return brglng.color.darken(PmenuThumb.bg, 0.1)
             --         end
             --     end)()
             -- })

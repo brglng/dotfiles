@@ -276,39 +276,39 @@ return {
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", {
                     fg = DiagnosticVirtualTextError.fg,
-                    bg = brglng.color.transparency(DiagnosticVirtualTextError.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(DiagnosticVirtualTextError.fg, Normal.bg, 0.4),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", {
                     fg = DiagnosticVirtualTextWarn.fg,
-                    bg = brglng.color.transparency(DiagnosticVirtualTextWarn.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(DiagnosticVirtualTextWarn.fg, Normal.bg, 0.4),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", {
                     fg = DiagnosticVirtualTextInfo.fg,
-                    bg = brglng.color.transparency(DiagnosticVirtualTextInfo.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(DiagnosticVirtualTextInfo.fg, Normal.bg, 0.4),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", {
                     fg = DiagnosticVirtualTextHint.fg,
-                    bg = brglng.color.transparency(DiagnosticVirtualTextHint.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(DiagnosticVirtualTextHint.fg, Normal.bg, 0.4),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesError", {
                     fg = DiagnosticVirtualLinesError.fg,
-                    bg = brglng.color.transparency(DiagnosticVirtualLinesError.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(DiagnosticVirtualLinesError.fg, Normal.bg, 0.4),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesWarn", {
                     fg = DiagnosticVirtualLinesWarn.fg,
-                    bg = brglng.color.transparency(DiagnosticVirtualLinesWarn.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(DiagnosticVirtualLinesWarn.fg, Normal.bg, 0.4),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesInfo", {
                     fg = DiagnosticVirtualLinesInfo.fg,
-                    bg = brglng.color.transparency(DiagnosticVirtualLinesInfo.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(DiagnosticVirtualLinesInfo.fg, Normal.bg, 0.4),
                 })
                 vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesHint", {
                     fg = DiagnosticVirtualLinesHint.fg,
-                    bg = brglng.color.transparency(DiagnosticVirtualLinesHint.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(DiagnosticVirtualLinesHint.fg, Normal.bg, 0.4),
                 })
                 vim.api.nvim_set_hl(0, "LspInlayHint", {
                     fg = LspInlayHint.fg,
-                    bg = brglng.color.transparency(LspInlayHint.fg, Normal.bg, 0.2),
+                    bg = brglng.color.blend(LspInlayHint.fg, Normal.bg, 0.4),
                 })
             end
             set_lsp_colors()

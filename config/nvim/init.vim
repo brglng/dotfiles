@@ -4,12 +4,15 @@ if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
 endif
 
 if !has('nvim')
-    let &runtimepath = &runtimepath . ',/home/linuxbrew/.linuxbrew/share/vim/vimfiles'
     let &runtimepath = &runtimepath . ',/usr/local/share/vim/vimfiles'
 endif
 
-if exists('g:neovide') && !has('win32')
-    let $PATH = $HOME . '/.local/bin:' . $HOME . '/.cargo/bin:' . $PATH
+if exists('g:neovide')
+    if has('win32')
+        let $PATH = $HOME . '/.local/bin;' . $HOME . '/.cargo/bin;' . $HOME . '/.pixi/bin;' . $PATH
+    else
+        let $PATH = $HOME . '/.local/bin:' . $HOME . '/.cargo/bin:' . $HOME . '/.pixi/bin:' . $PATH
+    endif
 endif
 
 if !has('nvim')

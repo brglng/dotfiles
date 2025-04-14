@@ -294,8 +294,15 @@ return {
         end
 
         local function format_message(title, message, percentage, is_end)
+            local percentage_start
+            if vim.g.neovide then
+                percentage_start = 2
+            else
+                percentage_start = 1
+            end
             if title ~= nil and #title > 0 then
                 title = title .. " "
+                percentage_start = percentage_start + #title + 1
             else
                 title = ""
             end
@@ -306,7 +313,7 @@ return {
                 percentage = draw_percentage(percentage, 20) .. " "
                 message = message or ""
             end
-            return title .. percentage .. message, #title + 1, #title + 1 + #percentage
+            return title .. percentage .. message, percentage_start, percentage_start + #percentage
         end
 
         vim.api.nvim_create_autocmd("LspProgress", {
@@ -330,7 +337,7 @@ return {
                 if val.kind == "begin" then
                     msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
                 elseif val.kind == "report" then
-                    if vim.uv.now() - notif_data.last_update_time < 200 then
+                    if vim.uv.now() - notif_data.last_update_time < 300 then
                         return
                     end
                     msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
@@ -339,6 +346,7 @@ return {
                     client_data.token_msg_data_tbl[params.token] = nil
                 end
                 local msg = ""
+                local row = 0
                 for _, data in ipairs(notif_data.msg_data_list) do
                     if data.msg ~= "" then
                         if msg == "" then
@@ -346,6 +354,8 @@ return {
                         else
                             msg = msg .. "\n" .. data.msg
                         end
+                        data.row = row
+                        row = row + 1
                     end
                 end
                 notif_data.notification = vim.notify(msg, vim.log.levels.INFO, {
@@ -357,17 +367,15 @@ return {
                         opts.render(buf, notif, highlights, config)
                         local base = require("notify.render.base")
                         local namespace = base.namespace()
-                        local row = 0
-                        for _, data in ipairs(notif_data.msg_data_list) do
-                            if data.msg ~= "" then
-                                vim.api.nvim_buf_set_extmark(buf, namespace, row, data.percentage_start, {
-                                    hl_group = "DiagnosticInfo",
-                                    end_col = data.percentage_end,
-                                    priority = 50,
-                                })
-                                row = row + 1
-                            end
-                        end
+                        -- for _, data in ipairs(notif_data.msg_data_list) do
+                        --     if data.percentage_end > data.percentage_start then
+                        --         vim.api.nvim_buf_set_extmark(buf, namespace, data.row, data.percentage_start, {
+                        --             hl_group = "DiagnosticInfo",
+                        --             end_col = data.percentage_end,
+                        --             priority = 50,
+                        --         })
+                        --     end
+                        -- end
                     end
                 })
                 notif_data.last_update_time = vim.uv.now()

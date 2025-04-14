@@ -33,16 +33,9 @@ return {
             local Comment = vim.api.nvim_get_hl(0, { name = 'Comment', link = false })
             local Special = vim.api.nvim_get_hl(0, { name = 'Special', link = false })
 
-            local fill_bg, inactive_bg, visible_bg
-            if vim.o.background == "dark" then
-                fill_bg = brglng.color.reduce_value(Normal.bg, 0.12)
-                inactive_bg = brglng.color.reduce_value(Normal.bg, 0.06)
-                visible_bg = brglng.color.reduce_value(Normal.bg, 0.02)
-            else
-                fill_bg = brglng.color.reduce_value(Normal.bg, 0.24)
-                inactive_bg = brglng.color.reduce_value(Normal.bg, 0.12)
-                visible_bg = brglng.color.reduce_value(Normal.bg, 0.05)
-            end
+            local fill_bg = brglng.color.darken(Normal.bg, 0.2)
+            local inactive_bg = brglng.color.darken(Normal.bg, 0.1)
+            local visible_bg = brglng.color.darken(Normal.bg, 0.05)
 
             vim.api.nvim_set_hl(0, "TabLineFill", {
                 bg = fill_bg
@@ -82,7 +75,7 @@ return {
             })
             vim.api.nvim_set_hl(0, 'BufferVisible', {
                 fg = Comment.fg,
-                bg = brglng.color.reduce_value(Normal.bg, 0.03),
+                bg = brglng.color.darken(Normal.bg, 0.05),
             })
             vim.api.nvim_set_hl(0, 'BufferVisibleSign', {
                 fg = fill_bg,

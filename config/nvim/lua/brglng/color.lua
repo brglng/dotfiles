@@ -1,177 +1,451 @@
+-- Require the bit library (built into LuaJIT)
+local bit = require("bit")
+
 local M = {}
 
-local function fix(x)
-    if x >= 0 then
-        return math.floor(x)
-    else
-        return math.ceil(x)
+-- sRGB to Linear RGB
+---@param r number
+---@param g number
+---@param b number
+---@param gamma number?
+---@return number, number, number
+function M.rgb_to_linear_rgb(r, g, b, gamma)
+    if gamma == nil then
+        gamma = 2.2
     end
+    local function to_linear(x)
+        if x <= 0.04045 then
+            return x / 12.92
+        else
+            return ((x + 0.055) / 1.055) ^ gamma
+        end
+    end
+
+    return to_linear(r), to_linear(g), to_linear(b)
 end
 
-function M.rgb2str(r, g, b)
-    assert(type(r) == "number" and type(g) == "number" and type(b) == "number")
-    return string.format("#02x%02x%02x", r, g, b)
+-- Linear RGB to sRGB
+---@param lr number
+---@param lg number
+---@param lb number
+---@param gamma number?
+---@return number, number, number
+function M.linear_rgb_to_rgb(lr, lg, lb, gamma)
+    if gamma == nil then
+        gamma = 2.2
+    end
+    local function to_srgb(x)
+        if x <= 0.0031308 then
+            return x * 12.92
+        else
+            return 1.055 * (x ^ (1.0 / gamma)) - 0.055
+        end
+    end
+
+    return to_srgb(lr), to_srgb(lg), to_srgb(lb)
 end
 
-function M.str2rgb(rgb_str)
-    local r, g, b = string.match(rgb_str, "^#?(%x%x)(%x%x)(%x%x)$")
-    assert(r ~= nil and g ~= nil and b ~= nil)
-    return tonumber(r, 16), tonumber(g, 16), tonumber(b, 16)
+-- Linear RGB to Oklab
+---@param lr number
+---@param lg number
+---@param lb number
+---@return number, number, number
+function M.linear_rgb_to_oklab(lr, lg, lb)
+    -- Intermediate values
+    local l = 0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb
+    local m = 0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb
+    local s = 0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb
+
+    l = l ^ (1 / 3)
+    m = m ^ (1 / 3)
+    s = s ^ (1 / 3)
+
+    -- Oklab coordinates
+    local L = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s
+    local a = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s
+    local b = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s
+
+    return L, a, b
 end
 
-function M.extract_rgb(rgb)
-    local r = math.floor(rgb / 16 ^ 4)
-    local g = math.floor((rgb - r * 16 ^ 4) / (16 ^ 2))
-    local b = rgb - r * 16 ^ 4 - g * 16 ^ 2
+-- Oklab to Linear RGB
+---@param L number
+---@param a number
+---@param b number
+---@return number, number, number
+function M.oklab_to_linear_rgb(L, a, b)
+    -- Inverse transform
+    local l = L + 0.3963377774 * a + 0.2158037573 * b
+    local m = L - 0.1055613458 * a - 0.0638541728 * b
+    local s = L - 0.0894841775 * a - 1.2914855480 * b
+
+    -- Cube the values
+    l = l * l * l
+    m = m * m * m
+    s = s * s * s
+
+    -- Convert to linear RGB
+    local lr = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
+    local lg = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
+    local lb = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+
+    -- Clamp values
+    lr = math.max(0, math.min(1, lr))
+    lg = math.max(0, math.min(1, lg))
+    lb = math.max(0, math.min(1, lb))
+
+    return lr, lg, lb
+end
+
+-- Oklab to Oklch
+---@param L number
+---@param a number
+---@param b number
+---@return number, number, number
+function M.oklab_to_oklch(L, a, b)
+    local C = math.sqrt(a * a + b * b)
+    local h = math.atan2(b, a)
+    -- Convert h to degrees
+    h = h * 180 / math.pi
+    -- Ensure h is in [0, 360]
+    if h < 0 then
+        h = h + 360
+    end
+
+    return L, C, h
+end
+
+-- Oklch to Oklab
+---@param L number
+---@param C number
+---@param h number
+---@return number, number, number
+function M.oklch_to_oklab(L, C, h)
+    -- Convert h to radians
+    local h_rad = h * math.pi / 180
+
+    local a = C * math.cos(h_rad)
+    local b = C * math.sin(h_rad)
+
+    return L, a, b
+end
+
+-- Linear RGB to Oklch
+---@param lr number
+---@param lg number
+---@param lb number
+---@return number, number, number
+function M.linear_rgb_to_oklch(lr, lg, lb)
+    local L, a, b = M.linear_rgb_to_oklab(lr, lg, lb)
+    return M.oklab_to_oklch(L, a, b)
+end
+
+-- Oklch to Linear RGB
+---@param L number
+---@param C number
+---@param h number
+---@return number, number, number
+function M.oklch_to_linear_rgb(L, C, h)
+    local _, a, b = M.oklch_to_oklab(L, C, h)
+    return M.oklab_to_linear_rgb(L, a, b)
+end
+
+-- sRGB to Oklch
+---@param r number
+---@param g number
+---@param b number
+---@return number, number, number
+function M.rgb_to_oklch(r, g, b)
+    local lr, lg, lb = M.rgb_to_linear_rgb(r, g, b)
+    return M.linear_rgb_to_oklch(lr, lg, lb)
+end
+
+-- Oklch to sRGB
+---@param L number
+---@param C number
+---@param h number
+---@return number, number, number
+function M.oklch_to_rgb(L, C, h)
+    local lr, lg, lb = M.oklch_to_linear_rgb(L, C, h)
+    return M.linear_rgb_to_rgb(lr, lg, lb)
+end
+
+-- Lighten a color
+---@param r number [0.0, 1.0]
+---@param g number [0.0, 1.0]
+---@param b number [0.0, 1.0]
+---@param amount number [0.0, 1.0]
+---@return number, number, number
+function M.lighten_rgb(r, g, b, amount)
+    -- Convert RGB to OKLCH
+    local L, c, h = M.rgb_to_oklch(r, g, b)
+
+    -- Scale lightness towards 1.0 (white)
+    -- This formula ensures a perceptually uniform change
+    L = L + (1.0 - L) * amount
+
+    -- Convert back to RGB
+    return M.oklch_to_rgb(L, c, h)
+end
+
+-- Darken a color
+---@param r number [0.0, 1.0]
+---@param g number [0.0, 1.0]
+---@param b number [0.0, 1.0]
+---@param amount number [0.0, 1.0]
+---@return number, number, number
+function M.darken_rgb(r, g, b, amount)
+    -- Convert RGB to OKLCH
+    local L, c, h = M.rgb_to_oklch(r, g, b)
+
+    -- Scale lightness towards 0.0 (black)
+    -- This formula ensures a perceptually uniform change
+    L = L * (1.0 - amount)
+
+    -- Convert back to RGB
+    return M.oklch_to_rgb(L, c, h)
+end
+
+-- Calculate a color between two RGB colors
+---@param r1 number [0.0, 1.0]
+---@param g1 number [0.0, 1.0]
+---@param b1 number [0.0, 1.0]
+---@param r2 number [0.0, 1.0]
+---@param g2 number [0.0, 1.0]
+---@param b2 number [0.0, 1.0]
+---@param mix number [0.0, 1.0], t=0.0 returns the first color, t=1.0 returns the second color
+---@return number, number, number
+function M.interpolate_rgb(r1, g1, b1, r2, g2, b2, mix)
+    -- Clamp t to [0,1] range
+    t = math.max(0.0, math.min(1.0, t))
+
+    -- Convert both colors to OKLCH
+    local L1, C1, h1 = M.rgb_to_oklch(r1, g1, b1)
+    local L2, C2, h2 = M.rgb_to_oklch(r2, g2, b2)
+
+    -- Linearly interpolate L and C
+    local L = L1 + (L2 - L1) * t
+    local C = C1 + (C2 - C1) * t
+
+    -- Handle special case where either color has zero chroma
+    -- In such cases, the hue is meaningless and we can use the other color's hue
+    if C1 < 0.0001 then h1 = h2 end
+    if C2 < 0.0001 then h2 = h1 end
+
+    -- Interpolate hue (special case since it's an angle)
+    local h
+
+    -- Calculate the shortest path around the color wheel
+    local delta_h = h2 - h1
+    if delta_h > 180 then
+        delta_h = delta_h - 360
+    elseif delta_h < -180 then
+        delta_h = delta_h + 360
+    end
+
+    h = h1 + delta_h * t
+
+    -- Ensure h stays in [0, 360] range
+    if h < 0 then
+        h = h + 360
+    elseif h > 360 then
+        h = h - 360
+    end
+
+    -- Convert back to RGB
+    return M.oklch_to_rgb(L, C, h)
+end
+
+-- Blend a foreground color over a background color with given opacity using OKLCH color space
+-- Input: 
+--   fr, fg, fb: foreground RGB color in [0.0, 1.0] range
+--   br, bg, bb: background RGB color in [0.0, 1.0] range
+--   opacity: the opacity of the foreground color in [0.0, 1.0] range
+-- Output: blended r, g, b in [0.0, 1.0] range
+---@param fg_r number [0.0, 1.0]
+---@param fg_g number [0.0, 1.0]
+---@param fg_b number [0.0, 1.0]
+---@param bg_r number [0.0, 1.0]
+---@param bg_g number [0.0, 1.0]
+---@param bg_b number [0.0, 1.0]
+---@param opacity number [0.0, 1.0]
+---@return number, number, number
+function M.blend_rgb(fg_r, fg_g, fg_b, bg_r, bg_g, bg_b, opacity)
+    -- Clamp opacity to [0,1] range
+    opacity = math.max(0.0, math.min(1.0, opacity))
+
+    -- Convert foreground and background to OKLCH
+    local fg_L, fg_C, fg_h = M.rgb_to_oklch(fg_r, fg_g, fg_b)
+    local bg_L, bg_C, bg_h = M.rgb_to_oklch(bg_r, bg_g, bg_b)
+
+    -- Blend lightness and chroma using linear interpolation
+    local L = fg_L * opacity + bg_L * (1 - opacity)
+    local C = fg_C * opacity + bg_C * (1 - opacity)
+
+    -- Handle special cases where either color has zero chroma
+    -- In such cases, the hue is meaningless
+    if fg_C < 0.0001 then fg_h = bg_h end
+    if bg_C < 0.0001 then bg_h = fg_h end
+
+    -- Convert back to RGB
+    return M.oklch_to_rgb(L, C, fg_h)
+end
+
+-- Pack separate RGB components into a single integer
+---@param r number [0.0, 1.0]
+---@param g number [0.0, 1.0]
+---@param b number [0.0, 1.0]
+---@return integer
+function M.pack_rgb(r, g, b)
+    -- Convert from [0.0, 1.0] to [0, 255]
+    local r_byte = math.floor(r * 255 + 0.5)
+    local g_byte = math.floor(g * 255 + 0.5)
+    local b_byte = math.floor(b * 255 + 0.5)
+
+    -- Ensure values are in [0, 255] range
+    r_byte = math.max(0, math.min(255, r_byte))
+    g_byte = math.max(0, math.min(255, g_byte))
+    b_byte = math.max(0, math.min(255, b_byte))
+
+    -- Pack into a single number (R in high bits, B in low bits)
+    -- Using LuaJIT bit operations
+    local number = bit.bor(
+        bit.lshift(r_byte, 16),
+        bit.lshift(g_byte, 8),
+        b_byte
+    )
+
+    return number
+end
+
+-- Unpack a RGB integer into separate RGB components
+---@param packed integer
+---@return number, number, number
+function M.unpack_rgb(packed)
+    -- Extract the individual RGB bytes using LuaJIT bit operations
+    local r_byte = bit.band(bit.rshift(packed, 16), 0xFF)
+    local g_byte = bit.band(bit.rshift(packed, 8), 0xFF)
+    local b_byte = bit.band(packed, 0xFF)
+
+    -- Convert from [0, 255] to [0.0, 1.0]
+    local r = r_byte / 255
+    local g = g_byte / 255
+    local b = b_byte / 255
+
     return r, g, b
 end
 
-function M.combine_rgb(r, g, b)
-    return math.floor(r) * 16 ^ 4 + math.floor(g) * 16 ^ 2 + math.floor(b)
+---@param rgb integer
+---@param amount number [0.0, 1.0]
+---@return integer
+function M.lighten(rgb, amount)
+    local r, g, b = M.unpack_rgb(rgb)
+    r, g, b = M.lighten_rgb(r, g, b, amount)
+    return M.pack_rgb(r, g, b)
 end
 
-function M.rgb2hsv(r, g, b)
-    assert(type(r) == "number" and type(g) == "number" and type(b) == "number")
-    local rgbmax = math.max(r, g, b)
-    local rgbmin = math.min(r, g, b)
+---@param rgb integer
+---@param amount number [0.0, 1.0]
+---@return integer
+function M.darken(rgb, amount)
+    local r, g, b = M.unpack_rgb(rgb)
+    r, g, b = M.darken_rgb(r, g, b, amount)
+    return M.pack_rgb(r, g, b)
+end
 
-    local h
-    if rgbmax == rgbmin then
-        h = 0
-    elseif rgbmax == r and g >= b then
-        h = 60 * (g - b) / (rgbmax - rgbmin)
-    elseif rgbmax == r and g < b then
-        h = 60 * (g - b) / (rgbmax - rgbmin) + 360
-    elseif rgbmax == g then
-        h = 60 * (b - r) / (rgbmax - rgbmin) + 120
-    elseif rgbmax == b then
-        h = 60 * (r - g) / (rgbmax - rgbmin) + 240
+---@param rgb1 integer
+---@param rgb2 integer
+---@param mix number [0.0, 1.0]
+---@return integer
+function M.interpolate(rgb1, rgb2, mix)
+    local r1, g1, b1 = M.unpack_rgb(rgb1)
+    local r2, g2, b2 = M.unpack_rgb(rgb2)
+    local r, g, b = M.interpolate_rgb(r1, g1, b1, r2, g2, b2, mix)
+    return M.pack_rgb(r, g, b)
+end
+
+---@param rgb1 integer
+---@param rgb2 integer
+---@return integer
+function M.middle(rgb1, rgb2)
+    return M.interpolate(rgb1, rgb2, 0.5)
+end
+
+---@param fg integer
+---@param bg integer
+---@param opacity number
+---@return integer
+function M.blend(fg, bg, opacity)
+    local fg_r, fg_g, fg_b = M.unpack_rgb(fg)
+    local bg_r, bg_g, bg_b = M.unpack_rgb(bg)
+    local r, g, b = M.blend_rgb(fg_r, fg_g, fg_b, bg_r, bg_g, bg_b, opacity)
+    return M.pack_rgb(r, g, b)
+end
+
+---@param name_dot_attr string
+local function hl_get(name_dot_attr)
+    local name, attr = name_dot_attr:match("([^%.]+)%.(.+)")
+    if not name or not attr then
+        error("Invalid highlight group format. Expected 'name.attr'")
     end
 
-    local s
-    if rgbmax == 0 then
-        s = 0
+    local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
+    if not hl[attr] then
+        error("Attribute '" .. attr .. "' not found in highlight group '" .. name .. "'")
+    end
+
+    return hl[attr]
+end
+
+---@param opts table
+---@return integer
+local function hl_transform(opts)
+    local count = 0
+    for _, t in ipairs({ "lighten", "darken", "interpolate", "middle", "blend" }) do
+        if opts[t] then
+            count = count + 1
+        end
+    end
+    if count > 1 then
+        error("Only one transform is allowed per color")
+    end
+
+    if opts.lighten then
+        return M.lighten(hl_get(opts.lighten), opts.amount)
+    elseif opts.darken then
+        return M.darken(hl_get(opts.darken), opts.amount)
+    elseif opts.interpolate then
+        return M.interpolate(hl_get(opts.interpolate[1]), hl_get(opts.interpolate[2]), opts.t)
+    elseif opts.middle then
+        return M.middle(hl_get(opts.middle[1]), hl_get(opts.middle[2]))
+    elseif opts.blend then
+        return M.blend(hl_get(opts.blend[1]), hl_get(opts.blend[2]), opts.opacity)
     else
-        s = 1 - rgbmin / rgbmax
-    end
-
-    local v = rgbmax
-
-    return h, s, v
-end
-
-function M.hsv2rgb(h, s, v)
-    local hi = math.floor(h / 60)
-    local f = h / 60 - hi
-    local p = fix(v * (1 - s))
-    local q = fix(v * (1 - f * s))
-    local t = fix(v * (1 - (1 - f) * s))
-    if hi == 0 then
-        return v, t, p
-    elseif hi == 1 then
-        return q, v, p
-    elseif hi == 2 then
-        return p, v, t
-    elseif hi == 3 then
-        return p, q, v
-    elseif hi == 4 then
-        return t, p, v
-    elseif hi == 5 then
-        return v, p, q
+        return hl_get(opts[1])
     end
 end
 
-function M.middle_color(rgb1, rgb2)
-    if rgb1 == nil or rgb2 == nil then
-        return nil
+---@param hl_list table
+---@usage hl_list = { MyHighlight = { fg = { lighten = "Comment", amount = 0.2 } } }
+function M.hl(hl_list)
+    local function cb()
+        for hl_name, hl_opts in pairs(hl_list) do
+            local result = {}
+            for attr, opts in pairs(hl_opts) do
+                result[attr] = hl_transform(opts)
+            end
+            vim.api.nvim_set_hl(0, hl_name, result)
+        end
     end
-
-    local r1, g1, b1 = M.extract_rgb(rgb1)
-    local r2, g2, b2 = M.extract_rgb(rgb2)
-    local h1, s1, v1 = M.rgb2hsv(r1, g1, b1)
-    local h2, s2, v2 = M.rgb2hsv(r2, g2, b2)
-
-    local h
-    if math.abs(h1 - h2) <= 180 then
-        h = (h1 + h2) / 2
-    else
-        h = ((360 - h1) + (360 - h2)) / 2
-    end
-    local s = (s1 + s2) / 2
-    local v = (v1 + v2) / 2
-    local r, g, b = M.hsv2rgb(h, s, v)
-    return M.combine_rgb(r, g, b)
+    cb()
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "*",
+        callback = cb
+    })
+    vim.api.nvim_create_autocmd("OptionSet", {
+        pattern = "background",
+        callback = cb
+    })
 end
-
-function M.add_value(rgb, proportion)
-    if rgb == nil then
-        return nil
-    end
-
-    local r, g, b = M.extract_rgb(rgb)
-    local h, s, v = M.rgb2hsv(r, g, b)
-
-    v = math.min(v + proportion * 255, 255)
-    r, g, b = M.hsv2rgb(h, s, v)
-    return M.combine_rgb(r, g, b)
-end
-
-function M.reduce_value(rgb, proportion)
-    if rgb == nil then
-        return nil
-    end
-
-    local r, g, b = M.extract_rgb(rgb)
-    local h, s, v = M.rgb2hsv(r, g, b)
-
-    v = math.max(v - proportion * 255, 0)
-    r, g, b = M.hsv2rgb(h, s, v)
-    return M.combine_rgb(r, g, b)
-end
-
-function M.add_saturation(rgb, proportion)
-    if rgb == nil then
-        return nil
-    end
-
-    local r, g, b = M.extract_rgb(rgb)
-    local h, s, v = M.rgb2hsv(r, g, b)
-
-    s = math.min(s + proportion, 1.0)
-    r, g, b = M.hsv2rgb(h, s, v)
-    return M.combine_rgb(r, g, b)
-end
-
-function M.reduce_saturation(rgb, proportion)
-    if rgb == nil then
-        return nil
-    end
-
-    local r, g, b = M.extract_rgb(rgb)
-    local h, s, v = M.rgb2hsv(r, g, b)
-
-    s = math.max(s - proportion, 0)
-    r, g, b = M.hsv2rgb(h, s, v)
-    return M.combine_rgb(r, g, b)
-end
-
-function M.transparency(fg, bg, alpha)
-    if fg == nil or bg == nil then
-        return nil
-    end
-
-    local fg_r, fg_g, fg_b = M.extract_rgb(fg)
-    local bg_r, bg_g, bg_b = M.extract_rgb(bg)
-    local fg_h, fg_s, fg_v = M.rgb2hsv(fg_r, fg_g, fg_b)
-    local _, bg_s, bg_v = M.rgb2hsv(bg_r, bg_g, bg_b)
-
-    local h = fg_h
-    local s = fg_s * alpha + bg_s * (1 - alpha)
-    local v = fg_v * alpha + bg_v * (1 - alpha)
-    local r, g, b = M.hsv2rgb(h, s, v)
-    return M.combine_rgb(r, g, b)
-end
-
-
 
 return M

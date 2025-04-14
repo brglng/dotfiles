@@ -191,22 +191,22 @@ return {
             end
             -- vim.notify(string.format("NormalFloat = { fg = %s, bg = %s }", NormalFloat.fg, NormalFloat.bg))
             -- vim.notify(string.format("PmenuSel = { fg = %s, bg = %s, reverse = %s }", PmenuSel.fg, PmenuSel.bg, PmenuSel.reverse))
-            -- local prompt_bg = brglng.color.transparency(PmenuSel.bg, Normal.bg, 0.3)
+            -- local prompt_bg = brglng.color.blend(PmenuSel.bg, Normal.bg, 0.3)
             local prompt_bg
             if vim.o.background == 'dark' then
-                prompt_bg = brglng.color.reduce_value(NormalFloat.bg, 0.07)
+                prompt_bg = brglng.color.darken(NormalFloat.bg, 0.2)
             else
-                prompt_bg = brglng.color.add_value(NormalFloat.bg, 0.05)
+                prompt_bg = brglng.color.lighten(NormalFloat.bg, 0.2)
             end
-            local prompt_fg = NormalFloat.fg
-            local prompt_counter_fg = brglng.color.transparency(prompt_fg, prompt_bg, 0.5)
+            local prompt_fg = NormalFloat.fg ---@type integer
+            local prompt_counter_fg = brglng.color.blend(prompt_fg, prompt_bg, 0.5)
             local preview_bg, preview_title_bg
-            if vim.o.background == "light" then
-                preview_bg = brglng.color.reduce_value(NormalFloat.bg, 0.03)
+            if vim.o.background == "dark" then
+                preview_bg = brglng.color.lighten(NormalFloat.bg, 0.04)
             else
-                preview_bg = brglng.color.add_value(NormalFloat.bg, 0.05)
+                preview_bg = brglng.color.darken(NormalFloat.bg, 0.04)
             end
-            preview_title_bg = brglng.color.transparency(NormalFloat.fg, preview_bg, 0.6)
+            preview_title_bg = brglng.color.blend(NormalFloat.fg, preview_bg, 0.6)
             vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
                 fg = Normal.bg,
                 bg = DiagnosticOk.fg

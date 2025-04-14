@@ -900,9 +900,9 @@ if (uname).operating-system =~ 'MS/Windows' {
     $env.config.shell_integration.osc133 = false
 }
 
-use ~/.cache/starship/init.nu
-
 source ~/.cache/carapace/init.nu
+
+use ~/.cache/starship/init.nu
 
 $env.config.completions.external.completer = {|spans|
     match $spans.0 {
@@ -926,6 +926,9 @@ $env.config.completions.external.completer = {|spans|
 #     } | do $in $spans
 # }
 
+mkdir $"($nu.data-dir)/vendor/autoload"
+pixi completion --shell nushell | save --force $"($nu.data-dir)/vendor/autoload/pixi-completions.nu"
+
 source ~/.cache/zlua.nu
 
 alias z = _zlua
@@ -944,6 +947,26 @@ alias winget = winget.exe
 
 def --wrapped ssh [ ...args ] {
     with-env { TERM: xterm-256color } { ^ssh ...$args }
+}
+
+def --wrapped 'pxa' [ ...args ] {
+    ^pixi global add --environment default ...$args
+}
+
+def --wrapped 'pxi' [ ...args ] {
+    ^pixi global add --environment default ...$args
+}
+
+def --wrapped 'pxx' [ ...args ] {
+    ^pixi global expose add --environment default ...$args
+}
+
+def --wrapped 'pxl' [ ...args ] {
+    ^pixi global expose add --environment default ...$args
+}
+
+def --wrapped 'pxu' [ ...args ] {
+    ^pixi global expose remove --environment default ...$args
 }
 
 def 'vpn on' [] {

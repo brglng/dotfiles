@@ -368,17 +368,6 @@ return {
                 fg = Normal.bg,
                 bg = DiagnosticSignInfo.fg,
             })
-            if vim.o.background == 'dark' then
-                vim.api.nvim_set_hl(0, 'NoiceHoverBorder', {
-                    fg = brglng.color.reduce_value(Normal.bg, 0.1),
-                    bg = NormalFloat.bg
-                })
-            else
-                vim.api.nvim_set_hl(0, 'NoiceHoverBorder', {
-                    fg = brglng.color.reduce_value(Normal.bg, 0.1),
-                    bg = NormalFloat.bg
-                })
-            end
         end
         set_noice_color()
         vim.api.nvim_create_autocmd("ColorScheme", {

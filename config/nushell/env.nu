@@ -126,17 +126,14 @@ if (uname | get operating-system) == "Darwin" {
     if (uname | get machine) =~ "^arm64" {
         path_prepend "/opt/homebrew/bin"
     }
+    if (which brew | length) > 0 {
+        $"eval (brew shellenv)\nenv | grep '^HOMEBREW\\|^MANPATH\\|^INFOPATH'" | sh | parse "{k}={v}" | transpose -r -d | load-env
+    }
 }
 
-path_prepend $"($env.HOME)/.local/bin"
-
-if (which brew | length) > 0 {
-    $"eval (brew shellenv)\nenv | grep '^HOMEBREW\\|^MANPATH\\|^INFOPATH'" | sh | parse "{k}={v}" | transpose -r -d | load-env
-}
-
-# do again to make it first
-path_prepend $"($env.HOME)/.local/bin"
+path_prepend $"($env.HOME)/.pixi/bin"
 path_prepend $"($env.HOME)/.cargo/bin"
+path_prepend $"($env.HOME)/.local/bin"
 
 mkdir ~/.cache/starship
 starship init nu | save -f ~/.cache/starship/init.nu

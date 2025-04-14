@@ -271,13 +271,13 @@ return {
                 FloatBorder.fg = NormalFloat.fg
             end
             if vim.o.background == 'dark' then
-                bg = brglng.color.add_value(Pmenu.bg, 0.02)
-                sel_bg = brglng.color.add_value(PmenuSel.bg, 0.02)
-                doc_bg = brglng.color.add_value(NormalFloat.bg, 0.05)
+                bg = brglng.color.lighten(Pmenu.bg, 0.02)
+                sel_bg = brglng.color.lighten(PmenuSel.bg, 0.02)
+                doc_bg = brglng.color.lighten(NormalFloat.bg, 0.04)
             else
-                bg = brglng.color.reduce_value(Pmenu.bg, 0.02)
-                sel_bg = brglng.color.reduce_value(PmenuSel.bg, 0.02)
-                doc_bg = brglng.color.reduce_value(NormalFloat.bg, 0.03)
+                bg = brglng.color.darken(Pmenu.bg, 0.02)
+                sel_bg = brglng.color.darken(PmenuSel.bg, 0.02)
+                doc_bg = brglng.color.darken(NormalFloat.bg, 0.04)
             end
             if vim.g.neovide then
                 vim.api.nvim_set_hl(0, 'CmpNormal', { fg = NormalFloat.fg, bg = NormalFloat.bg })

@@ -69,24 +69,28 @@ return {
 
         -- NeoTreeFloatBorder NeoTreeTitleBar
         local function set_neo_tree_colors()
+            local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
             local Comment = vim.api.nvim_get_hl(0, { name = "Comment", link = false })
             local NeoTreeNormal = vim.api.nvim_get_hl(0, { name = "NeoTreeNormal", link = false })
+            if NeoTreeNormal.bg == nil then
+                NeoTreeNormal.bg = Normal.bg
+            end
             local FloatTitle = vim.api.nvim_get_hl(0, { name = "FloatTitle", link = false })
             vim.api.nvim_set_hl(0, 'NeoTreeTabActive', {
-                fg = NeoTreeNormal.fg,
+                fg = Normal.fg,
                 bg = NeoTreeNormal.bg
             })
             vim.api.nvim_set_hl(0, 'NeoTreeTabInactive', {
                 fg = Comment.fg,
-                bg = brglng.color.reduce_value(NeoTreeNormal.bg, 0.1)
+                bg = brglng.color.darken(NeoTreeNormal.bg, 0.1)
             })
             vim.api.nvim_set_hl(0, 'NeoTreeTabSeparatorActive', {
-                fg = brglng.color.reduce_value(NeoTreeNormal.bg, 0.2),
+                fg = brglng.color.darken(NeoTreeNormal.bg, 0.2),
                 bg = NeoTreeNormal.bg
             })
             vim.api.nvim_set_hl(0, 'NeoTreeTabSeparatorInactive', {
-                fg = brglng.color.reduce_value(NeoTreeNormal.bg, 0.2),
-                bg = brglng.color.reduce_value(NeoTreeNormal.bg, 0.1)
+                fg = brglng.color.darken(NeoTreeNormal.bg, 0.2),
+                bg = brglng.color.darken(NeoTreeNormal.bg, 0.1)
             })
             vim.api.nvim_set_hl(0, 'NeoTreeWinSeparator', { link = 'WinSeparator' })
             vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { link = "FloatBorder" })
