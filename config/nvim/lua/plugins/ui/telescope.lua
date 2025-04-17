@@ -3,6 +3,7 @@ return {
     cmd = "Telescope",
     dependencies = {
         'nvim-lua/plenary.nvim',
+        "nvim-telescope/telescope-ui-select.nvim",
         "nvim-telescope/telescope-file-browser.nvim",
         'GustavoKatel/telescope-asynctasks.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
@@ -160,128 +161,171 @@ return {
                 },
                 asynctasks = {
                     layout_config = {
-                        width = 0.62
+                        width = 0.3,
+                        height = 0.3,
                     }
                 },
                 file_browser = {
                     hijack_netrw = false
-                }
+                },
+                ["ui-select"] = {
+                    -- require("telescope.themes").get_dropdown {
+                    --     layout_config = nil
+                    -- }
+                    layout_config = {
+                        width = 0.3,
+                        height = 0.3
+                    }
+                },
             }
         }
 
-        local set_telescope_colors = function()
-            local brglng = require("brglng")
-            local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-            local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
-            local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
-            local DiagnosticInfo = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo", link = false })
-            local DiagnosticOk = vim.api.nvim_get_hl(0, { name = "DiagnosticOk", link = false })
-            if NormalFloat == nil then
-                NormalFloat = vim.api.nvim_get_hl(0, { name = "Pmenu", link = false })
-            end
-            if NormalFloat.fg == nil then
-                NormalFloat.fg = Normal.fg
-            end
-            local PmenuSel = vim.api.nvim_get_hl(0, { name = "PmenuSel", link = false })
-            if PmenuSel.fg == nil then
-                PmenuSel.fg = Normal.fg
-            end
-            if PmenuSel.reverse == true then
-                PmenuSel.fg, PmenuSel.bg = PmenuSel.bg, PmenuSel.fg
-            end
-            -- vim.notify(string.format("NormalFloat = { fg = %s, bg = %s }", NormalFloat.fg, NormalFloat.bg))
-            -- vim.notify(string.format("PmenuSel = { fg = %s, bg = %s, reverse = %s }", PmenuSel.fg, PmenuSel.bg, PmenuSel.reverse))
-            -- local prompt_bg = brglng.color.blend(PmenuSel.bg, Normal.bg, 0.3)
-            local prompt_bg
-            if vim.o.background == 'dark' then
-                prompt_bg = brglng.color.darken(NormalFloat.bg, 0.2)
-            else
-                prompt_bg = brglng.color.lighten(NormalFloat.bg, 0.2)
-            end
-            local prompt_fg = NormalFloat.fg ---@type integer
-            local prompt_counter_fg = brglng.color.blend(prompt_fg, prompt_bg, 0.5)
-            local preview_bg, preview_title_bg
-            if vim.o.background == "dark" then
-                preview_bg = brglng.color.lighten(NormalFloat.bg, 0.04)
-            else
-                preview_bg = brglng.color.darken(NormalFloat.bg, 0.04)
-            end
-            preview_title_bg = brglng.color.blend(NormalFloat.fg, preview_bg, 0.6)
-            vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
-                fg = Normal.bg,
-                bg = DiagnosticOk.fg
-            })
-            vim.api.nvim_set_hl(0, "TelescopePreviewTitle", {
-                fg = Normal.bg,
-                bg = DiagnosticInfo.fg
-            })
-            vim.api.nvim_set_hl(0, "TelescopeSelection", {
-                fg = PmenuSel.fg,
-                bg = PmenuSel.bg
-            })
-            vim.api.nvim_set_hl(0, "TelescopeMatching", { link = "Search" })
-            if vim.g.neovide then
-                vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
-                    fg = prompt_fg,
-                    bg = prompt_bg
-                })
-                vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
-                    fg = prompt_bg,
-                    bg = prompt_bg
-                })
-                vim.api.nvim_set_hl(0, "TelescopeNormal", {
-                    fg = NormalFloat.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "TelescopeResultsBorder", {
-                    fg = NormalFloat.bg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "TelescopePreviewNormal", {
-                    fg = NormalFloat.fg,
-                    bg = preview_bg
-                })
-                vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
-                    fg = preview_bg,
-                    bg = preview_bg
-                })
-            else
-                vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
-                    fg = NormalFloat.fg,
-                    bg = nil
-                })
-                vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
-                    fg = FloatBorder.fg,
-                    bg = nil
-                })
-                vim.api.nvim_set_hl(0, "TelescopeNormal", {
-                    fg = NormalFloat.fg,
-                    bg = nil
-                })
-                vim.api.nvim_set_hl(0, "TelescopeResultsBorder", {
-                    fg = FloatBorder.fg,
-                    bg = nil,
-                })
-                vim.api.nvim_set_hl(0, "TelescopePreviewNormal", {
-                    fg = NormalFloat.fg,
-                    bg = nil,
-                })
-                vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
-                    fg = FloatBorder.fg,
-                    bg = nil
-                })
-            end
-        end
+        require("telescope").load_extension("ui-select")
 
-        set_telescope_colors()
-        vim.api.nvim_create_autocmd("ColorScheme", {
-            pattern = "*",
-            callback = set_telescope_colors,
-        })
-        vim.api.nvim_create_autocmd("OptionSet", {
-            pattern = "background",
-            callback = set_telescope_colors
-        })
+        local brglng = require("brglng")
+        -- local set_telescope_colors = function()
+        --     local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+        --     local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
+        --     local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
+        --     local DiagnosticInfo = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo", link = false })
+        --     local DiagnosticOk = vim.api.nvim_get_hl(0, { name = "DiagnosticOk", link = false })
+        --     if NormalFloat == nil then
+        --         NormalFloat = vim.api.nvim_get_hl(0, { name = "Pmenu", link = false })
+        --     end
+        --     if NormalFloat.fg == nil then
+        --         NormalFloat.fg = Normal.fg
+        --     end
+        --     local PmenuSel = vim.api.nvim_get_hl(0, { name = "PmenuSel", link = false })
+        --     if PmenuSel.fg == nil then
+        --         PmenuSel.fg = Normal.fg
+        --     end
+        --     if PmenuSel.reverse == true then
+        --         PmenuSel.fg, PmenuSel.bg = PmenuSel.bg, PmenuSel.fg
+        --     end
+        --     local prompt_bg = brglng.hl.transform_one({ deboss = "NormalFloat.bg,Normal.bg", amount = 0.2 })
+        --     local prompt_fg = brglng.hl.get_color("NormalFloat.fg,Normal.fg")
+        --     local preview_bg = brglng.hl.transform_one( { emboss = "NormalFloat.bg,Normal.bg", amount = 0.04 } )
+        --     vim.api.nvim_set_hl(0, "TelescopePromptTitle", {
+        --         fg = Normal.bg,
+        --         bg = DiagnosticOk.fg
+        --     })
+        --     vim.api.nvim_set_hl(0, "TelescopePreviewTitle", {
+        --         fg = Normal.bg,
+        --         bg = DiagnosticInfo.fg
+        --     })
+        --     vim.api.nvim_set_hl(0, "TelescopeSelection", {
+        --         fg = PmenuSel.fg,
+        --         bg = PmenuSel.bg
+        --     })
+        --     vim.api.nvim_set_hl(0, "TelescopeMatching", { link = "Search" })
+        --     if vim.g.neovide then
+        --         vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
+        --             fg = prompt_fg,
+        --             bg = prompt_bg
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
+        --             fg = prompt_bg,
+        --             bg = prompt_bg
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopeNormal", {
+        --             fg = NormalFloat.fg,
+        --             bg = NormalFloat.bg
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopeResultsBorder", {
+        --             fg = NormalFloat.bg,
+        --             bg = NormalFloat.bg
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopePreviewNormal", {
+        --             fg = NormalFloat.fg,
+        --             bg = preview_bg
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
+        --             fg = preview_bg,
+        --             bg = preview_bg
+        --         })
+        --     else
+        --         vim.api.nvim_set_hl(0, "TelescopePromptNormal", {
+        --             fg = NormalFloat.fg,
+        --             bg = nil
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopePromptBorder", {
+        --             fg = FloatBorder.fg,
+        --             bg = nil
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopeNormal", {
+        --             fg = NormalFloat.fg,
+        --             bg = nil
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopeResultsBorder", {
+        --             fg = FloatBorder.fg,
+        --             bg = nil,
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopePreviewNormal", {
+        --             fg = NormalFloat.fg,
+        --             bg = nil,
+        --         })
+        --         vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {
+        --             fg = FloatBorder.fg,
+        --             bg = nil
+        --         })
+        --     end
+        -- end
+        --
+        -- set_telescope_colors()
+        -- vim.api.nvim_create_autocmd("ColorScheme", {
+        --     pattern = "*",
+        --     callback = set_telescope_colors,
+        -- })
+        -- vim.api.nvim_create_autocmd("OptionSet", {
+        --     pattern = "background",
+        --     callback = set_telescope_colors
+        -- })
+
+        if vim.g.neovide then
+            brglng.hl.transform_tbl {
+                TelescopePromptTitle = { fg = "Normal.bg", bg = "DiagnosticOk.fg" },
+                TelescopePreviewTitle = { fg = "Normal.bg", bg = "DiagnosticInfo.fg" },
+                TelescopeSelection = { fg = "PmenuSel.fg", bg = "PmenuSel.bg" },
+                TelescopeMatching = { link = "Search" },
+                TelescopePromptNormal = {
+                    fg = "NormalFloat.fg,Normal.fg",
+                    bg = { transform = "deboss", from = "NormalFloat.bg,Norma.bg", amount = 0.2 }
+                },
+                TelescopePromptBorder = {
+                    fg = { transform = "deboss", from = "NormalFloat.bg,Normal.bg", amount = 0.2 },
+                    bg = { transform = "deboss", from = "NormalFloat.bg,Normal.bg", amount = 0.2 }
+                },
+                TelescopeNormal = {
+                    fg = "NormalFloat.fg,Normal.fg",
+                    bg = "NormalFloat.bg,Normal.bg"
+                },
+                TelescopeResultsBorder = {
+                    fg = "NormalFloat.bg,Normal.bg",
+                    bg = "NormalFloat.bg,Normal.bg"
+                },
+                TelescopePreviewNormal = {
+                    fg = "NormalFloat.fg,Normal.fg",
+                    bg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.04 }
+                },
+                TelescopePreviewBorder = {
+                    fg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.04 },
+                    bg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.04 }
+                },
+            }
+        else
+            brglng.hl.transform_tbl {
+                TelescopePromptTitle = { fg = "Normal.bg", bg = "DiagnosticOk.fg" },
+                TelescopePreviewTitle = { fg = "Normal.bg", bg = "DiagnosticInfo.fg" },
+                TelescopeSelection = { fg = "PmenuSel.fg", bg = "PmenuSel.bg" },
+                TelescopeMatching = { link = "Search" },
+                TelescopePromptNormal = { fg = "NormalFloat.fg,Normal.fg", bg = nil },
+                TelescopePromptBorder = { fg = "FloatBorder.fg", bg = nil },
+                TelescopeNormal = { fg = "NormalFloat.fg,Normal.fg", bg = nil },
+                TelescopeResultsBorder = { fg = "FloatBorder.fg", bg = nil, },
+                TelescopePreviewNormal = { fg = "NormalFloat.fg,Normal.fg", bg = nil, },
+                TelescopePreviewBorder = { fg = "FloatBorder.fg", bg = nil }
+            }
+        end
     end,
     keys = {
         { '<Leader>b', mode = 'n', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },

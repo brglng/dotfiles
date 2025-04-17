@@ -353,6 +353,28 @@ function M.darken(rgb, amount)
     return M.pack_rgb(r, g, b)
 end
 
+---@param rgb integer
+---@param amount number [0.0, 1.0]
+---@return integer
+function M.emboss(rgb, amount)
+    if vim.o.background == "dark" then
+        return M.lighten(rgb, amount)
+    else
+        return M.darken(rgb, amount)
+    end
+end
+
+---@param rgb integer
+---@param amount number [0.0, 1.0]
+---@return integer
+function M.deboss(rgb, amount)
+    if vim.o.background == "dark" then
+        return M.darken(rgb, amount)
+    else
+        return M.lighten(rgb, amount)
+    end
+end
+
 ---@param rgb1 integer
 ---@param rgb2 integer
 ---@param mix number [0.0, 1.0]
@@ -380,72 +402,6 @@ function M.blend(fg, bg, opacity)
     local bg_r, bg_g, bg_b = M.unpack_rgb(bg)
     local r, g, b = M.blend_rgb(fg_r, fg_g, fg_b, bg_r, bg_g, bg_b, opacity)
     return M.pack_rgb(r, g, b)
-end
-
----@param name_dot_attr string
-local function hl_get(name_dot_attr)
-    local name, attr = name_dot_attr:match("([^%.]+)%.(.+)")
-    if not name or not attr then
-        error("Invalid highlight group format. Expected 'name.attr'")
-    end
-
-    local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
-    if not hl[attr] then
-        error("Attribute '" .. attr .. "' not found in highlight group '" .. name .. "'")
-    end
-
-    return hl[attr]
-end
-
----@param opts table
----@return integer
-local function hl_transform(opts)
-    local count = 0
-    for _, t in ipairs({ "lighten", "darken", "interpolate", "middle", "blend" }) do
-        if opts[t] then
-            count = count + 1
-        end
-    end
-    if count > 1 then
-        error("Only one transform is allowed per color")
-    end
-
-    if opts.lighten then
-        return M.lighten(hl_get(opts.lighten), opts.amount)
-    elseif opts.darken then
-        return M.darken(hl_get(opts.darken), opts.amount)
-    elseif opts.interpolate then
-        return M.interpolate(hl_get(opts.interpolate[1]), hl_get(opts.interpolate[2]), opts.t)
-    elseif opts.middle then
-        return M.middle(hl_get(opts.middle[1]), hl_get(opts.middle[2]))
-    elseif opts.blend then
-        return M.blend(hl_get(opts.blend[1]), hl_get(opts.blend[2]), opts.opacity)
-    else
-        return hl_get(opts[1])
-    end
-end
-
----@param hl_list table
----@usage hl_list = { MyHighlight = { fg = { lighten = "Comment", amount = 0.2 } } }
-function M.hl(hl_list)
-    local function cb()
-        for hl_name, hl_opts in pairs(hl_list) do
-            local result = {}
-            for attr, opts in pairs(hl_opts) do
-                result[attr] = hl_transform(opts)
-            end
-            vim.api.nvim_set_hl(0, hl_name, result)
-        end
-    end
-    cb()
-    vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "*",
-        callback = cb
-    })
-    vim.api.nvim_create_autocmd("OptionSet", {
-        pattern = "background",
-        callback = cb
-    })
 end
 
 return M

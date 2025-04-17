@@ -150,7 +150,7 @@ return {
                             installPath = (function()
                                 if vim.uv.os_uname().sysname == 'Windows_NT' then
                                     return "C:\\Program Files\\MATLAB\\R2022b"
-                                elseif vim.fn.has('wsl') then
+                                elseif vim.fn.has('wsl') == 1 then
                                     return "/mnt/c/Program Files/MATLAB/R2022b"
                                 end
                             end)()

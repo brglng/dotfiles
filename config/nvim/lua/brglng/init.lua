@@ -1,5 +1,6 @@
 return {
     color = require("brglng.color"),
     dap = require("brglng.dap"),
-    projects = require("brglng.projects"),
+    hl = require("brglng.hl"),
+    projects = require("brglng.projects")
 }

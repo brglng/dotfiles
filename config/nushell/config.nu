@@ -949,23 +949,45 @@ def --wrapped ssh [ ...args ] {
     with-env { TERM: xterm-256color } { ^ssh ...$args }
 }
 
-def --wrapped 'pxa' [ ...args ] {
+def px [] {}
+
+def --wrapped 'px add' [ ...args ] {
     ^pixi global add --environment default ...$args
 }
 
-def --wrapped 'pxi' [ ...args ] {
+def --wrapped 'px a' [ ...args ] {
     ^pixi global add --environment default ...$args
 }
 
-def --wrapped 'pxx' [ ...args ] {
+def --wrapped 'px install' [ ...args ] {
+    ^pixi global add --environment default ...$args
+}
+
+def --wrapped 'px i' [ ...args ] {
+    ^pixi global add --environment default ...$args
+}
+
+def --wrapped 'px expose' [ ...args ] {
     ^pixi global expose add --environment default ...$args
 }
 
-def --wrapped 'pxl' [ ...args ] {
+def --wrapped 'px e' [ ...args ] {
     ^pixi global expose add --environment default ...$args
 }
 
-def --wrapped 'pxu' [ ...args ] {
+def --wrapped 'px link' [ ...args ] {
+    ^pixi global expose add --environment default ...$args
+}
+
+def --wrapped 'px l' [ ...args ] {
+    ^pixi global expose add --environment default ...$args
+}
+
+def --wrapped 'px unlink' [ ...args ] {
+    ^pixi global expose remove --environment default ...$args
+}
+
+def --wrapped 'px u' [ ...args ] {
     ^pixi global expose remove --environment default ...$args
 }
 

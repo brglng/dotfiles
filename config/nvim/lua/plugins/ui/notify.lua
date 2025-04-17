@@ -36,29 +36,12 @@ return {
             local namespace = base.namespace()
             local title = notif.title[1]
 
-            local win_title
-            if vim.g.neovide then
-                win_title = {
-                    { " " .. notif.icon .. " ", highlights.icon },
-                }
-            else
-                win_title = {
-                    { "╴" .. notif.icon .. " ", highlights.icon },
-                }
-            end
+            local win_title = { { " " .. notif.icon .. " ", highlights.icon } }
 
             if type(title) == "string" and notif.duplicates then
-                if vim.g.neovide then
-                    table.insert(win_title, { string.format(" %s x%d ", title, #notif.duplicates), highlights.title })
-                else
-                    table.insert(win_title, { string.format(" %s x%d╶", title, #notif.duplicates), highlights.title })
-                end
+                table.insert(win_title, { string.format(" %s x%d ", title, #notif.duplicates), highlights.title })
             elseif type(title) == "string" and #title > 0 then
-                if vim.g.neovide then
-                    table.insert(win_title, { title .. " ", highlights.title })
-                else
-                    table.insert(win_title, { title .. "╶", highlights.title })
-                end
+                table.insert(win_title, { title .. " ", highlights.title })
             end
 
             vim.api.nvim_buf_set_var(bufnr, "__notify_title__", win_title)
@@ -84,144 +67,55 @@ return {
     config = function(_, opts)
         local notify = require("notify")
         notify.setup(opts)
-        local set_notify_colors = function()
-            local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-            local NormalFloat = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
-            local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
-            local WinSeparator = vim.api.nvim_get_hl(0, { name = "WinSeparator", link = false })
-            local DiagnosticInfo = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo", link = false })
-            local DiagnosticWarn = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn", link = false })
-            local DiagnosticError = vim.api.nvim_get_hl(0, { name = "DiagnosticError", link = false })
-            if vim.g.neovide then
-                vim.api.nvim_set_hl(0, "NotifyERRORIcon", {
-                    bg = DiagnosticError.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyWARNIcon", {
-                    bg = DiagnosticWarn.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyINFOIcon", {
-                    bg = DiagnosticInfo.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyDEBUGIcon", {
-                    bg = FloatBorder.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyTRACEIcon", {
-                    bg = FloatBorder.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyERRORTitle", {
-                    bg = DiagnosticError.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyWARNTitle", {
-                    bg = DiagnosticWarn.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyINFOTitle", {
-                    bg = DiagnosticInfo.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyDEBUGTitle", {
-                    bg = FloatBorder.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyTRACETitle", {
-                    bg = FloatBorder.fg,
-                    fg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyERRORBorder", {
-                    fg = DiagnosticError.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyWARNBorder", {
-                    fg = DiagnosticWarn.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyINFOBorder", {
-                    fg = DiagnosticInfo.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyDEBUGBorder", {
-                    fg = FloatBorder.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyTRACEBorder", {
-                    fg = FloatBorder.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyERRORBody", {
-                    fg = NormalFloat.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyWARNBody", {
-                    fg = NormalFloat.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyINFOBody", {
-                    fg = NormalFloat.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyDEBUGBody", {
-                    fg = NormalFloat.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyTRACEBody", {
-                    fg = NormalFloat.fg,
-                    bg = NormalFloat.bg
-                })
-                vim.api.nvim_set_hl(0, "NotifyERRORBody", { link = "NormalFloat" })
-                vim.api.nvim_set_hl(0, "NotifyWARNBody", { link = "NormalFloat" })
-                vim.api.nvim_set_hl(0, "NotifyINFOBody", { link = "NormalFloat" })
-                vim.api.nvim_set_hl(0, "NotifyDEBUGBody", { link = "NormalFloat" })
-                vim.api.nvim_set_hl(0, "NotifyTRACEBody", { link = "NormalFloat" })
-            else
-                vim.api.nvim_set_hl(0, 'NotifyINFOIcon', { link = 'DiagnosticInfo' })
-                vim.api.nvim_set_hl(0, 'NotifyINFOTitle', { link = 'DiagnosticInfo' })
-                vim.api.nvim_set_hl(0, 'NotifyWARNIcon', { link = 'DiagnosticWarn' })
-                vim.api.nvim_set_hl(0, 'NotifyWARNTitle', { link = 'DiagnosticWarn' })
-                vim.api.nvim_set_hl(0, 'NotifyERRORIcon', { link = 'DiagnosticError' })
-                vim.api.nvim_set_hl(0, 'NotifyERRORTitle', { link = 'DiagnosticError' })
-                vim.api.nvim_set_hl(0, "NotifyERRORBorder", {
-                    fg = DiagnosticError.fg,
-                    bg = nil
-                })
-                vim.api.nvim_set_hl(0, "NotifyWARNBorder", {
-                    fg = DiagnosticWarn.fg,
-                    bg = nil
-                })
-                vim.api.nvim_set_hl(0, "NotifyINFOBorder", {
-                    fg = DiagnosticInfo.fg,
-                    bg = nil
-                })
-                vim.api.nvim_set_hl(0, "NotifyDEBUGBorder", {
-                    fg = FloatBorder.fg,
-                    bg = nil
-                })
-                vim.api.nvim_set_hl(0, "NotifyTRACEBorder", {
-                    fg = FloatBorder.fg,
-                    bg = nil
-                })
-                vim.api.nvim_set_hl(0, 'NotifyERRORBody', { link = 'Normal' })
-                vim.api.nvim_set_hl(0, 'NotifyWARNBody', { link = 'Normal' })
-                vim.api.nvim_set_hl(0, 'NotifyINFOBody', { link = 'Normal' })
-                vim.api.nvim_set_hl(0, 'NotifyDEBUGBody', { link = 'Normal' })
-                vim.api.nvim_set_hl(0, 'NotifyTRACEBody', { link = 'Normal' })
-            end
 
+        local brglng = require("brglng")
+        if vim.g.neovide then
+            brglng.hl.transform_tbl {
+                NotifyERRORIcon = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
+                NotifyWARNIcon = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
+                NotifyINFOIcon = { fg = "NormalFloat.bg", bg = "DiagnosticInfo.fg" },
+                NotifyDEBUGIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyTRACEIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg", },
+                NotifyERRORTitle = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
+                NotifyWARNTitle = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
+                NotifyINFOTitle = { fg = "NormalFloat.bg", bg = "DiagnosticInfo.fg" },
+                NotifyDEBUGTitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyTRACETitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyERRORBorder = { fg = "DiagnosticError.fg", bg = "NormalFloat.bg" },
+                NotifyWARNBorder = { fg = "DiagnosticWarn.fg", bg = "NormalFloat.bg" },
+                NotifyINFOBorder = { fg = "DiagnosticInfo.fg", bg = "NormalFloat.bg" },
+                NotifyDEBUGBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
+                NotifyTRACEBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
+                NotifyERRORBody = { link = "NormalFloat" },
+                NotifyWARNBody = { link = "NormalFloat" },
+                NotifyINFOBody = { link = "NormalFloat" },
+                NotifyDEBUGBody = { link = "NormalFloat" },
+                NotifyTRACEBody = { link = "NormalFloat" },
+            }
+        else
+            brglng.hl.transform_tbl {
+                NotifyERRORIcon = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
+                NotifyWARNIcon = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
+                NotifyINFOIcon = { fg = "NormalFloat.bg", bg = "DiagnosticInfo.fg" },
+                NotifyDEBUGIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyTRACEIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyERRORTitle = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
+                NotifyWARNTitle = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
+                NotifyINFOTitle = { fg = "NormalFloat.bg", bg = "DiagnosticInfo.fg" },
+                NotifyDEBUGTitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyTRACETitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyERRORBorder = { fg = "DiagnosticError.fg", bg = nil },
+                NotifyWARNBorder = { fg = "DiagnosticWarn.fg", bg = nil },
+                NotifyINFOBorder = { fg = "DiagnosticInfo.fg", bg = nil },
+                NotifyDEBUGBorder = { fg = "FloatBorder.fg", bg = nil },
+                NotifyTRACEBorder = { fg = "FloatBorder.fg", bg = nil },
+                NotifyERRORBody = { link = "Normal" },
+                NotifyWARNBody = { link = "Normal" },
+                NotifyINFOBody = { link = "Normal" },
+                NotifyDEBUGBody = { link = "Normal" },
+                NotifyTRACEBody = { link = "Normal" },
+            }
         end
-        set_notify_colors()
-        vim.api.nvim_create_autocmd("ColorScheme", {
-            pattern = "*",
-            callback = set_notify_colors
-        })
-        vim.api.nvim_create_autocmd("OptionSet", {
-            pattern = "background",
-            callback = set_notify_colors
-        })
 
         -- LSP Progress Notifications
 
@@ -302,7 +196,7 @@ return {
             end
             if title ~= nil and #title > 0 then
                 title = title .. " "
-                percentage_start = percentage_start + #title + 1
+                percentage_start = percentage_start + vim.fn.strdisplaywidth(title)
             else
                 title = ""
             end
@@ -313,7 +207,7 @@ return {
                 percentage = draw_percentage(percentage, 20) .. " "
                 message = message or ""
             end
-            return title .. percentage .. message, percentage_start, percentage_start + #percentage
+            return title .. percentage .. message, percentage_start, percentage_start + vim.fn.strdisplaywidth(percentage)
         end
 
         vim.api.nvim_create_autocmd("LspProgress", {
@@ -363,20 +257,20 @@ return {
                     timeout = 5000,
                     replace = notif_data.notification,
                     hide_from_history = (val.kind == "report"),
-                    render = function(buf, notif, highlights, config)
-                        opts.render(buf, notif, highlights, config)
-                        local base = require("notify.render.base")
-                        local namespace = base.namespace()
-                        -- for _, data in ipairs(notif_data.msg_data_list) do
-                        --     if data.percentage_end > data.percentage_start then
-                        --         vim.api.nvim_buf_set_extmark(buf, namespace, data.row, data.percentage_start, {
-                        --             hl_group = "DiagnosticInfo",
-                        --             end_col = data.percentage_end,
-                        --             priority = 50,
-                        --         })
-                        --     end
-                        -- end
-                    end
+                    -- render = function(buf, notif, highlights, config)
+                    --     opts.render(buf, notif, highlights, config)
+                    --     local base = require("notify.render.base")
+                    --     local namespace = base.namespace()
+                    --     for _, data in ipairs(notif_data.msg_data_list) do
+                    --         if data.percentage_end > data.percentage_start then
+                    --             vim.api.nvim_buf_set_extmark(buf, namespace, data.row, data.percentage_start, {
+                    --                 hl_group = "DiagnosticOk",
+                    --                 end_col = data.percentage_end,
+                    --                 priority = 50,
+                    --             })
+                    --         end
+                    --     end
+                    -- end
                 })
                 notif_data.last_update_time = vim.uv.now()
             end

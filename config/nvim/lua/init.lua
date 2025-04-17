@@ -4,7 +4,7 @@ vim.o.splitkeep = "screen"
 vim.g.maplocalleader = ","
 
 if vim.g.neovide then
-    if vim.uv.os_uname().sysname == "Windows_NT" or vim.fn.has("wsl") then
+    if vim.uv.os_uname().sysname == "Windows_NT" or vim.fn.has("wsl") == 1 then
         vim.g.neovide_scale_factor = 10.0 / 14.0
     end
     -- vim.o.linespace = -0
