@@ -191,7 +191,7 @@ return {
                 TelescopeMatching = { link = "Search" },
                 TelescopePromptNormal = {
                     fg = "NormalFloat.fg,Normal.fg",
-                    bg = { transform = "deboss", from = "NormalFloat.bg,Norma.bg", amount = 0.2 }
+                    bg = { transform = "deboss", from = "NormalFloat.bg,Normal.bg", amount = 0.2 }
                 },
                 TelescopePromptBorder = {
                     fg = { transform = "deboss", from = "NormalFloat.bg,Normal.bg", amount = 0.2 },

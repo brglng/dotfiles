@@ -42,31 +42,33 @@ local function transform_one(opts)
         error("Multiple transforms is not supported: " .. vim.inspect(opts))
     end
 
-    if opts.transform == "lighten" then
+    local transform = opts.transform or opts[1]
+
+    if transform == "lighten" then
         assert(type(opts.from) == "string" or type(opts.from) == "table", "lighten requires `from`")
         assert(type(opts.amount) == "number", "lighten requires `amount`")
         return color.lighten(get_color(opts.from), opts.amount)
-    elseif opts.transform == "darken" then
+    elseif transform == "darken" then
         assert(type(opts.from) == "string" or type(opts.from) == "table", "darken requires `from`")
         assert(type(opts.amount) == "number", "darken requires `amount`")
         return color.darken(get_color(opts.from), opts.amount)
-    elseif opts.transform == "emboss" then
+    elseif transform == "emboss" then
         assert(type(opts.from) == "string" or type(opts.from) == "table", "emboss requires `from`")
         assert(type(opts.amount) == "number", "emboss requires `amount`")
         return color.emboss(get_color(opts.from), opts.amount)
-    elseif opts.transform == "deboss" then
+    elseif transform == "deboss" then
         assert(type(opts.from) == "string" or type(opts.from) == "table", "deboss requires `from`")
         assert(type(opts.amount) == "number", "deboss requires `amount`")
         return color.deboss(get_color(opts.from), opts.amount)
-    elseif opts.transform == "interpolate" then
+    elseif transform == "interpolate" then
         assert(type(opts.from) == "table" and #opts.from >= 2, "interpolate requires `from`")
         assert(type(opts.mix) == "number", "interpolate requires `mix`")
         return color.interpolate(get_color(opts.from[1]), get_color(opts.from[2]), opts.mix)
-    elseif opts.transform == "middle" then
+    elseif transform == "middle" then
         assert(type(opts.from) == "table" and #opts.from >= 2, "middle requires `from`")
         assert(type(opts.mix) == "number", "middle requires `mix`")
         return color.middle(get_color(opts.from[1]), get_color(opts.from[2]))
-    elseif opts.transform == "blend" then
+    elseif transform == "blend" then
         assert((type(opts.fg) == "string" or type(opts.fg) == "table") and (type(opts.fg) == "string" or type(opts.fg) == "table"), "blend requires `fg` and `bg`")
         assert(type(opts.opacity) == "number", "blend requires `opacity`")
         return color.blend(get_color(opts.fg), get_color(opts.bg), opts.opacity)
@@ -75,7 +77,9 @@ local function transform_one(opts)
     end
 end
 
----@alias HighlightTransformTable { fg?: function | string | HighlightTransform, bg?: function | string | HighlightTransform, link?: string }
+---@alias HighlightTransformDef string | string[] | HighlightTransform
+---@alias HighlightTransformFunction function: HighlightTransformOrStringOrList
+---@alias HighlightTransformTable { fg?: HighlightTransformDef | HighlightTransformFunction, bg?: HighlightTransformDef | HighlightTransformFunction, link?: string }
 ---@param tbl table<string, HighlightTransformTable> | function: HighlightTransformTable
 local function transform_tbl(tbl)
     if type(tbl) == "function" then
