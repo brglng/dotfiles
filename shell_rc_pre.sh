@@ -48,6 +48,8 @@ if type brew &>/dev/null; then
     eval $(brew shellenv | grep -v 'export PATH=')
 fi
 
+path_prepend "$HOME/.pixi/bin"
+
 export NVM_DIR=~/.nvm
 
 # make node and npm avalailable in the PATH

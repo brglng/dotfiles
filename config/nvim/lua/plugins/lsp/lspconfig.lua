@@ -71,7 +71,7 @@ return {
                     return {
                         border = "rounded",
                         focusable = true,
-                        winhighlight = "FloatBorder:LspFloatingPreviewBorder,NormalFloat:Normal"
+                        winhighlight = "FloatBorder:LspFloatingPreviewBorder,NormalFloat:Normal,@markup.raw.block.markdown:Normal"
                     }
                 end
             end)(),
@@ -217,15 +217,29 @@ return {
 
             local orig_hover = vim.lsp.buf.hover
             vim.lsp.buf.hover = function (config)
-                if config == nil then
-                    config = opts.hover
-                else
-                    config = vim.tbl_deep_extend("force", config, opts.hover)
-                end
+                config = vim.tbl_deep_extend("force", config or {}, opts.hover)
+                config.caller = "hover"
                 return orig_hover(config)
             end
 
-            -- vim.api.nvim_create_autocmd({ "CursorHoldI", "CursorMovedI" }, {
+            -- local signature_win = nil
+            -- local orig_signature_help = vim.lsp.buf.signature_help
+            -- local orig_signature_help_handler = vim.lsp.handlers["textDocument/signatureHelp"]
+            -- vim.lsp.buf.signature_help = function (config)
+            --     return orig_signature_help(vim.tbl_deep_extend('force', config or {}, { caller = "signature_help", close_events = { "BufHidden", "InsertLeave" } }))
+            -- end
+            -- vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx)
+            --     if err or not result or not result.signatures or #result.signatures == 0 then
+            --         if signature_win then
+            --             vim.api.nvim_win_close(signature_win, true)
+            --             signature_win = nil
+            --         end
+            --     else
+            --         return orig_signature_help_handler(err, result, ctx)
+            --     end
+            -- end
+            --
+            -- vim.api.nvim_create_autocmd({ "CursorHoldI", "CursorMovedI", "InsertCharPre", "TextChangedI", "TextChangedP" }, {
             --     pattern = "*",
             --     callback = function ()
             --         vim.lsp.buf.signature_help({ focus = false, focusable = false, silent = true })
@@ -234,11 +248,7 @@ return {
 
             local orig_open_floating_preview = vim.lsp.util.open_floating_preview
             vim.lsp.util.open_floating_preview = function(contents, syntax, opts_)
-                if opts_ == nil then
-                    opts_ = opts.floating_preview
-                else
-                    opts_ = vim.tbl_deep_extend("force", opts_, opts.floating_preview)
-                end
+                opts_ = vim.tbl_deep_extend("force", opts_ or {}, opts.floating_preview)
                 local float_bufnr, win_id = orig_open_floating_preview(contents, syntax, opts_)
                 if win_id ~= nil then
                     if opts_.winhighlight ~= nil then
@@ -250,6 +260,9 @@ return {
                         vim.api.nvim_win_set_config(win_id, { focusable = opts_.focusable })
                     end
                 end
+                -- if opts_.caller == "signature_help" then
+                --     signature_win = win_id
+                -- end
                 return float_bufnr, win_id
             end
 
@@ -358,11 +371,11 @@ return {
                     -- Buffer local mappings.
                     -- See `:help vim.lsp.*` for documentation on any of the below functions
                     local opts = { buffer = ev.buf }
-                    -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-                    -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+                    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+                    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
                     -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-                    -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-                    -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+                    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
                     -- vim.keymap.set('n', '<leader>xn', vim.lsp.buf.rename, opts)
                     -- vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, opts)
                     -- vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, opts)

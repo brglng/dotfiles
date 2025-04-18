@@ -1,14 +1,17 @@
 return {
     "ray-x/lsp_signature.nvim",
     enabled = true,
-    cond = false,
+    cond = true,
     event = { "LspAttach" },
     opts = {
         bind = true,
-        doc_lines = 50,
-        wrap = true,
-        max_height = 50,
-        max_width = 120,
+        doc_lines = 1000,
+        wrap = false,
+        fix_pos = true,
+        max_height = 12,
+        max_width = function()
+            return math.min(vim.api.nvim_win_get_width(0) * 0.8, 120)
+        end,
         floating_window_off_x = 0,
         floating_window_off_y = 0,
         handler_opts = {

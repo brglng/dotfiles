@@ -41,7 +41,7 @@ return {
         require("neovim-project").setup(opts)
     end,
     keys = {
-        { "<Leader>fp", mode = "n", "<Cmd>NeovimProjectHistory<CR>", desc = "Recent Projects" },
-        { "<Leader>fP", mode = "n", "<Cmd>NeovimProjectDiscover<CR>", desc = "All Projects" }
+        -- { "<Leader>fp", mode = "n", "<Cmd>NeovimProjectHistory<CR>", desc = "Recent Projects" },
+        { "<Leader>fp", mode = "n", "<Cmd>NeovimProjectDiscover<CR>", desc = "All Projects" }
     },
 }

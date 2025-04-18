@@ -58,13 +58,13 @@ return {
         --     mode = "n",
         --     desc = "Toggle Indent Guides"
         -- },
-        {
-            "<Leader>wn",
-            function()
-                Snacks.notifier.show_history()
-            end,
-            mode = "n",
-            desc = "Show Notification History"
-        }
+        -- {
+        --     "<Leader>wn",
+        --     function()
+        --         Snacks.notifier.show_history()
+        --     end,
+        --     mode = "n",
+        --     desc = "Show Notification History"
+        -- }
     }
 }

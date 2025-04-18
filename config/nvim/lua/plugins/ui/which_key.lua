@@ -55,7 +55,7 @@ return {
             { "<Leader>sg", mode = "n", ":%s/\\<<C-r><C-w>\\>//gc<Left><Left><Left>", desc = "Search & Ask for Replace in Whole Buffer" },
             { "<Leader>sR", mode = "n", ":.,$s/\\<<C-r><C-w>\\>//g<Left><Left>", desc = "Search & Replace from Cursor to End" },
             { "<Leader>sG", mode = "n", ":%s/\\<<C-r><C-w>\\>//g<Left><Left>", desc = "Search & Replace in Whole Buffer" },
-            { "<Leader>w", group = "Window" }
+            -- { "<Leader>w", group = "Window" }
         }
     end
 }
