@@ -1,7 +1,7 @@
 local color = require("brglng.color")
 
 ---@param hl_fallback_list string | string[]
-local function get_color(hl_fallback_list)
+local function get_attr(hl_fallback_list)
     if type(hl_fallback_list) == "string" then
         hl_fallback_list = { hl_fallback_list }
     end
@@ -24,7 +24,8 @@ local function get_color(hl_fallback_list)
     end
 end
 
----@alias HighlightTransform { transform: "lighten" | "darken" | "emboss" | "deboss" | "interpolate" | "middle" | "blend", from?: string | string[], fg?: string | string[], bg?: string | string[], amount?: number, mix?: number, opacity?: number }
+---@alias HighlightTransformType "lighten" | "darken" | "emboss" | "deboss" | "interpolate" | "middle" | "blend"
+---@alias HighlightTransform { [1]?: HighlightTransformType, transform: HighlightTransformType, from?: string | string[], fg?: string | string[], bg?: string | string[], amount?: number, mix?: number, opacity?: number }
 ---@param opts HighlightTransform | function: HighlightTransform
 ---@return integer
 local function transform_one(opts)
@@ -47,45 +48,45 @@ local function transform_one(opts)
     if transform == "lighten" then
         assert(type(opts.from) == "string" or type(opts.from) == "table", "lighten requires `from`")
         assert(type(opts.amount) == "number", "lighten requires `amount`")
-        return color.lighten(get_color(opts.from), opts.amount)
+        return color.lighten(get_attr(opts.from), opts.amount)
     elseif transform == "darken" then
         assert(type(opts.from) == "string" or type(opts.from) == "table", "darken requires `from`")
         assert(type(opts.amount) == "number", "darken requires `amount`")
-        return color.darken(get_color(opts.from), opts.amount)
+        return color.darken(get_attr(opts.from), opts.amount)
     elseif transform == "emboss" then
         assert(type(opts.from) == "string" or type(opts.from) == "table", "emboss requires `from`")
         assert(type(opts.amount) == "number", "emboss requires `amount`")
-        return color.emboss(get_color(opts.from), opts.amount)
+        return color.emboss(get_attr(opts.from), opts.amount)
     elseif transform == "deboss" then
         assert(type(opts.from) == "string" or type(opts.from) == "table", "deboss requires `from`")
         assert(type(opts.amount) == "number", "deboss requires `amount`")
-        return color.deboss(get_color(opts.from), opts.amount)
+        return color.deboss(get_attr(opts.from), opts.amount)
     elseif transform == "interpolate" then
         assert(type(opts.from) == "table" and #opts.from >= 2, "interpolate requires `from`")
         assert(type(opts.mix) == "number", "interpolate requires `mix`")
-        return color.interpolate(get_color(opts.from[1]), get_color(opts.from[2]), opts.mix)
+        return color.interpolate(get_attr(opts.from[1]), get_attr(opts.from[2]), opts.mix)
     elseif transform == "middle" then
         assert(type(opts.from) == "table" and #opts.from >= 2, "middle requires `from`")
         assert(type(opts.mix) == "number", "middle requires `mix`")
-        return color.middle(get_color(opts.from[1]), get_color(opts.from[2]))
+        return color.middle(get_attr(opts.from[1]), get_attr(opts.from[2]))
     elseif transform == "blend" then
         assert((type(opts.fg) == "string" or type(opts.fg) == "table") and (type(opts.fg) == "string" or type(opts.fg) == "table"), "blend requires `fg` and `bg`")
         assert(type(opts.opacity) == "number", "blend requires `opacity`")
-        return color.blend(get_color(opts.fg), get_color(opts.bg), opts.opacity)
+        return color.blend(get_attr(opts.fg), get_attr(opts.bg), opts.opacity)
     else
         error("Invalid highlight transform: " .. vim.inspect(opts))
     end
 end
 
 ---@alias HighlightTransformDef string | string[] | HighlightTransform
----@alias HighlightTransformFunction function: HighlightTransformOrStringOrList
----@alias HighlightTransformTable { fg?: HighlightTransformDef | HighlightTransformFunction, bg?: HighlightTransformDef | HighlightTransformFunction, link?: string }
+---@alias HighlightTransformFunction function
+---@alias HighlightTransformTable { fg?: HighlightTransformDef | HighlightTransformFunction, bg?: HighlightTransformDef | HighlightTransformFunction, link?: string, bold?: boolean | string, italic?: boolean | string, underline?: boolean | string, undercurl?: boolean | string, strikethrough?: boolean | string }
 ---@param tbl table<string, HighlightTransformTable> | function: HighlightTransformTable
 local function transform_tbl(tbl)
-    if type(tbl) == "function" then
-        tbl = tbl()
-    end
-    local function cb()
+    local function cb(is_autocmd)
+        if type(tbl) == "function" then
+            tbl = tbl(is_autocmd)
+        end
         for hl_name, hl_opts in pairs(tbl) do
             local result = {}
             if type(hl_opts) == "function" then
@@ -95,14 +96,10 @@ local function transform_tbl(tbl)
                 if type(opts) == "function" then
                     opts = opts()
                 end
-                if attr == "fg" or attr == "bg" then
-                    if opts == nil then
-                        result[attr] = nil
-                    elseif type(opts) == "string" then
-                        result[attr] = get_color(opts)
-                    else
-                        result[attr] = transform_one(opts)
-                    end
+                if type(opts) == "table" then
+                    result[attr] = transform_one(opts)
+                elseif type(opts) == "string" and attr ~= "link" then
+                    result[attr] = get_attr(opts)
                 else
                     result[attr] = opts
                 end
@@ -110,19 +107,19 @@ local function transform_tbl(tbl)
             vim.api.nvim_set_hl(0, hl_name, result)
         end
     end
-    cb()
+    cb(false)
     vim.api.nvim_create_autocmd("ColorScheme", {
         pattern = "*",
-        callback = cb
+        callback = function () cb(true) end,
     })
     vim.api.nvim_create_autocmd("OptionSet", {
         pattern = "background",
-        callback = cb
+        callback = function () cb(true) end,
     })
 end
 
 return {
-    get_color =  get_color,
+    get_attr =  get_attr,
     transform_one = transform_one,
     transform_tbl = transform_tbl,
 }

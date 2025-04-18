@@ -197,21 +197,15 @@ return {
                     fg = { transform = "deboss", from = "NormalFloat.bg,Normal.bg", amount = 0.2 },
                     bg = { transform = "deboss", from = "NormalFloat.bg,Normal.bg", amount = 0.2 }
                 },
-                TelescopeNormal = {
-                    fg = "NormalFloat.fg,Normal.fg",
-                    bg = "NormalFloat.bg,Normal.bg"
-                },
-                TelescopeResultsBorder = {
-                    fg = "NormalFloat.bg,Normal.bg",
-                    bg = "NormalFloat.bg,Normal.bg"
-                },
+                TelescopeNormal = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                TelescopeResultsBorder = { fg = "NormalFloat.bg,Normal.bg", bg = "NormalFloat.bg,Normal.bg" },
                 TelescopePreviewNormal = {
                     fg = "NormalFloat.fg,Normal.fg",
-                    bg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.04 }
+                    bg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.03 }
                 },
                 TelescopePreviewBorder = {
-                    fg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.04 },
-                    bg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.04 }
+                    fg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.03 },
+                    bg = { transform = "emboss", from = "NormalFloat.bg,Normal.bg", amount = 0.03 }
                 },
             }
         else

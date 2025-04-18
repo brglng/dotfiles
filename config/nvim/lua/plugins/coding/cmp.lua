@@ -255,51 +255,24 @@ return {
         --     cmp_autopairs.on_confirm_done()
         -- )
 
-        local function set_cmp_colors()
-            local brglng = require('brglng')
-            local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
-            local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
-            local FloatBorder = vim.api.nvim_get_hl(0, { name = 'FloatBorder', link = false })
-            local Comment = vim.api.nvim_get_hl(0, { name = 'Comment', link = false })
-            local Pmenu = vim.api.nvim_get_hl(0, { name = 'Pmenu', link = false })
-            local PmenuSel = vim.api.nvim_get_hl(0, { name = 'PmenuSel', link = false })
-            local bg, sel_bg, doc_bg
-            if NormalFloat.fg == nil then
-                NormalFloat.fg = Normal.fg
-            end
-            if FloatBorder.fg == nil then
-                FloatBorder.fg = NormalFloat.fg
-            end
-            if vim.o.background == 'dark' then
-                -- bg = brglng.color.lighten(Pmenu.bg, 0.02)
-                -- sel_bg = brglng.color.lighten(PmenuSel.bg, 0.02)
-                doc_bg = brglng.color.lighten(NormalFloat.bg, 0.04)
-            else
-                -- bg = brglng.color.darken(Pmenu.bg, 0.02)
-                -- sel_bg = brglng.color.darken(PmenuSel.bg, 0.02)
-                doc_bg = brglng.color.darken(NormalFloat.bg, 0.04)
-            end
-            if vim.g.neovide then
-                vim.api.nvim_set_hl(0, 'CmpNormal', { fg = NormalFloat.fg, bg = NormalFloat.bg })
-                vim.api.nvim_set_hl(0, 'CmpBorder', { fg = FloatBorder.fg, bg = NormalFloat.bg })
-                vim.api.nvim_set_hl(0, 'CmpItemMenu', { fg = Comment.fg, bg = nil })
-                vim.api.nvim_set_hl(0, 'CmpDocNormal', { fg = NormalFloat.fg, bg = doc_bg })
-                vim.api.nvim_set_hl(0, 'CmpDocBorder', { fg = FloatBorder.fg, bg = NormalFloat.bg })
-            else
-                vim.api.nvim_set_hl(0, 'CmpNormal', { fg = NormalFloat.fg, bg = Normal.bg })
-                vim.api.nvim_set_hl(0, 'CmpBorder', { fg = FloatBorder.fg, bg = Normal.bg })
-                vim.api.nvim_set_hl(0, 'CmpItemMenu', { fg = Comment.fg, bg = nil })
-                vim.api.nvim_set_hl(0, "PmenuThumb", { bg = FloatBorder.fg })
-                vim.api.nvim_set_hl(0, 'CmpDocNormal', { fg = NormalFloat.fg, bg = Normal.bg })
-                vim.api.nvim_set_hl(0, 'CmpDocBorder', { fg = FloatBorder.fg, bg = Normal.bg })
-            end
-            -- vim.api.nvim_set_hl(0, 'Pmenu', { bg = bg })
-            -- vim.api.nvim_set_hl(0, 'PmenuSel', { bg = sel_bg })
-            -- vim.api.nvim_set_hl(0, 'PmenuSbar', { bg = bg })
+        local brglng = require("brglng")
+        if vim.g.neovide then
+            brglng.hl.transform_tbl {
+                CmpNormal = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                CmpBorder = { fg = "FloatBorder.fg,NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                CmpItemMenu = { fg = "Comment.fg", bg = nil },
+                CmpDocNormal = { fg = "NormalFloat.fg,Normal.fg", bg = { "lighten", from = "NormalFloat.bg,Normal.bg", amount = 0.04 } },
+                CmpDocBorder = { fg = "FloatBorder.fg,NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+            }
+        else
+            brglng.hl.transform_tbl {
+                CmpNormal = { fg = "NormalFloat.fg,Normal.fg", bg = "Normal.bg" },
+                CmpBorder = { fg = "FloatBorder.fg,NormalFloat.fg,Normal.fg", bg = "Normal.bg" },
+                CmpItemMenu = { fg = "Comment.fg", bg = nil },
+                PmenuThumb = { fg = "PmenuThumb.fg,Pmenu.fg", bg = "FloatBorder.fg" },
+                CmpDocNormal = { fg = "NormalFloat.fg,Normal.fg", bg = "Normal.bg" },
+                CmpDocBorder = { fg = "FloatBorder.fg,NormalFloat.fg,Normal.fg", bg = "Normal.bg" },
+            }
         end
-        vim.api.nvim_create_autocmd('ColorScheme', { pattern = '*', callback = set_cmp_colors })
-        vim.api.nvim_create_autocmd('OptionSet', { pattern = 'background', callback = set_cmp_colors })
-        set_cmp_colors()
-
     end
 }

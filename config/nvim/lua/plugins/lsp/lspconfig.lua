@@ -253,73 +253,47 @@ return {
                 return float_bufnr, win_id
             end
 
-            local set_lsp_colors = function()
-                local brglng = require("brglng")
-                local Normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-                local FloatBorder = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
-                local DiagnosticVirtualTextError = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualTextError", link = false })
-                local DiagnosticVirtualTextWarn = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualTextWarn", link = false })
-                local DiagnosticVirtualTextInfo = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualTextInfo", link = false })
-                local DiagnosticVirtualTextHint = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualTextHint", link = false })
-                local DiagnosticVirtualLinesError = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualLinesError", link = false })
-                local DiagnosticVirtualLinesWarn = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualLinesWarn", link = false })
-                local DiagnosticVirtualLinesInfo = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualLinesInfo", link = false })
-                local DiagnosticVirtualLinesHint = vim.api.nvim_get_hl(0, { name = "DiagnosticVirtualLinesHint", link = false })
-                local LspInlayHint = vim.api.nvim_get_hl(0, { name = "LspInlayHint", link = false })
-                vim.api.nvim_set_hl(0, "LspDiagnosticFloatBorder", {
-                    fg = FloatBorder.fg,
-                    bg = Normal.bg,
-                })
-                vim.api.nvim_set_hl(0, "LspFloatingPreviewBorder", {
-                    fg = FloatBorder.fg,
-                    bg = Normal.bg,
-                })
-                vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", {
-                    fg = DiagnosticVirtualTextError.fg,
-                    bg = brglng.color.blend(DiagnosticVirtualTextError.fg, Normal.bg, 0.4),
-                })
-                vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", {
-                    fg = DiagnosticVirtualTextWarn.fg,
-                    bg = brglng.color.blend(DiagnosticVirtualTextWarn.fg, Normal.bg, 0.4),
-                })
-                vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", {
-                    fg = DiagnosticVirtualTextInfo.fg,
-                    bg = brglng.color.blend(DiagnosticVirtualTextInfo.fg, Normal.bg, 0.4),
-                })
-                vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", {
-                    fg = DiagnosticVirtualTextHint.fg,
-                    bg = brglng.color.blend(DiagnosticVirtualTextHint.fg, Normal.bg, 0.4),
-                })
-                vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesError", {
-                    fg = DiagnosticVirtualLinesError.fg,
-                    bg = brglng.color.blend(DiagnosticVirtualLinesError.fg, Normal.bg, 0.4),
-                })
-                vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesWarn", {
-                    fg = DiagnosticVirtualLinesWarn.fg,
-                    bg = brglng.color.blend(DiagnosticVirtualLinesWarn.fg, Normal.bg, 0.4),
-                })
-                vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesInfo", {
-                    fg = DiagnosticVirtualLinesInfo.fg,
-                    bg = brglng.color.blend(DiagnosticVirtualLinesInfo.fg, Normal.bg, 0.4),
-                })
-                vim.api.nvim_set_hl(0, "DiagnosticVirtualLinesHint", {
-                    fg = DiagnosticVirtualLinesHint.fg,
-                    bg = brglng.color.blend(DiagnosticVirtualLinesHint.fg, Normal.bg, 0.4),
-                })
-                vim.api.nvim_set_hl(0, "LspInlayHint", {
-                    fg = LspInlayHint.fg,
-                    bg = brglng.color.blend(LspInlayHint.fg, Normal.bg, 0.4),
-                })
-            end
-            set_lsp_colors()
-            vim.api.nvim_create_autocmd("ColorScheme", {
-                pattern = "*",
-                callback = set_lsp_colors
-            })
-            vim.api.nvim_create_autocmd("OptionSet", {
-                pattern = "background",
-                callback = set_lsp_colors
-            })
+            local brglng = require("brglng")
+            brglng.hl.transform_tbl {
+                LspDiagnosticFloatBorder = { fg = "FloatBorder.fg,Normal.fg", bg = "Normal.bg" },
+                LspFloatingPreviewBorder = { fg = "FloatBorder.fg,Normal.fg", bg = "Normal.bg" },
+                DiagnosticVirtualTextError = {
+                    fg = "DiagnosticVirtualTextError.fg",
+                    bg = { "blend", fg = "DiagnosticVirtualTextError.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+                DiagnosticVirtualTextWarn = {
+                    fg = "DiagnosticVirtualTextWarn.fg",
+                    bg = { "blend", fg = "DiagnosticVirtualTextWarn.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+                DiagnosticVirtualTextInfo = {
+                    fg = "DiagnosticVirtualTextInfo.fg",
+                    bg = { "blend", fg = "DiagnosticVirtualTextInfo.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+                DiagnosticVirtualTextHint = {
+                    fg = "DiagnosticVirtualTextHint.fg",
+                    bg = { "blend", fg = "DiagnosticVirtualTextHint.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+                DiagnosticVirtualLinesError = {
+                    fg = "DiagnosticVirtualLinesError.fg",
+                    bg = { "blend", fg = "DiagnosticVirtualLinesError.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+                DiagnosticVirtualLinesWarn = {
+                    fg = "DiagnosticVirtualLinesWarn.fg",
+                    bg = { "blend", fg = "DiagnosticVirtualLinesWarn.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+                DiagnosticVirtualLinesInfo = {
+                    fg = "DiagnosticVirtualLinesInfo.fg",
+                    bg = { "blend", fg = "DiagnosticVirtualLinesInfo.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+                DiagnosticVirtualLinesHint = {
+                    fg = "DiagnosticVirtualLinesHint.fg",
+                    bg = { "blend", fg = "DiagnosticVirtualLinesHint.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+                LspInlayHint = {
+                    fg = "LspInlayHint.fg",
+                    bg = { "blend", fg = "LspInlayHint.fg", bg = "Normal.bg", opacity = 0.4 }
+                },
+            }
 
             if vim.uv.os_uname().sysname == 'Windows_NT' then
                 opts.servers.clangd.cmd[1] = 'clangd.cmd'

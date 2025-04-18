@@ -1,5 +1,6 @@
 maximized = true
 tabs = false
+# no-multigrid = true
 wsl = true
 
 [font]

@@ -32,29 +32,15 @@ return {
     },
     config = function(_, opts)
         require('which-key').setup(opts)
-        local set_which_key_color = function()
-            if not vim.g.neovide then
-                -- local WinSeparator = vim.api.nvim_get_hl(0, { name = 'WinSeparator', link = false })
-                -- local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
-                local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
-                local FloatTitle = vim.api.nvim_get_hl(0, { name = 'FloatTitle', link = false })
-                vim.api.nvim_set_hl(0, 'WhichKeyBorder', { link = 'WinSeparator' })
-                vim.api.nvim_set_hl(0, 'WhichKeyNormal', { link = 'Normal' })
-                vim.api.nvim_set_hl(0, "WhichKeyTitle", {
-                    fg = FloatTitle.fg,
-                    bg = Normal.bg
-                })
-            end
+
+        local brglng = require("brglng")
+        if not vim.g.neovide then
+            brglng.hl.transform_tbl {
+                WhichKeyTitle = { fg = "FloatTitle.fg", bg = "NormalFloat.bg" },
+                WhichKeyBorder = { fg = "WinSeparator.fg", bg = "NormalFloat.bg" },
+                WhichKeyNormal = { link = "NormalFloat" },
+            }
         end
-        set_which_key_color()
-        vim.api.nvim_create_autocmd("ColorScheme", {
-            pattern = "*",
-            callback = set_which_key_color
-        })
-        vim.api.nvim_create_autocmd("OptionSet", {
-            pattern = "background",
-            callback = set_which_key_color
-        })
 
         require("which-key").add {
             { "<Leader>b", group = "Buffer" },

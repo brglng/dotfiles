@@ -25,81 +25,27 @@ return {
         { ']b', mode = 'n', "<Cmd>BufferNext<CR>", desc = 'Next Buffer' },
     },
     config = function(_, opts)
-        local set_barbar_color = function()
-            local brglng = require("brglng")
-            local Normal = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
-            local NormalFloat = vim.api.nvim_get_hl(0, { name = 'NormalFloat', link = false })
-            local DiagnosticError = vim.api.nvim_get_hl(0, { name = 'DiagnosticError', link = false })
-            local Comment = vim.api.nvim_get_hl(0, { name = 'Comment', link = false })
-            local Special = vim.api.nvim_get_hl(0, { name = 'Special', link = false })
-
-            local fill_bg = brglng.color.darken(Normal.bg, 0.2)
-            local inactive_bg = brglng.color.darken(Normal.bg, 0.1)
-            local visible_bg = brglng.color.darken(Normal.bg, 0.05)
-
-            vim.api.nvim_set_hl(0, "TabLineFill", {
-                bg = fill_bg
-            })
-            vim.api.nvim_set_hl(0, 'BufferCurrent', {
-                fg = Normal.fg,
-                bold = true,
-                bg = Normal.bg,
-            })
-            vim.api.nvim_set_hl(0, 'BufferCurrentMod', {
-                fg = DiagnosticError.fg,
-                bold = true,
-                bg = Normal.bg,
-            })
-            vim.api.nvim_set_hl(0, 'BufferCurrentSign', {
-                fg = Special.fg,
-                bold = true,
-                bg = Normal.bg,
-            })
-            vim.api.nvim_set_hl(0, 'BufferCurrentTarget', {
-                fg = 'red',
-                bold = true,
-                bg = Normal.bg,
-            })
-            vim.api.nvim_set_hl(0, 'BufferInactive', {
-                fg = Comment.fg,
-                bg = inactive_bg
-            })
-            vim.api.nvim_set_hl(0, 'BufferInactiveSign', {
-                fg = fill_bg,
-                bg = inactive_bg
-            })
-            vim.api.nvim_set_hl(0, 'BufferInactiveTarget', {
-                fg = 'red',
-                bold = true,
-                bg = inactive_bg
-            })
-            vim.api.nvim_set_hl(0, 'BufferVisible', {
-                fg = Comment.fg,
-                bg = brglng.color.darken(Normal.bg, 0.05),
-            })
-            vim.api.nvim_set_hl(0, 'BufferVisibleSign', {
-                fg = fill_bg,
-                bg = visible_bg
-            })
-            vim.api.nvim_set_hl(0, 'BufferVisibleTarget', {
-                fg = 'red',
-                bold = true,
-                bg = visible_bg
-            })
-            vim.api.nvim_set_hl(0, "BufferOffset", {
-                fg = Comment.fg,
-                bg = NormalFloat.bg
-            })
-        end
-        set_barbar_color()
-        vim.api.nvim_create_autocmd("ColorScheme", {
-            pattern = "*",
-            callback = set_barbar_color
-        })
-        vim.api.nvim_create_autocmd("OptionSet", {
-            pattern = "background",
-            callback = set_barbar_color
-        })
+        local brglng = require("brglng")
+        brglng.hl.transform_tbl {
+            TabLineFill = { fg = "TabLineFill.fg", bg = { "darken", from = "Normal.bg", amount = 0.2 } },
+            BufferCurrent = { fg = "Normal.fg", bg = "Normal.bg", bold = true },
+            BufferCurrentMod = { fg = "DiagnosticError.fg", bg = "Normal.bg", bold = true },
+            BufferCurrentSign = { fg = "Special.fg", bg = "Normal.bg", bold = true },
+            BufferCurrentTarget = { fg = "red", bg = "Normal.bg", bold = true },
+            BufferInactive = { fg = "Comment.fg", bg = { "darken", from = "Normal.bg", amount = 0.1 } },
+            BufferInactiveSign = {
+                fg = { "darken",  from = "Normal.bg", amount = 0.2 },
+                bg = { "darken", from = "Normal.bg", amount = 0.1 }
+            },
+            BufferInactiveTarget = { fg = "red", bg = { "darken", from = "Normal.bg", amount = 0.1 }, bold = true },
+            BufferVisible = { fg = "Comment.fg", bg = { "darken", from = "Normal.bg", amount = 0.05 } },
+            BufferVisibleSign = {
+                fg = { "darken", from = "Normal.bg", amount = 0.2 },
+                bg = { "darken", from = "Normal.bg", amount = 0.05 }
+            },
+            BufferVisibleTarget = { fg = "red", bg = { "darken", from = "Normal.bg", amount = 0.05 }, bold = true },
+            BufferOffset = { fg = "Comment.fg", bg = "NormalFloat.bg,Normal.bg" },
+        }
 
         require("barbar").setup(opts)
 
