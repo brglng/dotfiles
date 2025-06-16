@@ -1,11 +1,12 @@
 local wezterm = require('wezterm')
+local brglng = require("brglng")
 
 local WINDOWS = wezterm.target_triple == "x86_64-pc-windows-msvc"
 local MAC = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin"
 
 local config = wezterm.config_builder()
 
-config.front_end = "WebGpu"
+config.front_end = "OpenGL"
 
 if WINDOWS then
     config.set_environment_variables = {
@@ -36,21 +37,58 @@ local function get_appearance()
 end
 
 local function scheme_for_appearance(appearance)
-    if appearance:find 'Dark' then
+    if appearance:find('Dark') then
         return 'melange_dark'
     else
         return 'melange_light'
     end
 end
 
-config.color_scheme = scheme_for_appearance(get_appearance())
+config.colors = wezterm.color.load_scheme(wezterm.config_dir .. "/colors/" .. scheme_for_appearance(get_appearance()) .. ".toml")
+local function set_tabline_colors(config)
+    local tabline_fg = config.colors.foreground
+    local tabline_bg = brglng.color.darken(config.colors.background, 0.15)
+    local tab_active_fg = config.colors.foreground
+    local tab_active_bg = config.colors.background
+    local tab_inactive_bg = brglng.color.darken(config.colors.background, 0.07)
+    local tab_inactive_fg = brglng.color.blend(tab_active_fg, tab_inactive_bg, 0.5)
+    local tab_inactive_hover_bg = brglng.color.darken(config.colors.background, 0.03)
+    config.colors.tab_bar = {
+        background = tabline_bg,
+        active_tab = {
+            fg_color = tab_active_fg,
+            bg_color = tab_active_bg,
+            intensity = 'Bold',
+        },
+        inactive_tab = {
+            fg_color = tab_inactive_fg,
+            bg_color = tab_inactive_bg,
+        },
+        inactive_tab_hover = {
+            fg_color = tab_inactive_fg,
+            bg_color = tab_inactive_hover_bg,
+            italic = false,
+        },
+        new_tab = {
+            fg_color = tabline_fg,
+            bg_color = tabline_bg,
+        },
+        new_tab_hover = {
+            fg_color = tab_inactive_fg,
+            bg_color = tab_inactive_hover_bg,
+            italic = false,
+        }
+    }
+end
+set_tabline_colors(config)
 
 -- GUI Appearance
 
 config.enable_scroll_bar = true
 config.use_fancy_tab_bar = false
+config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = true
-config.tab_max_width = 100
+config.tab_max_width = 1000
 config.window_decorations = "RESIZE"
 local window_min = ' 󰖰 '
 local window_max = ' 󰖯 '
@@ -74,43 +112,8 @@ local function tab_title(tab_info)
     local pane = tab_info.active_pane
     local title = ""
     if pane.domain_name ~= config.default_domain then
-        title = title .. pane.domain_name .. " "
+        title = title .. pane.domain_name .. " ❯ "
     end
-    -- if pane.current_working_dir.file_path ~= nil then
-    --     local cwd, home_dir
-    --     if WINDOWS then
-    --         cwd = string.gsub(pane.current_working_dir.file_path, '^/(%u:)/', '%1/')
-    --         home_dir = string.gsub(wezterm.home_dir, '\\', '/')
-    --     else
-    --         cwd = pane.current_working_dir.file_path
-    --         home_dir = wezterm.home_dir
-    --     end
-    --     cwd = string.gsub(cwd, '^' .. home_dir, '~')
-    --     title = title .. string.gsub(cwd, '(.*[/\\])([^/\\]*)', '%2')
-    -- end
-    -- if title ~= '' then
-    --     title = title .. ' '
-    -- end
-    -- if pane.foreground_process_name ~= '' then
-    --     title = title .. string.gsub(pane.foreground_process_name, '(.*[/\\])([^/\\]*)', '%2')
-    -- else
-    --     local process_name = string.gsub(pane.title, '^[^>]+> (.*)$', '%1')
-    --     if process_name ~= pane.title then
-    --         title = title .. process_name
-    --     end
-    -- end
-    --
-    -- title = string.gsub(title, '(.*)%.exe', '%1')
-    --
-    -- if #title == 0 then
-    --     title = tab_info.title
-    --     if #tab_info.title == 0 then
-    --         title = tab_info.active_pane.title
-    --     end
-    -- end
-    --
-    -- return title
-
     -- if the tab title is explicitly set, take that
     if tab_info.tab_title and #tab_info.tab_title > 0 then
         title = title .. tab_info.tab_title
@@ -119,57 +122,66 @@ local function tab_title(tab_info)
         -- in that tab
         title = title .. tab_info.active_pane.title
     end
+    title = title:gsub(":", " ❯ ")
     return title
 end
 
 wezterm.on(
     'format-tab-title',
     function(tab, tabs, panes, config, hover, max_width)
-        local title = tostring(tab.tab_index + 1) .. '  ' .. tab_title(tab)
-
-        local fg_separator_active, fg_separator_inactive, fg_active, fg_inactive, bg_active
-        if get_appearance():find('Dark') then
-            fg_active = '#ece1d7'
-            fg_inactive = '#c1a78e'
-            fg_separator_active = '#34302c'
-            fg_separator_inactive = '#161412'
-            bg_active = '#292522'
-        else
-            fg_active = '#54433a'
-            fg_inactive = '#7d6658'
-            fg_separator_active = '#e9e1db'
-            fg_separator_inactive = '#c0c0c0'
-            bg_active = '#f1f1f1'
-        end
-
-        -- ensure that the titles fit in the available space,
-        -- and that we have room for the edges.
-        title = ' ' .. wezterm.truncate_right(title, max_width)
-
+        local title = tostring(tab.tab_index + 1) .. ' ' .. tab_title(tab)
         if tab.is_active then
             return {
-                { Foreground = { Color = fg_separator_active } },
-                { Text = '▎' },
-                { Foreground = { Color = fg_active } },
-                { Text = title .. '  ' },
+                { Foreground = { Color = config.colors.tab_bar.active_tab.bg_color } },
+                { Background = { Color = config.colors.tab_bar.background } },
+                { Text = '' },
+                { Foreground = { Color = config.colors.tab_bar.active_tab.fg_color } },
+                { Background = { Color = config.colors.tab_bar.active_tab.bg_color } },
+                { Attribute = { Intensity = 'Bold' } },
+                { Text = " " .. title .. " " },
+                "ResetAttributes",
+                { Foreground = { Color = config.colors.tab_bar.active_tab.bg_color } },
+                { Background = { Color = config.colors.tab_bar.background } },
+                { Text = '' },
             }
         else
-            return {
-                { Foreground = { Color = fg_separator_inactive } },
-                { Text = '▎' },
-                { Foreground = { Color = fg_inactive } },
-                { Text = title .. '  ' },
-            }
+            if hover then
+                return {
+                    { Foreground = { Color = config.colors.tab_bar.inactive_tab_hover.bg_color } },
+                    { Background = { Color = config.colors.tab_bar.background } },
+                    { Text = '' },
+                    { Foreground = { Color = config.colors.tab_bar.inactive_tab_hover.fg_color } },
+                    { Background = { Color = config.colors.tab_bar.inactive_tab_hover.bg_color } },
+                    { Text = " " .. title .. " " },
+                    { Foreground = { Color = config.colors.tab_bar.inactive_tab_hover.bg_color } },
+                    { Background = { Color = config.colors.tab_bar.background } },
+                    { Text = '' },
+                }
+            else
+                return {
+                    { Foreground = { Color = config.colors.tab_bar.inactive_tab.bg_color } },
+                    { Background = { Color = config.colors.tab_bar.background } },
+                    { Text = '' },
+                    { Foreground = { Color = config.colors.tab_bar.inactive_tab.fg_color } },
+                    { Background = { Color = config.colors.tab_bar.inactive_tab.bg_color } },
+                    { Text = " " .. title .. " " },
+                    { Foreground = { Color = config.colors.tab_bar.inactive_tab.bg_color } },
+                    { Background = { Color = config.colors.tab_bar.background } },
+                    { Text = '' },
+                }
+            end
         end
     end
 )
 
-config.status_update_interval = 100
+config.status_update_interval = 300
 wezterm.on("update-status", function(window, pane)
-    local fg, bg, leader, modes
+    local colors = window:effective_config().colors
+    local tabbar_bg = colors.tab_bar.background
+    local tab_active_bg = colors.tab_bar.active_tab.bg_color
+    local tab_inactive_fg = colors.tab_bar.inactive_tab.fg_color
+    local leader, modes
     if get_appearance():find('Dark') then
-        fg = '#34302c'
-        bg = '#161412'
         leader = { text = ' 󱐋 ', fg = '#34302c', bg = '#d47766' }
         modes = {
             copy_mode = { text = " 󰆏 ", fg = '#34302c', bg = '#ebc06d' },
@@ -179,8 +191,6 @@ wezterm.on("update-status", function(window, pane)
             lock_mode = { text = "  ", fg = '#34302c', bg = '#c1a78e' },
         }
     else
-        fg = '#e9e1db'
-        bg = '#c0c0c0'
         leader = { text = ' 󱐋 ', fg = '#e9e1db', bg = '#bf0021' }
         modes = {
             copy_mode = { text = " 󰆏 ", fg = '#e9e1db', bg = '#a06d00' },
@@ -193,86 +203,48 @@ wezterm.on("update-status", function(window, pane)
 
     if window:leader_is_active() then
         window:set_left_status(wezterm.format {
-            { Foreground = { Color = leader.fg } },
-            { Background = { Color = leader.bg  } },
+            -- { Foreground = { Color = leader.bg } },
+            -- { Background = { Color = tabbar_bg } },
+            -- { Text = "" },
+            { Foreground = { Color = tab_active_bg } },
+            { Background = { Color = leader.bg } },
             { Attribute = { Intensity = 'Bold' } },
             { Text = ' 󱐋 ' },
+            { Foreground = { Color = leader.bg } },
+            { Background = { Color = tabbar_bg } },
+            { Text = " " }
         })
     else
         local name = window:active_key_table()
         if name and modes[name] then
             window:set_left_status(wezterm.format {
+                -- { Foreground = { Color = modes[name].bg.bg } },
+                -- { Background = { Color = tabbar_bg } },
+                -- { Text = "" },
                 { Foreground = { Color = modes[name].fg } },
                 { Background = { Color = modes[name].bg } },
                 { Attribute = { Intensity = 'Bold' } },
                 { Text = modes[name].text },
+                { Foreground = { Color = modes[name].bg.bg } },
+                { Background = { Color = tabbar_bg } },
+                { Text = " " }
             })
         else
             window:set_left_status(wezterm.format {
-                { Foreground = { Color = fg } },
-                { Background = { Color = bg } },
+                -- { Foreground = { Color = tabbar_bg } },
+                -- { Background = { Color = tabbar_bg } },
+                -- { Text = "" },
+                { Foreground = { Color = tabbar_bg } },
+                { Background = { Color = tabbar_bg } },
                 { Attribute = { Intensity = 'Bold' } },
                 { Text = '   ' },
+                { Foreground = { Color = tabbar_bg } },
+                { Background = { Color = tabbar_bg } },
+                { Text = " " }
             })
         end
     end
 end)
-
-if get_appearance():find 'Dark' then
-    config.colors.tab_bar = {
-        background = '#161412',
-        active_tab = {
-            fg_color = '#ece1d7',
-            bg_color = '#292522',
-            intensity = 'Bold',
-        },
-        inactive_tab = {
-            fg_color = '#c1a78e',
-            bg_color = '#1e1b19',
-        },
-        inactive_tab_hover = {
-            fg_color = '#c1a78e',
-            bg_color = '#25221f',
-            italic = false,
-        },
-        new_tab = {
-            fg_color = '#c1a78e',
-            bg_color = '#161412',
-        },
-        new_tab_hover = {
-            fg_color = '#c1a78e',
-            bg_color = '#25221f',
-            italic = false,
-        }
-    }
-else
-    config.colors.tab_bar = {
-        background = '#c0c0c0',
-        active_tab = {
-            fg_color = '#54433a',
-            bg_color = '#f1f1f1',
-            intensity = 'Bold'
-        },
-        inactive_tab = {
-            fg_color = '#7d6658',
-            bg_color = '#d4d4d4',
-            italic = false,
-        },
-        inactive_tab_hover = {
-            fg_color = '#7d6658',
-            bg_color = '#dddddd',
-            italic = false,
-        },
-        new_tab = {
-            fg_color = '#54433a',
-            bg_color = '#c0c0c0',
-        },
-        new_tab_hover = {
-            fg_color = '#54433a',
-            bg_color = '#dddddd',
-        },
-    }
-end
 
 -- Fonts
 
@@ -296,6 +268,8 @@ config.enable_kitty_graphics = true
 
 -- Keys
 
+-- config.enable_kitty_keyboard = true
+config.allow_win32_input_mode = true
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 5000 }
 
 config.keys = {
@@ -367,12 +341,12 @@ config.unix_domains = {
 
 config.ssh_domains = {
     {
-        name = 'SSH Mux VPS',
+        name = 'SSH:VPS:Mux',
         remote_address = '3.112.158.72',
         username = 'ubuntu',
     },
     {
-        name = 'SSH VPS',
+        name = 'SSH:VPS',
         remote_address = '3.112.158.72',
         username = 'ubuntu',
         multiplexing = 'None'
@@ -383,120 +357,120 @@ config.launch_menu = {}
 
 if WINDOWS then
     table.insert(config.ssh_domains, {
-        name = 'SSH WSL Ubuntu',
+        name = 'SSH:WSL:Ubuntu:Mux',
+        remote_address = 'localhost',
+        username = 'brglng',
+    })
+    table.insert(config.ssh_domains, {
+        name = 'SSH:WSL:Ubuntu',
         remote_address = 'localhost',
         username = 'brglng',
         multiplexing = 'None',
-        default_prog = { '/bin/bash', '-i', '-c', 'if type nu &> /dev/null; then nu -l -i; elif type zsh &> /dev/null; then zsh -l -i; else bash -i; fi' }
-    })
-    table.insert(config.ssh_domains, {
-        name = 'SSH WSL Mux Ubuntu',
-        remote_address = 'localhost',
-        username = 'brglng',
+        default_prog = { '/bin/sh', '-c', 'if [ -x ~/.pixi/bin/nu ]; then exec ~/.pixi/bin/nu -l -i; elif [ -x ~/.pixi/bin/zsh ]; then exec ~/.pixi/bin/zsh -l -i; else exec bash -l -i; fi' }
     })
 
-    config.default_domain = 'SSH WSL Mux Ubuntu'
+    config.default_domain = 'Mux'
 
     table.insert(config.launch_menu, {
-        label = 'SSH WSL Mux Ubuntu',
-        domain = { DomainName = 'SSH WSL Mux Ubuntu' }
-    })
-    table.insert(config.launch_menu, {
-        label = 'Mux Windows Nushell',
+        label = 'Mux ❯ Nushell',
         domain = { DomainName = "Mux" },
         args = { 'nu', '-i', '-l' },
     })
     table.insert(config.launch_menu, {
-        label = 'Mux Windows PowerShell',
+        label = 'SSH ❯ WSL ❯ Ubuntu ❯ Mux',
+        domain = { DomainName = 'SSH:WSL:Ubuntu:Mux' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'Mux ❯ PowerShell',
         domain = { DomainName = "Mux" },
         args = { 'powershell.exe', '-NoLogo' },
     })
     table.insert(config.launch_menu, {
-        label = "Mux Windows Command Prompt",
+        label = "Mux ❯ Command Prompt",
         domain = { DomainName = "Mux", },
         args = { 'cmd.exe' }
     })
     table.insert(config.launch_menu, {
-        label = "Mux Bose Cygwin 6.0",
+        label = "Mux ❯ Bose Cygwin 6.0",
         domain = { DomainName = "Mux" },
         args = {
             "cmd.exe", "/c",
-            "C:/cygwin64/Cygwin.bat"
+            "C:\\cygwin64\\Cygwin.bat"
         }
     })
     table.insert(config.launch_menu, {
-        label = 'Mux Developer Command Prompt for VS 2022 Community',
+        label = 'Mux ❯ Developer Command Prompt for VS 2022 Community',
         domain = { DomainName = "Mux" },
         args = {
             'cmd.exe', '/k',
-            'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat',
+            "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat",
             '-startdir=none',
             '-arch=x64',
             '-host_arch=x64',
         },
     })
     table.insert(config.launch_menu, {
-        label = 'Mux Developer Powershell for VS 2022 Community',
+        label = 'Mux ❯ Developer Powershell for VS 2022 Community',
         domain = { DomainName = "Mux" },
         args = {
             'powershell.exe',
             '-NoExit',
             '-Command',
-            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+            '&{Import-Module "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
         },
     })
-    table.insert(config.launch_menu, {
-        label = 'Mux Developer Command Prompt for VS 2022 Professional',
-        domain = { DomainName = "Mux" },
-        args = {
-            'cmd.exe', '/k',
-            'C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/VsDevCmd.bat',
-            '-startdir=none',
-            '-arch=x64',
-            '-host_arch=x64',
-        },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Mux Developer Powershell for VS 2022 Professional',
-        domain = { DomainName = "Mux" },
-        args = {
-            'powershell.exe',
-            '-NoExit',
-            '-Command',
-            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
-        },
-    })
+    -- table.insert(config.launch_menu, {
+    --     label = 'Mux ❯ Developer Command Prompt for VS 2022 Professional',
+    --     domain = { DomainName = "Mux" },
+    --     args = {
+    --         'cmd.exe', '/k',
+    --         "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\Tools\\VsDevCmd.bat",
+    --         '-startdir=none',
+    --         '-arch=x64',
+    --         '-host_arch=x64',
+    --     },
+    -- })
+    -- table.insert(config.launch_menu, {
+    --     label = 'Mux ❯ Developer Powershell for VS 2022 Professional',
+    --     domain = { DomainName = "Mux" },
+    --     args = {
+    --         'powershell.exe',
+    --         '-NoExit',
+    --         '-Command',
+    --         '&{Import-Module "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\Tools\\Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+    --     },
+    -- })
 
     table.insert(config.launch_menu, {
-        label = 'SSH WSL Ubuntu',
-        domain = { DomainName = 'SSH WSL Ubuntu' }
-    })
-    table.insert(config.launch_menu, {
-        label = 'Windows Nushell',
+        label = 'Nushell',
         domain = { DomainName = "local" },
         args = { 'nu', '-i', '-l' },
     })
     table.insert(config.launch_menu, {
-        label = 'Windows PowerShell',
+        label = 'SSH ❯ WSL ❯ Ubuntu',
+        domain = { DomainName = 'SSH:WSL:Ubuntu' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'PowerShell',
         domain = { DomainName = "local" },
         args = { 'powershell.exe', '-NoLogo' },
     })
     table.insert(config.launch_menu, {
-        label = "Windows Command Prompt",
+        label = "Command Prompt",
         domain = { DomainName = "local", },
         args = { 'cmd.exe' }
     })
     table.insert(config.launch_menu, {
         label = "Bose Cygwin 6.0",
         domain = { DomainName = "local" },
-        args = { "cmd.exe", "/c", "C:/cygwin64/Cygwin.bat" }
+        args = { "cmd.exe", "/c", "C:\\cygwin64\\Cygwin.bat" }
     })
     table.insert(config.launch_menu, {
         label = 'Developer Command Prompt for VS 2022 Community',
         domain = { DomainName = "local" },
         args = {
             'cmd.exe', '/k',
-            'C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/VsDevCmd.bat',
+            'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat',
             '-startdir=none',
             '-arch=x64',
             '-host_arch=x64',
@@ -509,60 +483,47 @@ if WINDOWS then
             'powershell.exe',
             '-NoExit',
             '-Command',
-            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+            '&{Import-Module "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 3c97223e -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
         },
     })
-    table.insert(config.launch_menu, {
-        label = 'Developer Command Prompt for VS 2022 Professional',
-        domain = { DomainName = "local" },
-        args = {
-            'cmd.exe', '/k',
-            'C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/VsDevCmd.bat',
-            '-startdir=none',
-            '-arch=x64',
-            '-host_arch=x64',
-        },
-    })
-    table.insert(config.launch_menu, {
-        label = 'Developer Powershell for VS 2022 Professional',
-        domain = { DomainName = "local" },
-        args = {
-            'powershell.exe',
-            '-NoExit',
-            '-Command',
-            '&{Import-Module "C:/Program Files/Microsoft Visual Studio/2022/Professional/Common7/Tools/Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
-        },
-    })
+    -- table.insert(config.launch_menu, {
+    --     label = 'Developer Command Prompt for VS 2022 Professional',
+    --     domain = { DomainName = "local" },
+    --     args = {
+    --         'cmd.exe', '/k',
+    --         'C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\Tools\\VsDevCmd.bat',
+    --         '-startdir=none',
+    --         '-arch=x64',
+    --         '-host_arch=x64',
+    --     },
+    -- })
+    -- table.insert(config.launch_menu, {
+    --     label = 'Developer Powershell for VS 2022 Professional',
+    --     domain = { DomainName = "local" },
+    --     args = {
+    --         'powershell.exe',
+    --         '-NoExit',
+    --         '-Command',
+    --         '&{Import-Module "C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\Common7\\Tools\\Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell bf82c5b9 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}',
+    --     },
+    -- })
 
     table.insert(config.launch_menu, {
-        label = 'WSL Ubuntu',
+        label = 'WSL ❯ Ubuntu',
         domain = { DomainName = 'WSL:Ubuntu' }
     })
 
     config.default_prog = { "nu.exe", "-i", "-l" }
 else
     config.default_domain = 'Mux'
-
-    if MAC then
-        if #wezterm.glob('/opt/homebrew/bin/nu') ~= 0 then
-            config.default_prog = { '/opt/homebrew/bin/nu', '-l', '-i' }
-        elseif #wezterm.glob('/usr/local/bin/nu') ~= 0 then
-            config.default_prog = { '/usr/local/bin/nu', '-l', '-i' }
-        elseif #wezterm.glob('/opt/homebrew/bin/zsh') ~= 0 then
-            config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i' }
-        elseif #wezterm.glob('/usr/local/bin/zsh') ~= 0 then
-            config.default_prog = { '/usr/local/bin/zsh', '-l', '-i' }
-        else
-            config.default_prog = { '/bin/zsh', '-l', '-i' }
-        end
+    if #wezterm.glob(wezterm.home_dir .. '/.pixi/bin/nu') ~= 0 then
+        config.default_prog = { wezterm.home_dir .. '/.pixi/bin/nu', '-l', '-i'  }
+    elseif #wezterm.glob(wezterm.home_dir .. '/.pixi/bin/zsh') ~= 0 then
+        config.default_prog = { wezterm.home_dir .. '/.pixi/bin/zsh', '-l', '-i'  }
+    elseif MAC then
+        config.default_prog = { '/bin/zsh', '-l', '-i' }
     else
-        if #wezterm.glob(wezterm.home_dir .. "/.local/bin/nu") ~= 0 then
-            config.default_prog = { wezterm.home_dir .. "/.local/bin/nu", "-i", "-l" }
-        elseif #wezterm.glob("~/.local/bin/zsh") ~= 0 then
-            config.default_prog = { wezterm.home_dir .. "/.local/bin/zsh", "-i", "-l" }
-        else
-            config.default_prog = { "/usr/bin/bash", "-i", "-l" }
-        end
+        config.default_prog = { '/usr/bin/bash', '-l', '-i' }
     end
     table.insert(config.launch_menu, {
         label = 'Mux',
@@ -575,16 +536,16 @@ else
 end
 
 table.insert(config.launch_menu, {
-    label = 'SSH Mux VPS',
-    domain = { DomainName = 'SSH Mux VPS' }
+    label = 'SSH ❯ VPS ❯ Mux',
+    domain = { DomainName = 'SSH:VPS:Mux' }
 })
 table.insert(config.launch_menu, {
-    label = 'SSH VPS',
-    domain = { DomainName = 'SSH VPS' }
+    label = 'SSH ❯ VPS',
+    domain = { DomainName = 'SSH:VPS' }
 })
 
-config.initial_rows = 40
-config.initial_cols = 160
+-- config.initial_rows = 40
+-- config.initial_cols = 160
 
 -- wezterm.on("gui-attached", function()
 --     -- maximize all displayed windows on startup

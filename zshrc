@@ -18,8 +18,8 @@ _cursor_bar() {
 
 zstyle ':zim:zmodule' use 'degit'
 zstyle ':zim:termtitle' hooks 'preexec' 'precmd'
-zstyle ':zim:termtitle:preexec' format '%1~: ${${(A)=1}[1]}'
-zstyle ':zim:termtitle:precmd' format '%1~: zsh'
+zstyle ':zim:termtitle:preexec' format '%1~:${${(A)=1}[1]}'
+zstyle ':zim:termtitle:precmd' format '%1~:zsh'
 
 precmd_functions+=(_cursor_bar)
 

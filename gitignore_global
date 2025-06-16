@@ -1,16 +1,27 @@
 *~
 .DS_Store
-
-#ignore thumbnails created by windows
 Thumbs.db
 
+*.swp
+*.swo
+
+.cache
 .ccls-cache
 .ccls_cache
 .cquery-cache
 .cquery_cache
-
-*.pyc
-.mypy_cache
-
+.xmake
 .clangd
 compile_flags.txt
+compile_commands.json
+
+node_modules
+
+*.pyc
+*.egg-info
+.mypy_cache
+.venv*
+.pixi
+pixi-activate.bat
+pixi.toml
+pixi.lock

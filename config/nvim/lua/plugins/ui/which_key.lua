@@ -44,12 +44,13 @@ return {
 
         require("which-key").add {
             { "<Leader>b", group = "Buffer" },
-            { "<Leader>c", group = "Code" },
-            { "<Leader>cc", group = "Call Hierarchy" },
+            { "<Leader>c", group = "CodeCompanion" },
             { "<Leader>d", group = "Debug" },
             { "<Leader>f", group = "Fuzzy Finder" },
             { "<Leader>g", group = "Git" },
             { "<Leader>h", group = "Hunk" },
+            { "<Leader>l", group = "LSP" },
+            { "<Leader>lc", group = "Call Hierarchy" },
             { "<Leader>s", group = "Search & Replace", mode = { "n", "v" } },
             { "<Leader>sr", mode = "n", ":.,$s/\\<<C-r><C-w>\\>//gc<Left><Left><Left>", desc = "Search & Ask for Replace from Cursor to End" },
             { "<Leader>sg", mode = "n", ":%s/\\<<C-r><C-w>\\>//gc<Left><Left><Left>", desc = "Search & Ask for Replace in Whole Buffer" },

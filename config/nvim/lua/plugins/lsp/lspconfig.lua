@@ -11,12 +11,13 @@ return {
             -- log_level = 'debug'
             diagnostic = {
                 virtual_text = false,
-                virtual_lines = {
-                    only_current_line = false,
-                    highlight_whole_line = false,
-                },
+                virtual_lines = false,
+                -- virtual_lines = {
+                --     only_current_line = false,
+                --     highlight_whole_line = false,
+                -- },
                 float = {
-                    enabled = false,
+                    enabled = true,
                     -- border = "none",
                     border = (function()
                         if vim.g.neovide then
@@ -145,6 +146,7 @@ return {
                 },
                 matlab_ls = {
                     enabled = true,
+                    filetypes = { "matlab" },
                     settings = {
                         MATLAB = {
                             installPath = (function()
@@ -167,14 +169,19 @@ return {
                 pyright = {
                     enabled = true
                 },
+                ruff = {
+                    enabled = true,
+                },
                 ts_ls = {
                     enabled = true
                 },
-                -- rust_analyzer = {
-                --     settings = {
-                --         ['rust_analyzer'] = {}
-                --     }
-                -- },
+                rust_analyzer = {
+                    enabled = false,
+                    filetypes = {}, -- Disable rust_analyzer for now, use rustaceanvim instead
+                    settings = {
+                        ['rust_analyzer'] = {}
+                    }
+                },
                 vimls = {
                     enabled = true
                 },
@@ -317,6 +324,7 @@ return {
                 opts.servers.matlab_ls.cmd = { 'matlab-language-server.cmd', '--stdio' }
                 opts.servers.perlnavigator.cmd = { 'perlnavigator.cmd' }
                 opts.servers.pyright.cmd = { 'pyright-langserver.cmd', '--stdio' }
+                opts.servers.ruff.cmd = { 'ruff.cmd', 'server' }
                 opts.servers.ts_ls.cmd = { 'typescript-language-server.cmd', '--stdio' }
                 opts.servers.vimls.cmd = { 'vim-language-server.cmd', '--stdio' }
                 opts.servers.yamlls.cmd = { 'yaml-language-server.cmd', '--stdio' }
@@ -375,7 +383,7 @@ return {
                     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
                     -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
                     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-                    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts)
                     -- vim.keymap.set('n', '<leader>xn', vim.lsp.buf.rename, opts)
                     -- vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, opts)
                     -- vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
@@ -393,8 +401,8 @@ return {
         end,
         keys = {
             { '<Leader>e', mode = { 'n' }, vim.diagnostic.open_float, desc = "Show Diagnostics" },
-            { "<Leader>ce", vim.diagnostic.open_float, desc = "Show Diagnostics" },
-            { "<Leader>cf", function() vim.lsp.buf.format { async = true } end, desc = "Format Buffer" },
+            { "<Leader>le", vim.diagnostic.open_float, desc = "Show Diagnostics" },
+            { "<Leader>lf", function() vim.lsp.buf.format { async = true } end, desc = "Format Buffer" },
         }
     },
     {

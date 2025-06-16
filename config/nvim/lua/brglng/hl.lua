@@ -79,9 +79,10 @@ local function transform_one(opts)
 end
 
 ---@alias HighlightTransformDef string | string[] | HighlightTransform
----@alias HighlightTransformFunction function
+---@alias HighlightTransformFunction function: HighlightTransformDef
 ---@alias HighlightTransformTable { fg?: HighlightTransformDef | HighlightTransformFunction, bg?: HighlightTransformDef | HighlightTransformFunction, link?: string, bold?: boolean | string, italic?: boolean | string, underline?: boolean | string, undercurl?: boolean | string, strikethrough?: boolean | string }
----@param tbl table<string, HighlightTransformTable> | function: HighlightTransformTable
+---@alias HighlightTransformTableFunction function: HighlightTransformTable?
+---@param tbl table<string, HighlightTransformTable | HighlightTransformTableFunction> | function: HighlightTransformTable
 local function transform_tbl(tbl)
     local function cb(is_autocmd)
         if type(tbl) == "function" then
@@ -92,19 +93,22 @@ local function transform_tbl(tbl)
             if type(hl_opts) == "function" then
                 hl_opts = hl_opts()
             end
-            for attr, opts in pairs(hl_opts) do
-                if type(opts) == "function" then
-                    opts = opts()
+            if hl_opts then
+                for attr, opts in pairs(hl_opts) do
+                    if type(opts) == "function" then
+                        opts = opts()
+                    end
+                    if type(opts) == "table" then
+                        result[attr] = transform_one(opts)
+                    elseif type(opts) == "string" and attr ~= "link" then
+                        result[attr] = get_attr(opts)
+                    else
+                        result[attr] = opts
+                    end
                 end
-                if type(opts) == "table" then
-                    result[attr] = transform_one(opts)
-                elseif type(opts) == "string" and attr ~= "link" then
-                    result[attr] = get_attr(opts)
-                else
-                    result[attr] = opts
-                end
+                result.force = true
+                vim.api.nvim_set_hl(0, hl_name, result)
             end
-            vim.api.nvim_set_hl(0, hl_name, result)
         end
     end
     cb(false)

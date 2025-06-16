@@ -8,19 +8,36 @@ class TF_LANGUAGEPROFILE {
         ;     GUID guidProfile;   // profile description    // GUID, 16 bytes, offset 40
         ; } TF_LANGUAGEPROFILE;
         this.buffer := Buffer(56, 0)
-        this.ptr := this.buffer.ptr
-        this.pclsid := this.buffer.ptr
+        this.clsid := this.buffer.ptr
         this.plangid := this.buffer.ptr + 16
-        this.pcatid := this.buffer.ptr + 20
+        this.catid := this.buffer.ptr + 20
         this.pfActive := this.buffer.ptr + 36
-        this.pGuidProfile := this.buffer.ptr + 40
+        this.guidProfile := this.buffer.ptr + 40
     }
 
-    langid() {
-        return NumGet(this.plangid, "ushort")
+    ptr {
+        get => this.buffer.ptr
     }
 
-    strGuid() {
-        return FormatGUID(this.pGuidProfile)
+    strClsid {
+        get => guidToStr(this.clsid)
+        set => guidFromStr(this.clsid, value)
+    }
+
+    langid {
+        get => NumGet(this.plangid, "ushort")
+    }
+
+    strCatid {
+        get => guidToStr(this.catid)
+        set => guidFromStr(this.catid, value)
+    }
+
+    fActive {
+        get => NumGet(this.pfActive, "int")
+    }
+
+    strGUIDProfile {
+        get => guidToStr(this.guidProfile)
     }
 }

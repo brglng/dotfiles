@@ -23,31 +23,31 @@ SetWorkingDir A_ScriptDir
 
 DetectHiddenWindows true
 
-#include "Imm32.ahk"
 #include "ModTapManager.ahk"
+#include "IMEManager.ahk"
 
-global CapsLockDownTime := 0
+global capslockDownTime := 0
 
 CapsLock::{
-    global CapsLockDownTime
-    if CapsLockDownTime = 0 {
-        CapsLockDownTime := A_TickCount
+    global capslockDownTime
+    if capslockDownTime = 0 {
+        capslockDownTime := A_TickCount
     }
 }
 
 CapsLock Up::{
-    global CapsLockDownTime
-    if A_PriorKey = "CapsLock" and A_TickCount - CapsLockDownTime < 200 {
+    global capslockDownTime
+    if A_PriorKey = "CapsLock" and A_TickCount - capslockDownTime < 200 {
         Send "{Esc}"
     } else {
         Send "{LWin Down}{Space}{LWin Up}"
     }
-    CapsLockDownTime := 0
+    capslockDownTime := 0
 }
 
 *CapsLock::return
 
-imm := Imm32()
+imeMgr := IMEManager()
 
 modtap := ModTapManager(Map(
     "Space", { modKey: "LShift", repeatTimeout: 0 },
@@ -60,9 +60,9 @@ modtap := ModTapManager(Map(
 ), , false)
 
 $*LShift::modtap.onModKeyDown("LShift")
-$*LShift up::modtap.onModKeyUp("LShift", () => imm.toggleKeyboardLayout())
+$*LShift up::modtap.onModKeyUp("LShift", () => imeMgr.toggleIME())
 $*RShift::modtap.onModKeyDown("RShift")
-$*RShift up::modtap.onModKeyUp("RShift", () => imm.toggleKeyboardLayout())
+$*RShift up::modtap.onModKeyUp("RShift", () => imeMgr.toggleIME())
 $*LControl::modtap.onModKeyDown("LControl")
 $*LControl up::modtap.onModKeyUp("LControl")
 $*RControl::modtap.onModKeyDown("RControl")

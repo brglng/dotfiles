@@ -217,15 +217,15 @@ end
 ---@return number, number, number
 function M.interpolate_rgb(r1, g1, b1, r2, g2, b2, mix)
     -- Clamp t to [0,1] range
-    t = math.max(0.0, math.min(1.0, t))
+    mix = math.max(0.0, math.min(1.0, mix))
 
     -- Convert both colors to OKLCH
     local L1, C1, h1 = M.rgb_to_oklch(r1, g1, b1)
     local L2, C2, h2 = M.rgb_to_oklch(r2, g2, b2)
 
     -- Linearly interpolate L and C
-    local L = L1 + (L2 - L1) * t
-    local C = C1 + (C2 - C1) * t
+    local L = L1 + (L2 - L1) * mix
+    local C = C1 + (C2 - C1) * mix
 
     -- Handle special case where either color has zero chroma
     -- In such cases, the hue is meaningless and we can use the other color's hue
@@ -243,7 +243,7 @@ function M.interpolate_rgb(r1, g1, b1, r2, g2, b2, mix)
         delta_h = delta_h + 360
     end
 
-    h = h1 + delta_h * t
+    h = h1 + delta_h * mix
 
     -- Ensure h stays in [0, 360] range
     if h < 0 then

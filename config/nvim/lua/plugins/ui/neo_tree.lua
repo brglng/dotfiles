@@ -4,7 +4,7 @@ return {
     cmd = { "Neotree" },
     dependencies = {
         "nvim-lua/plenary.nvim",
-        "echasnovski/mini.icons", -- not strictly required, but recommended
+        "echasnovski/mini.icons",
         "MunifTanjim/nui.nvim",
         "s1n7ax/nvim-window-picker"
     },
@@ -45,12 +45,13 @@ return {
             },
         },
         default_component_configs = {
-            -- indent = {
-            --     with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-            --     expander_collapsed = "",
-            --     expander_expanded = "",
-            --     expander_highlight = "NeoTreeExpander",
-            -- }
+            indent = {
+                with_markers = false,
+                with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
+                expander_collapsed = "",
+                expander_expanded = "",
+                expander_highlight = "NeoTreeExpander",
+            }
         },
         popup_border_style = (function()
             if vim.g.neovide then
@@ -77,9 +78,22 @@ return {
                 fg = { "darken", from = "NeoTreeNormal.bg,Normal.bg", amount = 0.2 },
                 bg = { "darken", from = "NeoTreeNormal.bg,Normal.bg", amount = 0.1 }
             },
-            NeoTreeWinSeparator = { link = "WinSeparator" },
-            NeoTreeFloatBorder = { link = "FloatBorder" },
+            NeoTreeWinSeparator = { fg = "WinSeparator.fg", bg = "Normal.bg", bold = false },
+            NeoTreeFloatBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
             NeoTreeFloatTitle = { fg = "FloatTitle.bg", bg = "FloatTitle.fg" },
+            -- NeoTreeFloatNormal = { fg = "Normal.fg", bg = "Normal.bg" },
+            NeoTreeDirectoryIcon = function ()
+                if vim.g.colors_name == "sakura" then
+                    return { fg = "Directory.fg", bg = "Directory.bg", bold = true }
+                end
+            end,
+            NeoTreeDotfile = { fg = "Comment.fg" },
+            NeoTreeGitAdded = { fg = { "emboss", from = "DiffAdd.bg", amount = 0.2 }, bold = true },
+            NeoTreeGitConflict = { fg = "DiagnosticError.fg", bold = true },
+            NeoTreeGitModified = { fg = { "emboss", from = "NeoTreeNormal.fg,Normal.fg", amount = 0.2 }, bold = true },
+            NeoTreeGitDeleted = { fg = "DiffDelete.bg", bold = true },
+            NeoTreeGitUntracked = { fg = { "emboss", from = "DiffAdd.bg", amount = 0.2 }, bold = true, italic = true },
+            NeoTreeCursorLine = { link = "CursorLine" },
         }
     end,
     keys = {

@@ -4,6 +4,10 @@ class IEnumTfLanguageProfiles {
         this.cFetch := Buffer(4, 0)
     }
 
+    __delete() {
+        ObjRelease(this.ptr)
+    }
+
     Next(count, profile) {
         ; HRESULT Next([in] ULONG ulCount,
         ;              [out, size_is(ulCount), length_is(*pcFetch)] TF_LANGUAGEPROFILE *pProfile,

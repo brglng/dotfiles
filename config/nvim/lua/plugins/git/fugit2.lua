@@ -3,7 +3,7 @@ return {
     cond = function() return vim.uv.os_uname().sysname ~= "Windows_NT" end,
     dependencies = {
         'MunifTanjim/nui.nvim',
-        'echasnovski/mini.icons',
+        "echasnovski/mini.icons",
         'nvim-lua/plenary.nvim',
         {
             'chrisgrieser/nvim-tinygit', -- optional: for Github PR view

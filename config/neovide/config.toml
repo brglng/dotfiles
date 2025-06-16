@@ -1,7 +1,7 @@
 maximized = true
 tabs = false
 # no-multigrid = true
-wsl = true
+# wsl = true
 
 [font]
 normal = ["Maple Mono NF CN", "Flog Symbols"]

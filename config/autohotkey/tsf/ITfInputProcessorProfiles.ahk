@@ -1,6 +1,6 @@
 #include "TF_LANGUAGEPROFILE.ahk"
 #include "IEnumTfLanguageProfiles.ahk"
-#include "utils.ahk"
+#include "..\utils.ahk"
 
 class ActiveLanguageProfile {
     __new(langid, guidProfile) {
@@ -9,11 +9,9 @@ class ActiveLanguageProfile {
     }
 
     strGuidProfile() {
-        return FormatGUID(this.guidProfile.ptr)
+        return guidToStr(this.guidProfile.ptr)
     }
 }
-
-CLSID_TF_InputProcessorProfiles := "{33C53A50-F456-4884-B049-85FD643ECFED}"
 
 class ITfInputProcessorProfiles {
     static IID := "{1F02B6C5-7842-4EE6-8A0B-9A24183A95CA}"
@@ -32,17 +30,19 @@ class ITfInputProcessorProfiles {
 
     __new(clsid) {
         this.comObj := ComObject(clsid, ITfInputProcessorProfiles.IID)
-        this.ptr := this.comObj.ptr
+    }
+
+    ptr {
+        get => this.comObj.ptr
     }
 
     GetActiveLanguageProfile(clsid) {
         ; HRESULT GetActiveLanguageProfile([in] REFCLSID rclsid, 
         ;                                  [out] LANGID *plangid, 
         ;                                  [out] GUID *pguidProfile);
-        binaryClsid := StringToBinaryGUID(clsid)
         langid := 0
         guidProfile := Buffer(16)
-        if (result := ComCall(3 + 8, this.comObj, "ptr", binaryClsid, "ushort*", &langid, "ptr", guidProfile)) != 0 {
+        if (result := ComCall(3 + 8, this.comObj, "ptr", clsid, "ushort*", &langid, "ptr", guidProfile)) != 0 {
             throw Error(Format("ITfInputProcessorProfiles::GetActiveLanguageProfile failed with HRESULT 0x{:08x}", result))
         }
         return ActiveLanguageProfile(langid, guidProfile)
@@ -60,7 +60,7 @@ class ITfInputProcessorProfiles {
         return IEnumTfLanguageProfiles(enumProfiles)
     }
 
-    IsLanguageProfileEnabled(profile) {
+    IsLanguageProfileEnabled(rclsid, langid, guidProfile) {
         ; HRESULT IsEnabledLanguageProfile(
         ;     [in]  REFCLSID rclsid,
         ;     [in]  LANGID   langid,
@@ -69,16 +69,16 @@ class ITfInputProcessorProfiles {
         ; );
         enabled := 0
         if (result := ComCall(3 + 15, this.comObj,
-                              "ptr", profile.pclsid,
-                              "ushort", profile.langid(),
-                              "ptr", profile.pGuidProfile,
+                              "ptr", rclsid,
+                              "ushort", langid,
+                              "ptr", guidProfile,
                               "int*", &enabled)) != 0 {
             throw Error(Format("ITfInputProcessorProfiles::IsLanguageProfileEnabled failed with HRESULT 0x{:08x}", result))
         }
         return enabled
     }
 
-    GetLanguageProfileDescription(profile) {
+    GetLanguageProfileDescription(rclsid, langid, guidProfile) {
         ; HRESULT GetLanguageProfileDescription(
         ;     [in]  REFCLSID rclsid,
         ;     [in]  LANGID   langid,
@@ -87,10 +87,10 @@ class ITfInputProcessorProfiles {
         ; );
         bstrProfile := ""
         if (result := ComCall(3 + 9, this.comObj,
-                              "ptr", profile.pclsid,
-                              "ushort", profile.langid(),
-                              "ptr", profile.pGuidProfile,
-                              "Str*", &bstrProfile)) != 0 {
+                              "ptr", rclsid,
+                              "ushort", langid,
+                              "ptr", guidProfile,
+                              "str*", &bstrProfile)) != 0 {
             throw Error(Format("ITfInputProcessorProfiles::GetLanguageProfileDescription failed with HRESULT 0x{:08x}", result))
         }
         return bstrProfile
@@ -115,9 +115,9 @@ GetEnabledInputMethods() {
 
         profile := TF_LANGUAGEPROFILE()
         while enumProfiles.Next(1, profile) {
-            if profiles.IsLanguageProfileEnabled(profile) {
-                profileDesc := profiles.GetLanguageProfileDescription(profile)
-                Msgbox Format("{:04X}`n{}`n{}`n", profile.langid(), profile.strGuid(), profileDesc)
+            if profiles.IsLanguageProfileEnabled(profile.clsid, profile.langid, profile.guidProfile) {
+                profileDesc := profiles.GetLanguageProfileDescription(profile.clsid, profile.langid, profile.guidProfile)
+                Msgbox Format("{:04X}`n{}`n{}`n", profile.langid, profile.strGuidProfile, profileDesc)
             }
         }
     }

@@ -3,7 +3,7 @@ return {
     enabled = false,
     dependencies = {
         'lewis6991/gitsigns.nvim',
-        'echasnovski/mini.icons',
+        "echasnovski/mini.icons",
     },
     event = { "VeryLazy" },
     init = function() vim.g.barbar_auto_setup = false end,

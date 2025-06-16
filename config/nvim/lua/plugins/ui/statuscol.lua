@@ -6,6 +6,7 @@ return {
         local builtin = require("statuscol.builtin")
         require("statuscol").setup {
             relculright = true,
+            ft_ignore = { "neo-tree", "neotree" },
             bt_ignore = { "nofile", "terminal" },
             segments = {
                 {

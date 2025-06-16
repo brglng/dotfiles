@@ -205,11 +205,11 @@ $env.config = {
         case_sensitive: false # set to true to enable case-sensitive completions
         quick: true    # set this to false to prevent auto-selecting completions when only one remains
         partial: true    # set this to false to prevent partial filling of the prompt
-        algorithm: "prefix"    # prefix or fuzzy
+        algorithm: "fuzzy"    # prefix or fuzzy
         external: {
             enable: true # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up may be very slow
-            max_results: 100 # setting it lower can improve completion performance at the cost of omitting some options
-            # completer: $external_completer
+            max_results: 1000 # setting it lower can improve completion performance at the cost of omitting some options
+            # completer: {|spans| $spans}
         }
         use_ls_colors: true # set this to true to enable file/path/directory completions using LS_COLORS
     }
@@ -234,7 +234,7 @@ $env.config = {
     edit_mode: emacs # emacs, vi
     shell_integration: {
         # osc2 abbreviates the path if in the home_dir, sets the tab/window title, shows the running command in the tab/window title
-        osc2: true
+        osc2: false
         # osc7 is a way to communicate the path to the terminal, this is helpful for spawning new tabs in the same directory
         osc7: true
         # osc8 is also implemented as the deprecated setting ls.show_clickable_links, it shows clickable links in ls output if your terminal supports it. show_clickable_links is deprecated in favor of osc8
@@ -284,15 +284,84 @@ $env.config = {
 
     hooks: {
         pre_prompt: [{
-            if (which direnv | is-empty) {
-                return
-            }
+            print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename)(ansi st)"
 
-            direnv export json | from json | default {} | load-env
+            # Search for pixi.toml in the current directory and all parent directories
+            mut project_root = $env.PWD
+            while not ([$project_root, "pixi.toml"] | path join | path exists) {
+                let new_project_root = [$project_root, ".."] | path join | path expand -n
+                if $new_project_root == $project_root {
+                    break
+                }
+                $project_root = $new_project_root
+            }
+            let found_project = [$project_root, "pixi.toml"] | path join | path exists
+
+            export-env {
+                if ("PIXI_IN_SHELL" in $env) and $env.PIXI_IN_SHELL == "1" { # and (not $found_project or $env.PIXI_PROJECT_ROOT != $project_root) {
+                    # Deactivate for every prompt for now, in case any files have changed
+                    # Try to find a better solution in the future
+                    # print $"(ansi blue)Deactivating (ansi attr_bold)($env.PIXI_PROJECT_NAME)(ansi reset)"
+                    if "PIXI_OLD_PROMPT" in $env {
+                        $env.PROMPT_COMMAND = $env.PIXI_OLD_PROMPT
+                        hide-env PIXI_OLD_PROMPT
+                    }
+                    if "PIXI_SAVE_ENV" in $env {
+                        $env.PIXI_SAVE_ENV | where {|e| $e.v != null } | transpose -ird | load-env
+                        $env.PIXI_SAVE_ENV | where {|e| $e.v == null } | each {|e| $e.k } | hide-env ...$in
+                        hide-env PIXI_SAVE_ENV
+                    }
+                    hide-env PIXI_IN_SHELL
+                }
+
+                if $found_project {
+                    let new_env = pixi shell-hook --json | from json | get environment_variables | default {}
+                    let project_name = if "PIXI_PROJECT_NAME" in $new_env {
+                        $new_env.PIXI_PROJECT_NAME
+                    } else {
+                        # If there is already PIXI_PROJECT_NAME in the environment, pixi shell-hook does not return it,
+                        # so use the one from the existing environment.
+                        $env.PIXI_PROJECT_NAME
+                    }
+                    # print $"(ansi blue)Activating (ansi attr_bold)($project_name)(ansi reset)"
+                    let envs_to_save = $new_env | transpose k v | each {|new_e|
+                        if $new_e.k in $env {
+                            { k: $new_e.k, v: ($env | get $new_e.k) }
+                        } else {
+                            { k: $new_e.k, v: null }
+                        }
+                    }
+                    $env.PIXI_SAVE_ENV = $envs_to_save
+                    $new_env | load-env
+                    $env.PATH = $env.PATH | split row (char env_sep)
+                    $env.Path = $env.Path | split row (char env_sep)
+                    $env.PIXI_OLD_PROMPT = $env.PROMPT_COMMAND
+                    $env.PROMPT_COMMAND = {||
+                        let old_prompt = (do $env.PIXI_OLD_PROMPT)
+                        if ($old_prompt | str starts-with "\n") {
+                            # If the old prompt starts with a newline, we need to trim it
+                            # This is the case when starship is used and add_newline is set to true in starship.toml
+                            echo $"\n($env.PIXI_PROMPT)($old_prompt | str trim --left)"
+                        } else {
+                            echo $"($env.PIXI_PROMPT)($old_prompt)"
+                        }
+
+                    }
+                }
+            }
         }]
-        pre_execution: [{ null }] # run before the repl input is run
+        pre_execution: [{
+            let last_cmd = (commandline)
+            if $last_cmd != "" {
+                print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename):($last_cmd)(ansi st)"
+            } else {
+                print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename)(ansi st)"
+            }
+        }]
         env_change: {
-            PWD: [{|before, after| null }] # run if the PWD environment is different since the last repl input
+            PWD: [
+                {|before, after| }
+            ] # run if the PWD environment is different since the last repl input
         }
         display_output: "if (term size).columns >= 100 { table -e } else { table }" # run to display the output of a pipeline
         command_not_found: { null } # return an error message when a command is not found
@@ -326,11 +395,11 @@ $env.config = {
             type: {
                 layout: ide
                 min_completion_width: 0,
-                max_completion_width: 100,
+                max_completion_width: 300,
                 max_completion_height: 20, # will be limited by the available lines in the terminal
                 padding: 0,
                 border: true,
-                cursor_offset: -1,
+                cursor_offset: 0,
                 description_mode: "prefer_right"
                 min_description_width: 0
                 max_description_width: 50
@@ -896,49 +965,18 @@ $env.config = {
     ]
 }
 
-if (uname).operating-system =~ 'MS/Windows' {
-    $env.config.shell_integration.osc133 = false
-}
-
-source ~/.cache/carapace/init.nu
-
-use ~/.cache/starship/init.nu
-
-$env.config.completions.external.completer = {|spans|
-    match $spans.0 {
-        _ => $carapace_completer
-    } | do $in $spans
-}
-
-# source ~/.zoxide.nu
-
-# let zoxide_completer = {|spans|
-#     $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+# if (uname).operating-system =~ 'MS/Windows' {
+#     $env.config.shell_integration.osc133 = false
 # }
-#
-# $env.config.completions.external.completer = {|spans|
-#     match $spans.0 {
-#         z => $zoxide_completer
-#         zi => $zoxide_completer
-#         __zoxide_z => $zoxide_completer
-#         __zoxide_zi => $zoxide_completer
-#         _ => $carapace_completer
-#     } | do $in $spans
-# }
-
-mkdir $"($nu.data-dir)/vendor/autoload"
-pixi completion --shell nushell | save --force $"($nu.data-dir)/vendor/autoload/pixi-completions.nu"
 
 source ~/.cache/zlua.nu
-
-alias z = _zlua
-alias zc = _zlua -c
-alias zi = _zlua -i
-alias zf = _zlua -I
-alias zb = _zlua -b
-alias zbi = _zlua -b -i
-alias zbf = _zlua -b -I
-alias zh = _zlua -I -t .
+alias zc = z -c
+alias zi = z -i
+alias zf = z -I
+alias zb = z -b
+alias zbi = z -b -i
+alias zbf = z -b -I
+alias zh = z -I -t .
 
 alias la = ls -al
 alias ll = ls -l
@@ -950,46 +988,16 @@ def --wrapped ssh [ ...args ] {
 }
 
 def px [] {}
-
-def --wrapped 'px add' [ ...args ] {
-    ^pixi global add --environment default ...$args
-}
-
-def --wrapped 'px a' [ ...args ] {
-    ^pixi global add --environment default ...$args
-}
-
-def --wrapped 'px install' [ ...args ] {
-    ^pixi global add --environment default ...$args
-}
-
-def --wrapped 'px i' [ ...args ] {
-    ^pixi global add --environment default ...$args
-}
-
-def --wrapped 'px expose' [ ...args ] {
-    ^pixi global expose add --environment default ...$args
-}
-
-def --wrapped 'px e' [ ...args ] {
-    ^pixi global expose add --environment default ...$args
-}
-
-def --wrapped 'px link' [ ...args ] {
-    ^pixi global expose add --environment default ...$args
-}
-
-def --wrapped 'px l' [ ...args ] {
-    ^pixi global expose add --environment default ...$args
-}
-
-def --wrapped 'px unlink' [ ...args ] {
-    ^pixi global expose remove --environment default ...$args
-}
-
-def --wrapped 'px u' [ ...args ] {
-    ^pixi global expose remove --environment default ...$args
-}
+def --wrapped 'px add'      [ ...args ] { ^pixi global add --environment default ...$args }
+def --wrapped 'px install'  [ ...args ] { ^pixi global install --environment default ...$args }
+def --wrapped 'px expose'   [ ...args ] { ^pixi global expose add --environment default ...$args }
+def --wrapped 'px link'     [ ...args ] { ^pixi global expose add --environment default ...$args }
+def --wrapped 'px list'     [ ...args ] { ^pixi global list ...$args }
+def --wrapped 'px remove'   [ ...args ] { ^pixi global remove --environment default ...$args }
+def --wrapped 'px search'   [ ...args ] { ^pixi search ...$args }
+def --wrapped 'px unexpose' [ ...args ] { ^pixi global expose remove ...$args }
+def --wrapped 'px unlink'   [ ...args ] { ^pixi global expose remove ...$args }
+def --wrapped 'px update'   [ ...args ] { ^pixi global update ...$args }
 
 def 'vpn on' [] {
     sudo systemctl start openconnect.service

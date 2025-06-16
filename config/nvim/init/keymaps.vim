@@ -4,9 +4,9 @@ vnoremap <BS> d
 " Don't copy the contents of an overwritten selection.
 " vnoremap <silent> <expr> p match(mode()[0], '^\(V\|S\|\|\)') ? "\"_dP" : (col('.') > strlen(getline('.')) ? "\"_dp" : "\"_dP")
 
-" noremap <silent> <C-s> :update<CR>
-" vnoremap <silent> <C-s> <C-c>:update<CR>
-" inoremap <silent> <C-s> <C-o>:update<CR>
+noremap <silent> <C-s> :update<CR>
+vnoremap <silent> <C-s> <C-c>:update<CR>
+inoremap <silent> <C-s> <C-o>:update<CR>
 noremap <silent> <M-s> :update<CR>
 vnoremap <silent> <M-s> <C-c>:update<CR>
 inoremap <silent> <M-s> <C-o>:update<CR>

@@ -1,6 +1,7 @@
-command_timeout = 5000
+command_timeout = 10000
 follow_symlinks = false
 add_newline = true
+# right_format = '$time'
 
 [directory]
 truncation_length = 0
@@ -8,7 +9,7 @@ truncate_to_repo = false
 read_only = " 󰌾"
 
 [direnv]
-disabled = false
+disabled = true
 
 [git_status]
 format = '([\[ $all_status$ahead_behind\]]($style) )'
@@ -99,6 +100,9 @@ symbol = " "
 
 [kotlin]
 symbol = " "
+
+[line_break]
+disabled = false
 
 [lua]
 symbol = " "

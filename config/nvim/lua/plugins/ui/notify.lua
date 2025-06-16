@@ -67,24 +67,26 @@ return {
     },
     config = function(_, opts)
         local notify = require("notify")
+        local brglng = require("brglng")
+
         notify.setup(opts)
 
-        local brglng = require("brglng")
         if vim.g.neovide then
             brglng.hl.transform_tbl {
+                NotifyBackground = { fg = "NormalFloat.fg", bg = "NormalFloat.bg" },
                 NotifyERRORIcon = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
                 NotifyWARNIcon = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
-                NotifyINFOIcon = { fg = "NormalFloat.bg", bg = "DiagnosticInfo.fg" },
+                NotifyINFOIcon = { fg = "NormalFloat.bg", bg = "FloatTitle.fg" },
                 NotifyDEBUGIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
                 NotifyTRACEIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg", },
                 NotifyERRORTitle = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
                 NotifyWARNTitle = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
-                NotifyINFOTitle = { fg = "NormalFloat.bg", bg = "DiagnosticInfo.fg" },
+                NotifyINFOTitle = { fg = "NormalFloat.bg", bg = "FloatTitle.fg" },
                 NotifyDEBUGTitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
-                NotifyTRACETitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyTRACETitle = { fg = "DiagnosticInfo.bg", bg = "DiagnosticInfo.fg" },
                 NotifyERRORBorder = { fg = "DiagnosticError.fg", bg = "NormalFloat.bg" },
                 NotifyWARNBorder = { fg = "DiagnosticWarn.fg", bg = "NormalFloat.bg" },
-                NotifyINFOBorder = { fg = "DiagnosticInfo.fg", bg = "NormalFloat.bg" },
+                NotifyINFOBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
                 NotifyDEBUGBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
                 NotifyTRACEBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
                 NotifyERRORBody = { link = "NormalFloat" },
@@ -95,21 +97,22 @@ return {
             }
         else
             brglng.hl.transform_tbl {
-                NotifyERRORIcon = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
-                NotifyWARNIcon = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
-                NotifyINFOIcon = { fg = "NormalFloat.bg", bg = "DiagnosticInfo.fg" },
-                NotifyDEBUGIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
-                NotifyTRACEIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
-                NotifyERRORTitle = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
-                NotifyWARNTitle = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
-                NotifyINFOTitle = { fg = "NormalFloat.bg", bg = "DiagnosticInfo.fg" },
-                NotifyDEBUGTitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
-                NotifyTRACETitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
-                NotifyERRORBorder = { fg = "DiagnosticError.fg", bg = nil },
-                NotifyWARNBorder = { fg = "DiagnosticWarn.fg", bg = nil },
-                NotifyINFOBorder = { fg = "DiagnosticInfo.fg", bg = nil },
-                NotifyDEBUGBorder = { fg = "FloatBorder.fg", bg = nil },
-                NotifyTRACEBorder = { fg = "FloatBorder.fg", bg = nil },
+                NotifyBackground = { fg = "Normal.fg", bg = "Normal.bg" },
+                NotifyERRORIcon = { fg = "Normal.bg", bg = "DiagnosticError.fg" },
+                NotifyWARNIcon = { fg = "Normal.bg", bg = "DiagnosticWarn.fg" },
+                NotifyINFOIcon = { fg = "Normal.bg", bg = "FloatTitle.fg" },
+                NotifyDEBUGIcon = { fg = "Normal.bg", bg = "FloatBorder.fg" },
+                NotifyTRACEIcon = { fg = "Normal.bg", bg = "FloatBorder.fg" },
+                NotifyERRORTitle = { fg = "Normal.bg", bg = "DiagnosticError.fg" },
+                NotifyWARNTitle = { fg = "Normal.bg", bg = "DiagnosticWarn.fg" },
+                NotifyINFOTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
+                NotifyDEBUGTitle = { fg = "Normal.bg", bg = "FloatBorder.fg" },
+                NotifyTRACETitle = { fg = "Normal.bg", bg = "DiagnosticInfo.fg" },
+                NotifyERRORBorder = { fg = "DiagnosticError.fg", bg = "Normal.bg" },
+                NotifyWARNBorder = { fg = "DiagnosticWarn.fg", bg = "Normal.bg" },
+                NotifyINFOBorder = { fg = "FloatTitle.fg", bg = "Normal.bg" },
+                NotifyDEBUGBorder = { fg = "FloatBorder.fg", bg = "Normal.bg" },
+                NotifyTRACEBorder = { fg = "DiagnosticInfo.fg", bg = "Normal.bg" },
                 NotifyERRORBody = { link = "Normal" },
                 NotifyWARNBody = { link = "Normal" },
                 NotifyINFOBody = { link = "Normal" },
@@ -137,34 +140,37 @@ return {
         end
 
         local function get_msg_data(client_data, token)
-            local notif_data
-            if vim.uv.now() - client_data.current_notif_data.last_update_time < 2000 then
-                notif_data = client_data.current_notif_data
-            else
-                notif_data = {
-                    last_update_time = vim.uv.now(),
-                    msg_data_list = {},
-                    notification = nil
-                }
-                client_data.current_notif_data = notif_data
-            end
-
+            local notif_data = client_data.current_notif_data
+            local msg_data
             if client_data.token_msg_data_tbl[token] then
-                return client_data.token_msg_data_tbl[token]
+                msg_data = client_data.token_msg_data_tbl[token]
             else
-                local msg_data = {
+                msg_data = {
                     token = token,
                     title = nil,
                     msg = nil,
                     percentage_start = nil,
                     percentage_end = nil,
                     notif_data = notif_data,
-                    notification = notif_data.notification
+                    notification = notif_data.notification,
+                    last_update_time = vim.uv.now(),
                 }
                 table.insert(notif_data.msg_data_list, msg_data)
                 client_data.token_msg_data_tbl[token] = msg_data
-                return msg_data
             end
+            for t, data in pairs(client_data.token_msg_data_tbl) do
+                if vim.uv.now() - data.last_update_time >= 5000 then
+                    client_data.token_msg_data_tbl[t] = nil
+                end
+            end
+            local new_msg_data_list = {}
+            for _, data in ipairs(notif_data.msg_data_list) do
+                if vim.uv.now() - data.last_update_time < 5000 then
+                    table.insert(new_msg_data_list, data)
+                end
+            end
+            notif_data.msg_data_list = new_msg_data_list
+            return msg_data
         end
 
         local function draw_percentage(percentage, len)
@@ -232,13 +238,15 @@ return {
                 if val.kind == "begin" then
                     msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
                 elseif val.kind == "report" then
-                    if vim.uv.now() - notif_data.last_update_time < 300 then
+                    if vim.uv.now() - notif_data.last_update_time < vim.o.updatetime then
                         return
                     end
                     msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
                 elseif val.kind == "end" then
                     msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, true)
                     client_data.token_msg_data_tbl[params.token] = nil
+                else
+                    return
                 end
                 local msg = ""
                 local row = 0

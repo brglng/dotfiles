@@ -32,7 +32,7 @@ return {
                     filetype = "vista",
                     text = "Vista",
                     text_align = "center",
-                    separator = true
+                    separator = true,
                 },
                 {
                     filetype = "undotree",
@@ -48,7 +48,7 @@ return {
                 }
             },
             -- separator_style = { '', '' }
-            -- separator_style = 'slant'
+            separator_style = 'slant'
         },
         highlights = {
     	    buffer_selected = { italic = false },
@@ -88,6 +88,10 @@ return {
         if vim.o.ft == "alpha" then
             vim.o.showtabline = 0
         end
+        local brglng = require("brglng")
+        brglng.hl.transform_tbl {
+            BufferLineOffsetSeparator = { fg = "WinSeparator.fg", bg = "Normal.bg", bold = false }
+        }
     end,
     keys = {
         { '[b', mode = 'n', "<Cmd>BufferLineCyclePrev<CR>", desc = 'Previous Buffer' },

@@ -10,7 +10,11 @@ let g:sidebar.neo_tree_filesystem = #{
 \   filter: {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'filesystem'},
 \   open: 'Neotree filesystem reveal',
 \   close: 'Neotree close',
-\   dont_close: 'neo_tree_.*'
+\   dont_close: 'neo_tree_.*',
+\   opts: {
+\       'foldenable': 0,
+\       'foldcolumn': 0,
+\   }
 \ }
 
 let g:sidebar.neo_tree_buffers = #{
@@ -18,7 +22,11 @@ let g:sidebar.neo_tree_buffers = #{
 \   filter: {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'buffers'},
 \   open: 'Neotree buffers reveal',
 \   close: 'Neotree close',
-\   dont_close: 'neo_tree_.*'
+\   dont_close: 'neo_tree_.*',
+\   opts: {
+\       'foldenable': 0,
+\       'foldcolumn': 0,
+\   }
 \ }
 
 let g:sidebar.neo_tree_git_status = #{
@@ -26,7 +34,11 @@ let g:sidebar.neo_tree_git_status = #{
 \   filter: {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'git_status'},
 \   open: 'Neotree git_status reveal',
 \   close: 'Neotree close',
-\   dont_close: 'neo_tree_.*'
+\   dont_close: 'neo_tree_.*',
+\   opts: {
+\       'foldenable': 0,
+\       'foldcolumn': 0,
+\   }
 \ }
 
 let g:sidebar.neo_tree_document_symbols = #{
@@ -34,7 +46,11 @@ let g:sidebar.neo_tree_document_symbols = #{
 \   filter: {nr -> getwinvar(nr, '&filetype') ==# 'neo-tree' && winbufnr(nr)->getbufvar('neo_tree_source') ==# 'document_symbols'},
 \   open: 'Neotree document_symbols reveal',
 \   close: 'Neotree close',
-\   dont_close: 'neo_tree_.*'
+\   dont_close: 'neo_tree_.*',
+\   opts: {
+\       'foldenable': 0,
+\       'foldcolumn': 0,
+\   }
 \ }
 
 let g:sidebar.trouble_quickfix = #{
@@ -146,9 +162,9 @@ let g:sidebar.terminal = #{
 let g:sidebar.help = #{
 \   position: 'right',
 \   filter: {nr -> getwinvar(nr, '&buftype') ==# 'help'},
-\   open: function("sidebar#open_last_help", ['botright vertical']),
+\   open: function("sidebar#open_last_help", ['botright']),
 \   close: 'helpclose',
-\   width: 0.4
+\   width: 0.5,
 \ }
 
 let g:sidebar.spectre = #{

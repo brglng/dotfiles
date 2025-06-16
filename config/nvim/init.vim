@@ -1,15 +1,17 @@
+let s:SEP = has('win32') ? '\' : '/'
+
 " The default runtimepath on windows is $USERPROFILE/vimfiles, but I am not going to use it
 if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
-    let &runtimepath = $HOME . '/.vim,' . &runtimepath . ',' . $HOME . '/.vim/after'
+    let &runtimepath = $HOME . '\.vim,' . &runtimepath . ',' . $HOME . '\.vim\after'
 endif
 
 if !has('nvim')
-    let &runtimepath = &runtimepath . ',/usr/local/share/vim/vimfiles'
+    let &runtimepath = &runtimepath . ',' . s:SEP . 'usr'. s:SEP . 'local' . s:SEP . 'share' . s:SEP . 'vim' . s:SEP . 'vimfiles'
 endif
 
 if exists('g:neovide')
     if has('win32')
-        let $PATH = $HOME . '/.local/bin;' . $HOME . '/.cargo/bin;' . $HOME . '/.pixi/bin;' . $PATH
+        let $PATH = $HOME . '\.local\bin;' . $HOME . '\.cargo\bin;' . $PATH
     else
         let $PATH = $HOME . '/.local/bin:' . $HOME . '/.cargo/bin:' . $HOME . '/.pixi/bin:' . $PATH
     endif
@@ -17,7 +19,7 @@ endif
 
 if !has('nvim')
     if has('win32')
-        let s:viewdir = $LOCALAPPDATA . '/vim-data/view'
+        let s:viewdir = $LOCALAPPDATA . '\vim-data\view'
     else
         let s:viewdir = $HOME . '/.local/state/vim/view'
     endif
@@ -91,7 +93,7 @@ if has('nvim')
     let s:backupdir = stdpath('state') . '/backup'
 else
     if has('win32')
-        let s:backupdir = $LOCALAPPDATA . '/vim-data/backup'
+        let s:backupdir = $LOCALAPPDATA . '\vim-data\backup'
     else
         let s:backupdir = $HOME . '/.local/state/vim/backup'
     endif
@@ -108,7 +110,7 @@ endif
 set swapfile
 if !has('nvim')
     if has('win32')
-        let s:directory = $LOCALAPPDATA . '/vim-data/swap'
+        let s:directory = $LOCALAPPDATA . '\vim-data\swap'
     else
         let s:directory = $HOME . '/.local/state/vim/swap'
     endif
@@ -227,7 +229,7 @@ autocmd BufRead,BufNewFile *.md set filetype=markdown
 
 if !has('nvim')
     if has('win32')
-        let s:undodir = $LOCALAPPDATA . '/vim-data/undo'
+        let s:undodir = $LOCALAPPDATA . '\vim-data\undo'
     else
         let s:undodir = $HOME . '/.local/state/vim/undo'
     endif
@@ -318,7 +320,7 @@ endif
 
 let g:plug_timeout = 300
 
-let s:plugdir = has('win32') ? $LOCALAPPDATA .. '/vim-data/plugged' : '~/.local/state/vim/plugged'
+let s:plugdir = has('win32') ? $LOCALAPPDATA .. '\vim-data\plugged' : '~/.local/state/vim/plugged'
 call plug#begin(s:plugdir)
 
 function! VimOnly(...)
@@ -426,30 +428,25 @@ runtime init/keymaps.vim
 runtime init/ui.vim
 
 function! s:find_project_root()
-    if has('win32')
-        let sep = '\\'
-    else
-        let sep = '/'
-    endif
     let found = v:false
     let marker = ''
     let project_root = getcwd()
     while v:true
-        if project_root ==# '/' || project_root =~# '^\a:\\$'
+        if project_root ==# '/' || project_root =~# '^\a:[\\/]$'
             break
         endif
-        if !empty(glob(project_root . sep . '.vim', v:true, v:true))
+        if !empty(glob(project_root . s:SEP . '.vim', v:true, v:true))
             let found = v:true
             let marker = '.vim'
             break
         endif
-        if !empty(glob(project_root . sep . '.nvim', v:true, v:true))
+        if !empty(glob(project_root . s:SEP . '.nvim', v:true, v:true))
             let found = v:true
             let marker = '.nvim'
             break
         endif
-        let parentdir = simplify(project_root . sep . '..')
-        if parentdir ==# project_root || parentdir ==# '/' || parentdir =~# '^\a:\\$'
+        let parentdir = simplify(project_root . s:SEP . '..')
+        if parentdir ==# project_root || parentdir ==# '/' || parentdir =~# '^\a:[\\/]$'
             break
         endif
         let project_root = parentdir
@@ -459,26 +456,21 @@ endfunction
 
 function! s:load_local_config()
     let [found, project_root, marker] = s:find_project_root()
-    if has('win32')
-        let sep = '\\'
-    else
-        let sep = '/'
-    endif
     if found
-        let project_runtime = project_root . sep . marker
+        let project_runtime = project_root . s:SEP . marker
         if isdirectory(project_runtime)
             let allrtp = split(&runtimepath, ',')
             for i in range(len(allrtp))
                 let allrtp[i] = resolve(allrtp[i])
             endfor
             if index(allrtp, resolve(project_runtime)) < 0
-                let &runtimepath = project_runtime . ',' . &runtimepath . ',' . project_runtime . sep . 'after'
-                if has('nvim') && !empty(glob(project_runtime . sep . 'init.lua', v:true, v:true))
-                    let init_script = project_runtime . sep . 'init.lua'
+                let &runtimepath = project_runtime . ',' . &runtimepath . ',' . project_runtime . s:SEP . 'after'
+                if has('nvim') && !empty(glob(project_runtime . s:SEP . 'init.lua', v:true, v:true))
+                    let init_script = project_runtime . s:SEP . 'init.lua'
                     echomsg 'Loading ' . init_script
                     execute 'source ' . init_script
-                elseif !empty(glob(project_runtime . sep . 'init.vim', v:true, v:true))
-                    let init_script = project_runtime . sep . 'init.vim'
+                elseif !empty(glob(project_runtime . s:SEP . 'init.vim', v:true, v:true))
+                    let init_script = project_runtime . s:SEP . 'init.vim'
                     echomsg 'Loading ' . init_script
                     execute 'source ' . init_script
                 endif
@@ -494,6 +486,8 @@ function! s:load_local_config()
         endif
     endif
 endfunction
-autocmd VimEnter * call s:load_local_config()
+
+"autocmd VimEnter * call s:load_local_config()
+call s:load_local_config()
 
 " vim: ts=8 sts=4 sw=4 et

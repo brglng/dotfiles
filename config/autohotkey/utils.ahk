@@ -1,46 +1,61 @@
+S_OK := 0
+S_FALSE := 1
+
 LOWORD(dword) {
     return dword & 0xffff
 }
 
-FormatGUID(bufferPtr) {
-    data1 := NumGet(bufferPtr, 0, "UInt")
-    data2 := NumGet(bufferPtr, 4, "UShort")
-    data3 := NumGet(bufferPtr, 6, "UShort")
-    return Format("{:08X}-{:04X}-{:04X}-{:02X}{:02X}-{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}",
+guidToStr(guid) {
+    data1 := NumGet(guid, 0, "UInt")
+    data2 := NumGet(guid, 4, "UShort")
+    data3 := NumGet(guid, 6, "UShort")
+    return Format("{{}{:08X}-{:04X}-{:04X}-{:02X}{:02X}-{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{}}",
         data1, data2, data3,
-        NumGet(bufferPtr + 8 + 0, "UChar"),
-        NumGet(bufferPtr + 8 + 1, "UChar"),
-        NumGet(bufferPtr + 8 + 2, "UChar"),
-        NumGet(bufferPtr + 8 + 3, "UChar"),
-        NumGet(bufferPtr + 8 + 4, "UChar"),
-        NumGet(bufferPtr + 8 + 5, "UChar"),
-        NumGet(bufferPtr + 8 + 6, "UChar"),
-        NumGet(bufferPtr + 8 + 7, "UChar")
+        NumGet(guid + 8 + 0, "UChar"),
+        NumGet(guid + 8 + 1, "UChar"),
+        NumGet(guid + 8 + 2, "UChar"),
+        NumGet(guid + 8 + 3, "UChar"),
+        NumGet(guid + 8 + 4, "UChar"),
+        NumGet(guid + 8 + 5, "UChar"),
+        NumGet(guid + 8 + 6, "UChar"),
+        NumGet(guid + 8 + 7, "UChar")
     )
 }
 
-StringToBinaryGUID(stringGuid) {
+guidFromStr(guid, strGUID) {
     ; Validate GUID format
-    if !RegExMatch(stringGuid, "^{[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}$")
+    if !regExMatch(strGUID, "^{[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}$")
         throw Error("Invalid GUID format")
 
     ; Remove the curly braces
-    stringGuid := SubStr(stringGuid, 2, -1)
+    strGUID := subStr(strGUID, 2, -1)
 
     ; Split the string based on the GUID structure
-    parts := StrSplit(stringGuid, "-")
-
-    ; Allocate a binary buffer of 16 bytes
-    binaryGuid := Buffer(16)
+    parts := strSplit(strGUID, "-")
 
     ; Convert each pair of hexadecimal characters into bytes
-    NumPut("UInt", Integer("0x" parts[1]), binaryGuid)
-    NumPut("UShort", Integer("0x" parts[2]), binaryGuid, 4)
-    NumPut("UShort", Integer("0x" parts[3]), binaryGuid, 6)
+    numPut("UInt", Integer("0x" parts[1]), guid)
+    numPut("UShort", Integer("0x" parts[2]), guid, 4)
+    numPut("UShort", Integer("0x" parts[3]), guid, 6)
     remaining := parts[4] . parts[5]
     Loop 8 {
-        byte := SubStr(remaining, (A_Index - 1) * 2 + 1, 2)
-        NumPut("UChar", Integer("0x" byte), binaryGuid, 8 + A_Index - 1)
+        byte := subStr(remaining, (A_Index - 1) * 2 + 1, 2)
+        numPut("UChar", Integer("0x" byte), guid, 8 + A_Index - 1)
     }
-    return binaryGuid
+    return guid
 }
+
+strToGUID(strGUID) {
+    ; Allocate a binary guid of 16 bytes
+    guid := Buffer(16)
+    guidFromStr(guid, strGUID)
+    return guid
+}
+
+GUID_NULL_STR := "{00000000-0000-0000-0000-000000000000}"
+GUID_NULL := strToGUID(GUID_NULL_STR)
+CLSID_NULL_STR := GUID_NULL_STR
+CLSID_NULL := GUID_NULL
+
+LANGID_EN_US := 0x0409
+LANGID_ZH_CN := 0x0804

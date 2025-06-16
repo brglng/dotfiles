@@ -3,7 +3,7 @@ return {
     enabled = false,
     dependencies = {
         "nvim-treesitter/nvim-treesitter",
-        "echasnovski/mini.icons"
+        "echasnovski/mini.icons",
     },
     opts = {
         filetypes = { "markdown", "quarto", "rmd", "Avante" },

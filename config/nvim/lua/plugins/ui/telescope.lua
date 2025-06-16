@@ -124,14 +124,14 @@ return {
                         "fd",
                         "-H",
                         "-I",
-                        "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs}",
+                        "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs,.pixi,.venv*,.conan2}",
                         "--strip-cwd-prefix",
                     },
                     -- find_command = {
                     --     "bfind",
                     --     "-H",
                     --     "-I",
-                    --     ".DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs",
+                    --     ".DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs,.pixi,.venv*,.conan2",
                     --     "--strip-cwd-prefix"
                     -- },
                 },
@@ -185,8 +185,8 @@ return {
         local brglng = require("brglng")
         if vim.g.neovide then
             brglng.hl.transform_tbl {
-                TelescopePromptTitle = { fg = "Normal.bg", bg = "DiagnosticOk.fg" },
-                TelescopePreviewTitle = { fg = "Normal.bg", bg = "DiagnosticInfo.fg" },
+                TelescopePromptTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
+                TelescopePreviewTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
                 TelescopeSelection = { fg = "PmenuSel.fg", bg = "PmenuSel.bg" },
                 TelescopeMatching = { link = "Search" },
                 TelescopePromptNormal = {
@@ -210,8 +210,8 @@ return {
             }
         else
             brglng.hl.transform_tbl {
-                TelescopePromptTitle = { fg = "Normal.bg", bg = "DiagnosticOk.fg" },
-                TelescopePreviewTitle = { fg = "Normal.bg", bg = "DiagnosticInfo.fg" },
+                TelescopePromptTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
+                TelescopePreviewTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
                 TelescopeSelection = { fg = "PmenuSel.fg", bg = "PmenuSel.bg" },
                 TelescopeMatching = { link = "Search" },
                 TelescopePromptNormal = { fg = "NormalFloat.fg,Normal.fg", bg = nil },

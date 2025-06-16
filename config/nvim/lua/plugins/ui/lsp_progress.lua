@@ -1,6 +1,8 @@
 return {
     'linrongbin16/lsp-progress.nvim',
-    dependencies = { 'echasnovski/mini.icons' },
+    dependencies = {
+        "echasnovski/mini.icons",
+    },
     event = { "LspAttach" },
     cond = false,
     opts = {

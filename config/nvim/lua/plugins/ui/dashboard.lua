@@ -3,7 +3,7 @@ return {
     enabled = false,
     lazy = false,
     dependencies = {
-        { 'echasnovski/mini.icons' },
+        "echasnovski/mini.icons",
         {
             "rubiin/fortune.nvim",
             opts = {

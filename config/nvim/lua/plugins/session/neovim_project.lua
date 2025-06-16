@@ -24,7 +24,7 @@ return {
         last_session_on_startup = false
     },
     config = function(_, opts)
-        local my_projects = vim.fn.stdpath('config') .. "/lua/my/projects.lua"
+        local my_projects = vim.fn.stdpath('config') .. "/lua/brglng/projects.lua"
         local local_projects = vim.fn.stdpath("data") .. "/neovim-project/projects.lua"
         if vim.uv.fs_open(my_projects, "r", 438) then
             vim.list_extend(opts.projects, dofile(my_projects))
@@ -32,10 +32,10 @@ return {
         if vim.uv.fs_open(local_projects, "r", 438) then
             vim.list_extend(opts.projects, dofile(local_projects))
         end
-        vim.api.nvim_create_user_command("MyProjects", function()
+        vim.api.nvim_create_user_command("EditPrivateProjects", function()
             vim.cmd("edit " .. my_projects)
         end, { nargs = 0 })
-        vim.api.nvim_create_user_command("MyLocalProjects", function()
+        vim.api.nvim_create_user_command("EditLocalProjects", function()
             vim.cmd("edit " .. local_projects)
         end, { nargs = 0 })
         require("neovim-project").setup(opts)

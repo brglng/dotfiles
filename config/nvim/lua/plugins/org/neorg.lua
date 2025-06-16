@@ -46,7 +46,7 @@ return {
         }
     },
     config = function(_, opts)
-        if vim.g.neovide or vim.uv.os_uname().sysname == "Windows_NT" then
+        if vim.g.neovide or vim.fn.has("win32") then
             opts.load["core.defaults"].config.disable = {
                 "core.integrations.image",
                 "core.latex.renderer"

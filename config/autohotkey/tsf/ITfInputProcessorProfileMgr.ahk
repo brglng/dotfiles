@@ -1,25 +1,34 @@
 #include "TF_INPUTPROCESSORPROFILE.ahk"
 #include "IEnumTfInputProcessorProfiles.ahk"
-#include "utils.ahk"
-
-GUID_TFCAT_TIP_KEYBOARD := StringToBinaryGUID("{34745C63-B2F0-4784-8B67-5E12C8701A31}")
+#include "..\utils.ahk"
 
 class ITfInputProcessorProfileMgr {
     static IID := "{71C6E74C-0F28-11D8-A82A-00065B84435C}"
 
     __new(clsid) {
         this.comObj := ComObject(clsid, ITfInputProcessorProfileMgr.IID)
-        this.ptr := this.comObj.ptr
     }
 
-    ActivateProfile(profile, langid, pclsid, pguidProfile, hkl, dwFlags) {
+    ptr {
+        get => this.comObj.ptr
+    }
+
+    ActivateProfile(dwProfileType, langid, pclsid, pguidProfile, hkl, dwFlags) {
         ; HRESULT ActivateProfile([in] DWORD dwProfileType, 
         ;                         [in] LANGID langid, 
         ;                         [in] REFCLSID clsid, 
         ;                         [in] REFGUID guidProfile, 
         ;                         [in] HKL hkl,
         ;                         [in] DWORD dwFlags);
+        if dwProfileType == TF_PROFILETYPE_KEYBOARDLAYOUT {
+            pclsid := GUID_NULL
+            pguidProfile := GUID_NULL
+        }
+        if dwProfileType == TF_PROFILETYPE_INPUTPROCESSOR {
+            hkl := 0
+        }
         hr := ComCall(3 + 0, this.comObj,
+                      "uint", dwProfileType,
                       "ushort", langid,
                       "ptr", pclsid,
                       "ptr", pguidProfile,
@@ -38,11 +47,11 @@ class ITfInputProcessorProfileMgr {
         return IEnumTfInputProcessorProfiles(pEnum)
     }
 
-    GetActiveProfile(pcatid) {
+    GetActiveProfile(catid) {
         ; HRESULT GetActiveProfile([in] REFGUID catid,
         ;                          [out] TF_INPUTPROCESSORPROFILE *pProfile);
         profile := TF_INPUTPROCESSORPROFILE()
-        hr := ComCall(3 + 7, this.comObj, "ptr", pcatid, "ptr", profile.buffer)
+        hr := ComCall(3 + 7, this.comObj, "ptr", catid, "ptr", profile.buffer)
         if hr != 0
             throw Error(Format("ITfInputProcessorProfileMgr::GetActiveProfile failed with HRESULT 0x{:08X}", hr))
         return profile
@@ -50,7 +59,6 @@ class ITfInputProcessorProfileMgr {
 }
 
 ShowActiveProfile() {
-    CLSID_TF_InputProcessorProfiles := "{33C53A50-F456-4884-B049-85FD643ECFED}"
     mgr := ITfInputProcessorProfileMgr(CLSID_TF_InputProcessorProfiles)
     profile := mgr.GetActiveProfile(GUID_TFCAT_TIP_KEYBOARD)
     Tooltip Format("dwProfileType: 0x{:08X}`n"
@@ -60,15 +68,15 @@ ShowActiveProfile() {
                    "catid: {}`n"
                    "hklSubstitute: 0x{:08X}`n"
                    "dwCaps: 0x{:08X}`n"
-                   "hkl: 0x{:08X}`n"
+                   "hkl: 0x{:016X}`n"
                    "dwFlags: 0x{:08X}`n",
-                   profile.dwProfileType(),
-                   profile.langid(),
-                   profile.strClsid(),
-                   profile.strGuidProfile(),
-                   profile.strCatid(),
-                   profile.hklSubstitute(),
-                   profile.dwCaps(),
-                   profile.hkl(),
-                   profile.dwFlags())
+                   profile.dwProfileType,
+                   profile.langid,
+                   profile.strClsid,
+                   profile.strGUIDProfile,
+                   profile.strCatid,
+                   profile.hklSubstitute,
+                   profile.dwCaps,
+                   profile.hkl,
+                   profile.dwFlags)
 }

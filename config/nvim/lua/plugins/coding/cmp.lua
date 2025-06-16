@@ -1,6 +1,6 @@
 return {
     "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
         "neovim/nvim-lspconfig",
         "hrsh7th/cmp-nvim-lsp",
@@ -71,20 +71,40 @@ return {
                     cmp.ItemField.Menu,
                 },
                 format = function(entry, vim_item)
+                    -- local lspkind = {
+                    --     -- if you change or add symbol here
+                    --     -- replace corresponding line in readme
+                    --     Text = { "󰉿", "Normal" },
+                    --     Method = { "󰆧", "@lsp.type.method" },
+                    --     Function = { "󰊕", "lsp.type.function" },
+                    --     Constructor = { "", "lsp.type.method" },
+                    --     Field = { "󰜢", "@lsp.type.property" },
+                    --     Variable = { "󰀫", "@lsp.type.variable" },
+                    --     Class = { "󰠱", "@lsp.type.class" },
+                    --     Interface = { "", "@lsp.type.interface" },
+                    --     Module = { "", "@lsp.type.namespace" },
+                    --     Property = { "󰜢", "@lsp.type.property" },
+                    --     Unit = { "󰑭", "@lsp.type.type" },
+                    --     Value = { "󰎠", "@lsp.type.number" },
+                    --     Enum = { "", "@lsp.type.enum" },
+                    --     Keyword = { "󰌋", "@lsp.type.keyword" },
+                    --     Snippet = { "", "@lsp.type.macro" },
+                    --     Color = { "󰏘", "@lsp.type.number" },
+                    --     File = { "󰈙", "Normal" },
+                    --     Reference = { "󰈇", "Normal" },
+                    --     Folder = { "󰉋", "Directory" },
+                    --     EnumMember = { "", "@lsp.type.enumMember" },
+                    --     Constant = { "󰏿", "Constant" },
+                    --     Struct = { "󰙅", "@lsp.type.struct" },
+                    --     Event = { "", "@lsp.type.event" },
+                    --     Operator = { "󰆕", "@lsp.type.operator" },
+                    --     TypeParameter = { "", "@lsp.type.typeParameter" },
+                    -- }
+                    -- local icon = lspkind[vim_item.kind][1]
+                    -- local icon_hl = lspkind[vim_item.kind][2]
+
                     local icon, icon_hl, _ = MiniIcons.get('lsp', vim_item.kind)
-                    -- if string.sub(vim_item.abbr or "", -1) == "~" and (vim_item.menu or "") ~= "" then
-                    --     if string.sub(vim_item.menu or "", 1)== '(' then
-                    --         vim_item.abbr = string.sub(vim.trim(vim_item.abbr or ""), 1, -2) .. vim.trim(vim_item.menu or "")
-                    --     else
-                    --         vim_item.abbr = vim.trim(vim_item.abbr or "") .. " " .. vim.trim(vim_item.menu or "")
-                    --     end
-                    -- else
-                    --     if vim.trim(vim_item.abbr or "") == vim.trim(vim_item.menu or "") then
-                    --         vim_item.abbr = vim.trim(vim_item.abbr or "")
-                    --     else
-                    --         vim_item.abbr = vim.trim(vim_item.abbr or "") .. " " ..  vim.trim(vim_item.menu or "")
-                    --     end
-                    -- end
+
                     vim_item.menu = "  " .. (vim_item.kind or "")
                     vim_item.kind = icon
                     vim_item.kind_hl_group = icon_hl

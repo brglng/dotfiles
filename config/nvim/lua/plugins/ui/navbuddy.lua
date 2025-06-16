@@ -1,5 +1,6 @@
 return {
     "SmiteshP/nvim-navbuddy",
+    enabled = false,
     cmd = "Navbuddy",
     dependencies = {
         "neovim/nvim-lspconfig",

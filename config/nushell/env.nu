@@ -1,6 +1,4 @@
 # Nushell Environment Config File
-#
-# version = "0.94.2"
 
 def create_left_prompt [] {
     let dir = match (do --ignore-errors { $env.PWD | path relative-to $nu.home-path }) {
@@ -99,14 +97,14 @@ $env.NU_PLUGIN_DIRS = [
 # To load from a custom file you can use:
 # source ($nu.default-config-dir | path join 'custom.nu')
 
-$env.PATH = ($env.PATH | split row (char esep))
+$env.PATH = ($env.PATH | split row (char esep) | where {|p| $p != ""})
 
 def --env path_prepend [path: string] {
-    $env.PATH = ($env.PATH | filter {|p| $p != $path} | prepend $path)
+    $env.PATH = ($env.PATH | where {|p| $p != $path} | prepend $path)
 }
 
 def --env path_append [path: string] {
-    $env.PATH = ($env.PATH | filter {|p| $p != $path} | append $path)
+    $env.PATH = ($env.PATH | where {|p| $p != $path} | append $path)
 }
 
 def --env setup_wsl_env [] {
@@ -131,26 +129,28 @@ if (uname | get operating-system) == "Darwin" {
     }
 }
 
-path_prepend $"($env.HOME)/.pixi/bin"
-path_prepend $"($env.HOME)/.cargo/bin"
-path_prepend $"($env.HOME)/.local/bin"
-
-mkdir ~/.cache/starship
-starship init nu | save -f ~/.cache/starship/init.nu
-
-$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
-mkdir ~/.cache/carapace
-carapace _carapace nushell | save --force ~/.cache/carapace/init.nu
-
-# $env._ZO_RESOLVE_SYMLINKS = '0'
-# zoxide init nushell | save -f ~/.zoxide.nu
-
-if (uname | get operating-system) =~ 'MS/Windows' {
-    luajit ((scoop prefix z.lua) + '/z.lua') --init nushell | save -f ~/.cache/zlua.nu
-} else {
-    luajit ((brew --prefix) + '/share/z.lua/z.lua') --init nushell | save -f ~/.cache/zlua.nu
-}
-
 if (which "/mnt/c/Windows/System32/cmd.exe" | length) > 0 {
     setup_wsl_env
+}
+
+if (uname | get operating-system) =~ "MS/Windows" {
+    path_prepend ([$env.LOCALAPPDATA, "pixi", "bin"] | path join)
+}
+
+path_prepend ([$env.HOME, ".pixi", "bin"] | path join)
+path_prepend ([$env.HOME, ".cargo", "bin"] | path join)
+path_prepend ([$env.HOME, ".local", "bin" ] | path join)
+
+mkdir ($nu.data-dir | path join "vendor/autoload")
+
+starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
+pixi completion --shell nushell | save -f $"($nu.data-dir)/vendor/autoload/pixi-completions.nu"
+
+$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
+carapace _carapace nushell | save -f ($nu.data-dir | path join "vendor/autoload/carapace.nu")
+
+if (uname | get operating-system) =~ 'MS/Windows' and (which scoop | length) > 0 {
+    luajit ([(scoop prefix z.lua), 'z.lua'] | path join) --init nushell | save -f "~/.cache/zlua.nu"
+} else if (which brew | length) > 0 {
+    luajit ([(brew --prefix), 'share/z.lua/z.lua'] | path join) --init nushell | save -f "~/.cache/zlua.nu"
 }

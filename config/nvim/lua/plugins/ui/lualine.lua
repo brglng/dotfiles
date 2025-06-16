@@ -12,9 +12,9 @@ return {
                 winbar = { "alpha" },
             },
             globalstatus = true,
-            -- component_separators = "│",
+            section_separators = { left = '', right = '' },
+            component_separators = { left = '', right = '' },
             -- component_separators = "|",
-            -- section_separators = { left = '', right = '' },
         },
         -- extensions = {
         --     "lazy",
@@ -23,7 +23,13 @@ return {
         --     "trouble"
         -- },
         sections = {
-            -- lualine_a =  { separator = { left = '' }, right_padding = 2 },
+            -- lualine_a =  {
+            --     {
+            --         "mode",
+            --         separator = { left = '', right = "" },
+            --         right_padding = 2
+            --     }
+            -- },
             lualine_b = {
                 "branch",
                 "diff",
@@ -43,12 +49,6 @@ return {
                             :filter(function(client)
                                 return client.attached_buffers[buf]
                             end)
-                            :filter(function(client)
-                                return client.name ~= "Codeium"
-                            end)
-                            :filter(function(client)
-                                return client.name ~= "Github Copilot"
-                            end)
                             :map(function(client)
                                 return client.name
                             end)
@@ -62,19 +62,22 @@ return {
                 --         return require('lsp-progress').progress()
                 --     end
                 -- }
-                {
-                    require("noice").api.status.search.get,
-                    cond = require("noice").api.status.search.has
-                },
+                -- {
+                --     require("noice").api.status.search.get,
+                --     cond = require("noice").api.status.search.has
+                -- },
             },
             lualine_x = {
                 {
                     require("noice").api.status.command.get,
                     cond = require("noice").api.status.command.has,
-                    separator = '',
-                    padding = { right = 3 }
                 },
                 'encoding',
+                {
+                    function()
+                        return "sw=" .. vim.o.shiftwidth .. " ts=" .. vim.o.tabstop .. " et=" .. (vim.o.expandtab and "on" or "off")
+                    end
+                },
                 'fileformat',
                 'filetype',
             },
@@ -98,8 +101,9 @@ return {
                     function()
                         local line = vim.fn.line('.')
                         local col = vim.fn.virtcol('.')
-                        return string.format(' %3d,%-2d', line, col)
-                    end
+                        return string.format(' %d  %d', line, col)
+                    end,
+                    -- separator = { left = '', right = '' }, left_padding = 2
                 }
             }
         }
