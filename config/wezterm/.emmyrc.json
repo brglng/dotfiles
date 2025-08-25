@@ -1,0 +1,11 @@
+{
+    "completion": {
+        "callSnippet": true
+    },
+    "signature": {
+        "detailSignatureHelper": true
+    },
+    "runtime": {
+        "version": "LuaLatest"
+    }
+}

@@ -68,7 +68,7 @@ return {
                 position = "center",
                 shortcut = sc,
                 cursor = 3,
-                width = math.min(vim.fn.winwidth(0) - 2, 150),
+                width = math.min(vim.fn.winwidth(0) - 2, 130),
                 align_shortcut = "right",
                 hl_shortcut = { { "Number", 0, 1 } },
                 shrink_margin = false,
@@ -154,7 +154,7 @@ return {
                 opts = {
                     position = "center",
                     hl = "Comment",
-                    width = math.min(vim.fn.winwidth(0) - 2, 150),
+                    width = math.min(vim.fn.winwidth(0) - 2, 130),
                 }
             }
         }
@@ -189,10 +189,15 @@ return {
                 projects_tbl = {}
                 for _, proj in ipairs(project_list) do
                     local short_proj
-                    if vim.fn.strdisplaywidth(proj) > math.min(vim.fn.winwidth(0) - 2, 150) - 5 then
-                        short_proj = "  ..." .. string.sub(proj, #proj - (math.min(vim.fn.winwidth(0) - 2, 150) - 8) + 1, #proj)
+                    if vim.fn.strdisplaywidth(proj) > math.min(vim.fn.winwidth(0) - 2, 130) - 5 then
+                        short_proj = "  ..." .. string.sub(proj, #proj - (math.min(vim.fn.winwidth(0) - 2, 130) - 8) + 1, #proj)
                     else
-                        short_proj = "  " .. proj
+                        short_proj = "  " .. proj
+                    end
+                    local proj_hl = { { "Directory", 0, 1 } }
+                    local fn_start = short_proj:match(".*[/\\]")
+                    if fn_start ~= nil then
+                        table.insert(proj_hl, { "Comment", 1, #fn_start })
                     end
                     local sc = next_key()
                     table.insert(projects_tbl, {
@@ -204,10 +209,10 @@ return {
                             position = "center",
                             shortcut = sc,
                             align_shortcut = "right",
-                            hl = { { "Directory", 0, 1 }, { "Normal", 1, -1 } },
+                            hl = proj_hl,
                             hl_shortcut = "Number",
                             cursor = 3,
-                            width = math.min(vim.fn.winwidth(0) - 2, 150),
+                            width = math.min(vim.fn.winwidth(0) - 2, 130),
                         }
                     })
                 end
@@ -259,8 +264,8 @@ return {
                     short_fn = fnamemodify(short_fn, ":~")
                 end
                 -- vim.notify(tostring(vim.fn.winwidth(0)))
-                if vim.fn.strdisplaywidth(short_fn) > math.min(vim.fn.winwidth(0) - 2, 150) - 5 then
-                    short_fn = "..." .. string.sub(short_fn, #short_fn - (math.min(vim.fn.winwidth(0) - 2, 150) - 8) + 1, #short_fn)
+                if vim.fn.strdisplaywidth(short_fn) > math.min(vim.fn.winwidth(0) - 2, 130) - 5 then
+                    short_fn = "..." .. string.sub(short_fn, #short_fn - (math.min(vim.fn.winwidth(0) - 2, 130) - 8) + 1, #short_fn)
                 end
                 local file_button_el = file_button(fn, next_key(), short_fn, opts.autocd)
                 tbl[i] = file_button_el

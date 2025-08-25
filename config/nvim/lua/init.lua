@@ -87,13 +87,50 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- if vim.fn.has("win32") == 1 then
+--     -- https://github.com/neovim/neovim/issues/25033#issuecomment-1717700044
+--     vim.api.nvim_create_autocmd({ "BufAdd" }, {
+--         callback = function()
+--             local name = vim.api.nvim_buf_get_name(0)
+--             if name:sub(2, 2) == ":" then
+--                 name = name:gsub("\\", "/"):gsub("^%l", string.upper)
+--                 vim.api.nvim_buf_set_name(0, name)
+--             end
+--         end,
+--     })
+--
+--     -- https://github.com/neovim/neovim/issues/8587#issuecomment-2439415252
+--     vim.api.nvim_create_autocmd({ "QuitPre" }, {
+--         callback = function ()
+--             local files = vim.fs.find(function (name, path)
+--                 return name:match("^main%.shada%.tmp%..*")
+--             end, { path = vim.fn.stdpath("data") .. "/shada" })
+--             for _, file in ipairs(files) do
+--                 os.remove(file)
+--             end
+--         end
+--     })
+-- end
+
+-- https://www.reddit.com/r/neovim/comments/f0qx2y/automatically_reload_file_if_contents_changed/
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+    pattern = "*",
+    callback = function()
+        if vim.fn.mode() ~= "c" then
+            vim.cmd("checktime")
+        end
+    end,
+})
+vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
+    pattern = "*",
+    callback = function()
+        vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.WARN)
+    end,
+})
+
 require("lazy").setup("plugins", {
     lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
-    -- concurrency = (function()
-    --     if vim.uv.os_uname().sysname == 'Windows_NT' then
-    --         return 1
-    --     end
-    -- end)(),
     change_detection = {
         enabled = false,
     },
@@ -109,3 +146,15 @@ require("lazy").setup("plugins", {
 })
 
 vim.cmd.colorscheme("sakura")
+
+require("brglng.pixi").setup()
+
+vim.o.exrc = true
+local project_root = vim.fs.root(0, { ".nvim.lua", ".nvimrc", ".exrc" })
+if project_root then
+    vim.uv.chdir(project_root)
+else
+    if vim.g.neovide and vim.fn.argc(-1) == 0 then
+        vim.uv.chdir(vim.env.HOME or vim.env.USERPROFILE)
+    end
+end

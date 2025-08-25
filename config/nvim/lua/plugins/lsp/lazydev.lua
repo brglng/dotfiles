@@ -17,4 +17,13 @@ return {
             { path = "xmake-luals-addon/library", files = { "xmake.lua" } },
         },
     },
+    config = function(_, opts)
+        local clientes_soportados = { "lua_ls", "emmylua_ls" }
+        ---@param cliente vim.lsp.Client
+        local function emmylua_ls_soportado(cliente)
+            return cliente and vim.tbl_contains(clientes_soportados, cliente.name)
+        end
+        require("lazydev.lsp").supports = emmylua_ls_soportado
+        require("lazydev").setup(opts)
+    end,
 }

@@ -14,7 +14,7 @@ return {
         "petertriho/cmp-git",
         "davidsierradz/cmp-conventionalcommits",
         "FelipeLema/cmp-async-path",
-        "xzbdmw/colorful-menu.nvim",
+        { "xzbdmw/colorful-menu.nvim", opts = {} },
         "MeanderingProgrammer/render-markdown.nvim",
     },
     enabled = true,
@@ -289,7 +289,6 @@ return {
                 CmpNormal = { fg = "NormalFloat.fg,Normal.fg", bg = "Normal.bg" },
                 CmpBorder = { fg = "FloatBorder.fg,NormalFloat.fg,Normal.fg", bg = "Normal.bg" },
                 CmpItemMenu = { fg = "Comment.fg", bg = nil },
-                PmenuThumb = { fg = "PmenuThumb.fg,Pmenu.fg", bg = "FloatBorder.fg" },
                 CmpDocNormal = { fg = "NormalFloat.fg,Normal.fg", bg = "Normal.bg" },
                 CmpDocBorder = { fg = "FloatBorder.fg,NormalFloat.fg,Normal.fg", bg = "Normal.bg" },
             }

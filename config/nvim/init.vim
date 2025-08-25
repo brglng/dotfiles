@@ -154,7 +154,7 @@ set listchars=tab:>-,trail:.,extends:>,precedes:<
 " set list
 "set scrolloff=3
 set sidescrolloff=5
-" set cursorline                  " highlight current line
+set cursorline                  " highlight current line
 set showmatch                   " blink matched pairs
 set matchtime=0
 autocmd FileType html,xml setlocal matchpairs+=<:>
@@ -195,7 +195,7 @@ set selection=exclusive
 set autoindent
 set cindent
 set cinoptions=Ls,l1,g0,N-s,E-s,t0,(0,u0,U1,w1,Ws,m1,j1,J1,)10000,*10000
-set tabstop=8
+set tabstop=4
 set softtabstop=4
 set expandtab
 set smarttab            " use shiftwidth as indent at line's beginning
@@ -318,6 +318,9 @@ if has('nvim')
     endif
 endif
 
+" let g:loaded_netrw       = 1
+" let g:loaded_netrwPlugin = 1
+
 let g:plug_timeout = 300
 
 let s:plugdir = has('win32') ? $LOCALAPPDATA .. '\vim-data\plugged' : '~/.local/state/vim/plugged'
@@ -426,68 +429,5 @@ endif
 
 runtime init/keymaps.vim
 runtime init/ui.vim
-
-function! s:find_project_root()
-    let found = v:false
-    let marker = ''
-    let project_root = getcwd()
-    while v:true
-        if project_root ==# '/' || project_root =~# '^\a:[\\/]$'
-            break
-        endif
-        if !empty(glob(project_root . s:SEP . '.vim', v:true, v:true))
-            let found = v:true
-            let marker = '.vim'
-            break
-        endif
-        if !empty(glob(project_root . s:SEP . '.nvim', v:true, v:true))
-            let found = v:true
-            let marker = '.nvim'
-            break
-        endif
-        let parentdir = simplify(project_root . s:SEP . '..')
-        if parentdir ==# project_root || parentdir ==# '/' || parentdir =~# '^\a:[\\/]$'
-            break
-        endif
-        let project_root = parentdir
-    endwhile
-    return [found, project_root, marker]
-endfunction
-
-function! s:load_local_config()
-    let [found, project_root, marker] = s:find_project_root()
-    if found
-        let project_runtime = project_root . s:SEP . marker
-        if isdirectory(project_runtime)
-            let allrtp = split(&runtimepath, ',')
-            for i in range(len(allrtp))
-                let allrtp[i] = resolve(allrtp[i])
-            endfor
-            if index(allrtp, resolve(project_runtime)) < 0
-                let &runtimepath = project_runtime . ',' . &runtimepath . ',' . project_runtime . s:SEP . 'after'
-                if has('nvim') && !empty(glob(project_runtime . s:SEP . 'init.lua', v:true, v:true))
-                    let init_script = project_runtime . s:SEP . 'init.lua'
-                    echomsg 'Loading ' . init_script
-                    execute 'source ' . init_script
-                elseif !empty(glob(project_runtime . s:SEP . 'init.vim', v:true, v:true))
-                    let init_script = project_runtime . s:SEP . 'init.vim'
-                    echomsg 'Loading ' . init_script
-                    execute 'source ' . init_script
-                endif
-                execute 'chdir ' . project_root
-            endif
-        else
-            execute 'source ' . project_runtime
-            execute 'chdir ' . project_root
-        endif
-    else
-        if exists('g:neovide') && argc(-1) == 0
-            chdir ~
-        endif
-    endif
-endfunction
-
-"autocmd VimEnter * call s:load_local_config()
-call s:load_local_config()
 
 " vim: ts=8 sts=4 sw=4 et

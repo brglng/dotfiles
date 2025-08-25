@@ -10,8 +10,8 @@ return {
                 return vim.o.columns * 0.4
             end
         end,
-        hide_numbers = false,
-        shade_terminals = false,
+        -- hide_numbers = false,
+        -- shade_terminals = false,
         start_in_insert = true,
         shell = (function()
             if vim.fn.executable('nu') then
@@ -19,7 +19,7 @@ return {
             elseif vim.fn.executable('zsh') then
                 return vim.fn.exepath('zsh')
             else
-                return vim.fn.exepath('bash')
+                return vim.o.shell
             end
         end)(),
         winbar = {

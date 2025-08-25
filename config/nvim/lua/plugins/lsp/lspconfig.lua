@@ -5,19 +5,23 @@ return {
         dependencies = {
             "williamboman/mason.nvim",
             "ray-x/lsp_signature.nvim",
+            "rachartier/tiny-inline-diagnostic.nvim",
             "folke/neoconf.nvim",
         },
         opts = {
             -- log_level = 'debug'
             diagnostic = {
                 virtual_text = false,
+                -- virtual_text = {
+                --     current_line = true,
+                -- },
                 virtual_lines = false,
                 -- virtual_lines = {
                 --     only_current_line = false,
                 --     highlight_whole_line = false,
                 -- },
                 float = {
-                    enabled = true,
+                    enabled = false,
                     -- border = "none",
                     border = (function()
                         if vim.g.neovide then
@@ -42,10 +46,10 @@ return {
                 },
                 signs = {
                     text = {
-                        [vim.diagnostic.severity.ERROR] = " ",
-                        [vim.diagnostic.severity.WARN] = " ",
-                        [vim.diagnostic.severity.INFO] = " ",
-                        [vim.diagnostic.severity.HINT] = "󰌶 "
+                        [vim.diagnostic.severity.ERROR] = " ",
+                        [vim.diagnostic.severity.WARN] = " ",
+                        [vim.diagnostic.severity.INFO] = " ",
+                        [vim.diagnostic.severity.HINT] = "󰌵 "
                     }
                 }
             },
@@ -83,13 +87,46 @@ return {
                 enabled = true,
             },
             servers = {
+                basedpyright = {
+                    enabled = true,
+                    settings = {
+                        basedpyright = {
+                            analysis = {
+                                inlayHints = {
+                                    variableTypes = true,
+                                    callArgumentNames = true,
+                                    functionReturnTypes = true,
+                                    genericTypes = true,
+                                },
+                                diagnosticSeverityOverrides = {
+                                    reportWildcardImportFromLibrary = "none",
+                                    reportUntypedFunctionDecorator = "none",
+                                    reportUntypedClassDecorator = "none",
+                                    reportUntypedBaseClass = "none",
+                                    reportUntypedNamedTuple = "none",
+                                    reportUnknownParameterType = "none",
+                                    reportUnknownArgumentType = "none",
+                                    reportUnknownLambdaType = "none",
+                                    reportUnknownVariableType = "none",
+                                    reportUnknownMemberType = "none",
+                                    reportMissingParameterType = "none",
+                                    reportMissingTypeStubs = "none",
+                                    reportIncompleteStub = "none",
+                                    reportUnusedCallResult = "none",
+                                    reportUnannotatedClassAttribute = "none",
+                                    reportAny = "none",
+                                }
+                            }
+                        }
+                    }
+                },
                 cmake = {
                     enabled = true
                 },
                 clangd = {
                     enabled = true,
                     cmd = {
-                        "clangd",
+                        "clangd" .. (vim.fn.has("win32") and ".cmd" or ""),
                         "--background-index",
                         "--header-insertion=never",
                         "--clang-tidy",
@@ -105,42 +142,30 @@ return {
                         offsetEncoding = 'utf-8'
                     }
                 },
+                emmylua_ls = {
+                    enabled = true,
+                },
                 jsonls = {
                     enabled = true,
                 },
                 lua_ls = {
-                    enabled = true
+                    enabled = true,
+                    settings = {
+                        Lua = {
+                            completion = {
+                                callSnippet = "Both"
+                            },
+                            hint = {
+                                enable = true,
+                                setType = true,
+                            },
+                            runtime = { version = "LuaJIT" },
+                            codelens = {
+                                enable = true,
+                            }
+                        }
+                    }
                 },
-                -- lua_ls = {
-                --     cmd = { "lua-language-server", "--logpath=" .. vim.fn.stdpath("log") .. "/luals" },
-                --     on_init = function(client)
-                --         local path = client.workspace_folders[1].name
-                --         if not vim.uv.fs_stat(path .. '/.luarc.json') and not vim.loop.fs_stat(path .. '/.luarc.jsonc') then
-                --             client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
-                --                 Lua = {
-                --                     runtime = {
-                --                         -- Tell the language server which version of Lua you're using
-                --                         -- (most likely LuaJIT in the case of Neovim)
-                --                         version = 'LuaJIT'
-                --                     },
-                --                     -- Make the server aware of Neovim runtime files
-                --                     workspace = {
-                --                         checkThirdParty = false,
-                --                         -- library = {
-                --                         --     vim.env.VIMRUNTIME
-                --                         --     -- "${3rd}/luv/library"
-                --                         --     -- "${3rd}/busted/library",
-                --                         -- }
-                --                         -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
-                --                         library = vim.api.nvim_get_runtime_file("", true)
-                --                     }
-                --                 }
-                --             })
-                --             client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
-                --         end
-                --         return true
-                --     end,
-                -- },
                 marksman = {
                     enabled = true
                 },
@@ -166,20 +191,37 @@ return {
                 perlnavigator = {
                     enabled = true
                 },
-                pyright = {
-                    enabled = true
+                pyrefly = {
+                    enabled = true,
                 },
                 ruff = {
                     enabled = true,
-                },
-                ts_ls = {
-                    enabled = true
+                    init_options = {
+                        settings = {
+                            lint = {
+                                ignore = {
+                                    "F405", -- 'F405: Name may be undefined, or defined from star imports: <module>'
+                                }
+                            }
+                        }
+                    }
                 },
                 rust_analyzer = {
                     enabled = false,
                     filetypes = {}, -- Disable rust_analyzer for now, use rustaceanvim instead
                     settings = {
                         ['rust_analyzer'] = {}
+                    }
+                },
+                ts_ls = {
+                    enabled = true
+                },
+                ty = {
+                    enabled = true,
+                    settings = {
+                        ty = {
+                            importStrategy = "fromEnvironment",
+                        }
                     }
                 },
                 vimls = {
@@ -273,63 +315,6 @@ return {
                 return float_bufnr, win_id
             end
 
-            local brglng = require("brglng")
-            brglng.hl.transform_tbl {
-                LspDiagnosticFloatBorder = { fg = "FloatBorder.fg,Normal.fg", bg = "Normal.bg" },
-                LspFloatingPreviewBorder = { fg = "FloatBorder.fg,Normal.fg", bg = "Normal.bg" },
-                DiagnosticVirtualTextError = {
-                    fg = "DiagnosticVirtualTextError.fg",
-                    bg = { "blend", fg = "DiagnosticVirtualTextError.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-                DiagnosticVirtualTextWarn = {
-                    fg = "DiagnosticVirtualTextWarn.fg",
-                    bg = { "blend", fg = "DiagnosticVirtualTextWarn.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-                DiagnosticVirtualTextInfo = {
-                    fg = "DiagnosticVirtualTextInfo.fg",
-                    bg = { "blend", fg = "DiagnosticVirtualTextInfo.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-                DiagnosticVirtualTextHint = {
-                    fg = "DiagnosticVirtualTextHint.fg",
-                    bg = { "blend", fg = "DiagnosticVirtualTextHint.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-                DiagnosticVirtualLinesError = {
-                    fg = "DiagnosticVirtualLinesError.fg",
-                    bg = { "blend", fg = "DiagnosticVirtualLinesError.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-                DiagnosticVirtualLinesWarn = {
-                    fg = "DiagnosticVirtualLinesWarn.fg",
-                    bg = { "blend", fg = "DiagnosticVirtualLinesWarn.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-                DiagnosticVirtualLinesInfo = {
-                    fg = "DiagnosticVirtualLinesInfo.fg",
-                    bg = { "blend", fg = "DiagnosticVirtualLinesInfo.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-                DiagnosticVirtualLinesHint = {
-                    fg = "DiagnosticVirtualLinesHint.fg",
-                    bg = { "blend", fg = "DiagnosticVirtualLinesHint.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-                LspInlayHint = {
-                    fg = "LspInlayHint.fg",
-                    bg = { "blend", fg = "LspInlayHint.fg", bg = "Normal.bg", opacity = 0.4 }
-                },
-            }
-
-            if vim.uv.os_uname().sysname == 'Windows_NT' then
-                opts.servers.clangd.cmd[1] = 'clangd.cmd'
-                opts.servers.cmake.cmd = { 'cmake-language-server.cmd' }
-                opts.servers.jsonls.cmd = { 'vscode-json-language-server.cmd' }
-                opts.servers.lua_ls.cmd = { 'lua-language-server.cmd' }
-                opts.servers.marksman.cmd = { 'marksman.cmd', 'server' }
-                opts.servers.matlab_ls.cmd = { 'matlab-language-server.cmd', '--stdio' }
-                opts.servers.perlnavigator.cmd = { 'perlnavigator.cmd' }
-                opts.servers.pyright.cmd = { 'pyright-langserver.cmd', '--stdio' }
-                opts.servers.ruff.cmd = { 'ruff.cmd', 'server' }
-                opts.servers.ts_ls.cmd = { 'typescript-language-server.cmd', '--stdio' }
-                opts.servers.vimls.cmd = { 'vim-language-server.cmd', '--stdio' }
-                opts.servers.yamlls.cmd = { 'yaml-language-server.cmd', '--stdio' }
-            end
-
             for server, server_opts in pairs(opts.servers) do
                 server_opts = vim.tbl_deep_extend('force',
                     {
@@ -365,8 +350,51 @@ return {
                     end
                 end
                 vim.lsp.config(server, server_opts)
-                vim.lsp.enable(server, server_opts.enabled)
+                if server_opts.enabled then
+                    vim.lsp.enable(server, true)
+                end
             end
+
+            local brglng = require("brglng")
+            brglng.hl.transform_tbl(function ()
+                local tbl = {
+                    LspDiagnosticFloatBorder = { fg = "FloatBorder.fg,Normal.fg", bg = "Normal.bg" },
+                    LspFloatingPreviewBorder = { fg = "FloatBorder.fg,Normal.fg", bg = "Normal.bg" },
+                    DiagnosticVirtualTextError = {
+                        fg = "DiagnosticError.fg",
+                        bg = { "blend", fg = "DiagnosticError.fg", bg = "Normal.bg", opacity = 0.1 }
+                    },
+                    DiagnosticVirtualTextWarn = {
+                        fg = "DiagnosticWarn.fg",
+                        bg = { "blend", fg = "DiagnosticWarn.fg", bg = "Normal.bg", opacity = 0.1 }
+                    },
+                    DiagnosticVirtualTextInfo = {
+                        fg = "DiagnosticInfo.fg",
+                        bg = { "blend", fg = "DiagnosticInfo.fg", bg = "Normal.bg", opacity = 0.1 }
+                    },
+                    DiagnosticVirtualTextHint = {
+                        fg = "DiagnosticHint.fg",
+                        bg = { "blend", fg = "DiagnosticHint.fg", bg = "Normal.bg", opacity = 0.1 }
+                    },
+                    DiagnosticVirtualLinesError = {
+                        fg = "DiagnosticError.fg",
+                        bg = { "blend", fg = "DiagnosticError.fg", bg = "Normal.bg", opacity = 0.1 }
+                    },
+                    DiagnosticVirtualLinesWarn = {
+                        fg = "DiagnosticWarn.fg",
+                        bg = { "blend", fg = "DiagnosticWarn.fg", bg = "Normal.bg", opacity = 0.1 }
+                    },
+                    DiagnosticVirtualLinesInfo = {
+                        fg = "DiagnosticInfo.fg",
+                        bg = { "blend", fg = "DiagnosticInfo.fg", bg = "Normal.bg", opacity = 0.1 }
+                    },
+                    DiagnosticVirtualLinesHint = {
+                        fg = "DiagnosticHint.fg",
+                        bg = { "blend", fg = "DiagnosticHint.fg", bg = "Normal.bg", opacity = 0.1 }
+                    },
+                }
+                return tbl
+            end)
 
             -- Use LspAttach autocommand to only map the following keys
             -- after the language server attaches to the current buffer
@@ -395,12 +423,12 @@ return {
                     -- end, opts)
                     vim.keymap.set({'n', 'v'}, '<Leader>=', function()
                         vim.lsp.buf.format { async = true }
-                    end, opts)
+                    end, vim.tbl_extend('force', opts, { desc = "Format Buffer" }))
                 end
             })
         end,
         keys = {
-            { '<Leader>e', mode = { 'n' }, vim.diagnostic.open_float, desc = "Show Diagnostics" },
+            { "<Leader>la", vim.lsp.buf.code_action, desc = "Show Diagnostics" },
             { "<Leader>le", vim.diagnostic.open_float, desc = "Show Diagnostics" },
             { "<Leader>lf", function() vim.lsp.buf.format { async = true } end, desc = "Format Buffer" },
         }

@@ -23,13 +23,13 @@ return {
         filesystem = {
             bind_to_cwd = true,
             follow_current_file = {
-                enabled = true,
+                enabled = false,
                 leave_dirs_open = true
             },
             use_libuv_file_watcher = true
         },
         document_symbols = {
-            follow_cursor = true,
+            follow_cursor = false,
         },
         source_selector = {
             winbar = true,
@@ -40,13 +40,13 @@ return {
                 { source = "buffers" },
                 {
                     source = "git_status",
-                    follow_cursor = true
+                    follow_cursor = false
                 },
             },
         },
         default_component_configs = {
             indent = {
-                with_markers = false,
+                with_markers = true,
                 with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
                 expander_collapsed = "",
                 expander_expanded = "",
@@ -78,9 +78,10 @@ return {
                 fg = { "darken", from = "NeoTreeNormal.bg,Normal.bg", amount = 0.2 },
                 bg = { "darken", from = "NeoTreeNormal.bg,Normal.bg", amount = 0.1 }
             },
-            NeoTreeWinSeparator = { fg = "WinSeparator.fg", bg = "Normal.bg", bold = false },
+            -- NeoTreeWinSeparator = { fg = "WinSeparator.fg", bg = "Normal.bg", bold = false },
+            BufferLineOffsetSeparator = { fg = "NeoTreeWinSeparator.fg,WinSeparator.fg,Normal.fg", bg = "NeoTreeWinSeparator.bg,WinSeparator.bg,Normal.bg", bold = false },
             NeoTreeFloatBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
-            NeoTreeFloatTitle = { fg = "FloatTitle.bg", bg = "FloatTitle.fg" },
+            NeoTreeFloatTitle = { fg = "FloatTitle.bg,NormalFloat.bg,Normal.bg", bg = "FloatTitle.fg" },
             -- NeoTreeFloatNormal = { fg = "Normal.fg", bg = "Normal.bg" },
             NeoTreeDirectoryIcon = function ()
                 if vim.g.colors_name == "sakura" then
@@ -88,12 +89,12 @@ return {
                 end
             end,
             NeoTreeDotfile = { fg = "Comment.fg" },
-            NeoTreeGitAdded = { fg = { "emboss", from = "DiffAdd.bg", amount = 0.2 }, bold = true },
-            NeoTreeGitConflict = { fg = "DiagnosticError.fg", bold = true },
+            NeoTreeGitAdded = { fg = "DiagnosticInfo.fg", bold = true },
+            NeoTreeGitConflict = { fg = "DiagnosticWarn.fg", bold = true },
             NeoTreeGitModified = { fg = { "emboss", from = "NeoTreeNormal.fg,Normal.fg", amount = 0.2 }, bold = true },
             NeoTreeGitDeleted = { fg = "DiffDelete.bg", bold = true },
-            NeoTreeGitUntracked = { fg = { "emboss", from = "DiffAdd.bg", amount = 0.2 }, bold = true, italic = true },
-            NeoTreeCursorLine = { link = "CursorLine" },
+            NeoTreeGitUntracked = { fg = "DiagnosticHint.fg", bold = true, italic = true },
+            NeoTreeCursorLine = { bg = { "emboss", from = "NeoTreeNormal.bg,Normal.bg", amount = 0.1 } },
         }
     end,
     keys = {

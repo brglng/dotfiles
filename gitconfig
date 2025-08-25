@@ -3,7 +3,8 @@
 	excludesfile = ~/.gitignore_global
 	filemodes = true
 	fileMode = true
-	; pager = cat
+	longpaths = true
+	pager = bat
 	quotePath = false
 	precomposeunicode = true
 [http]

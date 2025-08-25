@@ -1,8 +1,12 @@
 return {
     "chrisgrieser/nvim-early-retirement",
     event = "VeryLazy",
-    enabled = false,
+    enabled = true,
     opts = {
-        retirementAgeMins = 120
+        retirementAgeMins = 20,
+        ignoredFiletypes = {},
+        minimumBufferNum = 10,
+        ignoreUnloadedBufs = false,
+        deleteBufferWhenFileDeleted = false,
     }
 }

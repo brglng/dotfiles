@@ -31,7 +31,6 @@ return {
                 })
             end
         end,
-        top_down = false,
         render = function(bufnr, notif, highlights, config)
             local base = require("notify.render.base")
             local namespace = base.namespace()
@@ -47,13 +46,19 @@ return {
 
             vim.api.nvim_buf_set_var(bufnr, "__notify_title__", win_title)
 
+            --- @type table<string>
             local message = {}
             for _, msg in ipairs(notif.message) do
+                local m = ""
                 if vim.g.neovide then
-                    table.insert(message, "  " .. msg .. " ")
+                    m = "  " .. msg .. " "
                 else
-                    table.insert(message, " " .. msg .. " ")
+                    m = " " .. msg .. " "
                 end
+                if #m < 50 then
+                    m = m .. vim.fn["repeat"](" ", 50 - #m)
+                end
+                table.insert(message, m)
             end
 
             vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, message)
@@ -63,7 +68,9 @@ return {
                 end_row = #message,
                 priority = 50,
             })
-        end
+        end,
+        -- fps = 15,
+        top_down = false,
     },
     config = function(_, opts)
         local notify = require("notify")
@@ -73,27 +80,27 @@ return {
 
         if vim.g.neovide then
             brglng.hl.transform_tbl {
-                NotifyBackground = { fg = "NormalFloat.fg", bg = "NormalFloat.bg" },
-                NotifyERRORIcon = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
-                NotifyWARNIcon = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
-                NotifyINFOIcon = { fg = "NormalFloat.bg", bg = "FloatTitle.fg" },
-                NotifyDEBUGIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
-                NotifyTRACEIcon = { fg = "NormalFloat.bg", bg = "FloatBorder.fg", },
-                NotifyERRORTitle = { fg = "NormalFloat.bg", bg = "DiagnosticError.fg" },
-                NotifyWARNTitle = { fg = "NormalFloat.bg", bg = "DiagnosticWarn.fg" },
-                NotifyINFOTitle = { fg = "NormalFloat.bg", bg = "FloatTitle.fg" },
-                NotifyDEBUGTitle = { fg = "NormalFloat.bg", bg = "FloatBorder.fg" },
+                NotifyBackground = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyERRORIcon = { fg = "NormalFloat.bg,Normal.bg", bg = "DiagnosticError.fg" },
+                NotifyWARNIcon = { fg = "NormalFloat.bg,Normal.bg", bg = "DiagnosticWarn.fg" },
+                NotifyINFOIcon = { fg = "NormalFloat.bg,Normal.bg", bg = "FloatTitle.fg" },
+                NotifyDEBUGIcon = { fg = "NormalFloat.bg,Normal.bg", bg = "FloatBorder.fg" },
+                NotifyTRACEIcon = { fg = "NormalFloat.bg,Normal.bg", bg = "FloatBorder.fg", },
+                NotifyERRORTitle = { fg = "NormalFloat.bg,Normal.bg", bg = "DiagnosticError.fg" },
+                NotifyWARNTitle = { fg = "NormalFloat.bg,Normal.bg", bg = "DiagnosticWarn.fg" },
+                NotifyINFOTitle = { fg = "NormalFloat.bg,Normal.bg", bg = "FloatTitle.fg" },
+                NotifyDEBUGTitle = { fg = "NormalFloat.bg,Normal.bg", bg = "FloatBorder.fg" },
                 NotifyTRACETitle = { fg = "DiagnosticInfo.bg", bg = "DiagnosticInfo.fg" },
-                NotifyERRORBorder = { fg = "DiagnosticError.fg", bg = "NormalFloat.bg" },
-                NotifyWARNBorder = { fg = "DiagnosticWarn.fg", bg = "NormalFloat.bg" },
-                NotifyINFOBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
-                NotifyDEBUGBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
-                NotifyTRACEBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
-                NotifyERRORBody = { link = "NormalFloat" },
-                NotifyWARNBody = { link = "NormalFloat" },
-                NotifyINFOBody = { link = "NormalFloat" },
-                NotifyDEBUGBody = { link = "NormalFloat" },
-                NotifyTRACEBody = { link = "NormalFloat" },
+                NotifyERRORBorder = { fg = "DiagnosticError.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyWARNBorder = { fg = "DiagnosticWarn.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyINFOBorder = { fg = "FloatTitle.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyDEBUGBorder = { fg = "DiagnosticInfo.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyTRACEBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyERRORBody = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyWARNBody = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyINFOBody = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyDEBUGBody = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyTRACEBody = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
             }
         else
             brglng.hl.transform_tbl {
@@ -111,13 +118,13 @@ return {
                 NotifyERRORBorder = { fg = "DiagnosticError.fg", bg = "Normal.bg" },
                 NotifyWARNBorder = { fg = "DiagnosticWarn.fg", bg = "Normal.bg" },
                 NotifyINFOBorder = { fg = "FloatTitle.fg", bg = "Normal.bg" },
-                NotifyDEBUGBorder = { fg = "FloatBorder.fg", bg = "Normal.bg" },
-                NotifyTRACEBorder = { fg = "DiagnosticInfo.fg", bg = "Normal.bg" },
-                NotifyERRORBody = { link = "Normal" },
-                NotifyWARNBody = { link = "Normal" },
-                NotifyINFOBody = { link = "Normal" },
-                NotifyDEBUGBody = { link = "Normal" },
-                NotifyTRACEBody = { link = "Normal" },
+                NotifyDEBUGBorder = { fg = "DiagnosticInfo.fg", bg = "Normal.bg" },
+                NotifyTRACEBorder = { fg = "FloatBorder.fg", bg = "Normal.bg" },
+                NotifyERRORBody = { fg = "Normal.fg", bg= "Normal.bg" },
+                NotifyWARNBody = { fg = "Normal.fg", bg = "Normal.bg" },
+                NotifyINFOBody = { fg = "Normal.fg", bg = "Normal.bg" },
+                NotifyDEBUGBody = { fg = "Normal.fg", bg = "Normal.bg" },
+                NotifyTRACEBody = { fg = "Normal.fg", bg = "Normal.bg" },
             }
         end
 
@@ -158,14 +165,16 @@ return {
                 table.insert(notif_data.msg_data_list, msg_data)
                 client_data.token_msg_data_tbl[token] = msg_data
             end
+            local tokens_to_remove = {}
             for t, data in pairs(client_data.token_msg_data_tbl) do
                 if vim.uv.now() - data.last_update_time >= 5000 then
                     client_data.token_msg_data_tbl[t] = nil
+                    table.insert(tokens_to_remove, t)
                 end
             end
             local new_msg_data_list = {}
             for _, data in ipairs(notif_data.msg_data_list) do
-                if vim.uv.now() - data.last_update_time < 5000 then
+                if not vim.list_contains(tokens_to_remove, data.token) and vim.uv.now() - data.last_update_time < 5000 then
                     table.insert(new_msg_data_list, data)
                 end
             end
@@ -203,7 +212,7 @@ return {
             end
             if title ~= nil and #title > 0 then
                 title = title .. " "
-                percentage_start = percentage_start + vim.fn.strdisplaywidth(title)
+                percentage_start = #title + percentage_start
             else
                 title = ""
             end
@@ -214,7 +223,7 @@ return {
                 percentage = draw_percentage(percentage, 20) .. " "
                 message = message or ""
             end
-            return title .. percentage .. message, percentage_start, percentage_start + vim.fn.strdisplaywidth(percentage)
+            return title .. percentage .. message, percentage_start, percentage_start + #percentage
         end
 
         vim.api.nvim_create_autocmd("LspProgress", {
@@ -238,7 +247,7 @@ return {
                 if val.kind == "begin" then
                     msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
                 elseif val.kind == "report" then
-                    if vim.uv.now() - notif_data.last_update_time < vim.o.updatetime then
+                    if vim.uv.now() - notif_data.last_update_time < 300 then
                         return
                     end
                     msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
@@ -255,7 +264,7 @@ return {
                         if msg == "" then
                             msg = data.msg
                         else
-                            msg = msg .. "\n" .. data.msg
+                            msg = msg .. "\n" .. (data.msg or "")
                         end
                         data.row = row
                         row = row + 1
@@ -266,20 +275,20 @@ return {
                     timeout = 5000,
                     replace = notif_data.notification,
                     hide_from_history = (val.kind == "report"),
-                    -- render = function(buf, notif, highlights, config)
-                    --     opts.render(buf, notif, highlights, config)
-                    --     local base = require("notify.render.base")
-                    --     local namespace = base.namespace()
-                    --     for _, data in ipairs(notif_data.msg_data_list) do
-                    --         if data.percentage_end > data.percentage_start then
-                    --             vim.api.nvim_buf_set_extmark(buf, namespace, data.row, data.percentage_start, {
-                    --                 hl_group = "DiagnosticOk",
-                    --                 end_col = data.percentage_end,
-                    --                 priority = 50,
-                    --             })
-                    --         end
-                    --     end
-                    -- end
+                    render = function(buf, notif, highlights, config)
+                        opts.render(buf, notif, highlights, config)
+                        local base = require("notify.render.base")
+                        local namespace = base.namespace()
+                        for _, data in ipairs(notif_data.msg_data_list) do
+                            if data.percentage_end > data.percentage_start then
+                                vim.api.nvim_buf_set_extmark(buf, namespace, data.row, data.percentage_start, {
+                                    hl_group = "DiagnosticOk",
+                                    end_col = data.percentage_end,
+                                    priority = 50,
+                                })
+                            end
+                        end
+                    end
                 })
                 notif_data.last_update_time = vim.uv.now()
             end

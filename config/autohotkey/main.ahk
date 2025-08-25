@@ -28,14 +28,14 @@ DetectHiddenWindows true
 
 global capslockDownTime := 0
 
-CapsLock::{
+$CapsLock::{
     global capslockDownTime
     if capslockDownTime = 0 {
         capslockDownTime := A_TickCount
     }
 }
 
-CapsLock Up::{
+$CapsLock Up::{
     global capslockDownTime
     if A_PriorKey = "CapsLock" and A_TickCount - capslockDownTime < 200 {
         Send "{Esc}"
@@ -45,7 +45,7 @@ CapsLock Up::{
     capslockDownTime := 0
 }
 
-*CapsLock::return
+$*CapsLock::return
 
 imeMgr := IMEManager()
 

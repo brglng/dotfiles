@@ -14,8 +14,8 @@ return {
                 if vim.g.neovide then
                     return "none"
                 else
-                    -- return {"▔", "▔" ,"▔", " ", " ", " ", " ", " " }
-                    return {"─", "─" ,"─", " ", " ", " ", " ", " " }
+                    return {"▔", "▔" ,"▔", " ", " ", " ", " ", " " }
+                    -- return {"─", "─" ,"─", " ", " ", " ", " ", " " }
                 end
             end)(),
             -- border = {"", "" ,"", "", "", "", "", "" },
@@ -32,14 +32,17 @@ return {
     },
     config = function(_, opts)
         require('which-key').setup(opts)
-
         local brglng = require("brglng")
         if not vim.g.neovide then
-            brglng.hl.transform_tbl {
-                WhichKeyTitle = { fg = "FloatTitle.fg", bg = "NormalFloat.bg" },
-                WhichKeyBorder = { fg = "WinSeparator.fg", bg = "NormalFloat.bg" },
-                WhichKeyNormal = { link = "NormalFloat" },
-            }
+            brglng.hl.transform_tbl(function ()
+                -- local border = brglng.hl.transform_one { "blend", fg = "FloatTitle.fg,NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg", opacity = 0.7 }
+                local border = "FloatTitle.fg,NormalFloat.fg,Normal.fg"
+                return {
+                    WhichKeyTitle = { fg = "NormalFloat.bg,Normal.bg", bg = border },
+                    WhichKeyBorder = { fg = border, bg = "NormalFloat.bg,Normal.bg" },
+                    WhichKeyNormal = { fg = "NormalFloat.fg,Normal.bg", bg = "NormalFloat.bg,Normal.bg" },
+                }
+            end)
         end
 
         require("which-key").add {

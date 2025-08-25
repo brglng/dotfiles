@@ -1,6 +1,5 @@
 local wezterm = require('wezterm')
 local brglng = require("brglng")
-
 local WINDOWS = wezterm.target_triple == "x86_64-pc-windows-msvc"
 local MAC = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin"
 
@@ -84,11 +83,12 @@ set_tabline_colors(config)
 
 -- GUI Appearance
 
+config.scrollback_lines = 100000
 config.enable_scroll_bar = true
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = true
-config.tab_max_width = 1000
+config.tab_max_width = 100
 config.window_decorations = "RESIZE"
 local window_min = ' 󰖰 '
 local window_max = ' 󰖯 '
@@ -108,11 +108,11 @@ config.window_padding = {
     bottom = 0
 }
 
-local function tab_title(tab_info)
+local function tab_title(tab_info, max_width)
     local pane = tab_info.active_pane
-    local title = ""
+    local title = tostring(tab_info.tab_index + 1) .. ' '
     if pane.domain_name ~= config.default_domain then
-        title = title .. pane.domain_name .. " ❯ "
+        title = title .. pane.domain_name .. ":"
     end
     -- if the tab title is explicitly set, take that
     if tab_info.tab_title and #tab_info.tab_title > 0 then
@@ -122,14 +122,14 @@ local function tab_title(tab_info)
         -- in that tab
         title = title .. tab_info.active_pane.title
     end
-    title = title:gsub(":", " ❯ ")
-    return title
+    title = title:gsub(":", " > ")
+    return title:sub(1, math.max(max_width - 4, 0))
 end
 
 wezterm.on(
     'format-tab-title',
     function(tab, tabs, panes, config, hover, max_width)
-        local title = tostring(tab.tab_index + 1) .. ' ' .. tab_title(tab)
+        local title = tab_title(tab, max_width)
         if tab.is_active then
             return {
                 { Foreground = { Color = config.colors.tab_bar.active_tab.bg_color } },
@@ -203,13 +203,13 @@ wezterm.on("update-status", function(window, pane)
 
     if window:leader_is_active() then
         window:set_left_status(wezterm.format {
-            -- { Foreground = { Color = leader.bg } },
-            -- { Background = { Color = tabbar_bg } },
-            -- { Text = "" },
+            { Foreground = { Color = leader.bg } },
+            { Background = { Color = tabbar_bg } },
+            { Text = "" },
             { Foreground = { Color = tab_active_bg } },
             { Background = { Color = leader.bg } },
             { Attribute = { Intensity = 'Bold' } },
-            { Text = ' 󱐋 ' },
+            { Text = '󱐋' },
             { Foreground = { Color = leader.bg } },
             { Background = { Color = tabbar_bg } },
             { Text = " " }
@@ -218,9 +218,9 @@ wezterm.on("update-status", function(window, pane)
         local name = window:active_key_table()
         if name and modes[name] then
             window:set_left_status(wezterm.format {
-                -- { Foreground = { Color = modes[name].bg.bg } },
-                -- { Background = { Color = tabbar_bg } },
-                -- { Text = "" },
+                { Foreground = { Color = modes[name].bg.bg } },
+                { Background = { Color = tabbar_bg } },
+                { Text = "" },
                 { Foreground = { Color = modes[name].fg } },
                 { Background = { Color = modes[name].bg } },
                 { Attribute = { Intensity = 'Bold' } },
@@ -231,13 +231,13 @@ wezterm.on("update-status", function(window, pane)
             })
         else
             window:set_left_status(wezterm.format {
-                -- { Foreground = { Color = tabbar_bg } },
-                -- { Background = { Color = tabbar_bg } },
-                -- { Text = "" },
+                { Foreground = { Color = tabbar_bg } },
+                { Background = { Color = tabbar_bg } },
+                { Text = "" },
                 { Foreground = { Color = tabbar_bg } },
                 { Background = { Color = tabbar_bg } },
                 { Attribute = { Intensity = 'Bold' } },
-                { Text = '   ' },
+                { Text = ' ' },
                 { Foreground = { Color = tabbar_bg } },
                 { Background = { Color = tabbar_bg } },
                 { Text = " " }

@@ -90,7 +90,7 @@ return {
         end
         local brglng = require("brglng")
         brglng.hl.transform_tbl {
-            BufferLineOffsetSeparator = { fg = "WinSeparator.fg", bg = "Normal.bg", bold = false }
+            BufferLineOffsetSeparator = { fg = "NeoTreeWinSeparator.fg,WinSeparator.fg,Normal.fg", bg = "NeoTreeWinSeparator.bg,WinSeparator.bg,Normal.bg", bold = false }
         }
     end,
     keys = {

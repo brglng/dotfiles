@@ -4,7 +4,7 @@ module completions {
     [ "always" "never" "auto" ]
   }
 
-  #  Pixi [version 0.48.1] - Developer Workflow and Environment Management for Multi-Platform, Language-Agnostic Workspaces.  Pixi is a versatile developer workflow tool designed to streamline the management of your workspace's dependencies, tasks, and environments. Built on top of the Conda ecosystem, Pixi offers seamless integration with the PyPI ecosystem.  Basic Usage:     Initialize pixi for a workspace:     $ pixi init     $ pixi add python numpy pytest      Run a task:     $ pixi task add test 'pytest -s'     $ pixi run test  Found a Bug or Have a Feature Request? Open an issue at: https://github.com/prefix-dev/pixi/issues  Need Help? Ask a question on the Prefix Discord server: https://discord.gg/kKV8ZxyzY4  For more information, see the documentation at: https://pixi.sh 
+  #  Pixi [version 0.51.0] - Developer Workflow and Environment Management for Multi-Platform, Language-Agnostic Workspaces.  Pixi is a versatile developer workflow tool designed to streamline the management of your workspace's dependencies, tasks, and environments. Built on top of the Conda ecosystem, Pixi offers seamless integration with the PyPI ecosystem.  Basic Usage:     Initialize pixi for a workspace:     $ pixi init     $ pixi add python numpy pytest      Run a task:     $ pixi task add test 'pytest -s'     $ pixi run test  Found a Bug or Have a Feature Request? Open an issue at: https://github.com/prefix-dev/pixi/issues  Need Help? Ask a question on the Prefix Discord server: https://discord.gg/kKV8ZxyzY4  For more information, see the documentation at: https://pixi.sh 
   export extern pixi [
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -13,6 +13,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
     --version(-V)             # Print version
   ]
+
+  def "nu-complete pixi add pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi add pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -41,11 +45,14 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi add pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --editable                # Whether the pypi requirement should be editable
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -118,6 +125,10 @@ module completions {
   export extern "pixi auth help help" [
   ]
 
+  def "nu-complete pixi build pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi build pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -129,15 +140,18 @@ module completions {
   # Workspace configuration
   export extern "pixi build" [
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi build pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi build pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi build pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --target-platform(-t): string # The target platform to build for (defaults to the current platform)
     --output-dir(-o): path    # The output directory to place the built artifacts
-    --no-incremental(-n)      # Whether to build incrementally if possible
     --build-dir(-b): path     # The directory to use for incremental builds artifacts
+    --clean(-c)               # Whether to clean the build directory before building
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -154,6 +168,7 @@ module completions {
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --environment(-e): string # The environment directory to remove
     --activation-cache        # Only remove the activation cache
+    --build                   # Only remove the pixi-build cache
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -172,7 +187,8 @@ module completions {
     --mapping                 # Clean only the mapping cache
     --exec                    # Clean only `exec` cache
     --repodata                # Clean only the repodata cache
-    --tool                    # Clean only the build backend tools cache
+    --build-backends          # Clean only the build backends environments cache
+    --build                   # Clean only the build related cache
     --yes(-y)                 # Answer yes to all questions
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --help(-h)                # Display help information
@@ -369,6 +385,10 @@ module completions {
   export extern "pixi config help help" [
   ]
 
+  def "nu-complete pixi exec pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi exec pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -381,15 +401,20 @@ module completions {
   export extern "pixi exec" [
     ...command: string        # The executable to run, followed by any arguments
     --spec(-s): string        # Matchspecs of package to install. If this is not provided, the package is guessed from the command
+    --with(-w): string        # Matchspecs of package to install, while also guessing a package from the command
     --channel(-c): string     # The channels to consider as a name or a url. Multiple channels can be specified by using this field multiple times
     --platform(-p): string    # The platform to create the environment for
     --force-reinstall         # If specified a new environment is always created even if one already exists
     --list: string            # Before executing the command, list packages in the environment Specify `--list=some_regex` to filter the shown packages
-    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --no-modify-ps1           # Disable modification of the PS1 prompt to indicate the temporary environment
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi exec pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi exec pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi exec pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -410,6 +435,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi global add pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi global add pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -420,14 +449,20 @@ module completions {
 
   # Adds dependencies to an environment
   export extern "pixi global add" [
-    ...packages: string       # Specifies the package that should be added to the environment
+    ...specs: string          # The dependency as names, conda MatchSpecs
+    --git(-g): string         # The git url to use when adding a git dependency
+    --subdir(-s): string      # The subdirectory of the git repository to use
+    --path: string            # The path to the local directory to use when adding a local dependency
     --environment(-e): string # Specifies the environment that the dependencies need to be added to
     --expose: string          # Add one or more mapping which describe which executables are exposed. The syntax is `exposed_name=executable_name`, so for example `python3.10=python`. Alternatively, you can input only an executable_name and `executable_name=executable_name` is assumed
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global add pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -449,6 +484,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi global install pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi global install pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -459,17 +498,23 @@ module completions {
 
   # Installs the defined packages in a globally accessible location and exposes their command line applications.
   export extern "pixi global install" [
-    ...packages: string       # Specifies the package that should be installed
+    ...specs: string          # The dependency as names, conda MatchSpecs
+    --git(-g): string         # The git url to use when adding a git dependency
+    --subdir(-s): string      # The subdirectory of the git repository to use
+    --path: string            # The path to the local directory to use when adding a local dependency
     --channel(-c): string     # The channels to consider as a name or a url. Multiple channels can be specified by using this field multiple times
     --platform(-p): string    # The platform to install the packages for
     --environment(-e): string # Ensures that all packages will be installed in the same environment
     --expose: string          # Add one or more mapping which describe which executables are exposed. The syntax is `exposed_name=executable_name`, so for example `python3.10=python`. Alternatively, you can input only an executable_name and `executable_name=executable_name` is assumed
     --with: string            # Add additional dependencies to the environment. Their executables will not be exposed
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global install pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global install pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global install pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --force-reinstall         # Specifies that the environment should be reinstalled
     --no-shortcuts            # Specifies that no shortcuts should be created for the installed packages
     --help(-h)                # Display help information
@@ -478,6 +523,10 @@ module completions {
     --color: string@"nu-complete pixi global install color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi global uninstall pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi global uninstall pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -490,17 +539,24 @@ module completions {
   # Uninstalls environments from the global environment.
   export extern "pixi global uninstall" [
     ...environment: string    # Specifies the environments that are to be removed
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global uninstall pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global uninstall pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global uninstall pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
     --color: string@"nu-complete pixi global uninstall color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi global remove pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi global remove pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -514,17 +570,24 @@ module completions {
   export extern "pixi global remove" [
     ...packages: string       # Specifies the package that should be removed
     --environment(-e): string # Specifies the environment that the dependencies need to be removed from
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global remove pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
     --color: string@"nu-complete pixi global remove color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi global list pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi global list pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -538,15 +601,18 @@ module completions {
     [ "always" "never" "auto" ]
   }
 
-  # Lists all packages previously installed into a globally accessible location via `pixi global install`.
+  # Lists global environments with their dependencies and exposed commands. Can also display all packages within a specific global environment when using the --environment flag.
   export extern "pixi global list" [
     regex?: string            # List only packages matching a regular expression. Without regex syntax it acts like a `contains` filter
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global list pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
-    --environment(-e): string # The name of the environment to list
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global list pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global list pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
+    --environment(-e): string # Allows listing all the packages installed in a specific environment, with an output similar to `pixi list`
     --sort-by: string@"nu-complete pixi global list sort_by" # Sorting strategy for the package table of an environment
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -554,6 +620,10 @@ module completions {
     --color: string@"nu-complete pixi global list color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi global sync pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi global sync pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -565,11 +635,14 @@ module completions {
 
   # Sync global manifest with installed environments
   export extern "pixi global sync" [
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global sync pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global sync pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global sync pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -590,6 +663,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi global expose add pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi global expose add pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -602,17 +679,24 @@ module completions {
   export extern "pixi global expose add" [
     ...mappings: string       # Add mapping which describe which executables are exposed. The syntax is `exposed_name=executable_name`, so for example `python3.10=python`. Alternatively, you can input only an executable_name and `executable_name=executable_name` is assumed
     --environment(-e): string # The environment to which the binaries should be exposed
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global expose add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global expose add pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global expose add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
     --color: string@"nu-complete pixi global expose add color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi global expose remove pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi global expose remove pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -625,11 +709,14 @@ module completions {
   # Remove exposed binaries from the global environment
   export extern "pixi global expose remove" [
     ...EXPOSED_NAME: string   # The exposed names that should be removed Can be specified multiple times
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global expose remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global expose remove pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global expose remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -666,6 +753,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi global shortcut add pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi global shortcut add pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -678,17 +769,24 @@ module completions {
   export extern "pixi global shortcut add" [
     ...packages: string       # The package name to add the shortcuts from
     --environment(-e): string # The environment from which the shortcut should be added
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global shortcut add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global shortcut add pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global shortcut add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
     --color: string@"nu-complete pixi global shortcut add color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi global shortcut remove pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi global shortcut remove pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -701,11 +799,14 @@ module completions {
   # Remove shortcuts from your machine
   export extern "pixi global shortcut remove" [
     ...shortcuts: string      # The shortcut that should be removed
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global shortcut remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global shortcut remove pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global shortcut remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -729,6 +830,10 @@ module completions {
   export extern "pixi global shortcut help help" [
   ]
 
+  def "nu-complete pixi global update pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi global update pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -740,11 +845,14 @@ module completions {
   # Updates environments in the global environment
   export extern "pixi global update" [
     ...environments: string   # Specifies the environments that are to be updated
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global update pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global update pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global update pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -768,6 +876,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi global upgrade-all pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi global upgrade-all pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -779,11 +891,14 @@ module completions {
   # Upgrade all globally installed packages This command has been removed, please use `pixi global update` instead
   export extern "pixi global upgrade-all" [
     --channel(-c): string     # The channels to consider as a name or a url. Multiple channels can be specified by using this field multiple times
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi global upgrade-all pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi global upgrade-all pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi global upgrade-all pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --platform: string        # The platform to install the package for
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -816,7 +931,7 @@ module completions {
   export extern "pixi global help remove" [
   ]
 
-  # Lists all packages previously installed into a globally accessible location via `pixi global install`.
+  # Lists global environments with their dependencies and exposed commands. Can also display all packages within a specific global environment when using the --environment flag.
   export extern "pixi global help list" [
   ]
 
@@ -881,7 +996,7 @@ module completions {
   ]
 
   def "nu-complete pixi init format" [] {
-    [ "pixi" "pyproject" ]
+    [ "pixi" "pyproject" "mojoproject" ]
   }
 
   def "nu-complete pixi init scm" [] {
@@ -908,6 +1023,54 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi import format" [] {
+    [ "conda-env" "pypi-txt" ]
+  }
+
+  def "nu-complete pixi import pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
+  def "nu-complete pixi import pypi_keyring_provider" [] {
+    [ "disabled" "subprocess" ]
+  }
+
+  def "nu-complete pixi import color" [] {
+    [ "always" "never" "auto" ]
+  }
+
+  # Imports a file into an environment in an existing workspace.
+  export extern "pixi import" [
+    --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
+    FILE: path                # File to import into the workspace
+    --format: string@"nu-complete pixi import format" # Which format to interpret the file as
+    --platform(-p): string    # The platforms for the imported environment
+    --environment(-e): string # A name for the created environment
+    --feature(-f): string     # A name for the created feature
+    --no-install              # Don't modify the environment, only modify the lock-file
+    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
+    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
+    --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
+    --auth-file: path         # Path to the file containing the authentication token
+    --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi import pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi import pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
+    --help(-h)                # Display help information
+    --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
+    --quiet(-q)               # Decrease logging verbosity (quiet mode)
+    --color: string@"nu-complete pixi import color" # Whether the log needs to be colored
+    --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
+  ]
+
+  def "nu-complete pixi install pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi install pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -922,12 +1085,16 @@ module completions {
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
     --environment(-e): string # The environment to install
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi install pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi install pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi install pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --all(-a)                 # Install all environments
+    --skip: string            # Skip installation of specific packages present in the lockfile. Requires --frozen. This can be useful for instance in a Dockerfile to skip local source dependencies when installing dependencies
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -979,6 +1146,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi reinstall pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi reinstall pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -994,11 +1165,14 @@ module completions {
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
     --environment(-e): string # The environment to install
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi reinstall pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi reinstall pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi reinstall pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --all(-a)                 # Install all environments
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -1006,6 +1180,10 @@ module completions {
     --color: string@"nu-complete pixi reinstall color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi remove pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi remove pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -1034,17 +1212,24 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi remove pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
     --color: string@"nu-complete pixi remove color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi run pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi run pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -1072,11 +1257,14 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi run pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi run pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi run pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --force-activate          # Do not use the environment activation cache. (default: true except in experimental mode)
     --no-completions          # Do not source the autocompletion scripts from the environment
     --environment(-e): string@"nu-complete pixi run environment" # The environment to run the task in
@@ -1128,6 +1316,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi shell pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi shell pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -1148,11 +1340,14 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi shell pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi shell pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi shell pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --environment(-e): string # The environment to activate in the shell
     --change-ps1: string@"nu-complete pixi shell change_ps1" # Do not change the PS1 variable when starting a prompt
     --force-activate          # Do not use the environment activation cache. (default: true except in experimental mode)
@@ -1163,6 +1358,10 @@ module completions {
     --color: string@"nu-complete pixi shell color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi shell-hook pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi shell-hook pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -1185,11 +1384,14 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi shell-hook pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi shell-hook pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi shell-hook pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --force-activate          # Do not use the environment activation cache. (default: true except in experimental mode)
     --no-completions          # Do not source the autocompletion scripts from the environment
     --environment(-e): string # The environment to activate in the script
@@ -1338,6 +1540,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi update pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi update pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -1348,11 +1554,14 @@ module completions {
 
   # The `update` command checks if there are newer versions of the dependencies and updates the `pixi.lock` file and environments accordingly
   export extern "pixi update" [
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi update pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi update pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi update pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --no-install              # Don't install the (solve) environments needed for pypi-dependencies solving
     --dry-run(-n)             # Don't actually write the lockfile or update any environment
@@ -1366,6 +1575,10 @@ module completions {
     --color: string@"nu-complete pixi update color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
+
+  def "nu-complete pixi upgrade pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
 
   def "nu-complete pixi upgrade pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
@@ -1383,11 +1596,14 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi upgrade pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi upgrade pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi upgrade pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     ...packages: string       # The packages to upgrade
     --feature(-f): string     # The feature to update
     --exclude: string         # The packages which should be excluded
@@ -1443,6 +1659,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi workspace channel add pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi workspace channel add pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -1462,11 +1682,14 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi workspace channel add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi workspace channel add pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi workspace channel add pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --feature(-f): string     # The name of the feature to modify
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -1490,6 +1713,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi workspace channel remove pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi workspace channel remove pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -1509,11 +1736,14 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi workspace channel remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi workspace channel remove pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi workspace channel remove pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --feature(-f): string     # The name of the feature to modify
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -1892,6 +2122,10 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi workspace export conda-explicit-spec pinning_strategy" [] {
+    [ "semver" "minor" "major" "latest-up" "exact-version" "no-pin" ]
+  }
+
   def "nu-complete pixi workspace export conda-explicit-spec pypi_keyring_provider" [] {
     [ "disabled" "subprocess" ]
   }
@@ -1911,11 +2145,14 @@ module completions {
     --no-lockfile-update      # Don't update lockfile, implies the no-install as well
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
-    --tls-no-verify           # Do not verify the TLS certificate of the server
     --auth-file: path         # Path to the file containing the authentication token
-    --pypi-keyring-provider: string@"nu-complete pixi workspace export conda-explicit-spec pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
-    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
+    --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
+    --pinning-strategy: string@"nu-complete pixi workspace export conda-explicit-spec pinning_strategy" # Set pinning strategy
+    --pypi-keyring-provider: string@"nu-complete pixi workspace export conda-explicit-spec pypi_keyring_provider" # Specifies whether to use the keyring to look up credentials for PyPI
+    --run-post-link-scripts   # Run post-link scripts (insecure)
+    --tls-no-verify           # Do not verify the TLS certificate of the server
+    --use-environment-activation-cache # Use environment activation cache (experimental)
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -2418,7 +2655,7 @@ module completions {
   export extern "pixi help global remove" [
   ]
 
-  # Lists all packages previously installed into a globally accessible location via `pixi global install`.
+  # Lists global environments with their dependencies and exposed commands. Can also display all packages within a specific global environment when using the --environment flag.
   export extern "pixi help global list" [
   ]
 
@@ -2468,6 +2705,10 @@ module completions {
 
   # Creates a new workspace
   export extern "pixi help init" [
+  ]
+
+  # Imports a file into an environment in an existing workspace.
+  export extern "pixi help import" [
   ]
 
   # Install an environment, both updating the lockfile and installing the environment

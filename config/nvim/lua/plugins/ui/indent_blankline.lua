@@ -19,6 +19,7 @@ return {
     },
     config = function(_, opts)
         require("ibl").setup(opts)
+
         vim.api.nvim_create_autocmd("Filetype", {
             pattern = "make,python,yaml",
             callback = function()
@@ -27,6 +28,21 @@ return {
                 })
             end
         })
+
+        local brglng = require("brglng")
+        brglng.hl.transform_tbl(function()
+            -- if vim.g.colors_name == "sakura" then
+                return {
+                    IblIndent = {
+                        fg = { "blend", fg = "ColorColumn.bg", bg = "Normal.bg", opacity = 1.0 },
+                    },
+                    ["@ibl.indent.char.1"] = {
+                        fg = { "blend", fg = "ColorColumn.bg", bg = "Normal.bg", opacity = 1.0 },
+                    }
+                }
+            -- end
+        end)
+
     end,
     keys = {
         {

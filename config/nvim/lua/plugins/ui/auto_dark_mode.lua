@@ -1,7 +1,8 @@
 return {
     "f-person/auto-dark-mode.nvim",
-    event = "VeryLazy",
+    cond = vim.g.neovide,
     lazy = false,
+    priority = 999,
     opts = {
         update_interval = 1000,
         set_dark_mode = function()
@@ -11,4 +12,7 @@ return {
             vim.o.background = "light"
         end,
     },
+    config = function (_, opts)
+        require("auto-dark-mode").setup(opts)
+    end
 }

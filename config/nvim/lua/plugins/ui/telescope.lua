@@ -1,6 +1,6 @@
 return {
     'nvim-telescope/telescope.nvim', branch = '0.1.x',
-    cmd = "Telescope",
+    lazy = false,
     dependencies = {
         'nvim-lua/plenary.nvim',
         "nvim-telescope/telescope-ui-select.nvim",
@@ -83,12 +83,20 @@ return {
             },
             pickers = {
                 buffers = {
-                    previewer = true,
-                    -- layout_strategy = 'brglng_nopreview',
-                    -- borderchars = {
-                    --     prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                    --     results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                    -- },
+                    previewer = false,
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term_nopreview'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
                     ignore_current_buffer = true,
                     sort_mru = true,
                     layout_config = {
@@ -105,17 +113,38 @@ return {
                 },
                 current_buffer_fuzzy_find = {
                     previewer = false,
-                    -- layout_strategy = 'brglng_nopreview',
-                    -- borderchars = {
-                    --     prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                    --     results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                    -- },
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term_nopreview'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
                     layout_config = {
                         -- width = 0.62,
                     },
                 },
                 find_files = {
-                    previewer = true,
+                    previewer = false,
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term_nopreview'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
                     layout_config = {
                         -- width = 0.62
                     },
@@ -124,14 +153,14 @@ return {
                         "fd",
                         "-H",
                         "-I",
-                        "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs,.pixi,.venv*,.conan2}",
+                        "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs}",
                         "--strip-cwd-prefix",
                     },
                     -- find_command = {
                     --     "bfind",
                     --     "-H",
                     --     "-I",
-                    --     ".DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs,.pixi,.venv*,.conan2",
+                    --     ".DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs",
                     --     "--strip-cwd-prefix"
                     -- },
                 },
@@ -146,9 +175,37 @@ return {
                     }
                 },
                 lsp_document_symbols = {
+                    previewer = false,
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term_nopreview'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
                     symbol_width = 0.8
                 },
                 oldfiles = {
+                    previewer = false,
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term_nopreview'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
                     hidden = true,
                 },
             },
@@ -166,15 +223,39 @@ return {
                     }
                 },
                 file_browser = {
+                    previewer = false,
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term_nopreview'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
                     hijack_netrw = false
                 },
                 ["ui-select"] = {
-                    -- require("telescope.themes").get_dropdown {
-                    --     layout_config = nil
-                    -- }
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term_nopreview'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
                     layout_config = {
-                        width = 0.3,
-                        height = 0.3
+                        width = 0.5,
+                        height = 0.5
                     }
                 },
             }
@@ -187,7 +268,7 @@ return {
             brglng.hl.transform_tbl {
                 TelescopePromptTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
                 TelescopePreviewTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
-                TelescopeSelection = { fg = "PmenuSel.fg", bg = "PmenuSel.bg" },
+                TelescopeSelection = { fg = nil, bg = "CursorLine.bg" },
                 TelescopeMatching = { link = "Search" },
                 TelescopePromptNormal = {
                     fg = "NormalFloat.fg,Normal.fg",

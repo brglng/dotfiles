@@ -23,21 +23,27 @@ return {
         --     "trouble"
         -- },
         sections = {
-            -- lualine_a =  {
-            --     {
-            --         "mode",
-            --         separator = { left = '', right = "" },
-            --         right_padding = 2
-            --     }
-            -- },
+            lualine_a =  {
+                {
+                    "mode",
+                    separator = { left = '', right = "" },
+                    right_padding = 2
+                }
+            },
             lualine_b = {
+                {
+                    function()
+                        return " " .. vim.uv.cwd():gsub(vim.env.HOME, "~")
+                    end
+                },
                 "branch",
                 "diff",
                 {
                     "diagnostics",
                     sources = { "nvim_diagnostic", "nvim_lsp" },
                     sections = { "error", "warn", "info", "hint" },
-                    symbols = { Error = " ", Warn = " ", Info = " ", Hint = "󰌶 " },
+                    -- symbols = { error = " ", warn = " ", info = " ", hint = "󰌶 " },
+                    symbols = { error = " ", warn = " ", info = " ", hint = "󰌵 " },
                 },
             },
             lualine_c = {
@@ -75,7 +81,7 @@ return {
                 'encoding',
                 {
                     function()
-                        return "sw=" .. vim.o.shiftwidth .. " ts=" .. vim.o.tabstop .. " et=" .. (vim.o.expandtab and "on" or "off")
+                        return "sw=" .. vim.o.shiftwidth .. " ts=" .. vim.o.tabstop .. " sts=" .. vim.o.softtabstop .. " et=" .. (vim.o.expandtab and "on" or "off")
                     end
                 },
                 'fileformat',
@@ -103,7 +109,8 @@ return {
                         local col = vim.fn.virtcol('.')
                         return string.format(' %d  %d', line, col)
                     end,
-                    -- separator = { left = '', right = '' }, left_padding = 2
+                    separator = { left = '', right = '' },
+                    left_padding = 2
                 }
             }
         }

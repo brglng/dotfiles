@@ -20,7 +20,7 @@ return {
             enabled = true,
         },
         input = {
-            enabled = true,
+            enabled = false,
         },
         statuscolumn = {
             enabled = false,

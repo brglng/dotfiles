@@ -22,6 +22,5 @@ node_modules
 .mypy_cache
 .venv*
 .pixi
-pixi-activate.bat
-pixi.toml
-pixi.lock
+.conan
+.conan2
