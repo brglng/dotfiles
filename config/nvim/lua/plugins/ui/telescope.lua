@@ -153,14 +153,15 @@ return {
                         "fd",
                         "-H",
                         "-I",
-                        "--exclude={.DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs}",
+                        "--exclude={.DS_Store,Thumbs.db,*.swp,*.swo,.clangd,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.venv*,.cache,.ghcup,.conda,.rustup,.cargo,target,.stfolder,.vs,*.pyc,*.egg-info,.pixi,.conan,.conan2}",
                         "--strip-cwd-prefix",
+                        "--path-separator", "/"
                     },
                     -- find_command = {
                     --     "bfind",
                     --     "-H",
                     --     "-I",
-                    --     ".DS_Store,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.cache,.ghcup,.conda,.rustup,.cargo,.local,target,.stfolder,.vs",
+                    --     ".DS_Store,Thumbs.db,*.swp,*.swo,.clangd,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.venv*,.cache,.ghcup,.conda,.rustup,.cargo,target,.stfolder,.vs,*.pyc,*.egg_info,.pixi,.conan,.conan2",
                     --     "--strip-cwd-prefix"
                     -- },
                 },
@@ -173,6 +174,42 @@ return {
                             ["<CR>"] = actions.select_vertical
                         }
                     }
+                },
+                live_grep = {
+                    additional_args = function()
+                        return {
+                            "--path-separator", "/",
+                            "--no-ignore",
+                            "--glob=!.DS_Store",
+                            "--glob=!Thumbs.db",
+                            "--glob=!*.swp",
+                            "--glob=!*.swo",
+                            "--glob=!.clangd",
+                            "--glob=!.git",
+                            "--glob=!.idea",
+                            "--glob=!.vscode",
+                            "--glob=!.sass-cache",
+                            "--glob=!.mypy_cache",
+                            "--glob=!node_modules",
+                            "--glob=!build",
+                            "--glob=!.vscode-server",
+                            "--glob=!.virtualenvs",
+                            "--glob=!.venv*",
+                            "--glob=!.cache",
+                            "--glob=!.ghcup",
+                            "--glob=!.conda",
+                            "--glob=!.rustup",
+                            "--glob=!.cargo",
+                            "--glob=!target",
+                            "--glob=!.stfolder",
+                            "--glob=!.vs",
+                            "--glob=!*.pyc",
+                            "--glob=!*.egg-info",
+                            "--glob=!.pixi",
+                            "--glob=!.conan",
+                            "--glob=!.conan2",
+                    }
+                    end
                 },
                 lsp_document_symbols = {
                     previewer = false,
@@ -268,7 +305,7 @@ return {
             brglng.hl.transform_tbl {
                 TelescopePromptTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
                 TelescopePreviewTitle = { fg = "Normal.bg", bg = "FloatTitle.fg" },
-                TelescopeSelection = { fg = nil, bg = "CursorLine.bg" },
+                TelescopeSelection = { fg = "PmenuSel.fg", bg = "PmenuSel.bg" },
                 TelescopeMatching = { link = "Search" },
                 TelescopePromptNormal = {
                     fg = "NormalFloat.fg,Normal.fg",

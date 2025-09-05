@@ -87,7 +87,7 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- if vim.fn.has("win32") == 1 then
+if vim.fn.has("win32") == 1 then
 --     -- https://github.com/neovim/neovim/issues/25033#issuecomment-1717700044
 --     vim.api.nvim_create_autocmd({ "BufAdd" }, {
 --         callback = function()
@@ -110,7 +110,7 @@ vim.opt.rtp:prepend(lazypath)
 --             end
 --         end
 --     })
--- end
+end
 
 -- https://www.reddit.com/r/neovim/comments/f0qx2y/automatically_reload_file_if_contents_changed/
 vim.o.autoread = true
@@ -145,7 +145,7 @@ require("lazy").setup("plugins", {
     }
 })
 
-vim.cmd.colorscheme("sakura")
+vim.cmd.colorscheme("catppuccin")
 
 require("brglng.pixi").setup()
 

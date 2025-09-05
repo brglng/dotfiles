@@ -4,13 +4,14 @@ module completions {
     [ "always" "never" "auto" ]
   }
 
-  #  Pixi [version 0.51.0] - Developer Workflow and Environment Management for Multi-Platform, Language-Agnostic Workspaces.  Pixi is a versatile developer workflow tool designed to streamline the management of your workspace's dependencies, tasks, and environments. Built on top of the Conda ecosystem, Pixi offers seamless integration with the PyPI ecosystem.  Basic Usage:     Initialize pixi for a workspace:     $ pixi init     $ pixi add python numpy pytest      Run a task:     $ pixi task add test 'pytest -s'     $ pixi run test  Found a Bug or Have a Feature Request? Open an issue at: https://github.com/prefix-dev/pixi/issues  Need Help? Ask a question on the Prefix Discord server: https://discord.gg/kKV8ZxyzY4  For more information, see the documentation at: https://pixi.sh 
+  #  Pixi [version 0.53.0] - Developer Workflow and Environment Management for Multi-Platform, Language-Agnostic Workspaces.  Pixi is a versatile developer workflow tool designed to streamline the management of your workspace's dependencies, tasks, and environments. Built on top of the Conda ecosystem, Pixi offers seamless integration with the PyPI ecosystem.  Basic Usage:     Initialize pixi for a workspace:     $ pixi init     $ pixi add python numpy pytest      Run a task:     $ pixi task add test 'pytest -s'     $ pixi run test  Found a Bug or Have a Feature Request? Open an issue at: https://github.com/prefix-dev/pixi/issues  Need Help? Ask a question on the Prefix Discord server: https://discord.gg/kKV8ZxyzY4  For more information, see the documentation at: https://pixi.sh 
   export extern pixi [
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
     --color: string@"nu-complete pixi color" # Whether the log needs to be colored
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
+    --list                    # List all installed commands (built-in and extensions)
     --version(-V)             # Print version
   ]
 
@@ -41,8 +42,7 @@ module completions {
     --rev: string             # The git revision
     --subdir(-s): string      # The subdirectory of the git repository to use
     --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
     --auth-file: path         # Path to the file containing the authentication token
@@ -149,6 +149,7 @@ module completions {
     --tls-no-verify           # Do not verify the TLS certificate of the server
     --use-environment-activation-cache # Use environment activation cache (experimental)
     --target-platform(-t): string # The target platform to build for (defaults to the current platform)
+    --build-platform: string  # The build platform to use for building (defaults to the current platform)
     --output-dir(-o): path    # The output directory to place the built artifacts
     --build-dir(-b): path     # The directory to use for incremental builds artifacts
     --clean(-c)               # Whether to clean the build directory before building
@@ -450,9 +451,12 @@ module completions {
   # Adds dependencies to an environment
   export extern "pixi global add" [
     ...specs: string          # The dependency as names, conda MatchSpecs
-    --git(-g): string         # The git url to use when adding a git dependency
-    --subdir(-s): string      # The subdirectory of the git repository to use
-    --path: string            # The path to the local directory to use when adding a local dependency
+    --git: string             # The git url, e.g. `https://github.com/user/repo.git`
+    --branch: string          # The git branch
+    --tag: string             # The git tag
+    --rev: string             # The git revision
+    --subdir: string          # The subdirectory within the git repository
+    --path: string            # The path to the local directory
     --environment(-e): string # Specifies the environment that the dependencies need to be added to
     --expose: string          # Add one or more mapping which describe which executables are exposed. The syntax is `exposed_name=executable_name`, so for example `python3.10=python`. Alternatively, you can input only an executable_name and `executable_name=executable_name` is assumed
     --auth-file: path         # Path to the file containing the authentication token
@@ -499,9 +503,12 @@ module completions {
   # Installs the defined packages in a globally accessible location and exposes their command line applications.
   export extern "pixi global install" [
     ...specs: string          # The dependency as names, conda MatchSpecs
-    --git(-g): string         # The git url to use when adding a git dependency
-    --subdir(-s): string      # The subdirectory of the git repository to use
-    --path: string            # The path to the local directory to use when adding a local dependency
+    --git: string             # The git url, e.g. `https://github.com/user/repo.git`
+    --branch: string          # The git branch
+    --tag: string             # The git tag
+    --rev: string             # The git revision
+    --subdir: string          # The subdirectory within the git repository
+    --path: string            # The path to the local directory
     --channel(-c): string     # The channels to consider as a name or a url. Multiple channels can be specified by using this field multiple times
     --platform(-p): string    # The platform to install the packages for
     --environment(-e): string # Ensures that all packages will be installed in the same environment
@@ -1047,11 +1054,6 @@ module completions {
     --platform(-p): string    # The platforms for the imported environment
     --environment(-e): string # A name for the created environment
     --feature(-f): string     # A name for the created feature
-    --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
-    --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
-    --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
     --auth-file: path         # Path to the file containing the authentication token
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
     --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
@@ -1119,9 +1121,10 @@ module completions {
     --sort-by: string@"nu-complete pixi list sort_by" # Sorting strategy
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --environment(-e): string # The environment to list packages for. Defaults to the default environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
+    --no-install              # Don't modify the environment, only modify the lock-file
     --explicit(-x)            # Only list packages that are explicitly defined in the workspace
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -1137,6 +1140,7 @@ module completions {
   # Solve environment and update the lock file without installing the environments
   export extern "pixi lock" [
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
+    --no-install              # Don't modify the environment, only modify the lock-file
     --json                    # Output the changes in JSON format
     --check                   # Check if any changes have been made to the lock file. If yes, exit with a non-zero code
     --help(-h)                # Display help information
@@ -1208,8 +1212,7 @@ module completions {
     --rev: string             # The git revision
     --subdir(-s): string      # The subdirectory of the git repository to use
     --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
     --auth-file: path         # Path to the file containing the authentication token
@@ -1253,10 +1256,10 @@ module completions {
     ...task: string@"nu-complete pixi run"           # The pixi task or a task shell command you want to run in the workspace's environment, which can be an executable in the environment's PATH
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
+    --as-is                   # Shorthand for the combination of --no-install and --frozen
     --auth-file: path         # Path to the file containing the authentication token
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
     --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
@@ -1336,10 +1339,10 @@ module completions {
   export extern "pixi shell" [
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
+    --as-is                   # Shorthand for the combination of --no-install and --frozen
     --auth-file: path         # Path to the file containing the authentication token
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
     --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
@@ -1380,10 +1383,10 @@ module completions {
     --shell(-s): string       # Sets the shell, options: [`bash`,  `zsh`,  `xonsh`,  `cmd`, `powershell`,  `fish`,  `nushell`]
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
+    --as-is                   # Shorthand for the combination of --no-install and --frozen
     --auth-file: path         # Path to the file containing the authentication token
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
     --concurrent-solves: string # Max concurrent solves, default is the number of CPUs
@@ -1529,9 +1532,10 @@ module completions {
     --platform(-p): string    # The platform to list packages for. Defaults to the current platform
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --environment(-e): string # The environment to list packages for. Defaults to the default environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
+    --no-install              # Don't modify the environment, only modify the lock-file
     --invert(-i)              # Invert tree and show what depends on given package in the regex argument
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -1592,8 +1596,7 @@ module completions {
   export extern "pixi upgrade" [
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
     --auth-file: path         # Path to the file containing the authentication token
@@ -1678,8 +1681,7 @@ module completions {
     --priority: string        # Specify the channel priority
     --prepend                 # Add the channel(s) to the beginning of the channels list, making them the highest priority
     --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
     --auth-file: path         # Path to the file containing the authentication token
@@ -1732,8 +1734,7 @@ module completions {
     --priority: string        # Specify the channel priority
     --prepend                 # Add the channel(s) to the beginning of the channels list, making them the highest priority
     --no-install              # Don't modify the environment, only modify the lock-file
-    --revalidate              # Run the complete environment validation. This will reinstall a broken environment
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
     --auth-file: path         # Path to the file containing the authentication token
@@ -2142,9 +2143,10 @@ module completions {
     --platform(-p): string    # The platform to render. Can be repeated for multiple platforms. Defaults to all platforms available for selected environments
     --ignore-pypi-errors      # PyPI dependencies are not supported in the conda explicit spec file
     --ignore-source-errors    # Source dependencies are not supported in the conda explicit spec file
-    --no-lockfile-update      # Don't update lockfile, implies the no-install as well
+    --no-lockfile-update      # DEPRECATED: use `--frozen` `--no-install`. Skips lock-file updates
     --frozen                  # Install the environment as defined in the lockfile, doesn't update lockfile if it isn't up-to-date with the manifest file
     --locked                  # Check if lockfile is up-to-date before installing the environment, aborts when lockfile isn't up-to-date with the manifest file
+    --no-install              # Don't modify the environment, only modify the lock-file
     --auth-file: path         # Path to the file containing the authentication token
     --concurrent-downloads: string # Max concurrent network requests, default is `50`
     --concurrent-solves: string # Max concurrent solves, default is the number of CPUs

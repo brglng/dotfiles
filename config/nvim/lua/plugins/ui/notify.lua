@@ -46,17 +46,27 @@ return {
 
             vim.api.nvim_buf_set_var(bufnr, "__notify_title__", win_title)
 
+            local max_width = 0
+            for _, line in ipairs(notif.message) do
+                if vim.g.neovide then
+                    max_width = math.max(max_width, vim.fn.strdisplaywidth(line, 2))
+                else
+                    max_width = math.max(max_width, vim.fn.strdisplaywidth(line, 1))
+                end
+            end
+            max_width = math.max(max_width, 50)
+
             --- @type table<string>
             local message = {}
             for _, msg in ipairs(notif.message) do
-                local m = ""
+                local m
                 if vim.g.neovide then
                     m = "  " .. msg .. " "
                 else
                     m = " " .. msg .. " "
                 end
-                if #m < 50 then
-                    m = m .. vim.fn["repeat"](" ", 50 - #m)
+                while vim.fn.strdisplaywidth(m) < max_width do
+                    m = m .. " "
                 end
                 table.insert(message, m)
             end
@@ -101,6 +111,7 @@ return {
                 NotifyINFOBody = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
                 NotifyDEBUGBody = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
                 NotifyTRACEBody = { fg = "NormalFloat.fg,Normal.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyProgressBar = { fg = "DiagnosticOk.fg", bg = "NormalFloat.bg,Normal.bg" },
             }
         else
             brglng.hl.transform_tbl {
@@ -125,6 +136,7 @@ return {
                 NotifyINFOBody = { fg = "Normal.fg", bg = "Normal.bg" },
                 NotifyDEBUGBody = { fg = "Normal.fg", bg = "Normal.bg" },
                 NotifyTRACEBody = { fg = "Normal.fg", bg = "Normal.bg" },
+                NotifyProgressBar = { fg = "DiagnosticOk.fg", bg = "NormalFloat.bg,Normal.bg" },
             }
         end
 
@@ -210,9 +222,9 @@ return {
             else
                 percentage_start = 1
             end
-            if title ~= nil and #title > 0 then
+            if title ~= nil and vim.fn.strdisplaywidth(title) > 0 then
                 title = title .. " "
-                percentage_start = #title + percentage_start
+                percentage_start = vim.fn.strdisplaywidth(title) + percentage_start
             else
                 title = ""
             end
@@ -282,7 +294,7 @@ return {
                         for _, data in ipairs(notif_data.msg_data_list) do
                             if data.percentage_end > data.percentage_start then
                                 vim.api.nvim_buf_set_extmark(buf, namespace, data.row, data.percentage_start, {
-                                    hl_group = "DiagnosticOk",
+                                    hl_group = "NotifyProgressBar",
                                     end_col = data.percentage_end,
                                     priority = 50,
                                 })

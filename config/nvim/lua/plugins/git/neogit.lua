@@ -4,7 +4,6 @@ return {
     dependencies = {
         'sindrets/diffview.nvim',
         "nvim-lua/plenary.nvim",
-        "ibhagwan/fzf-lua"
     },
     opts = {
         disable_commit_confirmation = true,
@@ -24,7 +23,11 @@ return {
         vim.cmd [[ autocmd FileType NeogitStatus,NeogitPopup,NeogitLogView wincmd J ]]
     end,
     keys = {
-        { '<Leader>gg', '<Cmd>Neogit<CR>', desc = 'Neogit' },
-        { '<Leader>gl', '<Cmd>Neogit log<CR>', desc = 'Neogit Log' },
+        { '<Leader>gg', mode = { "n" }, function() require("neogit").open() end, desc = 'Neogit' },
+        { '<Leader>gb', mode = { "n" }, function() require("neogit").open({ "branch", kind = "split" }) end, desc = 'Neogit branch' },
+        { '<Leader>gc', mode = { "n" }, function() require("neogit").open({ "commit", kind = "split" }) end, desc = 'Neogit commit' },
+        { '<Leader>gla', mode = { "n" }, function() require("neogit").action("log", 'log_all_references', { '--graph', '--decorate' })() end, desc = 'Neogit log' },
+        { '<Leader>gll', mode = { "n" }, "<Cmd>NeogitLogCurrent<CR>", desc = 'NeogitLogCurrent' },
+        { '<Leader>gs', mode = { "n" }, function() require("neogit").open({ kind = "split" }) end, desc = 'Neogit split' },
     }
 }

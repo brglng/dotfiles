@@ -14,20 +14,11 @@ return {
         }
     },
     config = function(_, opts)
-        require('illuminate').configure(opts)
-        local set_illuminated_colors = function()
-            vim.api.nvim_set_hl(0, "IlluminatedWordText", { link = "CursorLine" })
-            vim.api.nvim_set_hl(0, "IlluminatedWordRead", { link = "CursorLine" })
-            vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { link = "CursorLine" })
-        end
-        set_illuminated_colors()
-        vim.api.nvim_create_autocmd("ColorScheme", {
-            pattern = "*",
-            callback = set_illuminated_colors
-        })
-        vim.api.nvim_create_autocmd("OptionSet", {
-            pattern = "background",
-            callback = set_illuminated_colors
-        })
+        local brglng = require("brglng")
+        brglng.hl.transform_tbl {
+            IlluminatedWordText = { fg = nil, bg = { "middle", from = { "CursorLine.bg", "Visual.bg" } } },
+            IlluminatedWordRead = { fg = nil, bg = { "middle", from = { "CursorLine.bg", "Visual.bg" } } },
+            IlluminatedWordWrite = { fg = nil, bg = { "middle", from = { "CursorLine.bg", "Visual.bg" } } },
+        }
     end
 }

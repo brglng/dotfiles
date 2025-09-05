@@ -31,9 +31,11 @@ local function activate(project_root)
                             vim.g.pixi_save_env = save_env
                             local project_name = vim.env.PIXI_PROJECT_NAME or "<NO NAME>"
                             vim.notify("Activated Pixi environment " .. project_name .. " at " .. project_root, vim.log.levels.INFO)
-                            -- for _, v in ipairs({ "basedpyright", "pyrefly", "pyright", "ruff", "ty" }) do
-                            --     vim.cmd("LspRestart " .. v)
-                            -- end
+                            for _, v in ipairs({ "basedpyright", "pyrefly", "pyright", "ruff", "ty" }) do
+                                if #vim.lsp.get_clients({ name = v }) > 0 then
+                                    vim.cmd("LspRestart " .. v)
+                                end
+                            end
                         else
                             vim.notify("No `environment_variables` field in `pixi shell-hook --json` output", vim.log.levels.WARN)
                         end

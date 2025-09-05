@@ -355,9 +355,9 @@ runtime init/plugins/im_select.vim
 " runtime init/plugins/dasht.vim
 
 " UI Plugins
-runtime init/plugins/devicons.vim
+" runtime init/plugins/devicons.vim
 " runtime init/plugins/dirvish.vim
-runtime init/plugins/lightline.vim
+" runtime init/plugins/lightline.vim
 " runtime init/plugins/fencview.vim
 runtime init/plugins/undotree.vim
 " runtime init/plugins/startify.vim
@@ -366,29 +366,29 @@ runtime init/plugins/sidebar_manager.vim
 " runtime init/plugins/defx.vim
 " runtime init/plugins/netrw.vim
 " runtime init/plugins/terminal_help.vim
-runtime init/plugins/vista.vim
+" runtime init/plugins/vista.vim
 " runtime init/plugins/dein_ui.vim
 " runtime init/plugins/indent_line.vim
 
 " Fuzzy Finder
 " runtime init/plugins/denite.vim
-runtime init/plugins/leaderf.vim
+" runtime init/plugins/leaderf.vim
 " runtime init/plugins/clap.vim
 
 " Moving Plugins
-runtime init/plugins/clever_f.vim
-runtime init/plugins/unimpaired.vim
-runtime init/plugins/surround.vim
-runtime init/plugins/targets.vim
-runtime init/plugins/matchup.vim
-runtime init/plugins/textobj.vim
+" runtime init/plugins/clever_f.vim
+" runtime init/plugins/unimpaired.vim
+" runtime init/plugins/surround.vim
+" runtime init/plugins/targets.vim
+" runtime init/plugins/matchup.vim
+" runtime init/plugins/textobj.vim
 
 " Editing Plugins
 " runtime init/plugins/nerd_commenter.vim
-runtime init/plugins/tcomment.vim
+" runtime init/plugins/tcomment.vim
 runtime init/plugins/easy_align.vim
 " runtime init/plugins/endwise.vim
-runtime init/plugins/sleuth.vim
+" runtime init/plugins/sleuth.vim
 runtime init/plugins/repeat.vim
 runtime init/plugins/abolish.vim
 runtime init/plugins/cycle.vim
@@ -396,13 +396,13 @@ runtime init/plugins/cycle.vim
 
 " FileType Plugins
 " runtime init/plugins/ps1.vim
-runtime init/plugins/plantuml_syntax.vim
+" runtime init/plugins/plantuml_syntax.vim
 " runtime init/plugins/python_pep8_indent.vim
 " runtime init/plugins/polyglot.vim
 " runtime init/plugins/tmux.vim
 
 " Source Control Plugins
-runtime init/plugins/fugitive.vim
+" runtime init/plugins/fugitive.vim
 
 " Project management
 runtime init/plugins/asyncrun.vim
