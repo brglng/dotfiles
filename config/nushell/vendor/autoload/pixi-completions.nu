@@ -4,7 +4,7 @@ module completions {
     [ "always" "never" "auto" ]
   }
 
-  #  Pixi [version 0.53.0] - Developer Workflow and Environment Management for Multi-Platform, Language-Agnostic Workspaces.  Pixi is a versatile developer workflow tool designed to streamline the management of your workspace's dependencies, tasks, and environments. Built on top of the Conda ecosystem, Pixi offers seamless integration with the PyPI ecosystem.  Basic Usage:     Initialize pixi for a workspace:     $ pixi init     $ pixi add python numpy pytest      Run a task:     $ pixi task add test 'pytest -s'     $ pixi run test  Found a Bug or Have a Feature Request? Open an issue at: https://github.com/prefix-dev/pixi/issues  Need Help? Ask a question on the Prefix Discord server: https://discord.gg/kKV8ZxyzY4  For more information, see the documentation at: https://pixi.sh 
+  #  Pixi [version 0.54.2] - Developer Workflow and Environment Management for Multi-Platform, Language-Agnostic Workspaces.  Pixi is a versatile developer workflow tool designed to streamline the management of your workspace's dependencies, tasks, and environments. Built on top of the Conda ecosystem, Pixi offers seamless integration with the PyPI ecosystem.  Basic Usage:     Initialize pixi for a workspace:     $ pixi init     $ pixi add python numpy pytest      Run a task:     $ pixi task add test 'pytest -s'     $ pixi run test  Found a Bug or Have a Feature Request? Open an issue at: https://github.com/prefix-dev/pixi/issues  Need Help? Ask a question on the Prefix Discord server: https://discord.gg/kKV8ZxyzY4  For more information, see the documentation at: https://pixi.sh 
   export extern pixi [
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -80,7 +80,7 @@ module completions {
 
   # Store authentication information for a given host
   export extern "pixi auth login" [
-    host: string              # The host to authenticate with (e.g. repo.prefix.dev)
+    host: string              # The host to authenticate with (e.g. prefix.dev)
     --token: string           # The token to use (for authentication with prefix.dev)
     --username: string        # The username to use (for basic HTTP authentication)
     --password: string        # The password to use (for basic HTTP authentication)
@@ -914,6 +914,22 @@ module completions {
     --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
   ]
 
+  def "nu-complete pixi global tree color" [] {
+    [ "always" "never" "auto" ]
+  }
+
+  # Show a tree of dependencies for a specific global environment
+  export extern "pixi global tree" [
+    --environment(-e): string # The environment to list packages for
+    regex?: string            # List only packages matching a regular expression
+    --invert(-i)              # Invert tree and show what depends on a given package in the regex argument
+    --help(-h)                # Display help information
+    --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
+    --quiet(-q)               # Decrease logging verbosity (quiet mode)
+    --color: string@"nu-complete pixi global tree color" # Whether the log needs to be colored
+    --no-progress             # Hide all progress bars, always turned on if stderr is not a terminal
+  ]
+
   # Print this message or the help of the given subcommand(s)
   export extern "pixi global help" [
   ]
@@ -980,6 +996,10 @@ module completions {
 
   # Upgrade all globally installed packages This command has been removed, please use `pixi global update` instead
   export extern "pixi global help upgrade-all" [
+  ]
+
+  # Show a tree of dependencies for a specific global environment
+  export extern "pixi global help tree" [
   ]
 
   # Print this message or the help of the given subcommand(s)
@@ -1096,7 +1116,9 @@ module completions {
     --tls-no-verify           # Do not verify the TLS certificate of the server
     --use-environment-activation-cache # Use environment activation cache (experimental)
     --all(-a)                 # Install all environments
-    --skip: string            # Skip installation of specific packages present in the lockfile. Requires --frozen. This can be useful for instance in a Dockerfile to skip local source dependencies when installing dependencies
+    --skip: string            # Skip installation of specific packages present in the lockfile. This uses a soft exclusion: the package will be skipped but its dependencies are installed
+    --skip-with-deps: string  # Skip a package and its entire dependency subtree. This performs a hard exclusion: the package and its dependencies are not installed unless reachable from another non-skipped root
+    --only: string            # Install and build only these package(s) and their dependencies. Can be passed multiple times
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
     --quiet(-q)               # Decrease logging verbosity (quiet mode)
@@ -2699,6 +2721,10 @@ module completions {
 
   # Upgrade all globally installed packages This command has been removed, please use `pixi global update` instead
   export extern "pixi help global upgrade-all" [
+  ]
+
+  # Show a tree of dependencies for a specific global environment
+  export extern "pixi help global tree" [
   ]
 
   # Information about the system, workspace and environments for the current machine

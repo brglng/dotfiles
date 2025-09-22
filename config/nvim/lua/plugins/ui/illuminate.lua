@@ -1,7 +1,7 @@
 return {
     "RRethy/vim-illuminate",
     enabled = true,
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     opts = {
         filetypes_denylist = {
             "neo-tree",

@@ -37,13 +37,14 @@ end
 
 local function scheme_for_appearance(appearance)
     if appearance:find('Dark') then
-        return 'melange_dark'
+        return 'Catppuccin Mocha'
     else
-        return 'melange_light'
+        return 'Catppuccin Latte'
     end
 end
 
-config.colors = wezterm.color.load_scheme(wezterm.config_dir .. "/colors/" .. scheme_for_appearance(get_appearance()) .. ".toml")
+-- config.colors = wezterm.color.load_scheme(wezterm.config_dir .. "/colors/" .. scheme_for_appearance(get_appearance()) .. ".toml")
+config.colors = wezterm.color.get_builtin_schemes()[scheme_for_appearance(get_appearance())]
 local function set_tabline_colors(config)
     local tabline_fg = config.colors.foreground
     local tabline_bg = brglng.color.darken(config.colors.background, 0.15)
@@ -353,6 +354,8 @@ config.ssh_domains = {
     }
 }
 
+config.serial_ports = {}
+
 config.launch_menu = {}
 
 if WINDOWS then
@@ -367,6 +370,11 @@ if WINDOWS then
         username = 'brglng',
         multiplexing = 'None',
         default_prog = { '/bin/sh', '-c', 'if [ -x ~/.pixi/bin/nu ]; then exec ~/.pixi/bin/nu -l -i; elif [ -x ~/.pixi/bin/zsh ]; then exec ~/.pixi/bin/zsh -l -i; else exec bash -l -i; fi' }
+    })
+    table.insert(config.serial_ports, {
+        name = "COM7",
+        port = "COM7",
+        baud = 115200,
     })
 
     config.default_domain = 'Mux'
@@ -509,8 +517,13 @@ if WINDOWS then
     -- })
 
     table.insert(config.launch_menu, {
+        label = 'COM7',
+        domain = { DomainName = 'COM7' },
+        args = { "/bin/sh" }
+    })
+    table.insert(config.launch_menu, {
         label = 'WSL ❯ Ubuntu',
-        domain = { DomainName = 'WSL:Ubuntu' }
+        domain = { DomainName = 'WSL:Ubuntu' },
     })
 
     config.default_prog = { "nu.exe", "-i", "-l" }

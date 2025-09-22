@@ -11,7 +11,7 @@ return {
             end
         end,
         -- hide_numbers = false,
-        -- shade_terminals = false,
+        shade_terminals = false,
         start_in_insert = true,
         shell = (function()
             if vim.fn.executable('nu') then
