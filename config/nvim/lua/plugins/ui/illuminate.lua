@@ -14,6 +14,7 @@ return {
         }
     },
     config = function(_, opts)
+        require("illuminate").configure(opts)
         local brglng = require("brglng")
         brglng.hl.transform_tbl {
             IlluminatedWordText = { fg = nil, bg = { "middle", from = { "CursorLine.bg", "Visual.bg" } } },

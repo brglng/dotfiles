@@ -28,6 +28,8 @@ return {
         { '<Leader>gc', mode = { "n" }, function() require("neogit").open({ "commit", kind = "split" }) end, desc = 'Neogit commit' },
         { '<Leader>gla', mode = { "n" }, function() require("neogit").action("log", 'log_all_references', { '--graph', '--decorate' })() end, desc = 'Neogit log' },
         { '<Leader>gll', mode = { "n" }, "<Cmd>NeogitLogCurrent<CR>", desc = 'NeogitLogCurrent' },
+        { '<Leader>gp', mode = { "n" }, function() require("neogit").open({ "pull", kind = "split" }) end, desc = 'Neogit pull' },
+        { '<Leader>gP', mode = { "n" }, function() require("neogit").open({ "push", kind = "split" }) end, desc = 'Neogit push' },
         { '<Leader>gs', mode = { "n" }, function() require("neogit").open({ kind = "split" }) end, desc = 'Neogit split' },
     }
 }

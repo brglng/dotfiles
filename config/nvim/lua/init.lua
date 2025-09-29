@@ -129,6 +129,7 @@ vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
     end,
 })
 
+vim.api.nvim_set_hl(0, "LazyNormal", { link = "Normal" })
 require("lazy").setup("plugins", {
     lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
     change_detection = {
@@ -142,7 +143,15 @@ require("lazy").setup("plugins", {
     rocks = {
         enabled = true,
         hererocks = true,
-    }
+    },
+    ui = (function()
+        if not vim.g.neovide then
+            return {
+                border = "rounded",
+                backdrop = 100
+            }
+        end
+    end)(),
 })
 
 vim.cmd.colorscheme("catppuccin")

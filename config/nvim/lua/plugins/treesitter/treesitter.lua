@@ -5,8 +5,7 @@ return {
         { "nushell/tree-sitter-nu", lazy = true, ft = 'nu' },
     },
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufWritePost", "BufNewFile"  },
-    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+    lazy = false,
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     opts = {
         ensure_installed = {
@@ -71,9 +70,10 @@ return {
             enable = true,
         }
     },
+    config = function(_, opts)
+        require("nvim-treesitter.configs").setup(opts)
 
-    -- enable if switch to main branch
-    -- config = function(_, opts)
+    --     enable if switch to main branch
     --     require("nvim-treesitter").install(opts.ensure_installed)
     --     if opts.auto_install then
     --         vim.api.nvim_create_autocmd('FileType', {
@@ -101,5 +101,5 @@ return {
     --             end,
     --         })
     --     end
-    -- end
+    end
 }

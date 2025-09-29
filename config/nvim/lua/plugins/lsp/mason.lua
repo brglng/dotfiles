@@ -2,7 +2,16 @@ return {
     {
         "williamboman/mason.nvim",
         -- event = "VeryLazy",
-        opts = {}
+        opts = {
+            ui = (function()
+                if not vim.g.neovide then
+                    return {
+                        border = "rounded",
+                        backdrop = 100
+                    }
+                end
+            end)(),
+        }
     },
     {
         "WhoIsSethDaniel/mason-tool-installer.nvim",

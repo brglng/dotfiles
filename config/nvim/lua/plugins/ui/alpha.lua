@@ -68,7 +68,7 @@ return {
                 position = "center",
                 shortcut = sc,
                 cursor = 3,
-                width = math.min(vim.fn.winwidth(0) - 2, 130),
+                width = math.min(vim.fn.winwidth(0) - 2, 100),
                 align_shortcut = "right",
                 hl_shortcut = { { "Number", 0, 1 } },
                 shrink_margin = false,
@@ -154,7 +154,7 @@ return {
                 opts = {
                     position = "center",
                     hl = "Comment",
-                    width = math.min(vim.fn.winwidth(0) - 2, 130),
+                    width = math.min(vim.fn.winwidth(0) - 2, 100),
                 }
             }
         }
@@ -189,8 +189,8 @@ return {
                 projects_tbl = {}
                 for _, proj in ipairs(project_list) do
                     local short_proj
-                    if vim.fn.strdisplaywidth(proj) > math.min(vim.fn.winwidth(0) - 2, 130) - 5 then
-                        short_proj = "  ..." .. string.sub(proj, #proj - (math.min(vim.fn.winwidth(0) - 2, 130) - 8) + 1, #proj)
+                    if vim.fn.strdisplaywidth(proj) > math.min(vim.fn.winwidth(0) - 2, 100) - 5 then
+                        short_proj = "  ..." .. string.sub(proj, #proj - (math.min(vim.fn.winwidth(0) - 2, 100) - 8) + 1, #proj)
                     else
                         short_proj = "  " .. proj
                     end
@@ -212,7 +212,7 @@ return {
                             hl = proj_hl,
                             hl_shortcut = "Number",
                             cursor = 3,
-                            width = math.min(vim.fn.winwidth(0) - 2, 130),
+                            width = math.min(vim.fn.winwidth(0) - 2, 100),
                         }
                     })
                 end
@@ -264,8 +264,8 @@ return {
                     short_fn = fnamemodify(short_fn, ":~")
                 end
                 -- vim.notify(tostring(vim.fn.winwidth(0)))
-                if vim.fn.strdisplaywidth(short_fn) > math.min(vim.fn.winwidth(0) - 2, 130) - 5 then
-                    short_fn = "..." .. string.sub(short_fn, #short_fn - (math.min(vim.fn.winwidth(0) - 2, 130) - 8) + 1, #short_fn)
+                if vim.fn.strdisplaywidth(short_fn) > math.min(vim.fn.winwidth(0) - 2, 100) - 5 then
+                    short_fn = "..." .. string.sub(short_fn, #short_fn - (math.min(vim.fn.winwidth(0) - 2, 100) - 8) + 1, #short_fn)
                 end
                 local file_button_el = file_button(fn, next_key(), short_fn, opts.autocd)
                 tbl[i] = file_button_el
