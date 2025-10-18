@@ -17,8 +17,8 @@ SetWorkingDir A_ScriptDir
 ;             Run '*RunAs "' A_ScriptFullPath '" /restart'
 ;         else
 ;             Run '*RunAs "' A_AhkPath '" /restart "' A_ScriptFullPath '"'
+;         ExitApp
 ;     }
-;     ExitApp
 ; }
 
 DetectHiddenWindows true
@@ -37,7 +37,7 @@ $CapsLock::{
 
 $CapsLock Up::{
     global capslockDownTime
-    if A_PriorKey = "CapsLock" and A_TickCount - capslockDownTime < 200 {
+    if A_PriorKey = "CapsLock" and A_TickCount - capslockDownTime < 250 {
         Send "{Esc}"
     } else {
         Send "{LWin Down}{Space}{LWin Up}"
@@ -59,10 +59,30 @@ modtap := ModTapManager(Map(
     "l", { modKey: "RWin" }
 ), , false)
 
-$*LShift::modtap.onModKeyDown("LShift")
-$*LShift up::modtap.onModKeyUp("LShift", () => imeMgr.toggleIME())
-$*RShift::modtap.onModKeyDown("RShift")
-$*RShift up::modtap.onModKeyUp("RShift", () => imeMgr.toggleIME())
+$*LShift::{
+    if WinActive("ahk_class TeamsWebView") {
+        Send("{LShift down}")
+        return
+    }
+    return modtap.onModKeyDown("LShift")
+}
+
+$*LShift up::{
+    if WinActive("ahk_class TeamsWebView") {
+        Send("{LShift up}")
+        return
+    }
+    return modtap.onModKeyUp("LShift", () => imeMgr.toggleIME())
+}
+
+$*RShift::{
+    return modtap.onModKeyDown("RShift")
+}
+
+$*RShift up::{
+    return modtap.onModKeyUp("RShift", () => Send("{RWin Down}{Space}{RWin Up}"))
+}
+
 $*LControl::modtap.onModKeyDown("LControl")
 $*LControl up::modtap.onModKeyUp("LControl")
 $*RControl::modtap.onModKeyDown("RControl")

@@ -154,7 +154,7 @@ set listchars=tab:>-,trail:.,extends:>,precedes:<
 " set list
 "set scrolloff=3
 set sidescrolloff=5
-set cursorline                  " highlight current line
+" set cursorline                  " highlight current line
 set showmatch                   " blink matched pairs
 set matchtime=0
 autocmd FileType html,xml setlocal matchpairs+=<:>

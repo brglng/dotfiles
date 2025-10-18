@@ -4,7 +4,7 @@ module completions {
     [ "always" "never" "auto" ]
   }
 
-  #  Pixi [version 0.54.2] - Developer Workflow and Environment Management for Multi-Platform, Language-Agnostic Workspaces.  Pixi is a versatile developer workflow tool designed to streamline the management of your workspace's dependencies, tasks, and environments. Built on top of the Conda ecosystem, Pixi offers seamless integration with the PyPI ecosystem.  Basic Usage:     Initialize pixi for a workspace:     $ pixi init     $ pixi add python numpy pytest      Run a task:     $ pixi task add test 'pytest -s'     $ pixi run test  Found a Bug or Have a Feature Request? Open an issue at: https://github.com/prefix-dev/pixi/issues  Need Help? Ask a question on the Prefix Discord server: https://discord.gg/kKV8ZxyzY4  For more information, see the documentation at: https://pixi.sh 
+  #  Pixi [version 0.56.0] - Developer Workflow and Environment Management for Multi-Platform, Language-Agnostic Workspaces.  Pixi is a versatile developer workflow tool designed to streamline the management of your workspace's dependencies, tasks, and environments. Built on top of the Conda ecosystem, Pixi offers seamless integration with the PyPI ecosystem.  Basic Usage:     Initialize pixi for a workspace:     $ pixi init     $ pixi add python numpy pytest      Run a task:     $ pixi task add test 'pytest -s'     $ pixi run test  Found a Bug or Have a Feature Request? Open an issue at: https://github.com/prefix-dev/pixi/issues  Need Help? Ask a question on the Prefix Discord server: https://discord.gg/kKV8ZxyzY4  For more information, see the documentation at: https://pixi.sh 
   export extern pixi [
     --help(-h)                # Display help information
     --verbose(-v)             # Increase logging verbosity (-v for warnings, -vv for info, -vvv for debug, -vvvv for trace)
@@ -456,7 +456,7 @@ module completions {
     --tag: string             # The git tag
     --rev: string             # The git revision
     --subdir: string          # The subdirectory within the git repository
-    --path: string            # The path to the local directory
+    --path: string            # The path to the local package
     --environment(-e): string # Specifies the environment that the dependencies need to be added to
     --expose: string          # Add one or more mapping which describe which executables are exposed. The syntax is `exposed_name=executable_name`, so for example `python3.10=python`. Alternatively, you can input only an executable_name and `executable_name=executable_name` is assumed
     --auth-file: path         # Path to the file containing the authentication token
@@ -508,7 +508,7 @@ module completions {
     --tag: string             # The git tag
     --rev: string             # The git revision
     --subdir: string          # The subdirectory within the git repository
-    --path: string            # The path to the local directory
+    --path: string            # The path to the local package
     --channel(-c): string     # The channels to consider as a name or a url. Multiple channels can be specified by using this field multiple times
     --platform(-p): string    # The platform to install the packages for
     --environment(-e): string # Ensures that all packages will be installed in the same environment
@@ -2053,7 +2053,7 @@ module completions {
     [ "always" "never" "auto" ]
   }
 
-  # Commands to manage project environments
+  # Commands to manage workspace environments
   export extern "pixi workspace environment" [
     --manifest-path: path     # The path to `pixi.toml`, `pyproject.toml`, or the workspace directory
     --help(-h)                # Display help information
@@ -2511,7 +2511,7 @@ module completions {
   export extern "pixi workspace help version patch" [
   ]
 
-  # Commands to manage project environments
+  # Commands to manage workspace environments
   export extern "pixi workspace help environment" [
   ]
 
@@ -2887,7 +2887,7 @@ module completions {
   export extern "pixi help workspace version patch" [
   ]
 
-  # Commands to manage project environments
+  # Commands to manage workspace environments
   export extern "pixi help workspace environment" [
   ]
 
