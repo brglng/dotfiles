@@ -37,7 +37,7 @@ $CapsLock::{
 
 $CapsLock Up::{
     global capslockDownTime
-    if A_PriorKey = "CapsLock" and A_TickCount - capslockDownTime < 250 {
+    if A_PriorKey = "CapsLock" and A_TickCount - capslockDownTime < 200 {
         Send "{Esc}"
     } else {
         Send "{LWin Down}{Space}{LWin Up}"
@@ -80,7 +80,7 @@ $*RShift::{
 }
 
 $*RShift up::{
-    return modtap.onModKeyUp("RShift", () => Send("{RWin Down}{Space}{RWin Up}"))
+    return modtap.onModKeyUp("RShift", () => Send("{LWin Down}{Space}{LWin Up}"))
 }
 
 $*LControl::modtap.onModKeyDown("LControl")

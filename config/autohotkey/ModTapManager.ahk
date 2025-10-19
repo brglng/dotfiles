@@ -103,19 +103,21 @@ class ModTapManager {
         if this.modMap[modKey].downTime == 0 {
             this.modMap[modKey].downTime := A_TickCount
         }
-        this.sendKey(modKey, "down", "onModKeyDown(" modKey ")")
         Critical "Off"
     }
 
     onModKeyUp(modKey, onTap := "") {
         Critical "On"
-        if A_PriorKey = modKey
-            and A_TickCount - this.modMap[modKey].downTime < this.modMap[modKey].tapTimeout
-            and onTap != ""
-        {
-            onTap()
+        if A_PriorKey = modKey and onTap != "" {
+            if A_TickCount - this.modMap[modKey].downTime < this.modMap[modKey].tapTimeout {
+                onTap()
+            } else {
+                if not GetKeyState(modKey) {
+                    this.sendKey(modKey, "down", "onModKeyDown(" modKey ")")
+                }
+                this.sendKey(modKey, "up", "onModKeyUp(" modKey ")")
+            }
         }
-        this.sendKey(modKey, "up", "onModKeyUp(" modKey ")")
         this.modMap[modKey].downTime := 0
         this.modMap[modKey].upTime := A_TickCount
         Critical "Off"
@@ -132,6 +134,11 @@ class ModTapManager {
 
     onExtraMod(extraMod) {
         Critical "On"
+        for modKey, modProps in this.modMap {
+            if GetKeyState(modKey, "P") {
+                this.sendKey(modKey, "down", "onExtraMod(" extraMod ") 0")
+            }
+        }
         for otherExtraMod, otherExtraModProps in this.extraModMap {
             if otherExtraMod != extraMod {
                 otherExtraModProps.repeating := false
@@ -216,6 +223,11 @@ class ModTapManager {
             }
         }
 
+        for modKey, modProps in this.modMap {
+            if GetKeyState(modKey, "P") {
+                this.sendKey(modKey, "down", "onOtherKey(" extraMod ") 0")
+            }
+        }
         for extraMod, extraModProps in this.extraModMap {
             extraModProps.repeating := false
         }

@@ -34,7 +34,7 @@ class IMEManager {
         ; this.switchToIME(targetIME)
         try {
             tempFilePath := A_Temp . "\im-control-output-" . A_TickCount . ".txt"
-            RunWait("im-control.exe " . this.prevIME . " --if " . this.EN_US . " --else " . this.EN_US . " -o " . tempFilePath, , "Hide")
+            RunWait("im-control.exe " . this.prevIME . " --if " . this.EN_US . " --else " . this.EN_US . " -k open -o " . tempFilePath, , "Hide")
             output := FileRead(tempFilePath)
             output := RTrim(output, "`r`n")
             FileDelete(tempFilePath)
