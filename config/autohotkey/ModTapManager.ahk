@@ -166,6 +166,7 @@ class ModTapManager {
                 this.logQueue("onExtraMod(" extraMod ") 7")
             } else if A_PriorKey = extraMod and A_TickCount - this.extraModMap[extraMod].downTime > this.extraModMap[extraMod].repeatTimeout {
                 this.keyQueue.push(extraMod)
+                this.logQueue("onExtraMod(" extraMod ") 8")
                 this.extraModMap[extraMod].repeating := true
             }
             
@@ -175,6 +176,7 @@ class ModTapManager {
 
     onExtraModUp(extraMod, allowedOtherExtraMods) {
         Critical "On"
+        this.logQueue("onExtraModUp(" extraMod ") 0")
         if this.keyQueue.length > 0 and this.keyQueue[this.keyQueue.length] == extraMod {
             modsSent := []
             for key in this.keyQueue {
@@ -220,6 +222,7 @@ class ModTapManager {
         Critical "On"
         if not this.otherKeyMap.has(otherKey) {
             this.otherKeyMap[otherKey] := {
+                handleUpEvent: true,
                 repeating: false
             }
         }
@@ -263,15 +266,18 @@ class ModTapManager {
             this.sendKey(otherKey, , "onOtherKey(" otherKey ") 6")
             this.keyQueue := []
             this.otherKeyMap[otherKey].repeating := true
+            this.otherKeyMap[otherKey].handleUpEvent := false
         } else if this.isAnyKeyQueued(allowedExtraMods) {
             this.keyQueue.push(otherKey)
             this.logQueue("onOtherKey(" otherKey ") 7")
+            this.otherKeyMap[otherKey].handleUpEvent := true
         } else {
             for key in this.keyQueue {
                 this.sendKey(key, , "onOtherKey(" otherKey ") 8")
             }
             this.keyQueue := []
             this.sendKey(otherKey, , "onOtherKey(" otherKey ") 9")
+            this.otherKeyMap[otherKey].handleUpEvent := false
         }
         Critical "Off"
     }
@@ -280,35 +286,39 @@ class ModTapManager {
         Critical "On"
         if not this.otherKeyMap.has(otherKey) {
             this.otherKeyMap[otherKey] := {
+                handleUpEvent: false,
                 repeating: false
             }
         }
-        modsSent := []
-        for key in this.keyQueue {
-            if ArrayHasElement(allowedExtraMods, key) {
-                modKey := this.extraModMap[key].modKey
-                if GetKeyState(key, "P") {
-                    if not GetKeyState(modKey) {
-                        this.sendKey(modKey, "down", "onOtherKeyUp(" otherKey ") 1")
-                        modsSent.push(modKey)
+        if this.otherKeyMap[otherKey].handleUpEvent {
+            modsSent := []
+            for key in this.keyQueue {
+                if ArrayHasElement(allowedExtraMods, key) {
+                    modKey := this.extraModMap[key].modKey
+                    if GetKeyState(key, "P") {
+                        if not GetKeyState(modKey) {
+                            this.sendKey(modKey, "down", "onOtherKeyUp(" otherKey ") 1")
+                            modsSent.push(modKey)
+                        } else {
+                            this.sendKey(key, , "onOtherKeyUp(" otherKey ") 2")
+                        }
                     } else {
-                        this.sendKey(key, , "onOtherKeyUp(" otherKey ") 2")
+                        this.sendKey(key, , "onOtherKeyUp(" otherKey ") 3")
                     }
                 } else {
-                    this.sendKey(key, , "onOtherKeyUp(" otherKey ") 3")
+                    this.sendKey(key, , "onOtherKeyUp(" otherKey ") 4")
                 }
-            } else {
-                this.sendKey(key, , "onOtherKeyUp(" otherKey ") 4")
             }
-        }
-        while modsSent.length > 0 {
-            modKey := modsSent.pop()
-            if not GetKeyState(this.modMap[modKey].extraMod, "P") {
-                this.sendKey(modKey, "up", "onOtherKeyUp(" otherKey ") 5")
+            while modsSent.length > 0 {
+                modKey := modsSent.pop()
+                if not GetKeyState(this.modMap[modKey].extraMod, "P") {
+                    this.sendKey(modKey, "up", "onOtherKeyUp(" otherKey ") 5")
+                }
             }
+            this.keyQueue := []
         }
-        this.keyQueue := []
         this.otherKeyMap[otherKey].repeating := false
+        this.otherKeyMap[otherKey].handleUpEvent := true
         Critical "Off"
     }
 }
