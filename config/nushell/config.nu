@@ -315,7 +315,7 @@ $env.config = {
                 }
 
                 if $found_project {
-                    let new_env = pixi shell-hook --json | from json | get environment_variables | default {}
+                    let new_env = pixi shell-hook --no-progress --json | from json | get environment_variables | default {}
                     let project_name = if "PIXI_PROJECT_NAME" in $new_env {
                         $new_env.PIXI_PROJECT_NAME
                     } else {
@@ -999,7 +999,7 @@ def --wrapped 'px remove'   [ ...args ] { ^pixi global remove --environment defa
 def --wrapped 'px search'   [ ...args ] { ^pixi search ...$args }
 def --wrapped 'px unexpose' [ ...args ] { ^pixi global expose remove ...$args }
 def --wrapped 'px unlink'   [ ...args ] { ^pixi global expose remove ...$args }
-def --wrapped 'px update'   [ ...args ] { ^pixi global update ...$args }
+def --wrapped 'px update'   [ ...args ] { ^pixi global update ...$args; ^pixi self-update }
 
 def 'vpn on' [] {
     sudo systemctl start openconnect.service

@@ -17,7 +17,7 @@ local function activate(project_root)
     project_root = project_root or find_project_root()
     if project_root then
         vim.notify("Activating Pixi environment at " .. project_root, vim.log.levels.INFO)
-        vim.system({ "pixi", "shell-hook", "--json" }, { cwd = project_root, text = true }, function(obj)
+        vim.system({ "pixi", "shell-hook", "--no-progress", "--json" }, { cwd = project_root, text = true }, function(obj)
             vim.schedule(function()
                 if obj.code == 0 then
                     if obj.stdout and obj.stdout ~= "" then

@@ -1,5 +1,6 @@
 return {
     "nvim-neorg/neorg",
+    cond = vim.fn.has("win32") == 0,
     dependencies = {
         "3rd/image.nvim",
         -- "folke/snacks.nvim",
@@ -46,7 +47,7 @@ return {
         }
     },
     config = function(_, opts)
-        if vim.g.neovide or vim.fn.has("win32") then
+        if vim.g.neovide or vim.fn.has("win32") == 1 then
             opts.load["core.defaults"].config.disable = {
                 "core.integrations.image",
                 "core.latex.renderer"

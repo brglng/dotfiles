@@ -50,7 +50,7 @@ $*CapsLock::return
 imeMgr := IMEManager()
 
 modtap := ModTapManager(Map(
-    "Space", { modKey: "LShift", repeatTimeout: 0 },
+    "Space", { modKey: "LShift", repeatTimeout: 50 },
     "f", { modKey: "LControl" },
     "d", { modKey: "LAlt" },
     "s", { modKey: "LWin" },

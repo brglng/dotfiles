@@ -19,19 +19,7 @@ class IMEManager {
         }
     }
     
-    switchToIME(key) {
-        Run("im-control.exe " key " -k open", , "Hide")
-    }
-    
     toggleIME() {
-        ; currentIME := this.getCurrentIME()
-        ; if (currentIME == this.EN_US) {
-        ;     targetIME := this.prevIME
-        ; } else {
-        ;     this.prevIME := currentIME
-        ;     targetIME := this.EN_US
-        ; }
-        ; this.switchToIME(targetIME)
         try {
             tempFilePath := A_Temp . "\im-control-output-" . A_TickCount . ".txt"
             RunWait("im-control.exe " . this.prevIME . " --if " . this.EN_US . " --else " . this.EN_US . " -k open -o " . tempFilePath, , "Hide")

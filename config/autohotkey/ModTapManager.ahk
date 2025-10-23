@@ -29,7 +29,7 @@ class ModTapManager {
             this.extraModMap[extraMod] := {
                 modKey: extraModProps.modKey,
                 modTapTimeout: extraModProps.hasOwnProp("modTapTimeout") ? extraModProps.modTapTimeout : 200,
-                repeatTimeout: extraModProps.hasOwnProp("repeatTimeout") ? extraModProps.repeatTimeout : 400,
+                repeatTimeout: extraModProps.hasOwnProp("repeatTimeout") ? extraModProps.repeatTimeout : 100,
                 downTime: 0,
                 upTime: 0,
                 repeating: false,
@@ -139,7 +139,7 @@ class ModTapManager {
 
         if isAnyModDown {
             this.sendKey(extraMod, , "onExtraMod(" extraMod ") 1")
-        } else if this.extraModMap[extraMod].repeating or (this.keyQueue.length > 0 and this.keyQueue[this.keyQueue.length] = extraMod) {
+        } else if this.extraModMap[extraMod].repeating {
             for key in this.keyQueue {
                 if ArrayHasElement(allowedOtherExtraMods, key) {
                     modKey := this.extraModMap[key].modKey
@@ -164,10 +164,9 @@ class ModTapManager {
                 this.extraModMap[extraMod].downTime := A_TickCount
                 this.keyQueue.push(extraMod)
                 this.logQueue("onExtraMod(" extraMod ") 7")
-            } else if A_PriorKey = extraMod and A_TickCount - this.extraModMap[extraMod].downTime > this.extraModMap[extraMod].repeatTimeout {
-                this.keyQueue.push(extraMod)
-                this.logQueue("onExtraMod(" extraMod ") 8")
-                this.extraModMap[extraMod].repeating := true
+                if A_PriorKey = extraMod and A_TickCount - this.extraModMap[extraMod].upTime < this.extraModMap[extraMod].repeatTimeout {
+                    this.extraModMap[extraMod].repeating := true
+                }
             }
             
         }
