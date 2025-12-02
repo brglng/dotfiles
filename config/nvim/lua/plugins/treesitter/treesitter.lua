@@ -1,9 +1,6 @@
 return {
     "nvim-treesitter/nvim-treesitter",
     -- branch = "main",
-    dependencies = {
-        { "nushell/tree-sitter-nu", lazy = false },
-    },
     build = ":TSUpdate",
     lazy = false,
     -- cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },

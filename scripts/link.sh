@@ -71,11 +71,9 @@ EOF
 }
 
 function link_common() {
-    link "$PWD/clang-format"                    "$HOME/.clang-format"
     link "$PWD/config/powerline"                "$HOME/.config/powerline"
     link "$PWD/config/starship.toml"            "$HOME/.config/starship.toml"
     link "$PWD/config/wezterm"                  "$HOME/.config/wezterm"
-    link "$PWD/cgdb/cgdbrc"                     "$HOME/.cgdb/cgdbrc"
     update_gitconfig
     link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
     link "$PWD/tmux.conf"                       "$HOME/.tmux.conf"
@@ -85,7 +83,7 @@ function link_common() {
     link "$PWD/zimrc"                           "$HOME/.zimrc"
     link "$PWD/zprofile"                        "$HOME/.zprofile"
     update_zshrc
-    update_alacritty_toml
+    # update_alacritty_toml
     # link "$PWD/config/alacritty/colors"         "$HOME/config/.alacritty/colors"
     update_kitty_conf
 }
@@ -99,6 +97,7 @@ function link_linux() {
 
 function link_mac() {
     update_bashrc                               "$HOME/.bash_profile"
+    mkdir -p "$HOME/Library/Application Support/nushell"
     link "$PWD/config/nushell/env.nu"           "$HOME/Library/Application Support/nushell/env.nu"
     link "$PWD/config/nushell/config.nu"        "$HOME/Library/Application Support/nushell/config.nu"
     link_common

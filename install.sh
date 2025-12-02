@@ -14,7 +14,7 @@ install_yum() {
 install_apt() {
     # sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
-    sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git xsel python3-pip libreadline-dev
+    sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git xsel python3-pip libreadline-dev vim
 }
 
 install_pacman() {
@@ -81,9 +81,9 @@ function install_mac() {
       	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake clang-format git-lfs reattach-to-user-namespace
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake clang-format git-lfs reattach-to-user-namespace wezterm@nightly font-maple-mono-nf-cn
 
-    brew install --cask macvim
+    brew install --cask macvim neovide mactex
 
     brew tap daipeihust/tap
     brew install im-select
@@ -123,14 +123,9 @@ if ! infocmp xterm-256color-italic &> /dev/null; then
     tic -x terminfo/xterm-256color-italic.terminfo
 fi
 
-scripts/setup_python3.sh --no-setup-proxy
-
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git rustup-init go cmake zsh tmux nushell starship z.lua fzf ripgrep-all fd vim colordiff nvm dasht luajit luarocks direnv
-
-    brew tap rsteube/homebrew-tap
-    brew install rsteube/tap/carapace
+    brew install git rustup-init go node npm cmake zsh tmux nushell starship z.lua fzf ripgrep-all fd vim nvm luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli
 fi
 
 mkdir -p ~/.terminfo
@@ -143,31 +138,25 @@ else
 fi
 [[ -s "$HOME/.cargo/env" ]] && source $HOME/.cargo/env
 rustup update
-rustup component add rls rust-analysis rust-src rustfmt
+rustup component add rust-analysis rust-src rustfmt
 
 if type brew &>/dev/null; then
-    if ! brew ls --versions universal-ctags &> /dev/null; then
-        brew tap universal-ctags/universal-ctags
-        brew install --HEAD universal-ctags
-    fi
-    if ! brew ls --versions neovim &> /dev/null; then
-        brew install -s neovim
-    fi
-
     scripts/linuxbrew_post_install.sh
 fi
 
-if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
-    source /usr/share/nvm/init-nvm.sh
-else
-    export NVM_DIR="$HOME/.nvm"
-    [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-    [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-fi
+pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv
 
-nvm install node npm
-nvm use node
-nvm alias default $(nvm current)
+# if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
+#     source /usr/share/nvm/init-nvm.sh
+# else
+#     export NVM_DIR="$HOME/.nvm"
+#     [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+#     [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# fi
+
+# nvm install node npm
+# nvm use node
+# nvm alias default $(nvm current)
 
 # gem install --user-install neovim
 npm install -g neovim

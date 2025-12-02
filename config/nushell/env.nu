@@ -97,6 +97,12 @@ $env.NU_PLUGIN_DIRS = [
 # To load from a custom file you can use:
 # source ($nu.default-config-dir | path join 'custom.nu')
 
+if (uname | get operating-system) == 'Darwin' {
+    $env.PATH = (/usr/libexec/path_helper | parse 'PATH="{path}";{_}').path
+} else if (uname | get operating-system) == 'Linux' {
+    $env.PATH = (^/bin/bash -l -c 'echo $PATH')
+}
+
 $env.PATH = ($env.PATH | split row (char esep) | where {|p| $p != ""})
 
 def --env path_prepend [path: string] {
