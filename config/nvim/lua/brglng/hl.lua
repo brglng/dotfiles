@@ -88,9 +88,9 @@ end
 ---@alias HighlightTransformTableFunction function: HighlightTransformTable?
 ---@param tbl table<string, HighlightTransformTable | HighlightTransformTableFunction> | function: HighlightTransformTable
 function M.transform_tbl(tbl)
-    local function cb(is_autocmd)
+    local function cb(tbl, colors_name, background)
         if type(tbl) == "function" then
-            tbl = tbl(is_autocmd)
+            tbl = tbl(colors_name, background)
         end
         if not tbl then
             return
@@ -118,22 +118,26 @@ function M.transform_tbl(tbl)
             end
         end
     end
-    cb(false)
+    cb(tbl, vim.g.colors_name, vim.o.background)
     vim.api.nvim_create_autocmd("ColorScheme", {
         pattern = "*",
-        callback = function () cb(true) end,
+        callback = function(ev)
+            return cb(tbl, ev.match, vim.o.background)
+        end,
     })
     vim.api.nvim_create_autocmd("OptionSet", {
         pattern = "background",
-        callback = function () cb(true) end,
+        callback = function()
+            return cb(tbl, vim.g.colors_name, vim.o.background)
+        end,
     })
 end
 
-function M.modify_colorscheme(colorscheme, tbl)
-    M.transform_tbl(function(is_autocmd)
-        if vim.g.colors_name == colorscheme or not is_autocmd then
+function M.modify_colorscheme(colorscheme_pattern, tbl)
+    M.transform_tbl(function(colors_name, background)
+        if colors_name and colors_name:match(colorscheme_pattern) then
             if type(tbl) == "function" then
-                tbl = tbl()
+                tbl = tbl(background)
             end
             return tbl
         end

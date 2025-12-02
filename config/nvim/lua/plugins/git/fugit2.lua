@@ -1,5 +1,6 @@
 return {
     "SuperBo/fugit2.nvim",
+    enabled = false,
     cond = function() return vim.uv.os_uname().sysname ~= "Windows_NT" end,
     dependencies = {
         'MunifTanjim/nui.nvim',

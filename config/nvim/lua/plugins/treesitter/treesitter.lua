@@ -2,11 +2,11 @@ return {
     "nvim-treesitter/nvim-treesitter",
     -- branch = "main",
     dependencies = {
-        { "nushell/tree-sitter-nu", lazy = true, ft = 'nu' },
+        { "nushell/tree-sitter-nu", lazy = false },
     },
     build = ":TSUpdate",
     lazy = false,
-    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+    -- cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     opts = {
         ensure_installed = {
             "bash",
@@ -62,6 +62,9 @@ return {
         highlight = {
             enable = true,
             -- additional_vim_regex_highlighting = false
+        },
+        incremental_selection = {
+            enable = true,
         },
         indent = {
             enable = true,

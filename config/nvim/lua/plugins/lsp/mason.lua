@@ -6,12 +6,29 @@ return {
             ui = (function()
                 if not vim.g.neovide then
                     return {
-                        border = "rounded",
+                        border = {
+                            {"╭", "Normal"},
+                            {"─", "Normal"},
+                            {"╮", "Normal"},
+                            {"│", "Normal"},
+                            {"╯", "Normal"},
+                            {"─", "Normal"},
+                            {"╰", "Normal"},
+                            {"│", "Normal"},
+                        },
                         backdrop = 100
                     }
                 end
             end)(),
-        }
+        },
+        config = function(_, opts)
+            require("mason").setup(opts)
+            if not vim.g.neovide then
+                require("brglng.hl").transform_tbl {
+                    MasonNormal = { link = "Normal" }
+                }
+            end
+        end
     },
     {
         "WhoIsSethDaniel/mason-tool-installer.nvim",

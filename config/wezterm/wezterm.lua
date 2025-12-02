@@ -112,8 +112,15 @@ config.window_padding = {
 local function tab_title(tab_info, max_width)
     local pane = tab_info.active_pane
     local title = tostring(tab_info.tab_index + 1) .. ' '
-    if pane.domain_name ~= config.default_domain then
-        title = title .. pane.domain_name .. ":"
+    if pane.domain_name == config.default_domain then
+    elseif pane.domain_name == 'SSH·WSL·Ubuntu·Mux' then
+        title = title .. "WSL·"
+    elseif pane.domain_name == 'SSH·Ubuntu·Mux' then
+        title = title .. "WSL (No Mux):"
+    elseif pane.domain_name == 'WSL·Ubuntu' then
+        title = title .. "WSL (local)·"
+    else
+        title = title .. pane.domain_name .. "·"
     end
     -- if the tab title is explicitly set, take that
     if tab_info.tab_title and #tab_info.tab_title > 0 then
@@ -123,14 +130,13 @@ local function tab_title(tab_info, max_width)
         -- in that tab
         title = title .. tab_info.active_pane.title
     end
-    title = title:gsub(":", " > ")
     return title:sub(1, math.max(max_width - 4, 0))
 end
 
 wezterm.on(
     'format-tab-title',
     function(tab, tabs, panes, config, hover, max_width)
-        local title = tab_title(tab, max_width)
+        local title = tab_title(tab, max_width):gsub("·", " ❯ ")
         if tab.is_active then
             return {
                 { Foreground = { Color = config.colors.tab_bar.active_tab.bg_color } },
@@ -342,12 +348,12 @@ config.unix_domains = {
 
 config.ssh_domains = {
     {
-        name = 'SSH:VPS:Mux',
+        name = 'SSH·VPS·Mux',
         remote_address = '3.112.158.72',
         username = 'ubuntu',
     },
     {
-        name = 'SSH:VPS',
+        name = 'SSH·VPS',
         remote_address = '3.112.158.72',
         username = 'ubuntu',
         multiplexing = 'None'
@@ -360,12 +366,12 @@ config.launch_menu = {}
 
 if WINDOWS then
     table.insert(config.ssh_domains, {
-        name = 'SSH:WSL:Ubuntu:Mux',
+        name = 'SSH·WSL·Ubuntu·Mux',
         remote_address = 'localhost',
         username = 'brglng',
     })
     table.insert(config.ssh_domains, {
-        name = 'SSH:WSL:Ubuntu',
+        name = 'SSH·WSL·Ubuntu',
         remote_address = 'localhost',
         username = 'brglng',
         multiplexing = 'None',
@@ -386,7 +392,7 @@ if WINDOWS then
     })
     table.insert(config.launch_menu, {
         label = 'SSH ❯ WSL ❯ Ubuntu ❯ Mux',
-        domain = { DomainName = 'SSH:WSL:Ubuntu:Mux' }
+        domain = { DomainName = 'SSH·WSL·Ubuntu·Mux' }
     })
     table.insert(config.launch_menu, {
         label = 'Mux ❯ PowerShell',
@@ -456,7 +462,7 @@ if WINDOWS then
     })
     table.insert(config.launch_menu, {
         label = 'SSH ❯ WSL ❯ Ubuntu',
-        domain = { DomainName = 'SSH:WSL:Ubuntu' }
+        domain = { DomainName = 'SSH·WSL·Ubuntu' }
     })
     table.insert(config.launch_menu, {
         label = 'PowerShell',
@@ -523,20 +529,38 @@ if WINDOWS then
     })
     table.insert(config.launch_menu, {
         label = 'WSL ❯ Ubuntu',
-        domain = { DomainName = 'WSL:Ubuntu' },
+        domain = { DomainName = 'WSL·Ubuntu' },
     })
 
     config.default_prog = { "nu.exe", "-i", "-l" }
 else
     config.default_domain = 'Mux'
-    if #wezterm.glob(wezterm.home_dir .. '/.pixi/bin/nu') ~= 0 then
-        config.default_prog = { wezterm.home_dir .. '/.pixi/bin/nu', '-l', '-i'  }
-    elseif #wezterm.glob(wezterm.home_dir .. '/.pixi/bin/zsh') ~= 0 then
-        config.default_prog = { wezterm.home_dir .. '/.pixi/bin/zsh', '-l', '-i'  }
-    elseif MAC then
-        config.default_prog = { '/bin/zsh', '-l', '-i' }
+    if MAC then
+        if #wezterm.glob('/opt/homebrew/bin/nu') ~= 0 then
+            config.default_prog = { '/opt/homebrew/bin/nu', '-l', '-i'  }
+        elseif #wezterm.glob('/opt/homebrew/bin/zsh') ~= 0 then
+            config.default_prog = { '/opt/homebrew/bin/zsh', '-l', '-i'  }
+        elseif #wezterm.glob(wezterm.home_dir .. '/.pixi/bin/nu') ~= 0 then
+            config.default_prog = { wezterm.home_dir .. '/.pixi/bin/nu', '-l', '-i'  }
+        elseif #wezterm.glob(wezterm.home_dir ..  '/.pixi/bin/zsh') ~= 0 then
+            config.default_prog = { wezterm.home_dir ..  '/.pixi/bin/zsh', '-l', '-i'  }
+        else
+            config.default_prog = { '/bin/zsh', '-l', '-i' }
+        end
     else
-        config.default_prog = { '/usr/bin/bash', '-l', '-i' }
+        if #wezterm.glob(wezterm.home_dir .. '/.linuxbrew/bin/nu') ~= 0 then
+            config.default_prog = { wezterm.home_dir .. '/.linuxbrew/bin/nu', '-l', '-i'  }
+        elseif #wezterm.glob('/home/linuxbrew/.linuxbrew/bin/nu') ~= 0 then
+            config.default_prog = { '/home/linuxbrew/.linuxbrew/bin/nu', '-l', '-i'  }
+        elseif #wezterm.glob(wezterm.home_dir .. '/.linuxbrew/bin/zsh') ~= 0 then
+            config.default_prog = { wezterm.home_dir .. '/.linuxbrew/bin/zsh', '-l', '-i'  }
+        elseif #wezterm.glob('/home/linuxbrew/.linuxbrew/bin/zsh') ~= 0 then
+            config.default_prog = { '/home/linuxbrew/.linuxbrew/bin/zsh', '-l', '-i'  }
+        elseif #wezterm.glob('/usr/bin/zsh') ~= 0 then
+            config.default_prog = { '/usr/bin/zsh', '-l', '-i'  }
+        else
+            config.default_prog = { '/usr/bin/bash', '-l', '-i' }
+        end
     end
     table.insert(config.launch_menu, {
         label = 'Mux',
@@ -550,11 +574,11 @@ end
 
 table.insert(config.launch_menu, {
     label = 'SSH ❯ VPS ❯ Mux',
-    domain = { DomainName = 'SSH:VPS:Mux' }
+    domain = { DomainName = 'SSH·VPS·Mux' }
 })
 table.insert(config.launch_menu, {
     label = 'SSH ❯ VPS',
-    domain = { DomainName = 'SSH:VPS' }
+    domain = { DomainName = 'SSH·VPS' }
 })
 
 -- config.initial_rows = 40

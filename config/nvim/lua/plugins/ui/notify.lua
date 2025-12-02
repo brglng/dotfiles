@@ -136,7 +136,7 @@ return {
                 NotifyINFOBody = { fg = "Normal.fg", bg = "Normal.bg" },
                 NotifyDEBUGBody = { fg = "Normal.fg", bg = "Normal.bg" },
                 NotifyTRACEBody = { fg = "Normal.fg", bg = "Normal.bg" },
-                NotifyProgressBar = { fg = "DiagnosticOk.fg", bg = "NormalFloat.bg,Normal.bg" },
+                NotifyProgressBar = { fg = "DiagnosticOk.fg", bg = "Normal.bg" },
             }
         end
 
@@ -167,7 +167,7 @@ return {
                 msg_data = {
                     token = token,
                     title = nil,
-                    msg = nil,
+                    msg = "",
                     percentage_start = nil,
                     percentage_end = nil,
                     notif_data = notif_data,
@@ -194,6 +194,9 @@ return {
             return msg_data
         end
 
+        --- @param percentage number
+        --- @param len integer
+        --- @return string
         local function draw_percentage(percentage, len)
             if not percentage then
                 -- return vim.fn["repeat"]("░", len)
@@ -201,8 +204,8 @@ return {
                 return ""
             end
             local left_count = math.floor(percentage / 100 * len)
-            local half
-            local right_count
+            local half --- @type string
+            local right_count --- @type integer
             if percentage / 100 * len - left_count < 0.5 then
                 half = ""
                 right_count = len - left_count
@@ -215,8 +218,18 @@ return {
             return vim.fn["repeat"]("━", left_count) .. half .. vim.fn["repeat"](" ", right_count)
         end
 
+        --- @class FormatMessageResult
+        --- @field msg string
+        --- @field percentage_start integer
+        --- @field percentage_end integer
+
+        --- @param title string
+        --- @param message string
+        --- @param percentage number
+        --- @param is_end boolean
+        --- @return FormatMessageResult
         local function format_message(title, message, percentage, is_end)
-            local percentage_start
+            local percentage_start --- @type integer
             if vim.g.neovide then
                 percentage_start = 2
             else
@@ -224,18 +237,23 @@ return {
             end
             if title ~= nil and vim.fn.strdisplaywidth(title) > 0 then
                 title = title .. " "
-                percentage_start = vim.fn.strdisplaywidth(title) + percentage_start
+                percentage_start = #title + percentage_start
             else
                 title = ""
             end
+            local percentage_str --- @type string
             if is_end then
-                percentage = ""
+                percentage_str = ""
                 message = message or "✔"
             else
-                percentage = draw_percentage(percentage, 20) .. " "
+                percentage_str = draw_percentage(percentage, 20) .. " "
                 message = message or ""
             end
-            return title .. percentage .. message, percentage_start, percentage_start + #percentage
+            return {
+                msg = title .. percentage_str .. message,
+                percentage_start = percentage_start,
+                percentage_end = percentage_start + #percentage_str - 1,
+            }
         end
 
         vim.api.nvim_create_autocmd("LspProgress", {
@@ -256,23 +274,27 @@ return {
                     end
                     msg_data.title = val.title
                 end
+                local format_result --- @type FormatMessageResult
                 if val.kind == "begin" then
-                    msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
+                    format_result = format_message(msg_data.title, val.message, val.percentage, false)
                 elseif val.kind == "report" then
                     if vim.uv.now() - notif_data.last_update_time < 300 then
                         return
                     end
-                    msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, false)
+                    format_result = format_message(msg_data.title, val.message, val.percentage, false)
                 elseif val.kind == "end" then
-                    msg_data.msg, msg_data.percentage_start, msg_data.percentage_end = format_message(msg_data.title, val.message, val.percentage, true)
+                    format_result = format_message(msg_data.title, val.message, val.percentage, true)
                     client_data.token_msg_data_tbl[params.token] = nil
                 else
                     return
                 end
+                msg_data.msg = format_result.msg
+                msg_data.percentage_start = format_result.percentage_start
+                msg_data.percentage_end = format_result.percentage_end
                 local msg = ""
                 local row = 0
                 for _, data in ipairs(notif_data.msg_data_list) do
-                    if data.msg ~= "" then
+                    if data.msg ~= nil and data.msg ~= "" then
                         if msg == "" then
                             msg = data.msg
                         else
@@ -292,7 +314,7 @@ return {
                         local base = require("notify.render.base")
                         local namespace = base.namespace()
                         for _, data in ipairs(notif_data.msg_data_list) do
-                            if data.percentage_end > data.percentage_start then
+                            if data.percentage_start ~= nil and data.percentage_end ~= nil and data.percentage_end > data.percentage_start then
                                 vim.api.nvim_buf_set_extmark(buf, namespace, data.row, data.percentage_start, {
                                     hl_group = "NotifyProgressBar",
                                     end_col = data.percentage_end,

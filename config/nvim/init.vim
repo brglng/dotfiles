@@ -277,6 +277,7 @@ silent! set pumblend=0
 " \   endif
 
 " set formatoptions+=a
+set formatoptions-=ro
 
 if executable('rg')
     let &grepprg = 'rg --vimgrep'

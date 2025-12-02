@@ -139,6 +139,9 @@ require("lazy").setup("plugins", {
         enabled = false,
     },
     performance = {
+        -- cache = {
+        --     enabled = false,
+        -- },
         rtp = {
             reset = false
         }
@@ -150,12 +153,26 @@ require("lazy").setup("plugins", {
     ui = (function()
         if not vim.g.neovide then
             return {
-                border = "rounded",
+                border = {
+                    {"╭", "Normal"},
+                    {"─", "Normal"},
+                    {"╮", "Normal"},
+                    {"│", "Normal"},
+                    {"╯", "Normal"},
+                    {"─", "Normal"},
+                    {"╰", "Normal"},
+                    {"│", "Normal"},
+                },
                 backdrop = 100
             }
         end
     end)(),
 })
+if not vim.g.neovide then
+    require("brglng.hl").transform_tbl {
+        LazyNormal = { link = "Normal" }
+    }
+end
 
 vim.cmd.colorscheme("catppuccin")
 

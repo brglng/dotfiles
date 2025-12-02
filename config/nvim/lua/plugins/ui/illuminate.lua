@@ -5,6 +5,7 @@ return {
     opts = {
         filetypes_denylist = {
             "neo-tree",
+            "neo-tree-popup",
             "TelescopePrompt",
             "qf",
             "trouble",

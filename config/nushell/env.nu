@@ -99,24 +99,6 @@ $env.NU_PLUGIN_DIRS = [
 
 $env.PATH = ($env.PATH | split row (char esep) | where {|p| $p != ""})
 
-# Don't know why Nushell does not respect the LIB and INCLUDE environment variables on Windows
-$env.LIB = ([
-    'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\lib\x64'
-    'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\lib\x64'
-    'C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64'
-    'C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\um\x64'
-] | str join ';')
-$env.INCLUDE = ([
-    'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include'
-    'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\ATLMFC\include'
-    'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include'
-    'C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt'
-    'C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\um'
-    'C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\shared'
-    'C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\winrt'
-    'C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\cppwinrt'
-] | str join ';')
-
 def --env path_prepend [path: string] {
     $env.PATH = ($env.PATH | where {|p| $p != $path} | prepend $path)
 }
@@ -151,25 +133,21 @@ if (which "/mnt/c/Windows/System32/cmd.exe" | length) > 0 {
     setup_wsl_env
 }
 
-if (uname | get operating-system) =~ "MS/Windows" {
-    path_prepend ([$env.LOCALAPPDATA, "pixi", "bin"] | path join)
-}
-
 path_prepend ([$env.HOME, ".pixi", "bin"] | path join)
 path_prepend ([$env.HOME, ".cargo", "bin"] | path join)
 path_prepend ([$env.HOME, ".local", "bin" ] | path join)
 
-mkdir ($nu.data-dir | path join "vendor/autoload")
+mkdir ($nu.data-dir | path join "autoload")
 
-starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
-pixi completion --shell nushell | save -f $"($nu.data-dir)/vendor/autoload/pixi-completions.nu"
+starship init nu | save -f ($nu.data-dir | path join "autoload/starship.nu")
+pixi completion --shell nushell | save -f $"($nu.data-dir)/autoload/pixi-completions.nu"
 
 $env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
 mkdir ~/.cache/carapace
 carapace _carapace nushell | save --force ~/.cache/carapace/init.nu
 
-# if (uname | get operating-system) =~ 'MS/Windows' and (which scoop | length) > 0 {
-#     luajit ([(scoop prefix z.lua), 'z.lua'] | path join) --init nushell | save -f "~/.cache/zlua.nu"
-# } else if (which brew | length) > 0 {
-#     luajit ([(brew --prefix), 'share/z.lua/z.lua'] | path join) --init nushell | save -f "~/.cache/zlua.nu"
-# }
+if (uname | get operating-system) =~ 'MS/Windows' and (which scoop | length) > 0 {
+    luajit ([(scoop prefix z.lua), 'z.lua'] | path join) --init nushell | save -f "~/.cache/zlua.nu"
+} else if (which brew | length) > 0 {
+    luajit ([(brew --prefix), 'share/z.lua/z.lua'] | path join) --init nushell | save -f "~/.cache/zlua.nu"
+}

@@ -7,7 +7,7 @@ return {
     { import = "plugins.formatter" },
     { import = "plugins.lint" },
     { import = "plugins.ai" },
-    { import = "plugins.editing" },
+    { import = "plugins.editor" },
     { import = "plugins.ui" },
     { import = "plugins.git" },
     { import = "plugins.dap" },

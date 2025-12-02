@@ -19,7 +19,7 @@ _cursor_bar() {
 zstyle ':zim:zmodule' use 'degit'
 zstyle ':zim:termtitle' hooks 'preexec' 'precmd'
 zstyle ':zim:termtitle:preexec' format '%1~:${${(A)=1}[1]}'
-zstyle ':zim:termtitle:precmd' format '%1~:zsh'
+zstyle ':zim:termtitle:precmd' format '%1~·zsh'
 
 precmd_functions+=(_cursor_bar)
 
@@ -73,8 +73,6 @@ setopt HIST_VERIFY              # Don't execute immediately upon history expansi
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd update_environment
 add-zsh-hook preexec update_environment
-
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 if type starship &>/dev/null; then
     eval "$(starship init zsh)"

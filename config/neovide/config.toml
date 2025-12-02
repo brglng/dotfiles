@@ -2,6 +2,7 @@ maximized = true
 tabs = false
 # no-multigrid = true
 # wsl = true
+# neovim-bin = "/home/brglng/.pixi/bin/nvim"
 
 [font]
 normal = ["Maple Mono NF CN", "Flog Symbols"]

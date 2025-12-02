@@ -1,8 +1,8 @@
 return {
     "goolord/alpha-nvim",
     enabled = true,
-    event = "VimEnter",
-    -- lazy = false,
+    -- event = "VimEnter",
+    lazy = false,
     dependencies = {
         "echasnovski/mini.icons",
         "nvim-lua/plenary.nvim"
@@ -526,7 +526,12 @@ return {
             pattern = "LazyVimStarted",
             callback = function()
                 require("alpha").redraw()
-                -- vim.cmd [[ AlphaRedraw ]]
+                vim.api.nvim_create_autocmd("OptionSet", {
+                    pattern = "background",
+                    callback = function()
+                        require("alpha").redraw()
+                    end
+                })
             end
         })
 

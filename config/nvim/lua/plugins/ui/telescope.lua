@@ -1,17 +1,21 @@
 return {
-    'nvim-telescope/telescope.nvim', branch = '0.1.x',
+    'nvim-telescope/telescope.nvim',
+    version = "*",
+    cond = true,
     lazy = false,
     dependencies = {
         'nvim-lua/plenary.nvim',
-        "nvim-telescope/telescope-ui-select.nvim",
+        { "nvim-telescope/telescope-ui-select.nvim", cond = true },
         "nvim-telescope/telescope-file-browser.nvim",
         'GustavoKatel/telescope-asynctasks.nvim',
-        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install' }
     },
     config = function()
-        local actions = require("telescope.actions")
         require('telescope').load_extension('asynctasks')
         require('telescope').load_extension('fzf')
+        require("telescope").load_extension("ui-select")
+
+        local actions = require("telescope.actions")
 
         require('telescope.pickers.layout_strategies').brglng_term = function(picker, columns, lines, layout_config)
             local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
@@ -297,8 +301,6 @@ return {
                 },
             }
         }
-
-        require("telescope").load_extension("ui-select")
 
         local brglng = require("brglng")
         if vim.g.neovide then

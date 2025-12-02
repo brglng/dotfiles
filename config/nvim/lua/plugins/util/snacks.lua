@@ -3,7 +3,8 @@ return {
     dependencies = {
         "echasnovski/mini.icons",
     },
-    event = "VeryLazy",
+    priority = 1000,
+    lazy = false,
     -- @type snacks.Config
     opts = {
         bigfile = {
@@ -25,7 +26,7 @@ return {
             },
         },
         input = {
-            enabled = false,
+            enabled = true,
         },
         statuscolumn = {
             enabled = false,

@@ -60,7 +60,7 @@ modtap := ModTapManager(Map(
 ), , false)
 
 $*LShift::{
-    if WinActive("ahk_class TeamsWebView") {
+    if WinActive("ahk_class TeamsWebView") or WinActive("ahk_class Outlook Host") {
         Send("{LShift down}")
         return
     }
@@ -68,7 +68,7 @@ $*LShift::{
 }
 
 $*LShift up::{
-    if WinActive("ahk_class TeamsWebView") {
+    if WinActive("ahk_class TeamsWebView") or WinActive("ahk_class Outlook Host") {
         Send("{LShift up}")
         return
     }
@@ -80,7 +80,7 @@ $*RShift::{
 }
 
 $*RShift up::{
-    return modtap.onModKeyUp("RShift", () => Send("{LWin Down}{Space}{LWin Up}"))
+    return modtap.onModKeyUp("RShift", () => Send("{RWin Down}{Space}{RWin Up}"))
 }
 
 $*LControl::modtap.onModKeyDown("LControl")

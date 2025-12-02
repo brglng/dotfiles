@@ -3,11 +3,11 @@ return {
     priority = 1000,
     config = function()
         local brglng = require("brglng")
-        brglng.hl.modify_colorscheme("melange", function(is_autocmd)
+        brglng.hl.modify_colorscheme("melange", function()
             local tbl = {
                 FloatBorder = {
                     fg = { "blend", fg = "Normal.fg", bg = "Normal.bg", opacity = 0.6 },
-                    bg = "NormalFloat.bg"
+                    bg = "NormalFloat.bg,Normal.bg"
                 },
                 LspInlayHint = {
                     fg = "NonText.fg",

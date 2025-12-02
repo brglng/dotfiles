@@ -84,8 +84,6 @@ fi
 
 set show-all-if-ambiguous on
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
 if type starship &>/dev/null; then
     eval "$(starship init bash)"
 fi

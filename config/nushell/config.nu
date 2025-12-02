@@ -353,7 +353,7 @@ $env.config = {
         pre_execution: [{
             let last_cmd = (commandline)
             if $last_cmd != "" {
-                print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename):($last_cmd)(ansi st)"
+                print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename)·($last_cmd)(ansi st)"
             } else {
                 print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename)(ansi st)"
             }

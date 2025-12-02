@@ -11,7 +11,7 @@ class IMEManager {
     getCurrentIME() {
         tempFilePath := A_Temp . "\im-control-output-" . A_TickCount . ".txt"
         try {
-            RunWait("im-control.exe -o " . tempFilePath, , "Hide")
+            RunWait("im-controlw.exe -o " . tempFilePath, , "Hide")
             output := FileRead(tempFilePath)
             output := RTrim(output, "`r`n")
             FileDelete(tempFilePath)
