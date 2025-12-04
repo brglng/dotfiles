@@ -1,7 +1,7 @@
 return {
     {
         "williamboman/mason.nvim",
-        -- event = "VeryLazy",
+        event = "VeryLazy",
         opts = {
             ui = (function()
                 if not vim.g.neovide then
@@ -54,7 +54,6 @@ return {
                 "dockerfile-language-server",
                 -- "emmylua_ls",
                 "gh-actions-language-server",
-                "gradle_ls",
                 "html-lsp",
                 "json-lsp",
                 "lemminx",

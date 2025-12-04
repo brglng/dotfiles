@@ -71,21 +71,22 @@ EOF
 }
 
 function link_common() {
+    link "$PWD/config/neovide"                  "$HOME/.config/neovide"
+    link "$PWD/config/nvim"                     "$HOME/.config/nvim"
+    link "$PWD/config/nvim"                     "$HOME/.vim"
     link "$PWD/config/powerline"                "$HOME/.config/powerline"
     link "$PWD/config/starship.toml"            "$HOME/.config/starship.toml"
     link "$PWD/config/wezterm"                  "$HOME/.config/wezterm"
-    update_gitconfig
     link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
     link "$PWD/tmux.conf"                       "$HOME/.tmux.conf"
     link "$PWD/vimrc"                           "$HOME/.vimrc"
-    link "$PWD/config/nvim"                     "$HOME/.vim"
-    link "$PWD/config/nvim"                     "$HOME/.config/nvim"
     link "$PWD/zimrc"                           "$HOME/.zimrc"
     link "$PWD/zprofile"                        "$HOME/.zprofile"
-    update_zshrc
     # update_alacritty_toml
     # link "$PWD/config/alacritty/colors"         "$HOME/config/.alacritty/colors"
+    update_gitconfig
     update_kitty_conf
+    update_zshrc
 }
 
 function link_linux() {
