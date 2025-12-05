@@ -314,12 +314,13 @@ return {
                         local base = require("notify.render.base")
                         local namespace = base.namespace()
                         for _, data in ipairs(notif_data.msg_data_list) do
-                            if data.percentage_start ~= nil and data.percentage_end ~= nil and data.percentage_end > data.percentage_start then
-                                vim.api.nvim_buf_set_extmark(buf, namespace, data.row, data.percentage_start, {
-                                    hl_group = "NotifyProgressBar",
-                                    end_col = data.percentage_end,
-                                    priority = 50,
-                                })
+                            local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, data.row, data.percentage_start, {
+                                hl_group = "NotifyProgressBar",
+                                end_col = data.percentage_end,
+                                priority = 50,
+                            })
+                            if not ok then
+                                vim.notify("Failed to set extmark for progress bar: row = " .. tostring(data.row) .. ", col = " .. tostring(data.percentage_start) .. ", end_col = " .. tostring(data.percentage_end), vim.log.levels.ERROR)
                             end
                         end
                     end

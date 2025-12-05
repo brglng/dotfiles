@@ -187,8 +187,6 @@ if [[ "$UNAME_S" = "Linux" ]]; then
     sudo chmod g-w /home/linuxbrew/.linuxbrew/share/zsh/site-functions /home/linuxbrew/.linuxbrew/share/zsh
 fi
 
-zsh -i
-
 if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/opt/fzf/install" ]]; then
     zsh -c "$HOMEBREW_PREFIX/opt/fzf/install --all --no-update-rc --no-fish"
 fi
