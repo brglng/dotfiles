@@ -6,8 +6,8 @@ return {
         "MunifTanjim/nui.nvim",
         "rcarriga/nvim-notify",
     },
-    -- event = "VeryLazy",
-    lazy = false,
+    event = "VeryLazy",
+    lazy = true,
     opts = {
         cmdline = {
             enabled = true,
