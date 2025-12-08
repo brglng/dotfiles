@@ -46,15 +46,17 @@ return {
 
             vim.api.nvim_buf_set_var(bufnr, "__notify_title__", win_title)
 
-            local max_width = 0
-            for _, line in ipairs(notif.message) do
-                if vim.g.neovide then
-                    max_width = math.max(max_width, vim.fn.strdisplaywidth(line, 2))
-                else
-                    max_width = math.max(max_width, vim.fn.strdisplaywidth(line, 1))
-                end
-            end
-            max_width = math.max(max_width, 50)
+            -- vim.api.nvim_set_option_value("winhighlight", "Normal:NormalFloat", { win = vim.api.nvim_get_current_win() })
+
+            -- local max_width = 0
+            -- for _, line in ipairs(notif.message) do
+            --     if vim.g.neovide then
+            --         max_width = math.max(max_width, vim.fn.strdisplaywidth(line, 2))
+            --     else
+            --         max_width = math.max(max_width, vim.fn.strdisplaywidth(line, 1))
+            --     end
+            -- end
+            -- max_width = math.max(max_width, 50)
 
             --- @type table<string>
             local message = {}
@@ -65,9 +67,9 @@ return {
                 else
                     m = " " .. msg .. " "
                 end
-                while vim.fn.strdisplaywidth(m) < max_width do
-                    m = m .. " "
-                end
+                -- while vim.fn.strdisplaywidth(m) < max_width do
+                --     m = m .. " "
+                -- end
                 table.insert(message, m)
             end
 
@@ -322,7 +324,7 @@ return {
                         if msg == "" then
                             msg = data.msg
                         else
-                            msg = msg .. "\n" .. (data.msg or "")
+                            msg = msg .. "\n" .. data.msg
                         end
                     end
                 end
@@ -337,15 +339,17 @@ return {
                         local namespace = base.namespace()
                         local row = 0
                         for _, data in ipairs(notif_data.msg_data_list) do
-                            local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, data.percentage_start, {
-                                hl_group = "NotifyProgressBar",
-                                end_col = data.percentage_end,
-                                priority = 50,
-                            })
-                            if not ok then
-                                vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(data.percentage_start) .. ", end_col = " .. tostring(data.percentage_end), vim.log.levels.ERROR)
+                            if data.msg ~= nil and data.msg ~= "" then
+                                local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, data.percentage_start, {
+                                    hl_group = "NotifyProgressBar",
+                                    end_col = data.percentage_end,
+                                    priority = 50,
+                                })
+                                if not ok then
+                                    vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(data.percentage_start) .. ", end_col = " .. tostring(data.percentage_end), vim.log.levels.ERROR)
+                                end
+                                row = row + 1
                             end
-                            row = row + 1
                         end
                     end
                 })
