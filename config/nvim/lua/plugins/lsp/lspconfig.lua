@@ -125,14 +125,20 @@ return {
             clangd = {
                 enabled = true,
                 cmd = {
-                    "clangd" .. (vim.fn.has("win32") and ".cmd" or ""),
-                    "--background-index",
-                    "--header-insertion=never",
-                    "--clang-tidy",
-                    "--suggest-missing-includes",
-                    "--completion-style=detailed",
-                    "--function-arg-placeholders",
-                    "--fallback-style=llvm"
+                    "clangd" .. (function()
+                        if vim.fn.has("win32") == 1 then
+                            return ".cmd"
+                        else
+                            return ""
+                        end
+                    end)(),
+                    -- "--background-index",
+                    -- "--header-insertion=never",
+                    -- "--clang-tidy",
+                    -- "--suggest-missing-includes",
+                    -- "--completion-style=detailed",
+                    -- "--function-arg-placeholders",
+                    -- "--fallback-style=llvm"
                 },
                 capabilities = {
                     textDocument = {
