@@ -2,7 +2,8 @@ return {
     'nvim-telescope/telescope.nvim',
     version = "*",
     cond = true,
-    lazy = false,
+    -- lazy = false,
+    event = "VeryLazy",
     dependencies = {
         'nvim-lua/plenary.nvim',
         { "nvim-telescope/telescope-ui-select.nvim", cond = true },
