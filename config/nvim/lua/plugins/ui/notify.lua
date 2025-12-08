@@ -142,8 +142,30 @@ return {
 
         -- LSP Progress Notifications
 
+        --- @class MessageData
+        --- @field token string
+        --- @field title string?
+        --- @field msg string
+        --- @field percentage_start integer?
+        --- @field percentage_end integer?
+        --- @field notif_data ClientNotificationData
+        --- @field notification notify.Record?
+        --- @field last_update_time integer
+
+        --- @class ClientNotificationData
+        --- @field last_update_time integer
+        --- @field msg_data_list MessageData[]
+        --- @field notification notify.Record?
+
+        --- @class ClientData
+        --- @field current_notif_data ClientNotificationData
+        --- @field token_msg_data_tbl table<string, MessageData>
+
+        --- @type table<integer, ClientData>
         local client_tbl = {}
 
+        --- @param client_id integer
+        --- @return ClientData
         local function get_client_data(client_id)
             if not client_tbl[client_id] then
                 client_tbl[client_id] = {
@@ -158,9 +180,12 @@ return {
             return client_tbl[client_id]
         end
 
+        --- @param client_data ClientData
+        --- @param token string
+        --- @return MessageData
         local function get_msg_data(client_data, token)
             local notif_data = client_data.current_notif_data
-            local msg_data
+            local msg_data --- @type MessageData
             if client_data.token_msg_data_tbl[token] then
                 msg_data = client_data.token_msg_data_tbl[token]
             else
@@ -177,14 +202,14 @@ return {
                 table.insert(notif_data.msg_data_list, msg_data)
                 client_data.token_msg_data_tbl[token] = msg_data
             end
-            local tokens_to_remove = {}
+            local tokens_to_remove = {} --- @type string[]
             for t, data in pairs(client_data.token_msg_data_tbl) do
                 if vim.uv.now() - data.last_update_time >= 5000 then
                     client_data.token_msg_data_tbl[t] = nil
                     table.insert(tokens_to_remove, t)
                 end
             end
-            local new_msg_data_list = {}
+            local new_msg_data_list = {} --- @type MessageData[]
             for _, data in ipairs(notif_data.msg_data_list) do
                 if not vim.list_contains(tokens_to_remove, data.token) and vim.uv.now() - data.last_update_time < 5000 then
                     table.insert(new_msg_data_list, data)
