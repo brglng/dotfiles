@@ -6,7 +6,7 @@ source "scripts/util.sh"
 BOLD=$(tput bold)
 SGR0=$(tput sgr0)
 
-install_yum() {
+install_dnf() {
     echo "Not implemented yet!"
     exit -1
 }
@@ -19,7 +19,7 @@ install_apt() {
 
 install_pacman() {
     sudo pacman -Sy
-    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm go cmake ruby rubygems zsh nushell starship tmux fzf ripgrep-all vim neovim colordiff nvm universal-ctags-git z.lua
+    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup cmake ninja zsh nushell starship tmux fzf ripgrep-all fd vim neovim node npm universal-ctags z.lua luajit luarocks direnv carapace pixi imagemagick tree-sitter-cli
 }
 
 install_linux() {
@@ -30,8 +30,8 @@ install_linux() {
     case $distname in
       	Ubuntu) install_apt ;;
       	Debian) install_apt ;;
-      	Fedora) install_yum ;;
-      	CentOS) install_yum ;;
+      	Fedora) install_dnf ;;
+      	CentOS) install_dnf ;;
       	Arch) install_pacman ;;
         *)
             if [[ "$distname" = "" ]]; then
@@ -125,7 +125,7 @@ fi
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git git-lfs subversion rustup-init go node npm cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim nvm luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli
+    brew install git git-lfs subversion rustup-init node npm cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli
 fi
 
 mkdir -p ~/.terminfo
