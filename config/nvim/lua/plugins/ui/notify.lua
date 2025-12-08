@@ -317,7 +317,6 @@ return {
                 msg_data.percentage_start = format_result.percentage_start
                 msg_data.percentage_end = format_result.percentage_end
                 local msg = ""
-                local row = 0
                 for _, data in ipairs(notif_data.msg_data_list) do
                     if data.msg ~= nil and data.msg ~= "" then
                         if msg == "" then
@@ -325,8 +324,6 @@ return {
                         else
                             msg = msg .. "\n" .. (data.msg or "")
                         end
-                        data.row = row
-                        row = row + 1
                     end
                 end
                 notif_data.notification = vim.notify(msg, vim.log.levels.INFO, {
@@ -338,15 +335,17 @@ return {
                         opts.render(buf, notif, highlights, config)
                         local base = require("notify.render.base")
                         local namespace = base.namespace()
+                        local row = 0
                         for _, data in ipairs(notif_data.msg_data_list) do
-                            local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, data.row, data.percentage_start, {
+                            local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, data.percentage_start, {
                                 hl_group = "NotifyProgressBar",
                                 end_col = data.percentage_end,
                                 priority = 50,
                             })
                             if not ok then
-                                vim.notify("Failed to set extmark for progress bar: row = " .. tostring(data.row) .. ", col = " .. tostring(data.percentage_start) .. ", end_col = " .. tostring(data.percentage_end), vim.log.levels.ERROR)
+                                vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(data.percentage_start) .. ", end_col = " .. tostring(data.percentage_end), vim.log.levels.ERROR)
                             end
+                            row = row + 1
                         end
                     end
                 })
