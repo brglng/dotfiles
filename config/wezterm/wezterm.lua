@@ -278,7 +278,7 @@ config.enable_kitty_graphics = true
 if WINDOWS then
     config.allow_win32_input_mode = true
 else
-    config.enable_kitty_keyboard = true
+    -- config.enable_kitty_keyboard = true
 end
 
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 5000 }
