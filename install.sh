@@ -14,7 +14,7 @@ install_yum() {
 install_apt() {
     # sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
-    sudo apt-get install -y subversion build-essential g++ gdb automake autoconf libtool pkg-config make git xsel python3-pip libreadline-dev vim
+    sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make xsel libreadline-dev
 }
 
 install_pacman() {
@@ -81,7 +81,7 @@ function install_mac() {
       	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake clang-format git-lfs reattach-to-user-namespace wezterm@nightly font-maple-mono-nf-cn
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake ninja git git-lfs reattach-to-user-namespace wezterm@nightly font-maple-mono-nf-cn
 
     brew install --cask macvim neovide mactex
 
@@ -125,7 +125,7 @@ fi
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git rustup-init go node npm cmake zsh tmux nushell starship z.lua fzf ripgrep-all fd vim nvm luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli
+    brew install git git-lfs subversion rustup-init go node npm cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim nvm luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli
 fi
 
 mkdir -p ~/.terminfo
