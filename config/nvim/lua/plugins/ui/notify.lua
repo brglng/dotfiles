@@ -335,22 +335,22 @@ return {
                     hide_from_history = (val.kind == "report"),
                     render = function(buf, notif, highlights, config)
                         opts.render(buf, notif, highlights, config)
-                        local base = require("notify.render.base")
-                        local namespace = base.namespace()
-                        local row = 0
-                        for _, data in ipairs(notif_data.msg_data_list) do
-                            if data.msg ~= nil and data.msg ~= "" then
-                                local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, data.percentage_start, {
-                                    hl_group = "NotifyProgressBar",
-                                    end_col = data.percentage_end,
-                                    priority = 50,
-                                })
-                                if not ok then
-                                    vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(data.percentage_start) .. ", end_col = " .. tostring(data.percentage_end), vim.log.levels.ERROR)
-                                end
-                                row = row + 1
-                            end
-                        end
+                        -- local base = require("notify.render.base")
+                        -- local namespace = base.namespace()
+                        -- local row = 0
+                        -- for _, data in ipairs(notif_data.msg_data_list) do
+                        --     if data.msg ~= nil and data.msg ~= "" then
+                        --         local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, data.percentage_start, {
+                        --             hl_group = "NotifyProgressBar",
+                        --             end_col = data.percentage_end,
+                        --             priority = 50,
+                        --         })
+                        --         if not ok then
+                        --             vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(data.percentage_start) .. ", end_col = " .. tostring(data.percentage_end), vim.log.levels.ERROR)
+                        --         end
+                        --         row = row + 1
+                        --     end
+                        -- end
                     end
                 })
                 notif_data.last_update_time = vim.uv.now()
