@@ -45,9 +45,9 @@ return {
             ["core.dirman"] = {
                 config = {
                     workspaces = {
-                        notes = "~/Syncthing/notes"
+                        mynorg = "~/github/mynorg"
                     },
-                    default_workspace = "notes"
+                    default_workspace = "mynorg"
                 }
             },
             ["core.esupports.metagen"] = {
