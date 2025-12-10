@@ -17,8 +17,8 @@ function M.start_debugging()
         end
     end
     dap.configurations[vim.o.filetype] = config
-    dap.continue()
     require("dapui").open()
+    dap.continue()
 end
 
 return M
