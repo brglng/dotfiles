@@ -18,7 +18,7 @@ return {
             --     end
             -- end)(),
         },
-        { dir = vim.fs.normalize("~/Syncthing/projects/neorg-auto-summary") }
+        { dir = vim.fs.normalize("~/github/neorg-auto-summary") }
     },
     -- lazy = true, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
     version = "*", -- Pin Neorg to the latest stable release
