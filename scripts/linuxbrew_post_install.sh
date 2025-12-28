@@ -35,6 +35,7 @@ ln -fs $HOMEBREW_PREFIX/bin/lua             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/luac            ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/luajit          ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/luarocks        ~/.local/bin/
+mkdir -p ~/.local/include
 ln -fs $HOMEBREW_PREFIX/include/lua*        ~/.local/include/
 ln -fs $HOMEBREW_PREFIX/bin/luarocks-admin  ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/nnn             ~/.local/bin/
