@@ -145,7 +145,7 @@ if [[ $UNAME_S = "Linux" ]]; then
     ln -sf /home/linuxbrew/.linuxbrew/bin/pixi $HOME/.local/bin
 fi
 
-pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn
+pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn numba
 
 if [[ $UNAME_S = "Linux" ]]; then
     pixi global install -e default pytorch torchvision torchaudio cuda cudnn
