@@ -141,7 +141,13 @@ if type brew &>/dev/null; then
     scripts/linuxbrew_post_install.sh
 fi
 
-pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn pytorch
+pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn 
+
+if [[ $UNAME_S = "Linux" ]]; then
+    pixi install pytorch torchvision torchaudio cuda cudnn
+else
+    pixi install pytorch torchvision torchaudio
+fi
 
 # if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
 #     source /usr/share/nvm/init-nvm.sh
