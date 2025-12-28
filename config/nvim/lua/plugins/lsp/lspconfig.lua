@@ -197,7 +197,10 @@ return {
                 enabled = true
             },
             pyrefly = {
-                enabled = true,
+                enabled = false,
+            },
+            pyright = {
+                enabled = false,
             },
             ruff = {
                 enabled = true,
@@ -222,7 +225,7 @@ return {
                 enabled = true
             },
             ty = {
-                enabled = true,
+                enabled = false,
                 settings = {
                     ty = {
                         importStrategy = "fromEnvironment",
