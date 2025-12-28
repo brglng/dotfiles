@@ -141,7 +141,11 @@ if type brew &>/dev/null; then
     scripts/linuxbrew_post_install.sh
 fi
 
-pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn 
+if [[ $UNAME_S = "Linux" ]]; then
+    ln -sf /home/linuxbrew/.linuxbrew/bin/pixi $HOME/.local/bin
+fi
+
+pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn
 
 if [[ $UNAME_S = "Linux" ]]; then
     pixi install pytorch torchvision torchaudio cuda cudnn
