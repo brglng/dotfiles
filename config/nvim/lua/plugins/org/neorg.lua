@@ -1,8 +1,10 @@
 return {
     "nvim-neorg/neorg",
     dependencies = {
-        "3rd/image.nvim",
+        -- "3rd/image.nvim",
         -- "folke/snacks.nvim",
+        "jbyuki/nabla.nvim",
+        "nvim-treesitter/nvim-treesitter",
         { "nvim-neorg/neorg-telescope" },
         { "benlubas/neorg-conceal-wrap" },
         { "benlubas/neorg-interim-ls" },
@@ -130,13 +132,13 @@ return {
                 "core.latex.renderer"
             }
         else
-            opts.load["core.integrations.image"] = {}
-            opts.load["core.latex.renderer"] = {
-                config = {
-                    conceal = true,
-                    render_on_enter = true,
-                }
-            }
+            -- opts.load["core.integrations.image"] = {}
+            -- opts.load["core.latex.renderer"] = {
+            --     config = {
+            --         conceal = true,
+            --         render_on_enter = true,
+            --     }
+            -- }
         end
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "norg",

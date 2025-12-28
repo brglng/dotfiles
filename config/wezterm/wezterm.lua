@@ -271,7 +271,7 @@ else
     config.font_size = 14.0
 end
 
-config.enable_kitty_graphics = true
+config.enable_kitty_graphics = false
 
 -- Keys
 

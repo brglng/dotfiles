@@ -1,6 +1,6 @@
 return {
     "nvim-treesitter/nvim-treesitter",
-    -- branch = "main",
+    branch = "master",
     build = ":TSUpdate",
     event = { "BufReadPost", "BufWritePost", "BufNewFile"  },
     lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
@@ -83,33 +83,32 @@ return {
     config = function(_, opts)
         require("nvim-treesitter.configs").setup(opts)
 
-    --     enable if switch to main branch
-    --     require("nvim-treesitter").install(opts.ensure_installed)
-    --     if opts.auto_install then
-    --         vim.api.nvim_create_autocmd('FileType', {
-    --             group = vim.api.nvim_create_augroup('treesitter.setup', {}),
-    --             callback = function(args)
-    --                 local buf = args.buf
-    --                 local filetype = args.match
-    --
-    --                 -- you need some mechanism to avoid running on buffers that do not
-    --                 -- correspond to a language (like oil.nvim buffers), this implementation
-    --                 -- checks if a parser exists for the current language
-    --                 local language = vim.treesitter.language.get_lang(filetype) or filetype
-    --                 if vim.treesitter.language.add(language) then
-    --                     vim.wo.foldmethod = 'expr'
-    --                     vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-    --
-    --                     if opts.highlight.enable then
-    --                         vim.treesitter.start(buf, language)
-    --                     end
-    --
-    --                     if opts.indent.enable then
-    --                         vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-    --                     end
-    --                 end
-    --             end,
-    --         })
-    --     end
+        -- require("nvim-treesitter").install(opts.ensure_installed)
+        -- if opts.auto_install then
+        --     vim.api.nvim_create_autocmd('FileType', {
+        --         group = vim.api.nvim_create_augroup('treesitter.setup', {}),
+        --         callback = function(args)
+        --             local buf = args.buf
+        --             local filetype = args.match
+        --
+        --             -- you need some mechanism to avoid running on buffers that do not
+        --             -- correspond to a language (like oil.nvim buffers), this implementation
+        --             -- checks if a parser exists for the current language
+        --             local language = vim.treesitter.language.get_lang(filetype) or filetype
+        --             if vim.treesitter.language.add(language) then
+        --                 vim.wo.foldmethod = 'expr'
+        --                 vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        --
+        --                 if opts.highlight.enable then
+        --                     vim.treesitter.start(buf, language)
+        --                 end
+        --
+        --                 if opts.indent.enable then
+        --                     vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        --                 end
+        --             end
+        --         end,
+        --     })
+        -- end
     end
 }
