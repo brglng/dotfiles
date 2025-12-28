@@ -148,9 +148,9 @@ fi
 pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn
 
 if [[ $UNAME_S = "Linux" ]]; then
-    pixi install pytorch torchvision torchaudio cuda cudnn
+    pixi global install -e default pytorch torchvision torchaudio cuda cudnn
 else
-    pixi install pytorch torchvision torchaudio
+    pixi global install -e default install pytorch torchvision torchaudio
 fi
 
 # if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
