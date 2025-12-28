@@ -122,7 +122,7 @@ fi
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git git-lfs subversion rustup-init node npm cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli
+    brew install git git-lfs subversion rustup-init nvm cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli
 fi
 
 mkdir -p ~/.terminfo
@@ -153,17 +153,17 @@ else
     pixi global install -e default install pytorch torchvision torchaudio
 fi
 
-# if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
-#     source /usr/share/nvm/init-nvm.sh
-# else
-#     export NVM_DIR="$HOME/.nvm"
-#     [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-#     [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-# fi
+if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
+    source /usr/share/nvm/init-nvm.sh
+else
+    export NVM_DIR="$HOME/.nvm"
+    [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+    [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+fi
 
-# nvm install node npm
-# nvm use node
-# nvm alias default $(nvm current)
+nvm install node npm
+nvm use node
+nvm alias default $(nvm current)
 
 # gem install --user-install neovim
 npm install -g neovim
