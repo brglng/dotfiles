@@ -120,6 +120,8 @@ if ! infocmp xterm-256color-italic &> /dev/null; then
     tic -x terminfo/xterm-256color-italic.terminfo
 fi
 
+pwd
+
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
     brew install git git-lfs subversion rustup-init node npm cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli
