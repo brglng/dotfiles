@@ -68,10 +68,6 @@ install_linux() {
         sudo -H -u linuxbrew mkdir -p /home/linuxbrew/.linuxbrew/etc
         sudo -H -u linuxbrew ln -fs /etc/localtime /home/linuxbrew/.linuxbrew/etc/localtime
         #sudo -H -u linuxbrew /home/linuxbrew/.linuxbrew/opt/glibc/bin/localedef -i zh_CN -f UTF-8 zh_CN.UTF-8
-
-        if ! brew ls --versions llvm &> /dev/null; then
-            brew install llvm
-        fi
     fi
 }
 
