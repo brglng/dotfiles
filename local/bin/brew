@@ -24,7 +24,7 @@ case $1 in
         fi
         ;;
     which)
-        exec which "$@"
+        exec which $*
         ;;
     doctor) ;&
     install) ;&
