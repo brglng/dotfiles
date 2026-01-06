@@ -4,7 +4,7 @@ if [[ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     exit 1
 fi
 cd /home/linuxbrew
-eval /home/linuxbrew/.linuxbrew/bin/brew shellenv > /dev/null
+eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) > /dev/null
 
 case $1 in
     doctor) ;&

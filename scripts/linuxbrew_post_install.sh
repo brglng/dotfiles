@@ -50,6 +50,7 @@ ln -fs $HOMEBREW_PREFIX/bin/rustup-init     ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/scan-build      ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/scan-view       ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/sqlite3         ~/.local/bin/
+ln -fs $HOMEBREW_PREFIX/bin/starship        ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/tig             ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/tree-sitter     ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/tmux            ~/.local/bin/
