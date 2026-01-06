@@ -5,6 +5,6 @@ return {
         vim.g.loaded_matchit = 1
     end,
     config = function()
-        vim.g.matchup_matchparen_offscreen = { method = "popup" }
+        -- vim.g.matchup_matchparen_offscreen = { method = "popup" }
     end,
 }

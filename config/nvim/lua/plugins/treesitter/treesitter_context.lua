@@ -3,6 +3,6 @@ return {
     dependencies = "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     opts = {
-        max_lines = 1
+        -- max_lines = 1
     }
 }
