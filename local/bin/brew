@@ -18,14 +18,23 @@ case $1 in
         sudo -H --preserve-env=http_proxy --preserve-env=https_proxy --preserve-env=no_proxy --preserve-env=HTTP_PROXY --preserve-env=HTTPS_PROXY --preserve-env=NO_PROXY -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
         ;;
     expose)
+        if [[ "$2" = "" ]]; then
+            echo "$0: error: no command specified to expose."
+            exit 1
+        fi
         if [[ -x $HOMEBREW_PREFIX/bin/$2  ]]; then
             ln -fs $HOMEBREW_PREFIX/bin/$2 ~/.local/bin/$2
+            echo "$0: linked $HOMEBREW_PREFIX/bin/$2 to ~/.local/bin/$2"
         else
             echo "$0: error: $HOMEBREW_PREFIX/bin/$2 does not exist or is not executable."
             exit 1
         fi
         ;;
     unexpose)
+        if [[ "$2" = "" ]]; then
+            echo "$0: error: no command specified to unexpose."
+            exit 1
+        fi
         if [[ -x ~/.local/bin/$2 ]]; then
             rm -f ~/.local/bin/$2 && \
             echo "$0: removed ~/.local/bin/$2"
