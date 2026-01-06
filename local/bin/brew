@@ -25,7 +25,7 @@ case $1 in
         ;;
     which)
         shift
-        exec which $*
+        exec which "$@"
         ;;
     doctor) ;&
     install) ;&
