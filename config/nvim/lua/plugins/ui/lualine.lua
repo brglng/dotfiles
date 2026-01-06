@@ -76,8 +76,12 @@ return {
             },
             lualine_x = {
                 {
-                    require("noice").api.status.command.get,
-                    cond = require("noice").api.status.command.has,
+                    function()
+                        return require("noice").api.status.command.get
+                    end,
+                    cond = function()
+                        return require("noice").api.status.command.has
+                    end
                 },
                 'encoding',
                 {

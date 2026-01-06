@@ -87,7 +87,7 @@ return {
         },
         servers = {
             basedpyright = {
-                enabled = true,
+                enabled = false,
                 settings = {
                     basedpyright = {
                         analysis = {
@@ -148,13 +148,13 @@ return {
                 }
             },
             emmylua_ls = {
-                enabled = false,
+                enabled = true,
             },
             jsonls = {
                 enabled = true,
             },
             lua_ls = {
-                enabled = true,
+                enabled = false,
                 settings = {
                     Lua = {
                         completion = {
@@ -225,11 +225,28 @@ return {
                 enabled = true
             },
             ty = {
-                enabled = false,
+                enabled = true,
                 settings = {
                     ty = {
-                        importStrategy = "fromEnvironment",
-                    }
+                        configuration = {
+                            environment = {
+                                python = vim.env.HOME .. "/.pixi/envs/default/bin/python"
+                            },
+                            -- src = {
+                            --     include = {
+                            --         vim.env.HOME .. "/.pixi/envs/default/lib/python3.13",
+                            --         vim.env.HOME .. "/.pixi/envs/default/lib/python3.13/site-packages",
+                            --         vim.env.HOME .. "/.pixi/envs/default/lib/python3.13/site-packages/torch",
+                            --     }
+                            -- }
+                        },
+                        -- importStrategy = "fromEnvironment",
+                        diagnosticMode = "workspace",
+                        experimental = {
+                            rename = true,
+                            autoImport = true,
+                        },
+                    },
                 }
             },
             vimls = {

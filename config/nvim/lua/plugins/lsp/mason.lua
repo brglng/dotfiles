@@ -38,7 +38,7 @@ return {
         },
         opts = {
             ensure_installed = {
-                "basedpyright",
+                -- "basedpyright",
                 "bash-language-server",
                 "clangd",
                 "clang-format",
@@ -52,12 +52,12 @@ return {
                 "dhall-lsp",
                 "docker-compose-language-service",
                 "dockerfile-language-server",
-                -- "emmylua_ls",
+                "emmylua_ls",
                 "gh-actions-language-server",
                 "html-lsp",
                 "json-lsp",
                 "lemminx",
-                "lua-language-server",
+                -- "lua-language-server",
                 "marksman",
                 "matlab-language-server",
                 "nickel-lang-lsp",
@@ -70,7 +70,7 @@ return {
                 "rust-analyzer",
                 "stylua",
                 "texlab",
-                -- "ty",
+                "ty",
                 "typescript-language-server",
                 "vim-language-server",
                 "yaml-language-server"

@@ -174,7 +174,7 @@ if not vim.g.neovide then
     }
 end
 
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("rose-pine")
 
 require("brglng.pixi").setup()
 

@@ -2,8 +2,8 @@ return {
     "rcarriga/nvim-notify",
     enabled = true,
     cond = true,
-    -- event = "VeryLazy",
-    lazy = false,
+    event = "VeryLazy",
+    -- lazy = false,
     opts = {
         on_open = function(win)
             local win_border
@@ -31,6 +31,11 @@ return {
                 })
             end
         end,
+
+        --- @param buf integer
+        --- @param notif notify.Record
+        --- @param highlights notify.Highlights
+        --- @param config notify.Config
         render = function(bufnr, notif, highlights, config)
             local base = require("notify.render.base")
             local namespace = base.namespace()
@@ -38,9 +43,7 @@ return {
 
             local win_title = { { " " .. notif.icon .. " ", highlights.icon } }
 
-            if type(title) == "string" and notif.duplicates then
-                table.insert(win_title, { string.format(" %s x%d ", title, #notif.duplicates), highlights.title })
-            elseif type(title) == "string" and #title > 0 then
+            if type(title) == "string" and #title > 0 then
                 table.insert(win_title, { title .. " ", highlights.title })
             end
 
@@ -58,7 +61,7 @@ return {
             -- end
             -- max_width = math.max(max_width, 50)
 
-            --- @type table<string>
+            --- @type string[]
             local message = {}
             for _, msg in ipairs(notif.message) do
                 local m
@@ -188,7 +191,7 @@ return {
         local function get_msg_data(client_data, token)
             local notif_data = client_data.current_notif_data
             local msg_data --- @type MessageData
-            if client_data.token_msg_data_tbl[token] then
+            if client_data.token_msg_data_tbl[token] ~= nil then
                 msg_data = client_data.token_msg_data_tbl[token]
             else
                 msg_data = {
@@ -318,41 +321,61 @@ return {
                 msg_data.msg = format_result.msg
                 msg_data.percentage_start = format_result.percentage_start
                 msg_data.percentage_end = format_result.percentage_end
+
+                --- @type string
                 local msg = ""
                 for _, data in ipairs(notif_data.msg_data_list) do
-                    if data.msg ~= nil and data.msg ~= "" then
-                        if msg == "" then
-                            msg = data.msg
-                        else
-                            msg = msg .. "\n" .. data.msg
+                    if type(data.msg) == "string" and data.msg ~= "" then
+                        if msg ~= "" then
+                            msg = msg .. "\n"
                         end
+                        msg = msg .. data.msg
                     end
                 end
+
                 notif_data.notification = vim.notify(msg, vim.log.levels.INFO, {
-                    title = vim.lsp.get_client_by_id(client_id).name,
+                    title = (function()
+                        local client = vim.lsp.get_client_by_id(client_id)
+                        if client then
+                            return client.name
+                        else
+                            return "LSP"
+                        end
+                    end)(),
+
                     timeout = 5000,
+
                     replace = notif_data.notification,
+
                     hide_from_history = (val.kind == "report"),
+
+                    --- @param buf integer
+                    --- @param notif notify.Record
+                    --- @param highlights notify.Highlights
+                    --- @param config notify.Config
                     render = function(buf, notif, highlights, config)
                         opts.render(buf, notif, highlights, config)
-                        -- local base = require("notify.render.base")
-                        -- local namespace = base.namespace()
-                        -- local row = 0
-                        -- for _, data in ipairs(notif_data.msg_data_list) do
-                        --     if data.msg ~= nil and data.msg ~= "" then
-                        --         local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, data.percentage_start, {
-                        --             hl_group = "NotifyProgressBar",
-                        --             end_col = data.percentage_end,
-                        --             priority = 50,
-                        --         })
-                        --         if not ok then
-                        --             vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(data.percentage_start) .. ", end_col = " .. tostring(data.percentage_end), vim.log.levels.ERROR)
-                        --         end
-                        --         row = row + 1
-                        --     end
-                        -- end
+                        local base = require("notify.render.base")
+                        local namespace = base.namespace()
+                        local row = 0
+                        for _, data in ipairs(notif.message) do
+                            local found_start, found_end = data:find("[━╸]+")
+                            if found_start and found_end then
+                                -- set extmark for progress bar
+                                local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, found_start - 1, {
+                                    hl_group = "NotifyProgressBar",
+                                    end_col = found_end,
+                                    priority = 50,
+                                })
+                                if not ok then
+                                    vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(found_start - 1) .. ", end_col = " .. tostring(found_end), vim.log.levels.ERROR)
+                                end
+                            end
+                            row = row + 1
+                        end
                     end
                 })
+
                 notif_data.last_update_time = vim.uv.now()
             end
         })
