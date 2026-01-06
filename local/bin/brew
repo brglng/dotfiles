@@ -18,10 +18,10 @@ case $1 in
         sudo -H --preserve-env=http_proxy --preserve-env=https_proxy --preserve-env=no_proxy --preserve-env=HTTP_PROXY --preserve-env=HTTPS_PROXY --preserve-env=NO_PROXY -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
         ;;
     expose)
-        if [[ -x /home/linuxbrew/.linuxbrew/bin/$2  ]]; then
-            ln -fs /home/linuxbrew/.linuxbrew/bin/$2 ~/.local/bin/$2
+        if [[ -x $HOMEBREW_PREFIX/bin/$2  ]]; then
+            ln -fs $HOMEBREW_PREFIX/bin/$2 ~/.local/bin/$2
         else
-            echo "$0: error: /home/linuxbrew/.linuxbrew/bin/$2 does not exist or is not executable."
+            echo "$0: error: $HOMEBREW_PREFIX/bin/$2 does not exist or is not executable."
             exit 1
         fi
         ;;
@@ -38,6 +38,6 @@ case $1 in
         which "$@"
         ;;
     *)
-        /home/linuxbrew/.linuxbrew/bin/brew "$@"
+        $HOMEBREW_PREFIX/bin/brew "$@"
         ;;
 esac
