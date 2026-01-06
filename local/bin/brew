@@ -25,7 +25,7 @@ case $1 in
         ;;
     which)
         shift
-        which "$@"
+        exec which "$@"
         ;;
     doctor) ;&
     install) ;&
@@ -35,9 +35,9 @@ case $1 in
     update) ;&
     upgrade) ;&
     uninstall)
-        sudo -H --preserve-env=http_proxy --preserve-env=https_proxy --preserve-env=no_proxy --preserve-env=HTTP_PROXY --preserve-env=HTTPS_PROXY --preserve-env=NO_PROXY -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
+        exec sudo -H --preserve-env=http_proxy --preserve-env=https_proxy --preserve-env=no_proxy --preserve-env=HTTP_PROXY --preserve-env=HTTPS_PROXY --preserve-env=NO_PROXY -u linuxbrew /home/linuxbrew/.linuxbrew/bin/brew "$@"
         ;;
     *)
-        /home/linuxbrew/.linuxbrew/bin/brew "$@"
+        exec /home/linuxbrew/.linuxbrew/bin/brew "$@"
         ;;
 esac
