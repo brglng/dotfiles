@@ -7,6 +7,25 @@ cd /home/linuxbrew
 eval /home/linuxbrew/.linuxbrew/bin/brew shellenv > /dev/null
 
 case $1 in
+    expose)
+        if [[ -x /home/linuxbrew/.linuxbrew/bin/$2  ]]; then
+            ln -fs /home/linuxbrew/.linuxbrew/bin/$2 ~/.local/bin/$2
+        else
+            echo "$0: error: /home/linuxbrew/.linuxbrew/bin/$2 does not exist or is not executable."
+            exit 1
+        fi
+        ;;
+    unexpose)
+        if [[ -x ~/.local/bin/$2 ]]; then
+            rm -f ~/.local/bin/$2 && \
+            echo "$0: removed ~/.local/bin/$2"
+        else
+            echo "$0: ~/.local/bin/$2 does not exist or is not executable."
+        fi
+        ;;
+    which)
+        exec which "$@"
+        ;;
     doctor) ;&
     install) ;&
     postinstall) ;&
@@ -21,4 +40,3 @@ case $1 in
         exec /home/linuxbrew/.linuxbrew/bin/brew "$@"
         ;;
 esac
-
