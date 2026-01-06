@@ -91,6 +91,7 @@ function link_common() {
 
 function link_linux() {
     update_bashrc                               "$HOME/.bashrc"
+    mkdir -p "$HOME/.config/nushell"
     link "$PWD/config/nushell/env.nu"           "$HOME/.config/nushell/env.nu"
     link "$PWD/config/nushell/config.nu"        "$HOME/.config/nushell/config.nu"
     link_common
