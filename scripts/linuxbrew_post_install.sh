@@ -5,6 +5,8 @@ if [[ ! $(uname -s) = "Linux" ]]; then
     exit
 fi
 
+echo "HOMEBREW_PREFIX: $HOMEBREW_PREFIX"
+
 mkdir -p ~/.local/bin
 ln -fs $HOMEBREW_PREFIX/bin/bundle          ~/.local/bin/
 ln -fs $HOMEBREW_PREFIX/bin/bundler         ~/.local/bin/
