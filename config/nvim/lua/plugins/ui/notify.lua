@@ -79,6 +79,7 @@ return {
             vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, message)
 
             vim.api.nvim_buf_set_extmark(bufnr, namespace, 0, 0, {
+                hl_eol = true,
                 hl_group = highlights.body,
                 end_row = #message,
                 priority = 50,
@@ -359,16 +360,17 @@ return {
                         local namespace = base.namespace()
                         local row = 0
                         for _, data in ipairs(notif.message) do
-                            local found_start, found_end = data:find("[━╸]+")
-                            if found_start and found_end then
+                            local match_start = vim.fn.match(data, "[━╸]\\+")
+                            local match_end = vim.fn.matchend(data, "[━╸]\\+")
+                            if match_start >= 0 and match_end > match_start then
                                 -- set extmark for progress bar
-                                local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, found_start - 1, {
+                                local ok, _ = pcall(vim.api.nvim_buf_set_extmark, buf, namespace, row, match_start, {
                                     hl_group = "NotifyProgressBar",
-                                    end_col = found_end,
+                                    end_col = match_end - 1,
                                     priority = 50,
                                 })
                                 if not ok then
-                                    vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(found_start - 1) .. ", end_col = " .. tostring(found_end), vim.log.levels.ERROR)
+                                    vim.notify("Failed to set extmark for progress bar: row = " .. tostring(row) .. ", col = " .. tostring(match_start) .. ", end_col = " .. tostring(match_end - 1), vim.log.levels.ERROR)
                                 end
                             end
                             row = row + 1
