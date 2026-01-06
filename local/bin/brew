@@ -24,6 +24,7 @@ case $1 in
         fi
         ;;
     which)
+        shift
         exec which $*
         ;;
     doctor) ;&
