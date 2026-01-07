@@ -5,7 +5,7 @@ local MAC = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_tri
 
 local config = wezterm.config_builder()
 
-config.front_end = "OpenGL"
+-- config.front_end = "OpenGL"
 
 if WINDOWS then
     config.set_environment_variables = {
@@ -261,14 +261,15 @@ config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
 config.freetype_load_target = "Light"
 config.freetype_render_target = "Light"
 config.font = wezterm.font_with_fallback {
-    "Maple Mono NF CN",
+    "LXGW Bright Code TC",
+    -- "Maple Mono NF CN",
     "Flog Symbols",
 }
 
 if WINDOWS then
-    config.font_size = 10.0
+    config.font_size = 12.0
 else
-    config.font_size = 14.0
+    config.font_size = 16.0
 end
 
 config.enable_kitty_graphics = false
