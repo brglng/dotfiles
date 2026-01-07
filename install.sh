@@ -14,12 +14,12 @@ install_dnf() {
 install_apt() {
     # sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
-    sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make xsel libreadline-dev
+    sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make xsel libreadline-dev unzip
 }
 
 install_pacman() {
     sudo pacman -Sy
-    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup cmake ninja zsh nushell starship tmux fzf ripgrep-all fd vim neovim node npm universal-ctags z.lua luajit luarocks direnv carapace pixi imagemagick tree-sitter-cli
+    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup cmake ninja zsh nushell starship tmux fzf ripgrep-all fd vim neovim node npm universal-ctags z.lua luajit luarocks direnv carapace pixi imagemagick tree-sitter-cli unzip
 }
 
 install_linux() {
