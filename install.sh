@@ -14,12 +14,12 @@ install_dnf() {
 install_apt() {
     # sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get update
-    sudo apt-get install -y build-essential g++ gdb automake autoconf libtool pkg-config make xsel libreadline-dev unzip
+    sudo apt-get install -y curl wget build-essential g++ gdb automake autoconf libtool pkg-config make xsel libreadline-dev unzip p7zip-full
 }
 
 install_pacman() {
     sudo pacman -Sy
-    sudo pacman -S --needed --noconfirm gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup cmake ninja zsh nushell starship tmux fzf ripgrep-all fd vim neovim node npm universal-ctags z.lua luajit luarocks direnv carapace pixi imagemagick tree-sitter-cli unzip
+    sudo pacman -S --needed --noconfirm curl wget gcc gdb automake autoconf libtool pkg-config make git subversion xsel python-pip patch clang llvm rustup cmake ninja zsh nushell starship tmux fzf ripgrep-all fd vim neovim node npm universal-ctags z.lua luajit luarocks direnv carapace pixi imagemagick tree-sitter-cli unzip p7zip-full
 }
 
 install_linux() {
@@ -47,6 +47,14 @@ install_linux() {
     if [[ -e ~/.viminfo ]]; then
         sudo chown $USER:$(id -g -n $USER) $HOME/.viminfo
     fi
+
+    mkdir -p ~/.local/share/fonts
+    curl https://github.com/subframe7536/maple-font/releases/latest/download/MapleMono-NF-CN-unhinted.zip | unzip -o -d ~/.local/share/fonts/ -
+    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCode.7z | 7zr x -o~/.local/share/fonts/
+    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCodeGB.7z | 7zr x -o~/.local/share/fonts/
+    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCodeTC.7z | 7zr x -o~/.local/share/fonts/
+    curl https://github.com/rbong/flog-symbols/raw/refs/heads/main/FlogSymbols.ttf -o ~/.local/share/fonts/FlogSymbols.ttf
+    fc-cache
 
     if [[ $distname != "Arch" ]]; then
         ln -sf $PWD/local/bin/brew $HOME/.local/bin
@@ -78,9 +86,14 @@ function install_mac() {
       	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake ninja git git-lfs reattach-to-user-namespace wezterm@nightly font-maple-mono-nf-cn
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake ninja git git-lfs reattach-to-user-namespace wezterm@nightly font-maple-mono-nf-cn font-symbols-only-nerd-font # font-lxgw-bright-code-tc
 
-    brew install --cask macvim neovide mactex
+    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCode.7z | 7zr x -o~/Library/Fonts/
+    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCodeGB.7z | 7zr x -o~/Library/Fonts/
+    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCodeTC.7z | 7zr x -o~/Library/Fonts/
+    curl https://github.com/rbong/flog-symbols/raw/refs/heads/main/FlogSymbols.ttf -o ~/Library/Fonts/FlogSymbols.ttf
+
+    brew install --cask macvim-app neovide-app mactex
 
     brew tap daipeihust/tap
     brew install im-select
