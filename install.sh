@@ -137,7 +137,7 @@ fi
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git git-lfs subversion rustup-init nvm cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli node npm
+    brew install git git-lfs subversion rustup-init cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli node npm
 fi
 
 mkdir -p ~/.terminfo
