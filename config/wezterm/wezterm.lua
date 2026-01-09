@@ -262,7 +262,7 @@ config.freetype_load_target = "Light"
 config.freetype_render_target = "Light"
 config.font = wezterm.font_with_fallback {
     "LXGW Bright Code TC",
-    "Symbols Nerd Font",
+    "Symbols Nerd Font Mono",
     -- "Maple Mono NF CN",
     "Flog Symbols",
 }

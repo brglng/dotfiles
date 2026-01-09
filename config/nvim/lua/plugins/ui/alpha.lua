@@ -331,7 +331,7 @@ return {
 
         require("alpha").setup {
             layout = {
-                { type = "padding", val = 1 },
+                -- { type = "padding", val = 1 },
                 -- {
                 --     type = "text",
                 --     val = {
@@ -347,59 +347,67 @@ return {
                 --         position = "center"
                 --     }
                 -- },
-                {
-                    type = "group",
-                    val = function()
-                        return apply_colors({
-                            [[  ███       ███  ]],
-                            [[  ████      ████ ]],
-                            [[  ████     █████ ]],
-                            [[ █ ████    █████ ]],
-                            [[ ██ ████   █████ ]],
-                            [[ ███ ████  █████ ]],
-                            [[ ████ ████ ████ ]],
-                            [[ █████  ████████ ]],
-                            [[ █████   ███████ ]],
-                            [[ █████    ██████ ]],
-                            [[ █████     █████ ]],
-                            [[ ████      ████ ]],
-                            [[  ███       ███  ]],
-                            -- [[                    ]],
-                            -- [[  N  E  O  V  I  M  ]],
-                        }, {
-                            ["b"] = { fg = "#3399ff", ctermfg = 33 },
-                            ["a"] = { fg = "#53C670", ctermfg = 35 },
-                            ["g"] = { fg = "#39ac56", ctermfg = 29 },
-                            ["h"] = { fg = "#33994d", ctermfg = 23},
-                            ["i"] = { fg = "#33994d", bg = "#39ac56", ctermfg = 23, ctermbg = 29},
-                            ["j"] = { fg = "#53C670", bg = "#33994d", ctermfg = 35, ctermbg = 23 },
-                            ["k"] = { fg = "#30A572", ctermfg = 36},
-                        }, {
-                            [[  kkkka       gggg  ]],
-                            [[  kkkkaa      ggggg ]],
-                            [[ b kkkaaa     ggggg ]],
-                            [[ bb kkaaaa    ggggg ]],
-                            [[ bbb kaaaaa   ggggg ]],
-                            [[ bbbb aaaaaa  ggggg ]],
-                            [[ bbbbb aaaaaa igggg ]],
-                            [[ bbbbb  aaaaaahiggg ]],
-                            [[ bbbbb   aaaaajhigg ]],
-                            [[ bbbbb    aaaaajhig ]],
-                            [[ bbbbb     aaaaajhi ]],
-                            [[ bbbbb      aaaaajh ]],
-                            [[  bbbb       aaaaa  ]],
-                            -- [[                    ]],
-                            -- [[  a  a  a  b  b  b  ]],
-                        })
-                    end
-                },
+                -- {
+                --     type = "group",
+                --     val = function()
+                --         return apply_colors({
+                --             [[  ███       ███  ]],
+                --             [[  ████      ████ ]],
+                --             [[  ████     █████ ]],
+                --             [[ █ ████    █████ ]],
+                --             [[ ██ ████   █████ ]],
+                --             [[ ███ ████  █████ ]],
+                --             [[ ████ ████ ████ ]],
+                --             [[ █████  ████████ ]],
+                --             [[ █████   ███████ ]],
+                --             [[ █████    ██████ ]],
+                --             [[ █████     █████ ]],
+                --             [[ ████      ████ ]],
+                --             [[  ███       ███  ]],
+                --             -- [[                    ]],
+                --             -- [[  N  E  O  V  I  M  ]],
+                --         }, {
+                --             ["b"] = { fg = "#3399ff", ctermfg = 33 },
+                --             ["a"] = { fg = "#53C670", ctermfg = 35 },
+                --             ["g"] = { fg = "#39ac56", ctermfg = 29 },
+                --             ["h"] = { fg = "#33994d", ctermfg = 23},
+                --             ["i"] = { fg = "#33994d", bg = "#39ac56", ctermfg = 23, ctermbg = 29},
+                --             ["j"] = { fg = "#53C670", bg = "#33994d", ctermfg = 35, ctermbg = 23 },
+                --             ["k"] = { fg = "#30A572", ctermfg = 36},
+                --         }, {
+                --             [[  kkkka       gggg  ]],
+                --             [[  kkkkaa      ggggg ]],
+                --             [[ b kkkaaa     ggggg ]],
+                --             [[ bb kkaaaa    ggggg ]],
+                --             [[ bbb kaaaaa   ggggg ]],
+                --             [[ bbbb aaaaaa  ggggg ]],
+                --             [[ bbbbb aaaaaa igggg ]],
+                --             [[ bbbbb  aaaaaahiggg ]],
+                --             [[ bbbbb   aaaaajhigg ]],
+                --             [[ bbbbb    aaaaajhig ]],
+                --             [[ bbbbb     aaaaajhi ]],
+                --             [[ bbbbb      aaaaajh ]],
+                --             [[  bbbb       aaaaa  ]],
+                --             -- [[                    ]],
+                --             -- [[  a  a  a  b  b  b  ]],
+                --         })
+                --     end
+                -- },
+                -- {
+                --     type = "text",
+                --     val = fortune,
+                --     opts = {
+                --         position = "center",
+                --         hl = "String"
+                --     }
+                -- },
+                { type = "padding", val = 1 },
                 {
                     type = "text",
                     val = function()
                         local lazy = require("lazy")
                         local stats = lazy.stats()
                         return {
-                            "",
                             "Startuptime: " .. stats.startuptime .. " ms",
                             "Plugins: " .. stats.loaded .. " loaded / " .. stats.count .. " installed",
                         }
@@ -407,14 +415,6 @@ return {
                     opts = {
                         position = "center",
                         hl = "Comment"
-                    }
-                },
-                {
-                    type = "text",
-                    val = fortune,
-                    opts = {
-                        position = "center",
-                        hl = "DiagnosticHint"
                     }
                 },
                 { type = "padding", val = 1 },

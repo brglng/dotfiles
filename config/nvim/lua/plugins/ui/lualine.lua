@@ -33,7 +33,7 @@ return {
             lualine_b = {
                 {
                     function()
-                        -- return " " .. vim.uv.cwd():gsub(vim.env.HOME, "~")
+                        -- return "  " .. vim.uv.cwd():gsub(vim.env.HOME, "~")
                         return " " .. vim.fs.basename(vim.uv.cwd())
                     end
                 },
