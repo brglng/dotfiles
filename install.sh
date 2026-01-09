@@ -53,6 +53,7 @@ install_linux() {
     curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCode.7z | 7zr x -o~/.local/share/fonts/
     curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCodeGB.7z | 7zr x -o~/.local/share/fonts/
     curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCodeTC.7z | 7zr x -o~/.local/share/fonts/
+    curl https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip | unzip -o -d ~/.local/share/fonts/ -
     curl https://github.com/rbong/flog-symbols/raw/refs/heads/main/FlogSymbols.ttf -o ~/.local/share/fonts/FlogSymbols.ttf
     fc-cache
 
