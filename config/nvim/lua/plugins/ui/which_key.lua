@@ -14,8 +14,8 @@ return {
                 if vim.g.neovide then
                     return "none"
                 else
-                    return {"▔", "▔" ,"▔", " ", " ", " ", " ", " " }
-                    -- return {"─", "─" ,"─", " ", " ", " ", " ", " " }
+                    -- return {"▔", "▔" ,"▔", " ", " ", " ", " ", " " }
+                    return {"─", "─" ,"─", " ", " ", " ", " ", " " }
                 end
             end)(),
             -- border = {"", "" ,"", "", "", "", "", "" },
@@ -39,8 +39,8 @@ return {
                 local border = "FloatTitle.fg,NormalFloat.fg,Normal.fg"
                 return {
                     WhichKeyTitle = { fg = "NormalFloat.bg,Normal.bg", bg = border },
-                    WhichKeyBorder = { fg = border, bg = "NormalFloat.bg,Normal.bg" },
-                    WhichKeyNormal = { fg = "NormalFloat.fg,Normal.bg", bg = "NormalFloat.bg,Normal.bg" },
+                    WhichKeyBorder = { fg = border, bg = "Normal.bg" },
+                    WhichKeyNormal = { fg = "Normal.bg", bg = "Normal.bg" },
                 }
             end)
         end
