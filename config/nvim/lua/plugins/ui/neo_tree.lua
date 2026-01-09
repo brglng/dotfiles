@@ -80,9 +80,21 @@ return {
             },
             -- NeoTreeWinSeparator = { fg = "WinSeparator.fg", bg = "Normal.bg", bold = false },
             BufferLineOffsetSeparator = { fg = "NeoTreeWinSeparator.fg,WinSeparator.fg,Normal.fg", bg = "NeoTreeWinSeparator.bg,WinSeparator.bg,Normal.bg", bold = false },
-            NeoTreeFloatBorder = { fg = "FloatBorder.fg", bg = "NormalFloat.bg" },
+            NeoTreeFloatBorder = function ()
+                if vim.g.neovide then
+                    return { fg = "FloatBorder.fg", bg = "NormalFloat.bg" }
+                else
+                    return { fg = "FloatBorder.fg", bg = "Normal.bg" }
+                end
+            end,
             NeoTreeFloatTitle = { fg = "FloatTitle.bg,NormalFloat.bg,Normal.bg", bg = "FloatTitle.fg" },
-            -- NeoTreeFloatNormal = { fg = "Normal.fg", bg = "Normal.bg" },
+            NeoTreeFloatNormal = function()
+                if vim.g.neovide then
+                    return { fg = "NormalFloat.fg", bg = "NormalFloat.bg" }
+                else
+                    return { fg = "Normal.fg", bg = "Normal.bg" }
+                end
+            end,
             NeoTreeDirectoryIcon = function ()
                 if vim.g.colors_name == "sakura" then
                     return { fg = "Directory.fg", bg = "Directory.bg", bold = true }
