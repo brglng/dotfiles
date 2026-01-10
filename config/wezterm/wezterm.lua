@@ -5,7 +5,7 @@ local MAC = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_tri
 
 local config = wezterm.config_builder()
 
--- config.front_end = "OpenGL"
+config.front_end = "OpenGL"
 
 if WINDOWS then
     config.set_environment_variables = {
