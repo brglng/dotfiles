@@ -22,10 +22,6 @@ end
 
 -- Colors
 
-config.colors = {
-    selection_fg = "none"
-}
-
 -- wezterm.gui is not available to the mux server, so take care to
 -- do something reasonable when this config is evaluated by the mux
 local function get_appearance()
@@ -35,23 +31,34 @@ local function get_appearance()
     return 'Dark'
 end
 
-local function scheme_for_appearance(appearance)
-    if appearance:find('Dark') then
-        return 'rose-pine'
+local theme = (function()
+    if get_appearance():find('Dark') then
+        return wezterm.plugin.require('https://github.com/neapsix/wezterm').main
     else
-        return 'rose-pine-dawn'
+        return wezterm.plugin.require('https://github.com/neapsix/wezterm').dawn
     end
-end
+end)()
+config.colors = theme.colors()
+config.colors.selection_fg = "none"
+config.window_frame = theme.window_frame()
 
+-- local function scheme_for_appearance(appearance)
+--     if appearance:find('Dark') then
+--         return 'rose-pine'
+--     else
+--         return 'rose-pine-dawn'
+--     end
+-- end
 -- config.colors = wezterm.color.load_scheme(wezterm.config_dir .. "/colors/" .. scheme_for_appearance(get_appearance()) .. ".toml")
-config.colors = wezterm.color.get_builtin_schemes()[scheme_for_appearance(get_appearance())]
+-- config.colors = wezterm.color.get_builtin_schemes()[scheme_for_appearance(get_appearance())]
+
 local function set_tabline_colors(config)
     local tabline_fg = config.colors.foreground
-    local tabline_bg = brglng.color.darken(config.colors.background, 0.15)
+    local tabline_bg = brglng.color.darken(config.colors.background, 0.12)
     local tab_active_fg = config.colors.foreground
     local tab_active_bg = config.colors.background
     local tab_inactive_bg = brglng.color.darken(config.colors.background, 0.07)
-    local tab_inactive_fg = brglng.color.blend(tab_active_fg, tab_inactive_bg, 0.5)
+    local tab_inactive_fg = brglng.color.blend(tab_active_fg, tab_inactive_bg, 0.8)
     local tab_inactive_hover_bg = brglng.color.darken(config.colors.background, 0.03)
     config.colors.tab_bar = {
         background = tabline_bg,
