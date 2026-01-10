@@ -16,8 +16,8 @@ return {
         local brglng = require("brglng")
         if not vim.g.neovide then
             brglng.hl.transform_tbl {
-                TreesitterContext = { fg = nil, bg = nil },
-                TreesitterContextSeparator = { fg = nil, bg = nil },
+                TreesitterContext = { fg = "Normal.fg", bg = "Normal.bg" },
+                TreesitterContextSeparator = { fg = "WinSeparator.fg", bg = "Normal.bg" },
                 TreesitterContextLineNumber = { link = "LineNr" },
             }
         end
