@@ -309,4 +309,9 @@ else
     set signcolumn=yes
 endif
 
+" Fix cell width for CJK punctuations
+call setcellwidths([
+\   [0x3000, 0x303f, 2]
+\ ])
+
 " vim: ts=8 sts=4 sw=4 et

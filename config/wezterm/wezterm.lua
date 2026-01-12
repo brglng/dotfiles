@@ -273,6 +273,10 @@ config.font = wezterm.font_with_fallback {
     -- "Maple Mono NF CN",
     "Flog Symbols",
 }
+-- Fix cell width for CJK punctuations
+config.cell_widths = {
+    { first = 0x3000, last = 0x303f, width = 2 },
+}
 
 if WINDOWS then
     config.font_size = 12.0

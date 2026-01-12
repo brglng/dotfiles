@@ -431,30 +431,30 @@ return {
 
                 -- Buffer local mappings.
                 -- See `:help vim.lsp.*` for documentation on any of the below functions
-                local opts = { buffer = ev.buf }
-                vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-                vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-                -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-                vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-                vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts)
-                -- vim.keymap.set('n', '<leader>xn', vim.lsp.buf.rename, opts)
-                -- vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-                -- vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+                -- local keymap_opts = { buffer = ev.buf }
+                -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, keymap_opts)
+                -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, keymap_opts)
+                -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, keymap_opts)
+                -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, keymap_opts)
+                -- vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, keymap_opts)
+                -- vim.keymap.set('n', '<leader>xn', vim.lsp.buf.rename, keymap_opts)
+                -- vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, keymap_opts)
+                -- vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, keymap_opts)
                 -- vim.keymap.set('n', '<Leader>wl', function()
                 --     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
                 -- end, opts)
                 -- vim.keymap.set({'n', 'v'}, '<Leader>xf', function()
                 --     vim.lsp.buf.format { async = true }
-                -- end, opts)
-                vim.keymap.set({'n', 'v'}, '<Leader>=', function()
-                    vim.lsp.buf.format { async = true }
-                end, vim.tbl_extend('force', opts, { desc = "Format Buffer" }))
+                -- end, keymap_opts)
+                -- vim.keymap.set({'n', 'v'}, '<Leader>=', function()
+                --     vim.lsp.buf.format { async = true }
+                -- end, vim.tbl_extend('force', keymap_opts, { desc = "Format Buffer" }))
             end
         })
     end,
     keys = {
         { "<Leader>la", vim.lsp.buf.code_action, desc = "Show Diagnostics" },
         { "<Leader>le", vim.diagnostic.open_float, desc = "Show Diagnostics" },
-        { "<Leader>lf", function() vim.lsp.buf.format { async = true } end, desc = "Format Buffer" },
+        { "<Leader>lf", mode = { "n", "v" }, function() vim.lsp.buf.format { async = true } end, desc = "Format" },
     }
 }

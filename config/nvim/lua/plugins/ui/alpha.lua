@@ -8,7 +8,6 @@ return {
         "nvim-lua/plenary.nvim"
     },
     config = function()
-        local fortune = require("alpha.fortune")()
 
         local if_nil = vim.F.if_nil
         local fnamemodify = vim.fn.fnamemodify
@@ -91,6 +90,30 @@ return {
                 end,
                 opts = opts,
             }
+        end
+
+        -- add border for fortune
+        local fortune_lines = require("alpha.fortune")()  --- @type string[]
+        local function fortune()
+            local max_width = 0
+            for _, line in ipairs(fortune_lines) do
+                local line_width = vim.fn.strdisplaywidth(line)
+                if line_width > max_width then
+                    max_width = line_width
+                end
+            end
+            local new_fortune_lines = {
+                "╭" .. string.rep("─", max_width + 2) .. "╮"
+            }
+            for i, line in ipairs(fortune_lines) do
+                if not ((i == 1 or i == #fortune_lines) and line:match("^%s*$")) then
+                    local line_width = vim.fn.strdisplaywidth(line)
+                    local padding = string.rep(" ", max_width - line_width)
+                    table.insert(new_fortune_lines, "│ " .. line .. padding .. " │")
+                end
+            end
+            table.insert(new_fortune_lines, "╰" .. string.rep("─", max_width + 2) .. "╯")
+            return new_fortune_lines
         end
 
         local file_icons = {
@@ -331,7 +354,7 @@ return {
 
         require("alpha").setup {
             layout = {
-                { type = "padding", val = 1 },
+                -- { type = "padding", val = 1 },
                 -- {
                 --     type = "text",
                 --     val = {
@@ -347,52 +370,52 @@ return {
                 --         position = "center"
                 --     }
                 -- },
-                {
-                    type = "group",
-                    val = function()
-                        return apply_colors({
-                            [[  ███       ███  ]],
-                            [[  ████      ████ ]],
-                            [[  ████     █████ ]],
-                            [[ █ ████    █████ ]],
-                            [[ ██ ████   █████ ]],
-                            [[ ███ ████  █████ ]],
-                            [[ ████ ████ ████ ]],
-                            [[ █████  ████████ ]],
-                            [[ █████   ███████ ]],
-                            [[ █████    ██████ ]],
-                            [[ █████     █████ ]],
-                            [[ ████      ████ ]],
-                            [[  ███       ███  ]],
-                            -- [[                    ]],
-                            -- [[  N  E  O  V  I  M  ]],
-                        }, {
-                            ["b"] = { fg = "#3399ff", ctermfg = 33 },
-                            ["a"] = { fg = "#53C670", ctermfg = 35 },
-                            ["g"] = { fg = "#39ac56", ctermfg = 29 },
-                            ["h"] = { fg = "#33994d", ctermfg = 23},
-                            ["i"] = { fg = "#33994d", bg = "#39ac56", ctermfg = 23, ctermbg = 29},
-                            ["j"] = { fg = "#53C670", bg = "#33994d", ctermfg = 35, ctermbg = 23 },
-                            ["k"] = { fg = "#30A572", ctermfg = 36},
-                        }, {
-                            [[  kkkka       gggg  ]],
-                            [[  kkkkaa      ggggg ]],
-                            [[ b kkkaaa     ggggg ]],
-                            [[ bb kkaaaa    ggggg ]],
-                            [[ bbb kaaaaa   ggggg ]],
-                            [[ bbbb aaaaaa  ggggg ]],
-                            [[ bbbbb aaaaaa igggg ]],
-                            [[ bbbbb  aaaaaahiggg ]],
-                            [[ bbbbb   aaaaajhigg ]],
-                            [[ bbbbb    aaaaajhig ]],
-                            [[ bbbbb     aaaaajhi ]],
-                            [[ bbbbb      aaaaajh ]],
-                            [[  bbbb       aaaaa  ]],
-                            -- [[                    ]],
-                            -- [[  a  a  a  b  b  b  ]],
-                        })
-                    end
-                },
+                -- {
+                --     type = "group",
+                --     val = function()
+                --         return apply_colors({
+                --             [[  ███       ███  ]],
+                --             [[  ████      ████ ]],
+                --             [[  ████     █████ ]],
+                --             [[ █ ████    █████ ]],
+                --             [[ ██ ████   █████ ]],
+                --             [[ ███ ████  █████ ]],
+                --             [[ ████ ████ ████ ]],
+                --             [[ █████  ████████ ]],
+                --             [[ █████   ███████ ]],
+                --             [[ █████    ██████ ]],
+                --             [[ █████     █████ ]],
+                --             [[ ████      ████ ]],
+                --             [[  ███       ███  ]],
+                --             -- [[                    ]],
+                --             -- [[  N  E  O  V  I  M  ]],
+                --         }, {
+                --             ["b"] = { fg = "#3399ff", ctermfg = 33 },
+                --             ["a"] = { fg = "#53C670", ctermfg = 35 },
+                --             ["g"] = { fg = "#39ac56", ctermfg = 29 },
+                --             ["h"] = { fg = "#33994d", ctermfg = 23},
+                --             ["i"] = { fg = "#33994d", bg = "#39ac56", ctermfg = 23, ctermbg = 29},
+                --             ["j"] = { fg = "#53C670", bg = "#33994d", ctermfg = 35, ctermbg = 23 },
+                --             ["k"] = { fg = "#30A572", ctermfg = 36},
+                --         }, {
+                --             [[  kkkka       gggg  ]],
+                --             [[  kkkkaa      ggggg ]],
+                --             [[ b kkkaaa     ggggg ]],
+                --             [[ bb kkaaaa    ggggg ]],
+                --             [[ bbb kaaaaa   ggggg ]],
+                --             [[ bbbb aaaaaa  ggggg ]],
+                --             [[ bbbbb aaaaaa igggg ]],
+                --             [[ bbbbb  aaaaaahiggg ]],
+                --             [[ bbbbb   aaaaajhigg ]],
+                --             [[ bbbbb    aaaaajhig ]],
+                --             [[ bbbbb     aaaaajhi ]],
+                --             [[ bbbbb      aaaaajh ]],
+                --             [[  bbbb       aaaaa  ]],
+                --             -- [[                    ]],
+                --             -- [[  a  a  a  b  b  b  ]],
+                --         })
+                --     end
+                -- },
                 {
                     type = "text",
                     val = fortune,
@@ -401,7 +424,6 @@ return {
                         hl = "String"
                     }
                 },
-                { type = "padding", val = 1 },
                 {
                     type = "text",
                     val = function()
