@@ -5,10 +5,15 @@ tabs = false
 # neovim-bin = "/home/brglng/.pixi/bin/nvim"
 
 [font]
-normal = ["LXGW Bright Code TC", "Symbols Nerd Font Mono", "Flog Symbols"]
-    
+normal = [
+    "LXGW Bright Code TC",
+    # "Maple Mono NF CN",
+    "Symbols Nerd Font Mono",
+    "Flog Symbols"
+]
 hinting = "none"
 size = 16.0
+# width = 0.4
 
 [box-drawing]
 mode = "native"

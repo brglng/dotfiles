@@ -265,8 +265,8 @@ end)
 config.allow_square_glyphs_to_overflow_width = "Always"
 -- config.freetype_interpreter_version = 40
 config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
-config.freetype_load_target = "HorizontalLcd"
-config.freetype_render_target = "HorizontalLcd"
+config.freetype_load_target = "Normal"
+config.freetype_render_target = "Normal"
 config.font = wezterm.font_with_fallback {
     "LXGW Bright Code TC",
     "Symbols Nerd Font Mono",
