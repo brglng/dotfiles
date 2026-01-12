@@ -354,7 +354,7 @@ return {
 
         require("alpha").setup {
             layout = {
-                -- { type = "padding", val = 1 },
+                { type = "padding", val = 1 },
                 -- {
                 --     type = "text",
                 --     val = {
@@ -421,9 +421,10 @@ return {
                     val = fortune,
                     opts = {
                         position = "center",
-                        hl = "String"
+                        hl = "markdownH1"
                     }
                 },
+                { type = "padding", val = 1 },
                 {
                     type = "text",
                     val = function()
