@@ -196,7 +196,7 @@ wezterm.on("update-status", function(window, pane)
     local tab_inactive_fg = colors.tab_bar.inactive_tab.fg_color
     local leader, modes
     if get_appearance():find('Dark') then
-        leader = { text = ' 󱐋 ', fg = '#34302c', bg = '#d47766' }
+        leader = { text = '󱐋 ', fg = '#34302c', bg = '#d47766' }
         modes = {
             copy_mode = { text = " 󰆏 ", fg = '#34302c', bg = '#ebc06d' },
             search_mode = { text = " 󰍉 ", fg = '#34302c', bg = '#cf9bc2' },
@@ -205,7 +205,7 @@ wezterm.on("update-status", function(window, pane)
             lock_mode = { text = "  ", fg = '#34302c', bg = '#c1a78e' },
         }
     else
-        leader = { text = ' 󱐋 ', fg = '#e9e1db', bg = '#bf0021' }
+        leader = { text = '󱐋 ', fg = '#e9e1db', bg = '#bf0021' }
         modes = {
             copy_mode = { text = " 󰆏 ", fg = '#e9e1db', bg = '#a06d00' },
             search_mode = { text = " 󰍉 ", fg = '#e9e1db', bg = '#904180' },
@@ -223,7 +223,7 @@ wezterm.on("update-status", function(window, pane)
             { Foreground = { Color = tab_active_bg } },
             { Background = { Color = leader.bg } },
             { Attribute = { Intensity = 'Bold' } },
-            { Text = '󱐋' },
+            { Text = '󱐋 ' },
             { Foreground = { Color = leader.bg } },
             { Background = { Color = tabbar_bg } },
             { Text = " " }
@@ -251,7 +251,7 @@ wezterm.on("update-status", function(window, pane)
                 { Foreground = { Color = tabbar_bg } },
                 { Background = { Color = tabbar_bg } },
                 { Attribute = { Intensity = 'Bold' } },
-                { Text = ' ' },
+                { Text = '  ' },
                 { Foreground = { Color = tabbar_bg } },
                 { Background = { Color = tabbar_bg } },
                 { Text = " " }
@@ -269,13 +269,42 @@ config.freetype_load_target = "Normal"
 config.freetype_render_target = "Normal"
 config.font = wezterm.font_with_fallback {
     "LXGW Bright Code TC",
-    "Symbols Nerd Font Mono",
     -- "Maple Mono NF CN",
+    "Symbols Nerd Font Mono",
     "Flog Symbols",
 }
 -- Fix cell width for CJK punctuations
 config.cell_widths = {
+    --- CJK (中日韩) 基础范围 ---
+    { first = 0x1100, last = 0x115f, width = 2 },
+    { first = 0x2e80, last = 0x2eff, width = 2 },
     { first = 0x3000, last = 0x303f, width = 2 },
+    { first = 0x3040, last = 0x309f, width = 2 },
+    { first = 0x30a0, last = 0x30ff, width = 2 },
+    { first = 0x31c0, last = 0x31ef, width = 2 },
+    { first = 0x3200, last = 0x32ff, width = 2 },
+    { first = 0x4e00, last = 0x9fff, width = 2 },
+    { first = 0xac00, last = 0xd7af, width = 2 },
+    { first = 0xf900, last = 0xfaff, width = 2 },
+
+    --- 2. 标点与符号 (非 PUA，不冲突 Nerd Font) ---
+    --- 包含全角冒号、感叹号、带圈数字等
+    { first = 0xfe30, last = 0xfe4f, width = 2 },
+    { first = 0xff01, last = 0xff60, width = 2 },
+    { first = 0xffe0, last = 0xffe6, width = 2 },
+    { first = 0x2460, last = 0x24ff, width = 2 },
+
+    --- 省略号 和 破折号 ---
+    { first = 0x2014, last = 0x2014, width = 2},
+    { first = 0x2026, last = 0x2026, width = 2},
+
+    --- 3. Emoji 表情符号 (位于 SMP 平面) ---
+    --- 修复火箭、笑脸等 Emoji 的宽度，不影响 Nerd Font
+    { first = 0x1f100, last = 0x1f1ff, width = 2 },
+    { first = 0x1f300, last = 0x1f5ff, width = 2 },
+    { first = 0x1f600, last = 0x1f64f, width = 2 },
+    { first = 0x1f680, last = 0x1f6ff, width = 2 },
+    { first = 0x1f900, last = 0x1f9ff, width = 2 },
 }
 
 if WINDOWS then

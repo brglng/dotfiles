@@ -307,7 +307,7 @@ return {
                 return k
             end
             return {
-                { type = "text", val = "Recent Projects", opts = { hl = "Title" } },
+                { type = "text", val = "Recent Projects", opts = { hl = "markdownH2" } },
                 { type = "padding", val = 1 },
                 {
                     type = "group",
@@ -324,7 +324,7 @@ return {
                         }
                     end,
                     opts = {
-                        hl = "Title",
+                        hl = "markdownH2",
                     }
                 },
                 { type = "padding", val = 1 },
@@ -339,7 +339,7 @@ return {
                     type = "text",
                     val = "All Recent Files",
                     opts = {
-                        hl = "Title"
+                        hl = "markdownH2"
                     }
                 },
                 { type = "padding", val = 1 },

@@ -3,7 +3,7 @@ return {
     dependencies = "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     opts = {
-        max_lines = "30%",
+        max_lines = 5,
         -- mode = 'topline',
         separator = (function ()
             if not vim.g.neovide then

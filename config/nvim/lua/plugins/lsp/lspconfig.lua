@@ -431,11 +431,10 @@ return {
 
                 -- Buffer local mappings.
                 -- See `:help vim.lsp.*` for documentation on any of the below functions
-                -- local keymap_opts = { buffer = ev.buf }
-                -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, keymap_opts)
-                -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, keymap_opts)
-                -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, keymap_opts)
-                -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, keymap_opts)
+                local keymap_opts = { buffer = ev.buf }
+                vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, keymap_opts)
+                vim.keymap.set('n', 'gd', vim.lsp.buf.definition, keymap_opts)
+                vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, keymap_opts)
                 -- vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, keymap_opts)
                 -- vim.keymap.set('n', '<leader>xn', vim.lsp.buf.rename, keymap_opts)
                 -- vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, keymap_opts)
