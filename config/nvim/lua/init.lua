@@ -15,8 +15,8 @@ if vim.g.neovide then
     -- vim.g.neovide_refresh_rate_idle = 60
     -- vim.g.neovide_no_idle = true
     -- vim.g.neovide_cursor_trail_size = 0.2
-    vim.g.neovide_cursor_vfx_mode = "torpedo"
-    -- vim.g.neovide_cursor_vfx_particle_density = 20.0
+    vim.g.neovide_cursor_vfx_mode = "pixiedust"
+    vim.g.neovide_cursor_vfx_particle_density = 20.0
 
     -- local function my_set_ime(args)
     --     if args.event:match("Enter$") then

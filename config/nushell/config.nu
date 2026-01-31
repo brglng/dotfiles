@@ -284,7 +284,7 @@ $env.config = {
 
     hooks: {
         pre_prompt: [{
-            print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename)(ansi st)"
+            print -n $"(ansi title)(pwd | str replace $nu.home-dir "~" | path basename)(ansi st)"
 
             # Search for pixi.toml in the current directory and all parent directories
             mut project_root = $env.PWD
@@ -353,9 +353,9 @@ $env.config = {
         pre_execution: [{
             let last_cmd = (commandline)
             if $last_cmd != "" {
-                print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename)·($last_cmd)(ansi st)"
+                print -n $"(ansi title)(pwd | str replace $nu.home-dir "~" | path basename)·($last_cmd)(ansi st)"
             } else {
-                print -n $"(ansi title)(pwd | str replace $nu.home-path "~" | path basename)(ansi st)"
+                print -n $"(ansi title)(pwd | str replace $nu.home-dir "~" | path basename)(ansi st)"
             }
         }]
         env_change: {
