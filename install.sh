@@ -164,7 +164,7 @@ fi
 pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn numba jaxtyping
 
 if [[ $UNAME_S = "Linux" ]]; then
-    pixi global install -e default pytorch torchaudio cuda cudnn
+    pixi global install -e default pytorch pytorch-gpu torchaudio cuda cudnn
 else
     pixi global install -e default install pytorch torchaudio
 fi
