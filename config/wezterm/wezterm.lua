@@ -298,6 +298,10 @@ config.cell_widths = {
     { first = 0x2014, last = 0x2014, width = 2},
     { first = 0x2026, last = 0x2026, width = 2},
 
+    --- 单双引号 ---
+    { first = 0x2018, last = 0x2019, width = 2 },
+    { first = 0x201c, last = 0x201d, width = 2 },
+
     --- 3. Emoji 表情符号 (位于 SMP 平面) ---
     --- 修复火箭、笑脸等 Emoji 的宽度，不影响 Nerd Font
     { first = 0x1f100, last = 0x1f1ff, width = 2 },

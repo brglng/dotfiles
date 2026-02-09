@@ -9,7 +9,7 @@ normal = [
     "LXGW Bright Code TC",
     # "Maple Mono NF CN",
     "Symbols Nerd Font Mono",
-    "Flog Symbols"
+    "Flog Symbols",
 ]
 hinting = "none"
 size = 16.0

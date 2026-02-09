@@ -346,6 +346,12 @@ let s:cjk_width_rules += [
 \   [0x2026, 0x2026, 2],
 \ ]
 
+" --- 单双引号 ---
+let s:cjk_width_rules += [
+\   [0x2018, 0x2019, 2],
+\   [0x201c, 0x201d, 2],
+\ ]
+
 " --- 3. Emoji 表情符号 (位于 SMP 平面) ---
 " 修复火箭、笑脸等 Emoji 的宽度，不影响 Nerd Font
 let s:cjk_width_rules += [
