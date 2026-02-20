@@ -2,19 +2,17 @@ return {
     "NeogitOrg/neogit",
     cmd = "Neogit",
     dependencies = {
-        'sindrets/diffview.nvim',
+        -- 'sindrets/diffview.nvim',
+        "esmuellert/codediff.nvim",
         "nvim-lua/plenary.nvim",
     },
     opts = {
         disable_commit_confirmation = true,
         graph_style = 'kitty',
         -- kind = 'split',
-        integrations = {
-            diffview = true
-        },
-        log_view = {
-            -- kind = 'split'
-        }
+        telescope_sorter = function()
+            return require("telescope").extensions.fzf.native_fzf_sorter()
+        end,
     },
     config = function(_, opts)
         local neogit = require('neogit')

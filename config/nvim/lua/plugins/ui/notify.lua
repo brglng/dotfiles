@@ -8,7 +8,7 @@ return {
         on_open = function(win)
             local win_border
             if vim.g.neovide then
-                win_border = { '🭼', '▔', '', '', '', ' ', '▏', '▏' }
+                win_border = { '', '▔', '', '', '', '▁', '', '' }
                 -- win_border = "single"
             else
                 win_border = "rounded"

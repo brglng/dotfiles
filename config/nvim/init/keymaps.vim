@@ -50,6 +50,15 @@ exe 'inoremap <script> <D-v> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <D-v> ' . paste#paste_cmd['v']
 " cmap <D-v> <C-r>+
 
+if has('mac') && exists('g:neovide') && g:neovide
+    nnoremap <silent> <D-n> :!open -na Neovide.app<CR>
+    inoremap <silent> <D-n> <C-o>:!open -na Neovide.app<CR>
+    cnoremap <silent> <D-n> <C-c>:!open -na Neovide.app<CR>
+    onoremap <silent> <D-n> <C-c>:!open -na Neovide.app<CR>
+    snoremap <silent> <D-n> <C-c>:!open -na Neovide.app<CR>
+    xnoremap <silent> <D-n> <C-c>:!open -na Neovide.app<CR>
+endif
+
 map <S-Insert> "+gP
 exe 'inoremap <script> <S-Insert> <C-g>u' . paste#paste_cmd['i']
 exe 'vnoremap <script> <S-Insert> ' . paste#paste_cmd['v']
