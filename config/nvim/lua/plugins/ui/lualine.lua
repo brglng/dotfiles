@@ -50,6 +50,11 @@ return {
             lualine_c = {
                 {
                     function()
+                        return require("opencode").statusline()
+                    end
+                },
+                {
+                    function()
                         local clients = vim.lsp.get_clients()
                         local buf = vim.api.nvim_get_current_buf()
                         clients = vim.iter(clients)
