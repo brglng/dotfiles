@@ -119,6 +119,9 @@ return {
                     }
                 }
             },
+            bashls = {
+                enabled = true
+            },
             cmake = {
                 enabled = true
             },

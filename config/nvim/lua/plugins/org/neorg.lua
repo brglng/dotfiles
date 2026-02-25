@@ -1,7 +1,7 @@
 return {
     "nvim-neorg/neorg",
     dependencies = {
-        -- "3rd/image.nvim",
+        "3rd/image.nvim",
         -- "folke/snacks.nvim",
         "jbyuki/nabla.nvim",
         "nvim-treesitter/nvim-treesitter",
@@ -36,7 +36,7 @@ return {
             },
             ["core.concealer"] = {
                 config = {
-                    -- icon_preset = "diamond"
+                    icon_preset = "diamond"
                 }
             },
             ["core.defaults"] = {

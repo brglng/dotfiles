@@ -33,6 +33,11 @@ if !has('nvim')
     endif
 endif
 
+if system('hostname')[:-2] == 'zhaosheng-MacBookAir2022.local'
+    let $XDG_RUNTIME_DIR = $HOME . '/.local/tmp'
+    let $TMPDIR = $HOME . '/.local/tmp'
+endif
+
 if has("patch-8.1.0360")
   set diffopt+=internal,algorithm:patience
 endif

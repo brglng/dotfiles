@@ -68,6 +68,7 @@ return {
                 -- "pyright",
                 "ruff",
                 "rust-analyzer",
+                "shellcheck",
                 "stylua",
                 "texlab",
                 "ty",

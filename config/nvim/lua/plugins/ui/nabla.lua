@@ -3,7 +3,7 @@ return {
     dependencies = {
         "williamboman/mason.nvim",
     },
-    ft = { "markdown", "norg" },
+    ft = { "markdown", "norg", "codecompanion" },
     lazy = true,
     config = function()
         require("nabla").enable_virt({
