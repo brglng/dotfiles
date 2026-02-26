@@ -4,7 +4,7 @@ return {
     cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0),
     lazy = true,
     opts = {
-        backend = "sixel", -- whatever backend you would like to use
+        backend = "kitty", -- whatever backend you would like to use
         processor = "magick_cli",
         -- max_width = 100,
         -- max_height = 12,
