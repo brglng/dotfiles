@@ -6,9 +6,8 @@ tabs = false
 
 [font]
 normal = [
-    "LXGW Bright Code TC",
+    "LXGW Bright Code TC NF",
     # "Maple Mono NF CN",
-    "Symbols Nerd Font Mono",
     "Flog Symbols",
 ]
 hinting = "none"

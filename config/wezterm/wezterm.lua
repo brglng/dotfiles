@@ -268,9 +268,8 @@ config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
 config.freetype_load_target = "Normal"
 config.freetype_render_target = "Normal"
 config.font = wezterm.font_with_fallback {
-    "LXGW Bright Code TC",
+    "LXGW Bright Code TC NF",
     -- "Maple Mono NF CN",
-    "Symbols Nerd Font Mono",
     "Flog Symbols",
 }
 -- Fix cell width for CJK punctuations
