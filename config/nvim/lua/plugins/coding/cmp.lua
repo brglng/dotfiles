@@ -214,6 +214,22 @@ return {
                         end
                     end
                 }),
+                [ '<Esc>' ] = cmp.mapping({
+                    i = function(fallback)
+                        if cmp.visible() then
+                            cmp.abort()
+                        else
+                            fallback()
+                        end
+                    end,
+                    c = function(fallback)
+                        if cmp.visible() then
+                            cmp.abort()
+                        else
+                            fallback()
+                        end
+                    end
+                }),
             }),
             experimental = {
                 ghost_text = false,
