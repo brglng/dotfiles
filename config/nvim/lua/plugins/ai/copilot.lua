@@ -6,7 +6,7 @@ return {
         suggestion = {
             auto_trigger = true,
             keymap = {
-                accept = "<C-CR>"
+                accept = "<S-CR>"
             }
         },
         filetypes = {
