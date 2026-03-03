@@ -146,6 +146,8 @@ return {
                 ['<Tab>'] = cmp.mapping(function(fallback)
                     if luasnip.locally_jumpable(1) then
                         luasnip.jump(1)
+                    elseif require("copilot.suggestion").is_visible() then
+                        require("copilot.suggestion").accept()
                     else
                         fallback()
                     end
@@ -190,11 +192,13 @@ return {
                     i = function(fallback)
                         if cmp.visible() then
                             cmp.abort()
+                        elseif require("copilot.suggestion").is_visible() then
+                            require("copilot.suggestion").accept_line()
                         else
                             if vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
                                 fallback()
                             else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'n', true)
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'i', true)
                             end
                         end
                     end,
@@ -270,10 +274,10 @@ return {
             })
         })
 
-        -- cmp.event:on(
-        --     'confirm_done',
-        --     cmp_autopairs.on_confirm_done()
-        -- )
+	-- cmp.event:on(
+	--     'confirm_done',
+	--     cmp_autopairs.on_confirm_done()
+	-- )
 
         local brglng = require("brglng")
         if vim.g.neovide then
