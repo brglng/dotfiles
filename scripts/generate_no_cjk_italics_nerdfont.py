@@ -2,6 +2,7 @@
 import copy
 
 from fontTools.ttLib import TTFont
+from fontTools.ttLib.tables._g_l_y_f import GlyphCoordinates
 
 
 def get_cjk_unicodes() -> list[int]:
@@ -17,14 +18,14 @@ def get_cjk_unicodes() -> list[int]:
         A list of integers representing the Unicode codepoints.
     """
     ranges = [
-        (0x2000, 0x206F),
-        (0x2E80, 0x2EFF),
-        (0x3000, 0x303F),
-        (0x3200, 0x32FF),
-        (0x3400, 0x4DBF),
-        (0x4E00, 0x9FFF),
-        (0xFE30, 0xFE4F),
-        (0xFF00, 0xFFEF),
+        (0x2000, 0x206F),  # General Punctuation (quotes, dashes, ellipses, etc.)
+        (0x2E80, 0x2EFF),  # CJK Radicals Supplement
+        (0x3000, 0x303F),  # CJK Symbols and Punctuation (ideographic comma, period, brackets)
+        (0x3200, 0x32FF),  # Enclosed CJK Letters and Months (parenthesized/circled characters)
+        (0x3400, 0x4DBF),  # CJK Unified Ideographs Extension A (Rare characters)
+        (0x4E00, 0x9FFF),  # CJK Unified Ideographs (Common Hanzi/Kanji/Hanja)
+        (0xFE30, 0xFE4F),  # CJK Compatibility Forms (Vertical punctuation variants)
+        (0xFF00, 0xFFEF),  # Halfwidth and Fullwidth Forms (Fullwidth Latin letters, etc.)
     ]
 
     unicodes = []
@@ -93,8 +94,9 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str) -> None:
     """
     Copies all mapped glyphs from a symbol font into the base font.
 
-    Renames imported glyphs to prevent naming collisions and overwrites
-    the character mapping carefully to prevent overflow issues.
+    Renames imported glyphs to prevent naming collisions, overwrites
+    the character mapping carefully to prevent overflow issues, and
+    scales the glyph coordinates and metrics based on unitsPerEm.
 
     Parameters
     ----------
@@ -117,6 +119,10 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str) -> None:
         base_vmtx = base_font["vmtx"]
         symbol_vmtx = symbol_font["vmtx"]
 
+    base_upem = base_font["head"].unitsPerEm
+    symbol_upem = symbol_font["head"].unitsPerEm
+    scale = base_upem / symbol_upem
+
     # prefix = f"{symbol_font_path.split('.')[0]}_"
     prefix = ""
 
@@ -129,18 +135,38 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str) -> None:
             if new_dep_name not in base_glyf:
                 if dep_name in symbol_glyf:
                     copied_glyph = copy.deepcopy(symbol_glyf[dep_name])
+                    copied_glyph.expand(symbol_glyf)
 
                     if copied_glyph.isComposite():
                         for comp in copied_glyph.components:
                             comp.glyphName = f"{prefix}{comp.glyphName}"
+                            if scale != 1.0:
+                                if hasattr(comp, "x") and comp.x is not None:
+                                    comp.x = int(round(comp.x * scale))
+                                if hasattr(comp, "y") and comp.y is not None:
+                                    comp.y = int(round(comp.y * scale))
+                    else:
+                        if scale != 1.0 and hasattr(copied_glyph, "coordinates"):
+                            coords = []
+                            for x, y in copied_glyph.coordinates:
+                                coords.append((int(round(x * scale)), int(round(y * scale))))
+                            copied_glyph.coordinates = GlyphCoordinates(coords)
 
                     base_glyf[new_dep_name] = copied_glyph
 
                 if dep_name in symbol_hmtx.metrics:
-                    base_hmtx.metrics[new_dep_name] = copy.deepcopy(symbol_hmtx.metrics[dep_name])
+                    adv, lsb = symbol_hmtx.metrics[dep_name]
+                    if scale != 1.0:
+                        adv = int(round(adv * scale))
+                        lsb = int(round(lsb * scale))
+                    base_hmtx.metrics[new_dep_name] = (adv, lsb)
 
                 if has_vmtx and dep_name in symbol_vmtx.metrics:
-                    base_vmtx.metrics[new_dep_name] = copy.deepcopy(symbol_vmtx.metrics[dep_name])
+                    v_adv, tsb = symbol_vmtx.metrics[dep_name]
+                    if scale != 1.0:
+                        v_adv = int(round(v_adv * scale))
+                        tsb = int(round(tsb * scale))
+                    base_vmtx.metrics[new_dep_name] = (v_adv, tsb)
 
         base_cmap[codepoint] = f"{prefix}{sym_glyph_name}"
 
