@@ -171,7 +171,7 @@ return {
                         if cmp.visible() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'n', true)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'i', false)
                         end
                     end,
                 }),
@@ -180,7 +180,7 @@ return {
                         if cmp.visible() then
                             cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'n', true)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'i', false)
                         end
                     end,
                 }),
@@ -198,7 +198,7 @@ return {
                             if vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
                                 fallback()
                             else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'i', true)
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'i', false)
                             end
                         end
                     end,
@@ -209,12 +209,12 @@ return {
                             if vim.fn.getcmdpos() > vim.fn.strlen(vim.fn.getcmdline()) then
                                 fallback()
                             else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'n', true)
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'c', false)
                             end
                         end
                     end
                 }),
-                [ '<Esc>' ] = cmp.mapping({
+                ['<Esc>'] = cmp.mapping({
                     i = function(fallback)
                         if cmp.visible() then
                             cmp.abort()
@@ -226,7 +226,7 @@ return {
                         if cmp.visible() then
                             cmp.abort()
                         else
-                            fallback()
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'c', false)
                         end
                     end
                 }),
