@@ -212,24 +212,24 @@ return {
                         end
                     end
                 }),
-                ['<Esc>'] = cmp.mapping({
-                    i = function(fallback)
-                        if cmp.visible() then
-                            cmp.abort()
-                        elseif require("copilot.suggestion").is_visible() then
-                            require("copilot.suggestion").dismiss()
-                        else
-                            fallback()
-                        end
-                    end,
-                    c = function(fallback)
-                        if cmp.visible() then
-                            cmp.abort()
-                        else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'c', true)
-                        end
-                    end
-                }),
+                -- ['<Esc>'] = cmp.mapping({
+                --     i = function(fallback)
+                --         if cmp.visible() then
+                --             cmp.abort()
+                --         elseif require("copilot.suggestion").is_visible() then
+                --             require("copilot.suggestion").dismiss()
+                --         else
+                --             fallback()
+                --         end
+                --     end,
+                --     c = function(fallback)
+                --         if cmp.visible() then
+                --             cmp.abort()
+                --         else
+                --             vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'c', true)
+                --         end
+                --     end
+                -- }),
             }),
             experimental = {
                 ghost_text = false,

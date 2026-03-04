@@ -6,7 +6,8 @@ return {
         suggestion = {
             auto_trigger = true,
             keymap = {
-                accept = nil
+                accept = nil,
+                accept_word = nil,
             }
         },
         filetypes = {
@@ -29,6 +30,20 @@ return {
             if not require("copilot.suggestion").is_visible() then
                 require("copilot.suggestion").next()
             end
-        end, mode = "i", desc = "Accept Copilot suggestion" },
+        end, mode = "i", desc = "Accept Copilot suggestion (all)" },
+        { "<C-Right>", function()
+            if require("copilot.suggestion").is_visible() then
+                require("copilot.suggestion").accept_word()
+            else
+                return "<C-Right>"
+            end
+        end, mode = "i", expr = true, noremap = true, desc = "Accept Copilot suggestion (word)" },
+        { "<M-f>", function()
+            if require("copilot.suggestion").is_visible() then
+                require("copilot.suggestion").accept_word()
+            else
+                return "<C-Right>"
+            end
+        end, mode = "i", expr = true, noremap = true, desc = "Accept Copilot suggestion (word)" },
     },
 }
