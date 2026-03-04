@@ -171,7 +171,7 @@ return {
                         if cmp.visible() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'i', false)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'i', true)
                         end
                     end,
                 }),
@@ -180,7 +180,7 @@ return {
                         if cmp.visible() then
                             cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'i', false)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'i', true)
                         end
                     end,
                 }),
@@ -194,12 +194,10 @@ return {
                             cmp.abort()
                         elseif require("copilot.suggestion").is_visible() then
                             require("copilot.suggestion").accept_line()
+                        elseif vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
+                            fallback()
                         else
-                            if vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
-                                fallback()
-                            else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'i', false)
-                            end
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'i', true)
                         end
                     end,
                     c = function(fallback)
@@ -209,7 +207,7 @@ return {
                             if vim.fn.getcmdpos() > vim.fn.strlen(vim.fn.getcmdline()) then
                                 fallback()
                             else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'c', false)
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'c', true)
                             end
                         end
                     end
@@ -218,6 +216,8 @@ return {
                     i = function(fallback)
                         if cmp.visible() then
                             cmp.abort()
+                        elseif require("copilot.suggestion").is_visible() then
+                            require("copilot.suggestion").dismiss()
                         else
                             fallback()
                         end
@@ -226,7 +226,7 @@ return {
                         if cmp.visible() then
                             cmp.abort()
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'c', false)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'c', true)
                         end
                     end
                 }),

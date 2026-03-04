@@ -23,5 +23,12 @@ return {
             CopilotAnnotation = { link = "Comment" },
             CopilotSuggestion = { link = "Comment" },
         }
-    end
+    end,
+    keys = {
+        { "<M-\\>", function()
+            if not require("copilot.suggestion").is_visible() then
+                require("copilot.suggestion").next()
+            end
+        end, mode = "i", desc = "Accept Copilot suggestion" },
+    },
 }
