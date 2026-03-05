@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
 import copy
+import math
 from dataclasses import dataclass
 from enum import Enum
-import math
 
 from fontTools.ttLib import TTFont
 from fontTools.ttLib.tables._g_l_y_f import GlyphCoordinates
+
+
+class Alignment(Enum):
+    """
+    Defines the horizontal alignment when padding glyphs with whitespace.
+    """
+    LEFT = "left"
+    CENTER = "center"
+    RIGHT = "right"
 
 
 class ScaleStrategy(Enum):
@@ -16,18 +25,67 @@ class ScaleStrategy(Enum):
     ENGLISH_SCALE_GAP_CJK_KEEP = "english_scale_gap_cjk_keep"
     ENGLISH_STRETCH_CJK_KEEP = "english_stretch_cjk_keep"
     OPTIMAL_SCALE_BOTH = "optimal_scale_both"
+    NO_STRETCH = "no_stretch"
+
+
+@dataclass
+class PadConfig:
+    """
+    Configuration for padding specific characters with whitespace.
+
+    Attributes
+    ----------
+    chars : list[str | int | tuple[int, int]]
+        A list of characters, codepoints, or ranges to pad.
+    alignment : Alignment
+        The alignment strategy for the padding.
+    """
+    chars: list[str | int | tuple[int, int]]
+    alignment: Alignment
 
 
 @dataclass
 class FontMergeConfig:
     """
     Configuration for a single font merging process.
+
+    Attributes
+    ----------
+    output_filename : str
+        The path for the output font file.
+    english_font_path : str
+        The path to the base English font.
+    cjk_font_path : str
+        The path to the CJK font.
+    scaling_strategy : ScaleStrategy
+        The strategy used to scale the fonts.
+    stretch_chars : list[str | int | tuple[int, int]]
+        Characters to stretch to double width.
+    pad_configs : list[PadConfig]
+        Configurations for characters that need double width padding.
+    weight_english : float
+        The weight for English font optimal scaling.
+    symbol_font_paths : list[str]
+        Paths to symbol fonts to merge.
+    adjust_baseline : bool
+        Whether to adjust the baseline of the CJK font.
+    cjk_y_offset : int
+        The manual vertical offset for CJK glyphs.
+    new_font_family : str
+        The new font family name.
+    new_font_subfamily : str
+        The new font subfamily name.
+    new_author : str
+        The author name for the metadata.
+    new_description : str
+        The description for the metadata.
     """
     output_filename: str
     english_font_path: str
     cjk_font_path: str
     scaling_strategy: ScaleStrategy
     stretch_chars: list[str | int | tuple[int, int]]
+    pad_configs: list[PadConfig]
     weight_english: float
     symbol_font_paths: list[str]
     adjust_baseline: bool
@@ -59,7 +117,6 @@ def calculate_optimal_rho(english_ratio: float, cjk_ratio: float, weight_english
     weight_cjk = 1.0 - weight_english
     ln_rho = (weight_english * math.log(english_ratio) +
               weight_cjk * math.log(cjk_ratio / 2.0))
-
     return math.exp(ln_rho)
 
 
@@ -90,13 +147,13 @@ def get_cjk_unicodes() -> list[int]:
     return unicodes
 
 
-def get_stretch_codepoints(stretch_chars: list[str | int | tuple[int, int]]) -> set[int]:
+def get_codepoints(chars: list[str | int | tuple[int, int]]) -> set[int]:
     """
     Parses a list of characters, codepoints, or ranges into a set of codepoints.
 
     Parameters
     ----------
-    stretch_chars : list[str | int | tuple[int, int]]
+    chars : list[str | int | tuple[int, int]]
         A list containing single characters, integer codepoints, or tuples of start/end codepoints.
 
     Returns
@@ -105,7 +162,7 @@ def get_stretch_codepoints(stretch_chars: list[str | int | tuple[int, int]]) -> 
         A set of integer codepoints.
     """
     codepoints = set()
-    for item in stretch_chars:
+    for item in chars:
         if isinstance(item, str):
             if len(item) == 1:
                 codepoints.add(ord(item))
@@ -114,11 +171,10 @@ def get_stretch_codepoints(stretch_chars: list[str | int | tuple[int, int]]) -> 
         elif isinstance(item, tuple) and len(item) == 2:
             start, end = item
             codepoints.update(range(start, end + 1))
-
     return codepoints
 
 
-def get_glyph_dependencies(glyph_name: str, glyf_table: object) -> set[str]:
+def get_glyph_dependencies(glyph_name: str, glyf_table: dict) -> set[str]:
     """
     Recursively finds all component glyphs required by a composite glyph.
 
@@ -126,7 +182,7 @@ def get_glyph_dependencies(glyph_name: str, glyf_table: object) -> set[str]:
     ----------
     glyph_name : str
         The name of the glyph to analyze.
-    glyf_table : object
+    glyf_table : dict
         The font's glyph table mapping names to glyph objects.
 
     Returns
@@ -167,7 +223,6 @@ def get_typical_advance(font: TTFont, char_code: int) -> int:
     if char_code in cmap:
         glyph_name = cmap[char_code]
         return font["hmtx"].metrics[glyph_name][0]
-
     return font["head"].unitsPerEm // 2
 
 
@@ -198,7 +253,6 @@ def calculate_baseline_offset(eng_font: TTFont, cjk_font: TTFont, upm_scale: flo
 
     scaled_cjk_center = cjk_center * upm_scale
     offset = int(round(eng_center - scaled_cjk_center))
-
     return offset
 
 
@@ -240,13 +294,13 @@ def scale_font_glyphs(font: TTFont, scale_x: float, scale_y: float):
             hmtx.metrics[glyph_name] = (int(round(adv * scale_x)), int(round(lsb * scale_x)))
 
 
-def shift_glyph_and_metrics(base_glyf: object, base_hmtx: object, glyph_name: str, shift_x: int, target_advance: int, processed_set: set[str]):
+def shift_glyph_and_metrics(base_glyf: dict, base_hmtx: object, glyph_name: str, shift_x: int, target_advance: int, processed_set: set[str]):
     """
     Centers a mapped CJK glyph horizontally inside its new advance width cell.
 
     Parameters
     ----------
-    base_glyf : object
+    base_glyf : dict
         The glyf table of the base font.
     base_hmtx : object
         The hmtx table of the base font.
@@ -280,7 +334,16 @@ def shift_glyph_and_metrics(base_glyf: object, base_hmtx: object, glyph_name: st
     base_hmtx.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
 
 
-def merge_cjk_glyphs(base_font: TTFont, cjk_font: TTFont, target_adv_c: int, target_adv_e: int, upm_scale: float, y_offset: int, typical_scaled_cjk_adv: float):
+def merge_cjk_glyphs(
+    base_font: TTFont,
+    cjk_font: TTFont,
+    target_adv_c: int,
+    target_adv_e: int,
+    upm_scale: float,
+    y_offset: int,
+    typical_scaled_cjk_adv: float,
+    strategy: ScaleStrategy
+):
     """
     Copies CJK glyphs from the CJK font to the base font, applying
     scaling, Y-offset, and centering them within the designated advance width.
@@ -301,6 +364,8 @@ def merge_cjk_glyphs(base_font: TTFont, cjk_font: TTFont, target_adv_c: int, tar
         The vertical offset to align baselines.
     typical_scaled_cjk_adv : float
         The advance width of a standard scaled CJK character.
+    strategy : ScaleStrategy
+        The scaling strategy configured by the user.
     """
     base_cmap = base_font.getBestCmap()
     cjk_cmap = cjk_font.getBestCmap()
@@ -373,10 +438,13 @@ def merge_cjk_glyphs(base_font: TTFont, cjk_font: TTFont, target_adv_c: int, tar
                 original_adv = cjk_hmtx.metrics[cjk_glyph_name][0]
                 scaled_adv = int(round(original_adv * upm_scale))
 
-                if scaled_adv > typical_scaled_cjk_adv * 0.75:
-                    final_target_adv = target_adv_c
+                if strategy == ScaleStrategy.NO_STRETCH:
+                    final_target_adv = scaled_adv
                 else:
-                    final_target_adv = target_adv_e
+                    if scaled_adv > typical_scaled_cjk_adv * 0.75:
+                        final_target_adv = target_adv_c
+                    else:
+                        final_target_adv = target_adv_e
 
                 shift_x = (final_target_adv - scaled_adv) // 2
 
@@ -399,7 +467,63 @@ def merge_cjk_glyphs(base_font: TTFont, cjk_font: TTFont, target_adv_c: int, tar
                 table.cmap.update(base_cmap)
 
 
-def stretch_glyph_width(font: TTFont, codepoint: int, target_advance: int):
+def pad_glyph_width(font: TTFont, codepoint: int, target_advance: int, alignment: Alignment) -> None:
+    """
+    Increases the advance width of a glyph by padding it with whitespace based on alignment.
+
+    Parameters
+    ----------
+    font : TTFont
+        The font object containing the glyph.
+    codepoint : int
+        The Unicode codepoint of the glyph to be padded.
+    target_advance : int
+        The target advance width to reach.
+    alignment : Alignment
+        The horizontal alignment.
+    """
+    cmap = font.getBestCmap()
+    if codepoint not in cmap:
+        return
+
+    glyph_name = cmap[codepoint]
+    glyf = font["glyf"]
+    hmtx = font["hmtx"]
+
+    if glyph_name not in glyf or glyph_name not in hmtx.metrics:
+        return
+
+    adv, current_lsb = hmtx.metrics[glyph_name]
+    if adv >= target_advance:
+        return
+
+    diff = target_advance - adv
+
+    if alignment == Alignment.LEFT:
+        shift_x = 0
+    elif alignment == Alignment.CENTER:
+        shift_x = diff // 2
+    elif alignment == Alignment.RIGHT:
+        shift_x = diff
+
+    if shift_x > 0:
+        glyph = glyf[glyph_name]
+
+        if glyph.isComposite():
+            for comp in glyph.components:
+                if hasattr(comp, "x") and comp.x is not None:
+                    comp.x += shift_x
+        else:
+            if hasattr(glyph, "coordinates"):
+                coords = []
+                for x, y in glyph.coordinates:
+                    coords.append((x + shift_x, y))
+                glyph.coordinates = GlyphCoordinates(coords)
+
+    hmtx.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
+
+
+def stretch_glyph_width(font: TTFont, codepoint: int, target_advance: int) -> None:
     """
     Stretches a specific glyph's geometry horizontally to match a new advance width.
 
@@ -587,20 +711,24 @@ def process_font(config: FontMergeConfig):
     eng_scale_x = 1.0
     eng_scale_y = 1.0
     target_adv_e = eng_typical_adv
+    target_adv_c = eng_typical_adv * 2
 
     if config.scaling_strategy == ScaleStrategy.ENGLISH_KEEP_CJK_SCALE_GAP:
         target_adv_e = eng_typical_adv
+        target_adv_c = target_adv_e * 2
 
     elif config.scaling_strategy == ScaleStrategy.ENGLISH_SCALE_GAP_CJK_KEEP:
         target_adv_e = int(round(scaled_cjk_adv / 2.0))
         ratio = target_adv_e / float(eng_typical_adv)
         eng_scale_x = ratio
         eng_scale_y = ratio
+        target_adv_c = target_adv_e * 2
 
     elif config.scaling_strategy == ScaleStrategy.ENGLISH_STRETCH_CJK_KEEP:
         target_adv_e = int(round(scaled_cjk_adv / 2.0))
         eng_scale_x = target_adv_e / float(eng_typical_adv)
         eng_scale_y = 1.0
+        target_adv_c = target_adv_e * 2
 
     elif config.scaling_strategy == ScaleStrategy.OPTIMAL_SCALE_BOTH:
         eng_ratio = eng_typical_adv / float(eng_upm)
@@ -610,8 +738,13 @@ def process_font(config: FontMergeConfig):
         target_adv_e = int(round(eng_upm * optimal_rho))
         eng_scale_x = target_adv_e / float(eng_typical_adv)
         eng_scale_y = 1.0
+        target_adv_c = target_adv_e * 2
 
-    target_adv_c = target_adv_e * 2
+    elif config.scaling_strategy == ScaleStrategy.NO_STRETCH:
+        target_adv_e = eng_typical_adv
+        target_adv_c = int(round(scaled_cjk_adv))
+        eng_scale_x = 1.0
+        eng_scale_y = 1.0
 
     scale_font_glyphs(eng_font, eng_scale_x, eng_scale_y)
 
@@ -626,12 +759,18 @@ def process_font(config: FontMergeConfig):
         target_adv_e,
         upm_scale,
         y_offset,
-        scaled_cjk_adv
+        scaled_cjk_adv,
+        config.scaling_strategy
     )
 
-    stretch_codepoints = get_stretch_codepoints(config.stretch_chars)
+    stretch_codepoints = get_codepoints(config.stretch_chars)
     for codepoint in stretch_codepoints:
         stretch_glyph_width(eng_font, codepoint, target_adv_c)
+
+    for pad_config in config.pad_configs:
+        pad_codepoints = get_codepoints(pad_config.chars)
+        for codepoint in pad_codepoints:
+            pad_glyph_width(eng_font, codepoint, target_adv_c, pad_config.alignment)
 
     for symbol_font_path in config.symbol_font_paths:
         merge_symbols_into_font(eng_font, symbol_font_path)
@@ -653,7 +792,21 @@ def main():
             english_font_path="SourceCodePro-Regular.ttf",
             cjk_font_path="LXGWBrightCodeTC-Regular.ttf",
             scaling_strategy=ScaleStrategy.OPTIMAL_SCALE_BOTH,
-            stretch_chars=["…", "—", 0x22EF, (0x2010, 0x2015)],
+            stretch_chars=["—", "…"],
+            pad_configs=[
+                PadConfig(
+                    chars=["‘", "“"],
+                    alignment=Alignment.RIGHT
+                ),
+                PadConfig(
+                    chars=["’", "”"],
+                    alignment=Alignment.LEFT
+                ),
+                PadConfig(
+                    chars=["．"],
+                    alignment=Alignment.CENTER
+                )
+            ],
             weight_english=0.5,
             symbol_font_paths=["SymbolsNerdFontMono-Regular.ttf", "FlogSymbols.ttf"],
             adjust_baseline=True,
