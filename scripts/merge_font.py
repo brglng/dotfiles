@@ -288,47 +288,24 @@ def scale_font_glyphs(font: TTFont, scale_x: float, scale_y: float):
                 for x, y in glyph.coordinates:
                     coords.append((int(round(x * scale_x)), int(round(y * scale_y))))
                 glyph.coordinates = GlyphCoordinates(coords)
-
         if glyph_name in hmtx.metrics:
             adv, lsb = hmtx.metrics[glyph_name]
             hmtx.metrics[glyph_name] = (int(round(adv * scale_x)), int(round(lsb * scale_x)))
 
 
-def shift_glyph_and_metrics(base_glyf: dict, base_hmtx: object, glyph_name: str, shift_x: int, target_advance: int, processed_set: set[str]):
-    """
-    Centers a mapped CJK glyph horizontally inside its new advance width cell.
-
-    Parameters
-    ----------
-    base_glyf : dict
-        The glyf table of the base font.
-    base_hmtx : object
-        The hmtx table of the base font.
-    glyph_name : str
-        The name of the glyph to shift.
-    shift_x : int
-        The horizontal shift distance.
-    target_advance : int
-        The final target advance width for the glyph.
-    processed_set : set[str]
-        A set storing already processed glyph names to avoid double transformations.
-    """
-    if glyph_name in processed_set:
-        return
-
-    processed_set.add(glyph_name)
-
+def shift_glyph_and_metrics(base_glyf: dict, base_hmtx: object, glyph_name: str, shift_x: int, target_advance: int):
     glyph = base_glyf[glyph_name]
-    if glyph.isComposite():
-        for comp in glyph.components:
-            if hasattr(comp, "x") and comp.x is not None:
-                comp.x += shift_x
-    else:
-        if hasattr(glyph, "coordinates"):
-            coords = []
-            for x, y in glyph.coordinates:
-                coords.append((x + shift_x, y))
-            glyph.coordinates = GlyphCoordinates(coords)
+    if shift_x != 0:
+        if glyph.isComposite():
+            for comp in glyph.components:
+                if hasattr(comp, "x") and comp.x is not None:
+                    comp.x += shift_x
+        else:
+            if hasattr(glyph, "coordinates"):
+                coords = []
+                for x, y in glyph.coordinates:
+                    coords.append((x + shift_x, y))
+                glyph.coordinates = GlyphCoordinates(coords)
 
     _, current_lsb = base_hmtx.metrics[glyph_name]
     base_hmtx.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
@@ -342,7 +319,9 @@ def merge_cjk_glyphs(
     upm_scale: float,
     y_offset: int,
     typical_scaled_cjk_adv: float,
-    strategy: ScaleStrategy
+    strategy: ScaleStrategy,
+    stretch_set: set[int],
+    alignment_map: dict[int, Alignment]
 ):
     """
     Copies CJK glyphs from the CJK font to the base font, applying
@@ -434,10 +413,15 @@ def merge_cjk_glyphs(
     for codepoint, cjk_glyph_name in cjk_cmap.items():
         if codepoint in cjk_unicodes:
             new_glyph_name = f"{prefix}{cjk_glyph_name}"
-            if new_glyph_name in base_glyf:
+            
+            # 确保每个字形只进行一次调整
+            if new_glyph_name in base_glyf and new_glyph_name not in processed_set:
+                processed_set.add(new_glyph_name)
+
                 original_adv = cjk_hmtx.metrics[cjk_glyph_name][0]
                 scaled_adv = int(round(original_adv * upm_scale))
 
+                # 判断目标宽度
                 if strategy == ScaleStrategy.NO_STRETCH:
                     final_target_adv = scaled_adv
                 else:
@@ -446,16 +430,48 @@ def merge_cjk_glyphs(
                     else:
                         final_target_adv = target_adv_e
 
-                shift_x = (final_target_adv - scaled_adv) // 2
+                # 优先执行用户配置的特殊排版规则 (Stretch 或 特定 Alignment)
+                if codepoint in stretch_set and scaled_adv > 0:
+                    scale_factor = final_target_adv / float(scaled_adv)
+                    glyph = base_glyf[new_glyph_name]
+                    
+                    if scale_factor != 1.0:
+                        if glyph.isComposite():
+                            for comp in glyph.components:
+                                if hasattr(comp, "x") and comp.x is not None:
+                                    comp.x = int(round(comp.x * scale_factor))
+                        else:
+                            if hasattr(glyph, "coordinates"):
+                                coords = []
+                                for x, y in glyph.coordinates:
+                                    coords.append((int(round(x * scale_factor)), y))
+                                glyph.coordinates = GlyphCoordinates(coords)
+                                
+                    _, current_lsb = base_hmtx.metrics[new_glyph_name]
+                    base_hmtx.metrics[new_glyph_name] = (
+                        final_target_adv,
+                        int(round(current_lsb * scale_factor))
+                    )
+                else:
+                    # 如果用户配置了对齐，使用用户的配置；否则默认居中
+                    alignment = alignment_map.get(codepoint, Alignment.CENTER)
+                    
+                    if alignment == Alignment.LEFT:
+                        shift_x = 0
+                    elif alignment == Alignment.CENTER:
+                        shift_x = (final_target_adv - scaled_adv) // 2
+                    elif alignment == Alignment.RIGHT:
+                        shift_x = final_target_adv - scaled_adv
+                    else:
+                        shift_x = 0
 
-                shift_glyph_and_metrics(
-                    base_glyf,
-                    base_hmtx,
-                    new_glyph_name,
-                    shift_x,
-                    final_target_adv,
-                    processed_set
-                )
+                    shift_glyph_and_metrics(
+                        base_glyf,
+                        base_hmtx,
+                        new_glyph_name,
+                        shift_x,
+                        final_target_adv
+                    )
 
     for table in base_font["cmap"].tables:
         if table.isUnicode():
@@ -467,7 +483,7 @@ def merge_cjk_glyphs(
                 table.cmap.update(base_cmap)
 
 
-def pad_glyph_width(font: TTFont, codepoint: int, target_advance: int, alignment: Alignment) -> None:
+def pad_glyph_width(font: TTFont, codepoint: int, target_advance: int, alignment: Alignment):
     """
     Increases the advance width of a glyph by padding it with whitespace based on alignment.
 
@@ -523,7 +539,7 @@ def pad_glyph_width(font: TTFont, codepoint: int, target_advance: int, alignment
     hmtx.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
 
 
-def stretch_glyph_width(font: TTFont, codepoint: int, target_advance: int) -> None:
+def stretch_glyph_width(font: TTFont, codepoint: int, target_advance: int):
     """
     Stretches a specific glyph's geometry horizontally to match a new advance width.
 
@@ -752,6 +768,13 @@ def process_font(config: FontMergeConfig):
     if config.adjust_baseline:
         y_offset += calculate_baseline_offset(eng_font, cjk_font, upm_scale)
 
+    # 提取规则字典，传入 CJK 合并函数中
+    stretch_set = get_codepoints(config.stretch_chars)
+    alignment_map: dict[int, Alignment] = {}
+    for pad_config in config.pad_configs:
+        for cp in get_codepoints(pad_config.chars):
+            alignment_map[cp] = pad_config.alignment
+
     merge_cjk_glyphs(
         eng_font,
         cjk_font,
@@ -760,11 +783,13 @@ def process_font(config: FontMergeConfig):
         upm_scale,
         y_offset,
         scaled_cjk_adv,
-        config.scaling_strategy
+        config.scaling_strategy,
+        stretch_set,
+        alignment_map
     )
 
-    stretch_codepoints = get_codepoints(config.stretch_chars)
-    for codepoint in stretch_codepoints:
+    # 外部调用保留：用于处理英文字体中原有的符号（如英文省略号或特殊连字符）
+    for codepoint in stretch_set:
         stretch_glyph_width(eng_font, codepoint, target_adv_c)
 
     for pad_config in config.pad_configs:
@@ -783,9 +808,6 @@ def process_font(config: FontMergeConfig):
 
 
 def main():
-    """
-    Main entry point defining the configurations and running the batch process.
-    """
     configs = [
         FontMergeConfig(
             output_filename="MyMergedFont-Regular.ttf",
