@@ -2,7 +2,7 @@ return {
     "nvim-neorg/neorg",
     dependencies = {
         (function()
-            if vim.fn.hostname == 'zhaosheng-MacBookAir2022.local' or vim.g.neovide then
+            if vim.fn.hostname() == 'zhaosheng-MacBookAir2022.local' or vim.g.neovide then
                 return { "jbyuki/nabla.nvim" }
             else
                 return { "3rd/image.nvim" }
