@@ -9,12 +9,14 @@ return {
         { "nvim-telescope/telescope-ui-select.nvim", cond = true },
         "nvim-telescope/telescope-file-browser.nvim",
         'GustavoKatel/telescope-asynctasks.nvim',
-        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install' }
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install' },
+        "benfowler/telescope-luasnip.nvim"
     },
     config = function()
         require('telescope').load_extension('asynctasks')
         require('telescope').load_extension('fzf')
         require("telescope").load_extension("ui-select")
+        require('telescope').load_extension('luasnip')
 
         local actions = require("telescope.actions")
 
@@ -300,6 +302,21 @@ return {
                         height = 0.5
                     }
                 },
+                luasnip = {
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
+                }
             }
         }
 

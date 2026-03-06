@@ -2,10 +2,9 @@ return {
     "nvim-neorg/neorg",
     dependencies = {
         (function()
-            if vim.fn.hostname == 'zhaosheng-MacBookAir2022.local' then
+            if vim.fn.hostname == 'zhaosheng-MacBookAir2022.local' or vim.g.neovide then
                 return { "jbyuki/nabla.nvim" }
             else
-                -- "folke/snacks.nvim",
                 return { "3rd/image.nvim" }
             end
         end)(),
@@ -42,13 +41,6 @@ return {
             ["core.concealer"] = {
                 config = {
                     icon_preset = "diamond"
-                }
-            },
-            ["core.defaults"] = {
-                config = {
-                    disable = {
-                        "core.integrations.image",
-                    }
                 }
             },
             ["core.dirman"] = {
@@ -133,21 +125,19 @@ return {
         }
     },
     config = function(_, opts)
-        if vim.g.neovide or vim.fn.has("win32") == 1 then
+        if vim.g.neovide or vim.fn.has("win32") == 1 or vim.fn.hostname() ~= 'zhaosheng-MacBookAir2022.local' then
             opts.load["core.defaults"].config.disable = {
                 "core.integrations.image",
                 "core.latex.renderer"
             }
         else
-            if vim.fn.hostname() ~= 'zhaosheng-MacBookAir2022.local' then
-                -- opts.load["core.integrations.image"] = {}
-                opts.load["core.latex.renderer"] = {
-                    config = {
-                        conceal = true,
-                        render_on_enter = true,
-                    }
+            opts.load["core.integrations.image"] = {}
+            opts.load["core.latex.renderer"] = {
+                config = {
+                    conceal = true,
+                    render_on_enter = true,
                 }
-            end
+            }
         end
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "norg",
