@@ -1,7 +1,4 @@
 local ft = { "markdown", "codecompanion" }
--- if vim.fn.hostname == "zhaosheng-MacBookAir2022.local" then
-    table.insert(ft, "norg")
--- end
 
 return {
     "jbyuki/nabla.nvim",

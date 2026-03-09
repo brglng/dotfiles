@@ -1,13 +1,7 @@
 return {
     "nvim-neorg/neorg",
     dependencies = {
-        (function()
-            if vim.fn.hostname() == 'zhaosheng-MacBookAir2022.local' or vim.g.neovide then
-                return { "jbyuki/nabla.nvim" }
-            else
-                return { "3rd/image.nvim" }
-            end
-        end)(),
+        { "3rd/image.nvim", cond = (not vim.g.neovide and vim.fn.has('win32') == 0) },
         "nvim-treesitter/nvim-treesitter",
         { "nvim-neorg/neorg-telescope" },
         { "benlubas/neorg-conceal-wrap" },
@@ -125,7 +119,7 @@ return {
         }
     },
     config = function(_, opts)
-        if vim.g.neovide or vim.fn.has("win32") == 1 or vim.fn.hostname() ~= 'zhaosheng-MacBookAir2022.local' then
+        if vim.g.neovide or vim.fn.has("win32") == 1 then
             opts.load["core.defaults"].config.disable = {
                 "core.integrations.image",
                 "core.latex.renderer"

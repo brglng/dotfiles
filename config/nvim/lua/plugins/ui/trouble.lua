@@ -8,8 +8,9 @@ return {
         focus = true
     },
     keys = {
+        { "gd", "<Cmd>SidebarToggle trouble_lsp_definitions<CR>", mode = "n", desc = "Definitions" },
         { "<Leader>ld", "<Cmd>SidebarToggle trouble_lsp_definitions<CR>", mode = "n", desc = "Definitions" },
-        { "<Leader>lD", "<Cmd>SidebarToggle trouble_lsp_declarations<CR>", mode = "n", desc = "Definitions" },
+        { "<Leader>lk", "<Cmd>SidebarToggle trouble_lsp_declarations<CR>", mode = "n", desc = "Declarations" },
         { "<Leader>li", "<Cmd>SidebarToggle trouble_lsp_implementations<CR>", mode = "n", desc = "Implementations" },
         { "<Leader>lr", "<Cmd>SidebarToggle trouble_lsp_references<CR>", mode = "n", desc = "References" },
         { "<Leader>lt", "<Cmd>SidebarToggle trouble_lsp_type_definitions<CR>", mode = "n", desc = "Type Definitions" },
