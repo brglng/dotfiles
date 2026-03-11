@@ -121,6 +121,12 @@ return {
     },
     config = function(_, opts)
         -- if vim.g.neovide or vim.fn.has("win32") == 1 then
+            if not opts.load["core.defaults"] then
+                opts.load["core.defaults"] = {}
+            end
+            if not opts.load["core.defaults"].config then
+                opts.load["core.defaults"].config = {}
+            end
             opts.load["core.defaults"].config.disable = {
                 "core.integrations.image",
                 "core.latex.renderer"
