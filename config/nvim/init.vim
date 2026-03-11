@@ -33,11 +33,6 @@ if !has('nvim')
     endif
 endif
 
-if hostname() == 'zhaosheng-MacBookAir2022.local'
-    let $XDG_RUNTIME_DIR = $HOME . '/.local/tmp'
-    let $TMPDIR = $HOME . '/.local/tmp'
-endif
-
 if has("patch-8.1.0360")
   set diffopt+=internal,algorithm:patience
 endif
@@ -266,7 +261,7 @@ set foldenable
 set diffopt+=context:99999
 
 " omni complete settings
-set completeopt=menuone,noinsert,noselect
+set completeopt=fuzzy,menuone,popup,noinsert
 set pumheight=15
 silent! set pumblend=0
 

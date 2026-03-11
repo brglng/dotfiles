@@ -6,7 +6,6 @@ return {
         "williamboman/mason.nvim",
     },
     ft = ft,
-    cond = (vim.g.neovide or vim.fn.has("win32") == 1),
     lazy = true,
     config = function()
         vim.api.nvim_create_autocmd("FileType", {

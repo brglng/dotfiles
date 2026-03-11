@@ -1,7 +1,8 @@
 return {
     "3rd/image.nvim",
     enabled = true,
-    cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0),
+    -- cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0),
+    cond = false,
     lazy = true,
     opts = {
         backend = "kitty", -- whatever backend you would like to use

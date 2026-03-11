@@ -30,7 +30,6 @@ return {
         end
 
         cmp.setup {
-            preselect = cmp.PreselectMode.None,
             window = {
                 completion = cmp.config.window.bordered({
                     border = (function()
@@ -144,7 +143,9 @@ return {
             mapping = cmp.mapping.preset.insert({
                 ['<C-x><C-x>'] = cmp.mapping.complete(),
                 ['<Tab>'] = cmp.mapping(function(fallback)
-                    if luasnip.locally_jumpable(1) then
+                    if cmp.visible() and cmp.get_active_entry() then
+                        cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+                    elseif luasnip.locally_jumpable(1) then
                         luasnip.jump(1)
                     elseif require("copilot.suggestion").is_visible() then
                         require("copilot.suggestion").accept()

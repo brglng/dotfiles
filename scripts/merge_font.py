@@ -270,7 +270,7 @@ def get_typical_advance(font: TTFont, char_code: int) -> int:
     return font["head"].unitsPerEm // 2
 
 
-def calculate_baseline_offset(eng_font: TTFont, cjk_font: TTFont, upm_scale: float) -> int:
+def calculate_baseline_offset(eng_font: TTFont, eng_upm_scale: TTFont, cjk_font: TTFont, cjk_upm_scale: float) -> int:
     """
     Calculates the Y-axis offset needed to align the CJK visual center
     with the English visual center.
@@ -279,10 +279,12 @@ def calculate_baseline_offset(eng_font: TTFont, cjk_font: TTFont, upm_scale: flo
     ----------
     eng_font : TTFont
         The English base font.
+    eng_upm_scale : float
+        The scale factor to normalize units per em for the English font.
     cjk_font : TTFont
         The CJK font to be mapped.
-    upm_scale : float
-        The scale factor to normalize units per em.
+    cjk_upm_scale : float
+        The scale factor to normalize units per em for the CJK font.
 
     Returns
     -------
@@ -295,8 +297,9 @@ def calculate_baseline_offset(eng_font: TTFont, cjk_font: TTFont, upm_scale: flo
     eng_center = (eng_os2.sTypoAscender + eng_os2.sTypoDescender) / 2.0
     cjk_center = (cjk_os2.sTypoAscender + cjk_os2.sTypoDescender) / 2.0
 
-    scaled_cjk_center = cjk_center * upm_scale
-    offset = int(round(eng_center - scaled_cjk_center))
+    scaled_eng_center = eng_center * eng_upm_scale
+    scaled_cjk_center = cjk_center * cjk_upm_scale
+    offset = int(round(scaled_eng_center - scaled_cjk_center))
     return offset
 
 
@@ -392,7 +395,8 @@ def merge_cjk_glyphs(
     cjk_font: TTFont,
     target_adv_c: int,
     target_adv_e: int,
-    upm_scale: float,
+    eng_upm_scale: float,
+    cjk_upm_scale: float,
     y_offset: int,
     typical_scaled_cjk_adv: float,
     strategy: ScaleStrategy,
@@ -455,16 +459,16 @@ def merge_cjk_glyphs(
                         if copied_glyph.isComposite():
                             for comp in copied_glyph.components:
                                 if hasattr(comp, "x") and comp.x is not None:
-                                    comp.x = int(round(comp.x * upm_scale))
+                                    comp.x = int(round(comp.x * cjk_upm_scale))
                                 if hasattr(comp, "y") and comp.y is not None:
-                                    comp.y = int(round(comp.y * upm_scale)) + y_offset
+                                    comp.y = int(round(comp.y * cjk_upm_scale)) + y_offset
                         else:
                             if hasattr(copied_glyph, "coordinates"):
                                 coords = []
                                 for x, y in copied_glyph.coordinates:
                                     coords.append((
-                                        int(round(x * upm_scale)),
-                                        int(round(y * upm_scale)) + y_offset
+                                        int(round(x * cjk_upm_scale)),
+                                        int(round(y * cjk_upm_scale)) + y_offset
                                     ))
                                 copied_glyph.coordinates = GlyphCoordinates(coords)
 
@@ -473,15 +477,15 @@ def merge_cjk_glyphs(
                     if dep_name in cjk_hmtx.metrics:
                         adv, lsb = cjk_hmtx.metrics[dep_name]
                         base_hmtx.metrics[new_dep_name] = (
-                            int(round(adv * upm_scale)),
-                            int(round(lsb * upm_scale))
+                            int(round(adv * cjk_upm_scale)),
+                            int(round(lsb * cjk_upm_scale))
                         )
 
                     if has_vmtx and dep_name in cjk_vmtx.metrics:
                         v_adv, tsb = cjk_vmtx.metrics[dep_name]
                         base_vmtx.metrics[new_dep_name] = (
-                            int(round(v_adv * upm_scale)),
-                            int(round(tsb * upm_scale)) - y_offset
+                            int(round(v_adv * cjk_upm_scale)),
+                            int(round(tsb * cjk_upm_scale)) - y_offset
                         )
 
             base_cmap[codepoint] = f"{cjk_glyph_name}"
@@ -496,7 +500,7 @@ def merge_cjk_glyphs(
                 processed_set.add(new_glyph_name)
 
                 original_adv = cjk_hmtx.metrics[cjk_glyph_name][0]
-                scaled_adv = int(round(original_adv * upm_scale))
+                scaled_adv = int(round(original_adv * cjk_upm_scale))
 
                 if strategy == ScaleStrategy.NO_STRETCH:
                     final_target_adv = scaled_adv
@@ -797,19 +801,17 @@ def process_font(config: FontMergeConfig):
 
     eng_upm = eng_font["head"].unitsPerEm
     cjk_upm = cjk_font["head"].unitsPerEm
-    upm_scale = eng_upm / float(cjk_upm)
+    upm = max(eng_upm, cjk_upm)
+    eng_upm_scale = upm / float(eng_upm)
+    cjk_upm_scale = upm / float(cjk_upm)
 
     eng_typical_adv = get_typical_advance(eng_font, ord('A'))
     cjk_typical_adv = get_typical_advance(cjk_font, ord('中'))
-    scaled_cjk_adv = cjk_typical_adv * upm_scale
-
-    eng_scale_x = 1.0
-    eng_scale_y = 1.0
-    target_adv_e = eng_typical_adv
-    target_adv_c = eng_typical_adv * 2
+    scaled_eng_adv = eng_typical_adv * eng_upm_scale
+    scaled_cjk_adv = cjk_typical_adv * cjk_upm_scale
 
     if config.scaling_strategy == ScaleStrategy.ENGLISH_KEEP_CJK_SCALE_GAP:
-        target_adv_e = eng_typical_adv
+        target_adv_e = scaled_eng_adv
         target_adv_c = target_adv_e * 2
 
     elif config.scaling_strategy == ScaleStrategy.ENGLISH_SCALE_GAP_CJK_KEEP:
@@ -822,30 +824,30 @@ def process_font(config: FontMergeConfig):
     elif config.scaling_strategy == ScaleStrategy.ENGLISH_STRETCH_CJK_KEEP:
         target_adv_e = int(round(scaled_cjk_adv / 2.0))
         eng_scale_x = target_adv_e / float(eng_typical_adv)
-        eng_scale_y = 1.0
+        eng_scale_y = eng_upm_scale
         target_adv_c = target_adv_e * 2
 
     elif config.scaling_strategy == ScaleStrategy.OPTIMAL_SCALE_BOTH:
         eng_ratio = eng_typical_adv / float(eng_upm)
-        cjk_ratio = scaled_cjk_adv / float(eng_upm)
+        cjk_ratio = cjk_typical_adv / float(cjk_upm)
         optimal_rho = calculate_optimal_rho(eng_ratio, cjk_ratio, config.weight_english)
 
-        target_adv_e = int(round(eng_upm * optimal_rho))
+        target_adv_e = int(round(upm * optimal_rho))
         eng_scale_x = target_adv_e / float(eng_typical_adv)
-        eng_scale_y = 1.0
+        eng_scale_y = eng_upm_scale
         target_adv_c = target_adv_e * 2
 
     elif config.scaling_strategy == ScaleStrategy.NO_STRETCH:
-        target_adv_e = eng_typical_adv
+        target_adv_e = int(round(scaled_eng_adv))
         target_adv_c = int(round(scaled_cjk_adv))
-        eng_scale_x = 1.0
-        eng_scale_y = 1.0
+        eng_scale_x = eng_upm_scale
+        eng_scale_y = eng_upm_scale
 
     scale_font_glyphs(eng_font, eng_scale_x, eng_scale_y)
 
     y_offset = config.cjk_y_offset
     if config.adjust_baseline:
-        y_offset += calculate_baseline_offset(eng_font, cjk_font, upm_scale)
+        y_offset += calculate_baseline_offset(eng_font, eng_upm_scale, cjk_font, cjk_upm_scale)
 
     stretch_set = get_codepoints(config.stretch_chars)
     alignment_map: dict[int, Alignment] = {}
@@ -858,7 +860,8 @@ def process_font(config: FontMergeConfig):
         cjk_font,
         target_adv_c,
         target_adv_e,
-        upm_scale,
+        eng_upm_scale,
+        cjk_upm_scale,
         y_offset,
         scaled_cjk_adv,
         config.scaling_strategy,

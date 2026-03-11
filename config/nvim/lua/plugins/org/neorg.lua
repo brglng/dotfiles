@@ -1,7 +1,8 @@
 return {
     "nvim-neorg/neorg",
     dependencies = {
-        { "3rd/image.nvim", cond = (not vim.g.neovide and vim.fn.has('win32') == 0) },
+        -- { "3rd/image.nvim", cond = (not vim.g.neovide and vim.fn.has('win32') == 0) },
+        { "jbyuki/nabla.nvim" },
         "nvim-treesitter/nvim-treesitter",
         { "nvim-neorg/neorg-telescope" },
         { "benlubas/neorg-conceal-wrap" },
@@ -119,20 +120,20 @@ return {
         }
     },
     config = function(_, opts)
-        if vim.g.neovide or vim.fn.has("win32") == 1 then
+        -- if vim.g.neovide or vim.fn.has("win32") == 1 then
             opts.load["core.defaults"].config.disable = {
                 "core.integrations.image",
                 "core.latex.renderer"
             }
-        else
-            opts.load["core.integrations.image"] = {}
-            opts.load["core.latex.renderer"] = {
-                config = {
-                    conceal = true,
-                    render_on_enter = true,
-                }
-            }
-        end
+        -- else
+        --     opts.load["core.integrations.image"] = {}
+        --     opts.load["core.latex.renderer"] = {
+        --         config = {
+        --             conceal = true,
+        --             render_on_enter = true,
+        --         }
+        --     }
+        -- end
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "norg",
             callback = function()
