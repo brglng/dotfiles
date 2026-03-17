@@ -17,7 +17,7 @@ return {
         strategies = {
             chat = {
                 adaptor = "copilot",
-                model = "gemini-3-pro-preview",
+                model = "claude-opus-4.5",
                 keymaps = {
                     send = {
                         -- modes = { n = "<C-Enter>", i = "<C-Enter>" },
@@ -29,11 +29,11 @@ return {
             },
             inline = {
                 adaptor = "copilot",
-                model = "gemini-3-pro-preview",
+                model = "claude-opus-4.5",
             },
             cmd = {
                 adaptor = "copilot",
-                model = "gemini-3-pro-preview",
+                model = "claude-opus-4.5",
             },
         },
         display = {
