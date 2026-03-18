@@ -1,4 +1,4 @@
 return {
-    "p00f/clangd_extensions.nvim",
-    ft = { "c", "cpp" }
+    "dchinmay2/clangd_extensions.nvim",
+    ft = { "c", "cpp", "objc" }
 }

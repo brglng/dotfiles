@@ -8,18 +8,12 @@ return {
         { "benlubas/neorg-conceal-wrap" },
         { "benlubas/neorg-interim-ls" },
         {
-            -- "benlubas/neorg-query",
-            "brglng/neorg-query",
-            branch = "feature/windows",
-            -- build = (function()
-            --     if vim.fn.has('win32') then
-            --         return false
-            --     else
-            --         return nil
-            --     end
-            -- end)(),
+            "benlubas/neorg-query",
+            -- "brglng/neorg-query",
+            -- branch = "feature/windows",
         },
-        { dir = vim.fs.normalize("~/github/neorg-auto-summary") }
+        { dir = vim.fs.normalize("~/github/neorg-auto-summary") },
+        { dir = vim.fs.normalize("~/github/neorg-nabla") }
     },
     -- lazy = true, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
     version = "*", -- Pin Neorg to the latest stable release
@@ -117,6 +111,11 @@ return {
                 }
             },
             ["external.query"] = {},
+            ["external.nabla"] = {
+                config = {
+                    render_on_enter = true,
+                }
+            }
         }
     },
     config = function(_, opts)

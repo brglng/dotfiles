@@ -75,7 +75,7 @@ return {
                 return {
                     border = "rounded",
                     focusable = true,
-                    winhighlight = "FloatBorder:LspFloatingPreviewBorder,NormalFloat:Normal,@markup.raw.block.markdown:Normal"
+                    winhighlight = "FloatBorder:LspFloatingPreviewBorder,NormalFloat:Normal"
                 }
             end
         end)(),
@@ -322,6 +322,12 @@ return {
         local orig_open_floating_preview = vim.lsp.util.open_floating_preview
         vim.lsp.util.open_floating_preview = function(contents, syntax, opts_)
             opts_ = vim.tbl_deep_extend("force", opts_ or {}, opts.floating_preview)
+            if opts_.max_width then
+                opts_.max_width = math.floor(opts_.max_width + 0.5)
+            end
+            if opts._width then
+                opts_.width = math.floor(opts_.width + 0.5)
+            end
             local float_bufnr, win_id = orig_open_floating_preview(contents, syntax, opts_)
             if win_id ~= nil then
                 if opts_.winhighlight ~= nil then
@@ -340,7 +346,7 @@ return {
         end
 
         for server, server_opts in pairs(opts.servers) do
-            server_opts = vim.tbl_deep_extend('force',
+            local server_opts = vim.tbl_deep_extend('force',
                 {
                     capabilities = vim.tbl_deep_extend('force',
                         vim.lsp.protocol.make_client_capabilities(),

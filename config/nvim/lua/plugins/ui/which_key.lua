@@ -50,7 +50,6 @@ return {
             { "<Leader>c", group = "CodeCompanion" },
             { "<Leader>d", group = "Debug" },
             { "<Leader>f", group = "Fuzzy Finder" },
-            { "<Leader>g", group = "Git" },
             { "<Leader>h", group = "Hunk" },
             { "<Leader>l", group = "LSP" },
             { "<Leader>lc", group = "Call Hierarchy" },

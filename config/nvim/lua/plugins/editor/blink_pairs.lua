@@ -1,7 +1,7 @@
 return {
     'saghen/blink.pairs',
     version = '*',
-    dependencies = 'saghen/blink.download',
+    dependencies = 'saghen/blink.lib',
     event = { 'InsertEnter', 'CmdlineEnter' },
     opts = {
         mappings = {
