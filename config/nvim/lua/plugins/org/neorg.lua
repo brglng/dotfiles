@@ -7,11 +7,11 @@ return {
         { "nvim-neorg/neorg-telescope" },
         { "benlubas/neorg-conceal-wrap" },
         { "benlubas/neorg-interim-ls" },
-        {
-            "benlubas/neorg-query",
+        -- {
+            -- "benlubas/neorg-query",
             -- "brglng/neorg-query",
             -- branch = "feature/windows",
-        },
+        -- },
         { dir = vim.fs.normalize("~/github/neorg-auto-summary") },
         { dir = vim.fs.normalize("~/github/neorg-nabla") }
     },
@@ -110,10 +110,11 @@ return {
                     }
                 }
             },
-            ["external.query"] = {},
+            -- ["external.query"] = {},
             ["external.nabla"] = {
                 config = {
                     render_on_enter = true,
+                    conceal_math_tags = true,
                 }
             }
         }
