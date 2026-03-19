@@ -1,7 +1,7 @@
 return {
     "nvim-neorg/neorg",
     dependencies = {
-        -- { "3rd/image.nvim", cond = (not vim.g.neovide and vim.fn.has('win32') == 0) },
+        { "3rd/image.nvim" },
         { "jbyuki/nabla.nvim" },
         "nvim-treesitter/nvim-treesitter",
         { "nvim-neorg/neorg-telescope" },
@@ -80,6 +80,7 @@ return {
                 config = {
                     name = "index.norg",
                     autocmd = true,
+                    metadata = true,
                 }
             },
             ["external.conceal-wrap"] = {},
@@ -128,7 +129,6 @@ return {
                 opts.load["core.defaults"].config = {}
             end
             opts.load["core.defaults"].config.disable = {
-                "core.integrations.image",
                 "core.latex.renderer"
             }
         -- else

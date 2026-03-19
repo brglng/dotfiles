@@ -6,12 +6,12 @@ tabs = false
 
 [font]
 normal = [
-    "LXGW Bright Code TC NF",
-    # "Maple Mono NF CN",
+    # "LXGW Bright Code TC NF",
+    "Maple Mono NF CN",
     "Flog Symbols",
 ]
 hinting = "none"
-size = 16.0
+size = 14.0
 # width = 0.4
 
 [box-drawing]

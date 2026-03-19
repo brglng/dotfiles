@@ -268,8 +268,8 @@ config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
 config.freetype_load_target = "Normal"
 config.freetype_render_target = "Normal"
 config.font = wezterm.font_with_fallback {
-    "LXGW Bright Code TC NF",
-    -- "Maple Mono NF CN",
+    -- "LXGW Bright Code TC NF",
+    "Maple Mono NF CN",
     "Flog Symbols",
 }
 -- Fix cell width for CJK punctuations
@@ -313,7 +313,7 @@ config.cell_widths = {
 if WINDOWS then
     config.font_size = 12.0
 else
-    config.font_size = 16.0
+    config.font_size = 14.0
 end
 
 config.enable_kitty_graphics = false
