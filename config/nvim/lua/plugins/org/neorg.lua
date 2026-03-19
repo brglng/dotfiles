@@ -79,7 +79,8 @@ return {
             ["external.auto-summary"] = {
                 config = {
                     name = "index.norg",
-                    autocmd = true,
+                    summary_on_launch = true,
+                    update_on_change = true,
                     inject_metadata = true,
                 }
             },
