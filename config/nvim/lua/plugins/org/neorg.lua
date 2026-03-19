@@ -7,11 +7,11 @@ return {
         { "nvim-neorg/neorg-telescope" },
         { "benlubas/neorg-conceal-wrap" },
         { "benlubas/neorg-interim-ls" },
-        -- {
-            -- "benlubas/neorg-query",
+        {
+            "benlubas/neorg-query",
             -- "brglng/neorg-query",
             -- branch = "feature/windows",
-        -- },
+        },
         { dir = vim.fs.normalize("~/github/neorg-auto-summary") },
         { dir = vim.fs.normalize("~/github/neorg-nabla") }
     },
@@ -80,7 +80,7 @@ return {
                 config = {
                     name = "index.norg",
                     autocmd = true,
-                    metadata = true,
+                    inject_metadata = true,
                 }
             },
             ["external.conceal-wrap"] = {},
