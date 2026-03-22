@@ -86,6 +86,10 @@ function link_common() {
     # link "$PWD/config/alacritty/colors"         "$HOME/config/.alacritty/colors"
     update_gitconfig
     update_kitty_conf
+    link "$PWD/config/nvim"                     "$HOME/.config/kitty/themes"
+    link "$PWD/config/nvim"                     "$HOME/.config/kitty/dark-theme.auto.conf"
+    link "$PWD/config/nvim"                     "$HOME/.config/kitty/light-theme.auto.conf"
+    link "$PWD/config/nvim"                     "$HOME/.config/kitty/no-preference-theme.auto.conf"
     update_zshrc
 }
 

@@ -268,9 +268,9 @@ config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
 config.freetype_load_target = "Normal"
 config.freetype_render_target = "Normal"
 config.font = wezterm.font_with_fallback {
-    "LXGW Bright Code TC NF",
-    -- "Maple Mono NF CN",
-    -- "Flog Symbols",
+    -- "LXGW Bright Code TC NF",
+    "Maple Mono NF CN",
+    "Flog Symbols",
 }
 -- Fix cell width for CJK punctuations
 config.cell_widths = {
@@ -311,9 +311,9 @@ config.cell_widths = {
 }
 
 if WINDOWS then
-    config.font_size = 12.0
+    config.font_size = 10.0
 else
-    config.font_size = 16.0
+    config.font_size = 14.0
 end
 
 config.enable_kitty_graphics = false
@@ -432,7 +432,7 @@ if WINDOWS then
         baud = 115200,
     })
 
-    config.default_domain = 'Mux'
+    config.default_domain = 'local'
 
     table.insert(config.launch_menu, {
         label = 'Mux ❯ Nushell',
@@ -583,7 +583,7 @@ if WINDOWS then
 
     config.default_prog = { "nu.exe", "-i", "-l" }
 else
-    config.default_domain = 'Mux'
+    config.default_domain = 'local'
     if MAC then
         if #wezterm.glob('/opt/homebrew/bin/nu') ~= 0 then
             config.default_prog = { '/opt/homebrew/bin/nu', '-l', '-i'  }
@@ -612,12 +612,12 @@ else
         end
     end
     table.insert(config.launch_menu, {
-        label = 'Mux',
-        domain = { DomainName = 'Mux' }
-    })
-    table.insert(config.launch_menu, {
         label = 'local',
         domain = { DomainName = 'local' }
+    })
+    table.insert(config.launch_menu, {
+        label = 'Mux',
+        domain = { DomainName = 'Mux' }
     })
 end
 
