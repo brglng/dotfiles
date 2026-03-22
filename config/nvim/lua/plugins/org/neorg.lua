@@ -1,7 +1,7 @@
 return {
     "nvim-neorg/neorg",
     dependencies = {
-        { "3rd/image.nvim" },
+        { "3rd/image.nvim", cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0) },
         { "jbyuki/nabla.nvim" },
         "nvim-treesitter/nvim-treesitter",
         { "nvim-neorg/neorg-telescope" },

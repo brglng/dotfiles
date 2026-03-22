@@ -1,11 +1,10 @@
 return {
     "3rd/image.nvim",
     enabled = true,
-    -- cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0),
-    cond = false,
+    cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0),
     lazy = true,
     opts = {
-        backend = "ueberzug", -- whatever backend you would like to use
+        backend = "kitty", -- whatever backend you would like to use
         processor = "magick_rock",
         -- max_width = 100,
         -- max_height = 12,
