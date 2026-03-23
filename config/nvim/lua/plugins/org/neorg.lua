@@ -32,6 +32,13 @@ return {
                     icon_preset = "diamond"
                 }
             },
+            ["core.defaults"] = {
+                config = {
+                    disable = {
+                        "core.latex.renderer"
+                    }
+                }
+            },
             ["core.dirman"] = {
                 config = {
                     workspaces = {
@@ -122,25 +129,17 @@ return {
         }
     },
     config = function(_, opts)
-        -- if vim.g.neovide or vim.fn.has("win32") == 1 then
-            if not opts.load["core.defaults"] then
-                opts.load["core.defaults"] = {}
-            end
-            if not opts.load["core.defaults"].config then
-                opts.load["core.defaults"].config = {}
-            end
-            opts.load["core.defaults"].config.disable = {
-                "core.latex.renderer"
-            }
-        -- else
-        --     opts.load["core.integrations.image"] = {}
+        if vim.g.neovide or vim.fn.has("win32") == 1 then
+            table.insert(opts.load["core.defaults"].config.disable, "core.integrations.image")
+        else
+            opts.load["core.integrations.image"] = {}
         --     opts.load["core.latex.renderer"] = {
         --         config = {
         --             conceal = true,
         --             render_on_enter = true,
         --         }
         --     }
-        -- end
+        end
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "norg",
             callback = function()
