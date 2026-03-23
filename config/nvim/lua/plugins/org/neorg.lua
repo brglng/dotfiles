@@ -68,10 +68,7 @@ return {
                 }
             },
             ["core.journal"] = {
-                config = {
-                    journal_folder = "library",
-                    strategy = "%Y/%m/%d-%H-%M-%S/index.norg",
-                }
+                config = {}
             },
             ["core.keybinds"] = {
                 config = {
