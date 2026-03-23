@@ -71,25 +71,25 @@ EOF
 }
 
 function link_common() {
-    link "$PWD/config/neovide"                  "$HOME/.config/neovide"
-    link "$PWD/config/nvim"                     "$HOME/.config/nvim"
-    link "$PWD/config/nvim"                     "$HOME/.vim"
-    link "$PWD/config/powerline"                "$HOME/.config/powerline"
-    link "$PWD/config/starship.toml"            "$HOME/.config/starship.toml"
-    link "$PWD/config/wezterm"                  "$HOME/.config/wezterm"
-    link "$PWD/gitignore_global"                "$HOME/.gitignore_global"
-    link "$PWD/tmux.conf"                       "$HOME/.tmux.conf"
-    link "$PWD/vimrc"                           "$HOME/.vimrc"
-    link "$PWD/zimrc"                           "$HOME/.zimrc"
-    link "$PWD/zprofile"                        "$HOME/.zprofile"
+    link "$PWD/config/neovide"                              "$HOME/.config/neovide"
+    link "$PWD/config/nvim"                                 "$HOME/.config/nvim"
+    link "$PWD/config/nvim"                                 "$HOME/.vim"
+    link "$PWD/config/powerline"                            "$HOME/.config/powerline"
+    link "$PWD/config/starship.toml"                        "$HOME/.config/starship.toml"
+    link "$PWD/config/wezterm"                              "$HOME/.config/wezterm"
+    link "$PWD/gitignore_global"                            "$HOME/.gitignore_global"
+    link "$PWD/tmux.conf"                                   "$HOME/.tmux.conf"
+    link "$PWD/vimrc"                                       "$HOME/.vimrc"
+    link "$PWD/zimrc"                                       "$HOME/.zimrc"
+    link "$PWD/zprofile"                                    "$HOME/.zprofile"
     # update_alacritty_toml
-    # link "$PWD/config/alacritty/colors"         "$HOME/config/.alacritty/colors"
+    # link "$PWD/config/alacritty/colors"                     "$HOME/config/.alacritty/colors"
     update_gitconfig
     update_kitty_conf
-    link "$PWD/config/nvim"                     "$HOME/.config/kitty/themes"
-    link "$PWD/config/nvim"                     "$HOME/.config/kitty/dark-theme.auto.conf"
-    link "$PWD/config/nvim"                     "$HOME/.config/kitty/light-theme.auto.conf"
-    link "$PWD/config/nvim"                     "$HOME/.config/kitty/no-preference-theme.auto.conf"
+    link "$PWD/config/kitty/themes"                         "$HOME/.config/kitty/themes"
+    link "$PWD/config/kitty/dark-theme.auto.conf"           "$HOME/.config/kitty/dark-theme.auto.conf"
+    link "$PWD/config/kitty/light-theme.auto.conf"          "$HOME/.config/kitty/light-theme.auto.conf"
+    link "$PWD/config/kitty/no-preference-theme.auto.conf"  "$HOME/.config/kitty/no-preference-theme.auto.conf"
     update_zshrc
 }
 
