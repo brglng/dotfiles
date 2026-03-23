@@ -13,7 +13,8 @@ return {
         --     -- branch = "feature/windows",
         -- },
         { dir = vim.fs.normalize("~/github/neorg-auto-summary") },
-        { dir = vim.fs.normalize("~/github/neorg-nabla") }
+        { dir = vim.fs.normalize("~/github/neorg-nabla") },
+        { dir = vim.fs.normalize("~/github/neorg-new") },
     },
     -- lazy = true, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
     version = "*", -- Pin Neorg to the latest stable release
@@ -124,6 +125,15 @@ return {
                 config = {
                     render_on_enter = true,
                     conceal_math_tags = true,
+                }
+            },
+            ["external.new"] = {
+                config = {
+                    filename = function(args)
+                        return os.date("%Y/%m/%d-%H-%M-%S/") .. table.concat(vim.tbl_map(function(arg)
+                            return vim.fn.substitute(vim.fn.tolower(arg), "\\s\\+", "-", "g")
+                        end, args), "-")
+                    end
                 }
             }
         }
