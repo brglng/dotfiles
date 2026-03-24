@@ -45,7 +45,22 @@ return {
                     workspaces = {
                         mynorg = "~/github/mynorg"
                     },
-                    default_workspace = "mynorg"
+                    default_workspace = function()
+                        if vim.fn.argc(-1) ~= 0 then
+                            return nil
+                        end
+                        local dirman = require("neorg").modules.get_module("core.dirman")
+                        local cwd = vim.uv.cwd()
+                        if not cwd then
+                            return nil
+                        end
+                        cwd = vim.fs.normalize(vim.fs.abspath(cwd))
+                        for name, path in pairs(dirman.get_workspaces()) do
+                            if vim.startswith(cwd, tostring(path:resolve():to_absolute())) then
+                                return name
+                            end
+                        end
+                    end
                 }
             },
             ["core.esupports.metagen"] = {
