@@ -325,7 +325,7 @@ return {
             if opts_.max_width then
                 opts_.max_width = math.floor(opts_.max_width + 0.5)
             end
-            if opts._width then
+            if opts_.width then
                 opts_.width = math.floor(opts_.width + 0.5)
             end
             local float_bufnr, win_id = orig_open_floating_preview(contents, syntax, opts_)
