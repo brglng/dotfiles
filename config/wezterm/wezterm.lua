@@ -196,22 +196,22 @@ wezterm.on("update-status", function(window, pane)
     local tab_inactive_fg = colors.tab_bar.inactive_tab.fg_color
     local leader, modes
     if get_appearance():find('Dark') then
-        leader = { text = '󱐋 ', fg = '#34302c', bg = '#d47766' }
+        leader = { text = '󱐋', fg = '#34302c', bg = '#d47766' }
         modes = {
-            copy_mode = { text = " 󰆏 ", fg = '#34302c', bg = '#ebc06d' },
-            search_mode = { text = " 󰍉 ", fg = '#34302c', bg = '#cf9bc2' },
-            window_mode = { text = " 󱂬 ", fg = '#34302c', bg = '#c1a78e' },
-            font_mode = { text = " 󰛖 ", fg = '#34302c', bg = '#c1a78e' },
-            lock_mode = { text = "  ", fg = '#34302c', bg = '#c1a78e' },
+            copy_mode = { text = "󰆏", fg = '#34302c', bg = '#ebc06d' },
+            search_mode = { text = "󰍉", fg = '#34302c', bg = '#cf9bc2' },
+            window_mode = { text = "󱂬", fg = '#34302c', bg = '#c1a78e' },
+            font_mode = { text = "󰛖", fg = '#34302c', bg = '#c1a78e' },
+            lock_mode = { text = "", fg = '#34302c', bg = '#c1a78e' },
         }
     else
-        leader = { text = '󱐋 ', fg = '#e9e1db', bg = '#bf0021' }
+        leader = { text = '󱐋', fg = '#e9e1db', bg = '#bf0021' }
         modes = {
-            copy_mode = { text = " 󰆏 ", fg = '#e9e1db', bg = '#a06d00' },
-            search_mode = { text = " 󰍉 ", fg = '#e9e1db', bg = '#904180' },
-            window_mode = { text = " 󱂬 ", fg = '#e9e1db', bg = '#7d6658' },
-            font_mode = { text = " 󰛖 ", fg = '#e9e1db', bg = '#7d6658' },
-            lock_mode = { text = "  ", fg = '#e9e1db', bg = '#7d6658' },
+            copy_mode = { text = "󰆏", fg = '#e9e1db', bg = '#a06d00' },
+            search_mode = { text = "󰍉", fg = '#e9e1db', bg = '#904180' },
+            window_mode = { text = "󱂬", fg = '#e9e1db', bg = '#7d6658' },
+            font_mode = { text = "󰛖", fg = '#e9e1db', bg = '#7d6658' },
+            lock_mode = { text = "", fg = '#e9e1db', bg = '#7d6658' },
         }
     end
 
@@ -223,7 +223,7 @@ wezterm.on("update-status", function(window, pane)
             { Foreground = { Color = tab_active_bg } },
             { Background = { Color = leader.bg } },
             { Attribute = { Intensity = 'Bold' } },
-            { Text = '󱐋 ' },
+            { Text = '󱐋' },
             { Foreground = { Color = leader.bg } },
             { Background = { Color = tabbar_bg } },
             { Text = " " }
@@ -251,7 +251,7 @@ wezterm.on("update-status", function(window, pane)
                 { Foreground = { Color = tabbar_bg } },
                 { Background = { Color = tabbar_bg } },
                 { Attribute = { Intensity = 'Bold' } },
-                { Text = '  ' },
+                { Text = ' ' },
                 { Foreground = { Color = tabbar_bg } },
                 { Background = { Color = tabbar_bg } },
                 { Text = " " }
