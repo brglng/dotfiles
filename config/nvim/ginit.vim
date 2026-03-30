@@ -22,22 +22,9 @@ if has('gui_running')
         inoremap <M-Space> <C-O>:simalt ~<CR>
         cnoremap <M-Space> <C-C>:simalt ~<CR>
     endif
-
-    if has('win32') || has('win64')
-        set guifont=FiraCodeNerdFontComplete-Regular:h13
-    elseif has('mac') || has('macunix')
-        set guifont=FiraCodeNerdFontComplete-Regular:h13
-    elseif has('unix')
-        if system('uname -s') == "Linux\n"
-            " font height bug of GVim on Ubuntu
-            let $LC_ALL='en_US.UTF-8'
-        endif
-        set guifont=Fura\ Code\ Nerd\ Font\ 11
-    endif
 endif
 
 if exists('g:GuiLoaded')
-    GuiFont! FuraCode Nerd Font:h11
     GuiLinespace 0
     GuiTabline 0
 endif
