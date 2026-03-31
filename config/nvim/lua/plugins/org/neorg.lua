@@ -17,7 +17,7 @@ return {
         { dir = vim.fs.normalize("~/github/neorg-new") },
     },
     -- lazy = true, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-    version = "*", -- Pin Neorg to the latest stable release
+    -- version = "*", -- Pin Neorg to the latest stable release
     -- build = ":Neorg sync-parsers",
     ft = "norg",
     cmd = "Neorg",
