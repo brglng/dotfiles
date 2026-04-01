@@ -5,3 +5,6 @@ macos-titlebar-style = hidden
 cursor-style = bar
 cursor-style-blink = false
 command = /bin/sh -c 'if [ -x ~/.pixi/bin/nu ]; then ~/.pixi/bin/nu -i -l; elif [ -x /opt/homebrew/bin/nu ]; then /opt/homebrew/bin/nu -i -l; elif [ -x /opt/homebrew/bin/zsh ]; then /opt/homebrew/bin/zsh -i -l; elif [ -x /usr/local/bin/zsh ]; then /usr/local/bin/zsh -i -l; else $SHELL; fi'
+notify-on-command-finish = unfocused
+notify-on-command-finish-action = bell,notify
+macos-option-as-alt = true
