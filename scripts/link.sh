@@ -90,6 +90,7 @@ function link_common() {
     link "$PWD/config/kitty/dark-theme.auto.conf"           "$HOME/.config/kitty/dark-theme.auto.conf"
     link "$PWD/config/kitty/light-theme.auto.conf"          "$HOME/.config/kitty/light-theme.auto.conf"
     link "$PWD/config/kitty/no-preference-theme.auto.conf"  "$HOME/.config/kitty/no-preference-theme.auto.conf"
+    link "$PWD/config/ghostty"                              "$HOME/.config/ghostty"
     update_zshrc
 }
 

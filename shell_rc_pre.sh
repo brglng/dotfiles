@@ -50,18 +50,18 @@ fi
 
 path_prepend "$HOME/.pixi/bin"
 
-export NVM_DIR=~/.nvm
-
-# make node and npm avalailable in the PATH
-path_prepend "$NVM_DIR/versions/node/$(<$NVM_DIR/alias/default)/bin"
-
-# lazy load nvm
-if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
-    source "/usr/share/nvm/init-nvm.sh"
-else
-    [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-    [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-fi
+# export NVM_DIR=~/.nvm
+#
+# # make node and npm avalailable in the PATH
+# path_prepend "$NVM_DIR/versions/node/$(<$NVM_DIR/alias/default)/bin"
+#
+# # lazy load nvm
+# if [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
+#     source "/usr/share/nvm/init-nvm.sh"
+# else
+#     [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]] && . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+#     [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# fi
 
 if [[ "$GOPATH" = "" ]]; then
     export GOPATH="$HOME/go"
