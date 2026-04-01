@@ -1,5 +1,7 @@
 font-family = Maple Mono NF CN
 font-size = 14
+font-thicken = false
+font-thicken-strength = 0
 theme = light:Rose Pine Dawn,dark:Rose Pine
 macos-titlebar-style = hidden
 cursor-style = bar

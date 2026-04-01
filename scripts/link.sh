@@ -77,6 +77,7 @@ function link_common() {
     link "$PWD/config/powerline"                            "$HOME/.config/powerline"
     link "$PWD/config/starship.toml"                        "$HOME/.config/starship.toml"
     link "$PWD/config/wezterm"                              "$HOME/.config/wezterm"
+    link "$PWD/config/tmux"                                 "$HOME/.config/tmux"
     link "$PWD/gitignore_global"                            "$HOME/.gitignore_global"
     link "$PWD/tmux.conf"                                   "$HOME/.tmux.conf"
     link "$PWD/vimrc"                                       "$HOME/.vimrc"

@@ -184,13 +184,13 @@ fi
 # gem install --user-install neovim
 npm install -g neovim
 
-mkdir -p ~/.tmux/plugins
-if [[ -r ~/.tmux/plugins/tpm && -d ~/.tmux/plugins/tpm ]]; then
-    pushd ~/.tmux/plugins/tpm
+mkdir -p ~/.local/share/tmux/plugins
+if [[ -r ~/.local/share/tmux/plugins/tpm && -d ~/.local/share/tmux/plugins/tpm ]]; then
+    pushd ~/.local/share/tmux/plugins/tpm
     git pull
     popd
 else
-    git clone --recursive https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    git clone --recursive https://github.com/tmux-plugins/tpm ~/.local/share/tmux/plugins/tpm
 fi
 
 if [[ -r ~/.zgen && -d ~/.zgen ]]; then
