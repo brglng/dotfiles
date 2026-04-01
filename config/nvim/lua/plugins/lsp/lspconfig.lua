@@ -365,19 +365,7 @@ return {
                 server_opts
             )
             if opts.codelens.enabled then
-                local orig_on_attach = server_opts.on_attach
-                server_opts.on_attach = function(client, buffer)
-                    if client.supports_method('textDocument/codeLens') then
-                        vim.lsp.codelens.refresh()
-                        vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost' }, {
-                            buffer = buffer,
-                            callback = vim.lsp.codelens.refresh
-                        })
-                    end
-                    if orig_on_attach ~= nil then
-                        orig_on_attach(client, buffer)
-                    end
-                end
+                vim.lsp.codelens.enable(true)
             end
             vim.lsp.config(server, server_opts)
             if server_opts.enabled then
