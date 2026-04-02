@@ -121,7 +121,7 @@ main() {
     fi
 
     while true; do
-        sleep 2
+        sleep 3
 
         if ! check_lock; then
             echo "Lock was taken over by another process, exiting..." >&2
