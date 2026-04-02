@@ -18,7 +18,7 @@ return {
             -- end,
         },
         image = {
-            enabled = false,
+            enabled = true,
             doc = {
                 enabled = true,
                 inline = true,

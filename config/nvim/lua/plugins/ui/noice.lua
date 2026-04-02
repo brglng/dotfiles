@@ -7,7 +7,7 @@ return {
         "rcarriga/nvim-notify",
     },
     event = "VeryLazy",
-    lazy = true,
+    -- lazy = false,
     opts = {
         cmdline = {
             enabled = true,

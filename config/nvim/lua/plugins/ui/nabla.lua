@@ -1,4 +1,4 @@
-local ft = { "markdown", "codecompanion" }
+local ft = { "norg" }
 
 return {
     "jbyuki/nabla.nvim",
