@@ -24,6 +24,13 @@ return {
                 inline = true,
                 float = false,
             },
+            math = {
+                latex = {
+                    color = function()
+                        return require("brglng.hl").get_attr("Normal.fg")
+                    end,
+                }
+            }
         },
         input = {
             enabled = false,
