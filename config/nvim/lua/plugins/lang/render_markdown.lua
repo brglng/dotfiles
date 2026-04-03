@@ -7,5 +7,8 @@ return {
     ft = { 'markdown', 'rmd', 'quarto', 'Avante', 'codecompanion' },
     opts = {
         file_types = { 'markdown', 'rmd', 'quarto', 'Avante', 'codecompanion' },
+        latex = {
+            highlight = "Normal"
+        }
     }
 }

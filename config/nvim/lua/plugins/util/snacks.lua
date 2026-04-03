@@ -24,13 +24,6 @@ return {
                 inline = true,
                 float = false,
             },
-            math = {
-                latex = {
-                    color = function()
-                        return require("brglng.hl").get_attr("Normal.fg")
-                    end,
-                }
-            }
         },
         input = {
             enabled = false,
@@ -58,6 +51,13 @@ return {
             }
         }
     },
+    config = function(_, opts)
+        require("snacks").setup(opts)
+        require("brglng.hl").transform_tbl {
+            SnacksImageMath = { fg = "Normal.fg" },
+        }
+            
+    end,
     keys = {
         -- {
         --     "<leader>i",

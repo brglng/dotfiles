@@ -4,6 +4,7 @@ return {
     lazy = true,
     dependencies = {
         "echasnovski/mini.icons",
+        "franco-ruggeri/codecompanion-lualine.nvim",
     },
     opts = {
         options = {
@@ -94,6 +95,7 @@ return {
                         return "sw=" .. vim.o.shiftwidth .. " ts=" .. vim.o.tabstop .. " sts=" .. vim.o.softtabstop .. " et=" .. (vim.o.expandtab and "on" or "off")
                     end
                 },
+                "codecompanion",
                 'fileformat',
                 'filetype',
             },

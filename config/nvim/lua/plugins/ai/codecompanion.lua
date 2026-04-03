@@ -4,6 +4,8 @@ return {
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
         "zbirenbaum/copilot.lua",
+        "ravitemer/codecompanion-history.nvim",
+        "franco-ruggeri/codecompanion-spinner.nvim"
     },
     -- event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     enabled = true,
@@ -17,23 +19,23 @@ return {
         strategies = {
             chat = {
                 adaptor = "copilot",
-                model = "claude-opus-4.5",
+                model = "gemini-3.1-pro-preview",
                 keymaps = {
                     send = {
-                        -- modes = { n = "<C-Enter>", i = "<C-Enter>" },
+                        -- modes = { n = "<C-CR>", i = "<C-CR>" },
                     },
                     close = {
-                        modes = { n = "q", i = "<C-d>" },
+                        modes = { n = "q", i = "<C-c>" },
                     }
                 }
             },
             inline = {
                 adaptor = "copilot",
-                model = "claude-opus-4.5",
+                model = "gemini-3.1-pro-preview",
             },
             cmd = {
                 adaptor = "copilot",
-                model = "claude-opus-4.5",
+                model = "gemini-3.1-pro-preview",
             },
         },
         display = {
@@ -43,6 +45,12 @@ return {
                 }
             }
         },
+        extensions = {
+            history = {
+                enabled = true,
+            },
+            spinner = {}
+        }
     },
     init = function ()
         vim.cmd([[cab cc CodeCompanion]])
