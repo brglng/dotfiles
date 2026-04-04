@@ -1008,3 +1008,11 @@ def 'vpn on' [] {
 def 'vpn off' [] {
     sudo systemctl stop openconnect.service
 }
+
+def t [] {
+    try {
+        ^tmux attach
+    } catch {
+        ^tmux new-session
+    }
+}
