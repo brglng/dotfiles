@@ -98,6 +98,7 @@ fi
 alias more='less'
 alias ssh='TERM=xterm-256color ssh'
 alias ping='ping -c 5'
+alias t='tmux attach || tmux new'
 
 # z.lua aliases
 alias zh='z -I -t .'

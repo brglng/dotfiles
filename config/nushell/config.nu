@@ -1009,10 +1009,4 @@ def 'vpn off' [] {
     sudo systemctl stop openconnect.service
 }
 
-def t [] {
-    try {
-        ^tmux attach
-    } catch {
-        ^tmux new-session
-    }
-}
+alias t = /bin/sh -c 'tmux attach || tmux new'
