@@ -1,5 +1,6 @@
 return {
     "nvim-neorg/neorg",
+    -- version = "*", -- Pin Neorg to the latest stable release
     dependencies = {
         { "3rd/image.nvim", cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0) },
         -- { "folke/snacks.nvim" },
@@ -17,9 +18,6 @@ return {
         { dir = vim.fs.normalize("~/github/neorg-nabla") },
         { dir = vim.fs.normalize("~/github/neorg-new") },
     },
-    -- lazy = true, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-    -- version = "*", -- Pin Neorg to the latest stable release
-    -- build = ":Neorg sync-parsers",
     ft = "norg",
     cmd = "Neorg",
     opts = {

@@ -7,7 +7,7 @@ return {
         require("statuscol").setup {
             relculright = true,
             ft_ignore = { "neo-tree", "neotree" },
-            bt_ignore = { "nofile", "terminal" },
+            -- bt_ignore = { "nofile", "terminal" },
             segments = {
                 {
                     sign = {
