@@ -1,4 +1,9 @@
-local ft = { "norg" }
+local ft
+if vim.g.neovide then
+    ft = { "norg" }
+else
+    ft = { "norg", "markdown", "codecompanion" }
+end
 
 return {
     "jbyuki/nabla.nvim",

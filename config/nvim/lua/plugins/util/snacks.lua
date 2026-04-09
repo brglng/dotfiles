@@ -18,7 +18,7 @@ return {
             -- end,
         },
         image = {
-            enabled = true,
+            enabled = ((not vim.g.neovide) and vim.fn.has("win32") == 0),
             doc = {
                 enabled = true,
                 inline = true,
