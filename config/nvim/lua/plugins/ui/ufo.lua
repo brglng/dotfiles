@@ -20,7 +20,7 @@ return {
         provider_selector = function(bufnr, filetype, buftype)
             return { 'treesitter', 'indent' }
         end,
-        disabled = { "neo-tree" }
+        disabled = { "neo-tree", "NeogitStatus" }
     },
     config = function (_, opts)
         require('ufo').setup(opts)
