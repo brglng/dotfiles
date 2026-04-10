@@ -24,6 +24,7 @@ return {
                 opts = {
                     allow_insecure = true,
                     proxy = "socks5://127.0.0.1:1086",
+                    show_model_choices = true
                 }
             }
         },

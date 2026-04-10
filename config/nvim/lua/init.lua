@@ -187,3 +187,5 @@ else
         vim.uv.chdir(vim.env.HOME or vim.env.USERPROFILE)
     end
 end
+
+-- require('vim._core.ui2').enable()

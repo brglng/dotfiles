@@ -43,6 +43,7 @@ return {
                     end
                 end)()
             },
+            severity_sort = true,
             signs = {
                 text = {
                     [vim.diagnostic.severity.ERROR] = " ",
