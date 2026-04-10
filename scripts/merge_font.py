@@ -270,39 +270,6 @@ def get_typical_advance(font: TTFont, char_code: int) -> int:
     return font["head"].unitsPerEm // 2
 
 
-def calculate_baseline_offset(eng_font: TTFont, eng_upm_scale: TTFont, cjk_font: TTFont, cjk_upm_scale: float) -> int:
-    """
-    Calculates the Y-axis offset needed to align the CJK visual center
-    with the English visual center.
-
-    Parameters
-    ----------
-    eng_font : TTFont
-        The English base font.
-    eng_upm_scale : float
-        The scale factor to normalize units per em for the English font.
-    cjk_font : TTFont
-        The CJK font to be mapped.
-    cjk_upm_scale : float
-        The scale factor to normalize units per em for the CJK font.
-
-    Returns
-    -------
-    int
-        The calculated vertical offset in font units.
-    """
-    eng_os2 = eng_font["OS/2"]
-    cjk_os2 = cjk_font["OS/2"]
-
-    eng_center = (eng_os2.sTypoAscender + eng_os2.sTypoDescender) / 2.0
-    cjk_center = (cjk_os2.sTypoAscender + cjk_os2.sTypoDescender) / 2.0
-
-    scaled_eng_center = eng_center * eng_upm_scale
-    scaled_cjk_center = cjk_center * cjk_upm_scale
-    offset = int(round(scaled_eng_center - scaled_cjk_center))
-    return offset
-
-
 def scale_font_glyphs(font: TTFont, scale_x: float, scale_y: float):
     """
     Scales all glyphs in the given font by the specified X and Y factors.
@@ -395,7 +362,6 @@ def merge_cjk_glyphs(
     cjk_font: TTFont,
     target_adv_c: int,
     target_adv_e: int,
-    eng_upm_scale: float,
     cjk_upm_scale: float,
     y_offset: int,
     typical_scaled_cjk_adv: float,
@@ -450,7 +416,7 @@ def merge_cjk_glyphs(
             dependencies = get_glyph_dependencies(cjk_glyph_name, cjk_glyf)
 
             for dep_name in dependencies:
-                new_dep_name = f"{dep_name}"
+                new_dep_name = f"cjk_{dep_name}"
 
                 if new_dep_name not in base_glyf:
                     if dep_name in cjk_glyf:
@@ -461,18 +427,25 @@ def merge_cjk_glyphs(
                                 if hasattr(comp, "x") and comp.x is not None:
                                     comp.x = int(round(comp.x * cjk_upm_scale))
                                 if hasattr(comp, "y") and comp.y is not None:
-                                    comp.y = int(round(comp.y * cjk_upm_scale)) + y_offset
+                                    comp.y = int(round(comp.y * cjk_upm_scale))
+                                    if dep_name == cjk_glyph_name:
+                                        comp.y += y_offset
                         else:
                             if hasattr(copied_glyph, "coordinates"):
                                 coords = []
                                 for x, y in copied_glyph.coordinates:
+                                    y_val = int(round(y * cjk_upm_scale))
+                                    if dep_name == cjk_glyph_name:
+                                        y_val += y_offset
                                     coords.append((
                                         int(round(x * cjk_upm_scale)),
-                                        int(round(y * cjk_upm_scale)) + y_offset
+                                        y_val
                                     ))
                                 copied_glyph.coordinates = GlyphCoordinates(coords)
 
                         base_glyf[new_dep_name] = copied_glyph
+                        if new_dep_name not in base_font.glyphOrder:
+                            base_font.glyphOrder.append(new_dep_name)
 
                     if dep_name in cjk_hmtx.metrics:
                         adv, lsb = cjk_hmtx.metrics[dep_name]
@@ -483,18 +456,21 @@ def merge_cjk_glyphs(
 
                     if has_vmtx and dep_name in cjk_vmtx.metrics:
                         v_adv, tsb = cjk_vmtx.metrics[dep_name]
+                        scaled_tsb = int(round(tsb * cjk_upm_scale))
+                        if dep_name == cjk_glyph_name:
+                            scaled_tsb -= y_offset
                         base_vmtx.metrics[new_dep_name] = (
                             int(round(v_adv * cjk_upm_scale)),
-                            int(round(tsb * cjk_upm_scale)) - y_offset
+                            scaled_tsb
                         )
 
-            base_cmap[codepoint] = f"{cjk_glyph_name}"
+            base_cmap[codepoint] = f"cjk_{cjk_glyph_name}"
 
     processed_set = set()
 
     for codepoint, cjk_glyph_name in cjk_cmap.items():
         if codepoint in cjk_unicodes:
-            new_glyph_name = f"{cjk_glyph_name}"
+            new_glyph_name = f"cjk_{cjk_glyph_name}"
             
             if new_glyph_name in base_glyf and new_glyph_name not in processed_set:
                 processed_set.add(new_glyph_name)
@@ -656,7 +632,7 @@ def stretch_glyph_width(font: TTFont, codepoint: int, target_advance: int):
             if hasattr(comp, "transform"):
                 try:
                     (xx, xy), (yx, yy) = comp.transform
-                    comp.transform = ((xx * scale_factor, xy * scale_factor), (yx, yy))
+                    comp.transform = ((xx * scale_factor, xy), (yx * scale_factor, yy))
                 except ValueError:
                     pass
     else:
@@ -705,7 +681,6 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str):
         for dep_name in dependencies:
             if dep_name in symbol_glyf:
                 copied_glyph = copy.deepcopy(symbol_glyf[dep_name])
-                copied_glyph.expand(symbol_glyf)
 
                 if copied_glyph.isComposite():
                     for comp in copied_glyph.components:
@@ -728,6 +703,8 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str):
                         copied_glyph.coordinates = GlyphCoordinates(coords)
 
                 base_glyf[dep_name] = copied_glyph
+                if dep_name not in base_font.glyphOrder:
+                    base_font.glyphOrder.append(dep_name)
 
             if dep_name in symbol_hmtx.metrics:
                 adv, lsb = symbol_hmtx.metrics[dep_name]
@@ -787,6 +764,53 @@ def update_font_metadata(font: TTFont, config: FontMergeConfig):
             record.string = new_text.encode(record.getEncoding())
 
 
+def scale_vertical_metrics(font: TTFont, scale: float):
+    """
+    Scales the vertical metrics tables (head, OS/2, hhea) by the given factor.
+
+    Parameters
+    ----------
+    font : TTFont
+        The font object to update.
+    scale : float
+        The scaling factor.
+    """
+    if scale == 1.0:
+        return
+
+    os2 = font["OS/2"]
+    os2.sTypoAscender = int(round(os2.sTypoAscender * scale))
+    os2.sTypoDescender = int(round(os2.sTypoDescender * scale))
+    os2.sTypoLineGap = int(round(os2.sTypoLineGap * scale))
+    os2.usWinAscent = int(round(os2.usWinAscent * scale))
+    os2.usWinDescent = int(round(os2.usWinDescent * scale))
+    os2.sxHeight = int(round(os2.sxHeight * scale))
+    os2.sCapHeight = int(round(os2.sCapHeight * scale))
+    os2.ySubscriptXSize = int(round(os2.ySubscriptXSize * scale))
+    os2.ySubscriptYSize = int(round(os2.ySubscriptYSize * scale))
+    os2.ySubscriptXOffset = int(round(os2.ySubscriptXOffset * scale))
+    os2.ySubscriptYOffset = int(round(os2.ySubscriptYOffset * scale))
+    os2.ySuperscriptXSize = int(round(os2.ySuperscriptXSize * scale))
+    os2.ySuperscriptYSize = int(round(os2.ySuperscriptYSize * scale))
+    os2.ySuperscriptXOffset = int(round(os2.ySuperscriptXOffset * scale))
+    os2.ySuperscriptYOffset = int(round(os2.ySuperscriptYOffset * scale))
+    os2.yStrikeoutSize = int(round(os2.yStrikeoutSize * scale))
+    os2.yStrikeoutPosition = int(round(os2.yStrikeoutPosition * scale))
+
+    hhea = font["hhea"]
+    hhea.ascent = int(round(hhea.ascent * scale))
+    hhea.descent = int(round(hhea.descent * scale))
+    hhea.lineGap = int(round(hhea.lineGap * scale))
+    hhea.caretSlopeRise = int(round(hhea.caretSlopeRise * scale))
+    hhea.caretOffset = int(round(hhea.caretOffset * scale))
+
+    if "vhea" in font:
+        vhea = font["vhea"]
+        vhea.ascent = int(round(vhea.ascent * scale))
+        vhea.descent = int(round(vhea.descent * scale))
+        vhea.lineGap = int(round(vhea.lineGap * scale))
+
+
 def process_font(config: FontMergeConfig):
     """
     Executes the complete font merging process based on the given configuration.
@@ -811,7 +835,9 @@ def process_font(config: FontMergeConfig):
     scaled_cjk_adv = cjk_typical_adv * cjk_upm_scale
 
     if config.scaling_strategy == ScaleStrategy.ENGLISH_KEEP_CJK_SCALE_GAP:
-        target_adv_e = scaled_eng_adv
+        target_adv_e = int(round(scaled_eng_adv))
+        eng_scale_x = eng_upm_scale
+        eng_scale_y = eng_upm_scale
         target_adv_c = target_adv_e * 2
 
     elif config.scaling_strategy == ScaleStrategy.ENGLISH_SCALE_GAP_CJK_KEEP:
@@ -844,10 +870,20 @@ def process_font(config: FontMergeConfig):
         eng_scale_y = eng_upm_scale
 
     scale_font_glyphs(eng_font, eng_scale_x, eng_scale_y)
+    scale_vertical_metrics(eng_font, eng_scale_y)
+
+    eng_font["head"].unitsPerEm = upm
 
     y_offset = config.cjk_y_offset
     if config.adjust_baseline:
-        y_offset += calculate_baseline_offset(eng_font, eng_upm_scale, cjk_font, cjk_upm_scale)
+        # Use CJK font's original metrics and the upm scales (before glyph scaling was applied)
+        # English font's OS/2 has already been scaled by eng_scale_y above
+        eng_os2 = eng_font["OS/2"]
+        cjk_os2 = cjk_font["OS/2"]
+        eng_center = (eng_os2.sTypoAscender + eng_os2.sTypoDescender) / 2.0
+        cjk_center = (cjk_os2.sTypoAscender + cjk_os2.sTypoDescender) / 2.0
+        scaled_cjk_center = cjk_center * cjk_upm_scale
+        y_offset += int(round(eng_center - scaled_cjk_center))
 
     stretch_set = get_codepoints(config.stretch_chars)
     alignment_map: dict[int, Alignment] = {}
@@ -860,7 +896,6 @@ def process_font(config: FontMergeConfig):
         cjk_font,
         target_adv_c,
         target_adv_e,
-        eng_upm_scale,
         cjk_upm_scale,
         y_offset,
         scaled_cjk_adv,
@@ -869,13 +904,16 @@ def process_font(config: FontMergeConfig):
         alignment_map
     )
 
+    cjk_codepoint_set = set(get_cjk_unicodes())
     for codepoint in stretch_set:
-        stretch_glyph_width(eng_font, codepoint, target_adv_c)
+        if codepoint not in cjk_codepoint_set:
+            stretch_glyph_width(eng_font, codepoint, target_adv_c)
 
     for pad_config in config.pad_configs:
         pad_codepoints = get_codepoints(pad_config.chars)
         for codepoint in pad_codepoints:
-            pad_glyph_width(eng_font, codepoint, target_adv_c, pad_config.alignment)
+            if codepoint not in cjk_codepoint_set:
+                pad_glyph_width(eng_font, codepoint, target_adv_c, pad_config.alignment)
 
     for symbol_font_path in config.symbol_font_paths:
         merge_symbols_into_font(eng_font, symbol_font_path)
