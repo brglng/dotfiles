@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Font merging script that combines English and CJK fonts with configurable
+scaling strategies, symbol font overlays, and metadata customization."""
 import copy
 from dataclasses import dataclass
 from enum import Enum
@@ -10,19 +12,56 @@ from fontTools.ttLib.tables._c_m_a_p import cmap_format_12
 from fontTools.ttLib.tables._g_l_y_f import GlyphCoordinates
 
 
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+CJK_UNICODE_RANGES = [
+    (0x2000, 0x206F),  # General Punctuation
+    (0x2E80, 0x2EFF),  # CJK Radicals Supplement
+    (0x3000, 0x303F),  # CJK Symbols and Punctuation
+    (0x3200, 0x32FF),  # Enclosed CJK Letters and Months
+    (0x3400, 0x4DBF),  # CJK Unified Ideographs Extension A
+    (0x4E00, 0x9FFF),  # CJK Unified Ideographs
+    (0xFE30, 0xFE4F),  # CJK Compatibility Forms
+    (0xFF00, 0xFFEF),  # Halfwidth and Fullwidth Forms
+]
+
+# Pre-built collections for O(1) membership tests throughout the pipeline.
+CJK_CODEPOINT_SET: set[int] = set()
+CJK_CODEPOINT_LIST: list[int] = []
+for _start, _end in CJK_UNICODE_RANGES:
+    _block = range(_start, _end + 1)
+    CJK_CODEPOINT_SET.update(_block)
+    CJK_CODEPOINT_LIST.extend(_block)
+
+
+# ---------------------------------------------------------------------------
+# Enums & Configuration
+# ---------------------------------------------------------------------------
+
+
 class Alignment(Enum):
-    """
-    Defines the horizontal alignment when padding glyphs with whitespace.
-    """
+    """Horizontal alignment when padding glyphs with whitespace."""
+
     LEFT = "left"
     CENTER = "center"
     RIGHT = "right"
 
+    def compute_shift(self, available_space: int) -> int:
+        """Return the horizontal shift for the given alignment and space."""
+        if self is Alignment.LEFT:
+            return 0
+        if self is Alignment.CENTER:
+            return available_space // 2
+        if self is Alignment.RIGHT:
+            return available_space
+        return 0
+
 
 class ScaleStrategy(Enum):
-    """
-    Defines the scaling strategies for merging English and CJK fonts.
-    """
+    """Scaling strategies for combining English and CJK fonts."""
+
     ENGLISH_KEEP_CJK_SCALE_GAP = "english_keep_cjk_scale_gap"
     ENGLISH_SCALE_GAP_CJK_KEEP = "english_scale_gap_cjk_keep"
     ENGLISH_STRETCH_CJK_KEEP = "english_stretch_cjk_keep"
@@ -32,56 +71,58 @@ class ScaleStrategy(Enum):
 
 @dataclass
 class PadConfig:
-    """
-    Configuration for padding specific characters with whitespace.
+    """Configuration for padding specific characters with whitespace.
 
     Attributes
     ----------
     chars : list[str | int | tuple[int, int]]
-        A list of characters, codepoints, or ranges to pad.
+        Characters, codepoints, or (start, end) ranges to pad.
     alignment : Alignment
-        The alignment strategy for the padding.
+        How to align the original glyph within the padded width.
     """
+
     chars: list[str | int | tuple[int, int]]
     alignment: Alignment
 
 
 @dataclass
 class FontMergeConfig:
-    """
-    Configuration for a single font merging process.
+    """Full configuration for a single font merging task.
 
     Attributes
     ----------
     output_filename : str
-        The path for the output font file.
+        Output font file path.
     english_font_path : str
-        The path to the base English font.
+        Path to the base English font.
     cjk_font_path : str
-        The path to the CJK font.
+        Path to the CJK font.
     scaling_strategy : ScaleStrategy
-        The strategy used to scale the fonts.
+        Strategy used to reconcile English / CJK advance widths.
     stretch_chars : list[str | int | tuple[int, int]]
-        Characters to stretch to double width.
+        Characters to stretch horizontally to double width.
     pad_configs : list[PadConfig]
-        Configurations for characters that need double width padding.
+        Per-character padding rules.
     weight_english : float
-        The weight for English font optimal scaling.
+        Weight for English font in the OPTIMAL_SCALE_BOTH strategy.
     symbol_font_paths : list[str]
-        Paths to symbol fonts to merge.
+        Paths to symbol fonts to overlay.
     adjust_baseline : bool
-        Whether to adjust the baseline of the CJK font.
+        Whether to auto-align CJK baseline to English baseline.
     cjk_y_offset : int
-        The manual vertical offset for CJK glyphs.
+        Manual vertical offset applied to CJK glyphs.
     new_font_family : str
-        The new font family name.
+        Font family name for the output.
     new_font_subfamily : str
-        The new font subfamily name.
+        Font subfamily name for the output.
     new_author : str
-        The author name for the metadata.
+        Author name written into metadata.
     new_description : str
-        The description for the metadata.
+        Description written into metadata.
+    mark_as_monospace : bool
+        Whether to flag the output font as monospaced.
     """
+
     output_filename: str
     english_font_path: str
     cjk_font_path: str
@@ -96,63 +137,190 @@ class FontMergeConfig:
     new_font_subfamily: str
     new_author: str
     new_description: str
+    mark_as_monospace: bool
 
 
-def calculate_optimal_rho(english_ratio: float, cjk_ratio: float, weight_english: float) -> float:
-    """
-    Calculate the optimal English advance width to height ratio.
+@dataclass
+class ScaleParams:
+    """Computed scaling parameters derived from a ScaleStrategy.
 
-    Parameters
+    Attributes
     ----------
-    english_ratio : float
-        The width to height ratio of the English font.
-    cjk_ratio : float
-        The width to height ratio of the CJK font.
-    weight_english : float
-        The weight assigned to the English font scaling.
-
-    Returns
-    -------
-    float
-        The optimal advance width to height ratio.
+    target_adv_e : int
+        Target advance width for halfwidth (English) characters.
+    target_adv_c : int
+        Target advance width for fullwidth (CJK) characters.
+    eng_scale_x : float
+        Horizontal scaling factor for the English font.
+    eng_scale_y : float
+        Vertical scaling factor for the English font.
     """
-    weight_cjk = 1.0 - weight_english
-    ln_rho = (weight_english * math.log(english_ratio) +
-              weight_cjk * math.log(cjk_ratio / 2.0))
-    return math.exp(ln_rho)
+
+    target_adv_e: int
+    target_adv_c: int
+    eng_scale_x: float
+    eng_scale_y: float
+
+
+# ---------------------------------------------------------------------------
+# Low-level glyph geometry helpers
+# ---------------------------------------------------------------------------
+
+
+class GlyphTransformer:
+    """Centralised helpers for the repetitive glyph coordinate manipulation
+    patterns used throughout the merging pipeline.
+
+    Every method operates on a single glyph **in place**.
+    """
+
+    @staticmethod
+    def scale(glyph: Any, scale_x: float, scale_y: float) -> None:
+        """Scale all coordinates by (*scale_x*, *scale_y*)."""
+        if glyph.isComposite():
+            for comp in glyph.components:
+                if hasattr(comp, "x") and comp.x is not None:
+                    comp.x = int(round(comp.x * scale_x))
+                if hasattr(comp, "y") and comp.y is not None:
+                    comp.y = int(round(comp.y * scale_y))
+                if hasattr(comp, "transform"):
+                    try:
+                        (xx, xy), (yx, yy) = comp.transform
+                        comp.transform = (
+                            (xx * scale_x, xy * scale_x),
+                            (yx * scale_y, yy * scale_y),
+                        )
+                    except ValueError:
+                        pass
+        elif hasattr(glyph, "coordinates"):
+            glyph.coordinates = GlyphCoordinates([
+                (int(round(x * scale_x)), int(round(y * scale_y)))
+                for x, y in glyph.coordinates
+            ])
+
+    @staticmethod
+    def scale_horizontal(glyph: Any, scale_x: float) -> None:
+        """Scale only the horizontal axis (used for stretching)."""
+        if glyph.isComposite():
+            for comp in glyph.components:
+                if hasattr(comp, "x") and comp.x is not None:
+                    comp.x = int(round(comp.x * scale_x))
+                if hasattr(comp, "transform"):
+                    try:
+                        (xx, xy), (yx, yy) = comp.transform
+                        comp.transform = ((xx * scale_x, xy * scale_x), (yx, yy))
+                    except ValueError:
+                        pass
+        elif hasattr(glyph, "coordinates"):
+            glyph.coordinates = GlyphCoordinates([
+                (int(round(x * scale_x)), y)
+                for x, y in glyph.coordinates
+            ])
+
+    @staticmethod
+    def shift_horizontal(glyph: Any, shift_x: int) -> None:
+        """Translate all coordinates by *shift_x* on the X axis."""
+        if shift_x == 0:
+            return
+        if glyph.isComposite():
+            for comp in glyph.components:
+                if hasattr(comp, "x") and comp.x is not None:
+                    comp.x += shift_x
+        elif hasattr(glyph, "coordinates"):
+            glyph.coordinates = GlyphCoordinates([
+                (x + shift_x, y) for x, y in glyph.coordinates
+            ])
+
+    @staticmethod
+    def scale_and_offset_y(
+        glyph: Any,
+        upm_scale: float,
+        y_offset: int,
+        apply_y_offset: bool,
+    ) -> None:
+        """Scale by *upm_scale* and optionally apply a vertical offset."""
+        if glyph.isComposite():
+            for comp in glyph.components:
+                if hasattr(comp, "x") and comp.x is not None:
+                    comp.x = int(round(comp.x * upm_scale))
+                if hasattr(comp, "y") and comp.y is not None:
+                    comp.y = int(round(comp.y * upm_scale))
+                    if apply_y_offset:
+                        comp.y += y_offset
+        elif hasattr(glyph, "coordinates"):
+            coords = []
+            for x, y in glyph.coordinates:
+                y_val = int(round(y * upm_scale))
+                if apply_y_offset:
+                    y_val += y_offset
+                coords.append((int(round(x * upm_scale)), y_val))
+            glyph.coordinates = GlyphCoordinates(coords)
+
+
+# ---------------------------------------------------------------------------
+# Codepoint utilities
+# ---------------------------------------------------------------------------
+
+
+def parse_codepoints(chars: list[str | int | tuple[int, int]]) -> set[int]:
+    """Convert a mixed list of characters, integers, and (start, end)
+    tuples into a flat set of integer codepoints."""
+    codepoints: set[int] = set()
+    for item in chars:
+        if isinstance(item, str) and len(item) == 1:
+            codepoints.add(ord(item))
+        elif isinstance(item, int):
+            codepoints.add(item)
+        elif isinstance(item, tuple) and len(item) == 2:
+            codepoints.update(range(item[0], item[1] + 1))
+    return codepoints
+
+
+def build_alignment_map(pad_configs: list[PadConfig]) -> dict[int, Alignment]:
+    """Build a codepoint \u2192 Alignment lookup from a list of PadConfigs."""
+    mapping: dict[int, Alignment] = {}
+    for cfg in pad_configs:
+        for cp in parse_codepoints(cfg.chars):
+            mapping[cp] = cfg.alignment
+    return mapping
+
+
+# ---------------------------------------------------------------------------
+# Font table helpers
+# ---------------------------------------------------------------------------
+
+
+def get_glyph_dependencies(glyph_name: str, glyf_table: dict) -> set[str]:
+    """Recursively collect all component glyph names for a composite glyph."""
+    deps = {glyph_name}
+    if glyph_name not in glyf_table:
+        return deps
+    glyph = glyf_table[glyph_name]
+    if glyph.isComposite():
+        for component in glyph.components:
+            deps.update(get_glyph_dependencies(component.glyphName, glyf_table))
+    return deps
+
+
+def get_typical_advance(font: TTFont, char_code: int) -> int:
+    """Return the advance width for *char_code*, falling back to half UPM."""
+    cmap = font.getBestCmap()
+    if char_code in cmap:
+        return font["hmtx"].metrics[cmap[char_code]][0]
+    return font["head"].unitsPerEm // 2
 
 
 def ensure_cmap_format_12(font: TTFont, cmap_mapping: dict[int, str]) -> None:
-    """
-    Ensure the font has a Format 12 cmap table if there are characters outside the BMP.
+    """Add a Format 12 cmap subtable when non-BMP codepoints are present."""
+    has_format_12 = any(t.format == 12 for t in font["cmap"].tables)
 
-    Parameters
-    ----------
-    font : TTFont
-        The font object to check and update.
-    cmap_mapping : dict[int, str]
-        The complete cmap mapping to apply.
-    """
-    has_format_12 = False
-    for table in font["cmap"].tables:
-        if table.format == 12:
-            has_format_12 = True
-            break
-
-    if not has_format_12:
-        needs_format_12 = False
-        for codepoint in cmap_mapping.keys():
-            if codepoint > 0xFFFF:
-                needs_format_12 = True
-                break
-
-        if needs_format_12:
-            new_table = cmap_format_12(12)
-            new_table.platformID = 3
-            new_table.platEncID = 10
-            new_table.language = 0
-            new_table.cmap = {}
-            font["cmap"].tables.append(new_table)
+    if not has_format_12 and any(cp > 0xFFFF for cp in cmap_mapping):
+        new_table = cmap_format_12(12)
+        new_table.platformID = 3
+        new_table.platEncID = 10
+        new_table.language = 0
+        new_table.cmap = {}
+        font["cmap"].tables.append(new_table)
 
     for table in font["cmap"].tables:
         if table.isUnicode():
@@ -164,393 +332,173 @@ def ensure_cmap_format_12(font: TTFont, cmap_mapping: dict[int, str]) -> None:
                 table.cmap.update(cmap_mapping)
 
 
-def get_cjk_unicodes() -> list[int]:
-    """
-    Returns a list of Unicode codepoints for CJK characters and related punctuation.
-
-    Returns
-    -------
-    list[int]
-        A list of integers representing the Unicode codepoints.
-    """
-    ranges = [
-        (0x2000, 0x206F),  # General Punctuation (quotes, dashes, ellipses, formatting spaces)
-        (0x2E80, 0x2EFF),  # CJK Radicals Supplement (radicals often used as standalone characters in dictionaries)
-        (0x3000, 0x303F),  # CJK Symbols and Punctuation (ideographic comma, period, corner brackets, etc.)
-        (0x3200, 0x32FF),  # Enclosed CJK Letters and Months (parenthesized or circled characters, ideographs, and numbers)
-        (0x3400, 0x4DBF),  # CJK Unified Ideographs Extension A (Rare and historical Hanzi/Kanji/Hanja characters)
-        (0x4E00, 0x9FFF),  # CJK Unified Ideographs (The core block for common Chinese, Japanese, and Korean characters)
-        (0xFE30, 0xFE4F),  # CJK Compatibility Forms (Vertical punctuation variants for traditional top-to-bottom writing)
-        (0xFF00, 0xFFEF),  # Halfwidth and Fullwidth Forms (Fullwidth Latin letters, numbers, and punctuation for CJK alignment)
-    ]
-
-    unicodes = []
-    for start, end in ranges:
-        unicodes.extend(range(start, end + 1))
-
-    return unicodes
+# ---------------------------------------------------------------------------
+# Scaling strategy computation
+# ---------------------------------------------------------------------------
 
 
-def get_codepoints(chars: list[str | int | tuple[int, int]]) -> set[int]:
-    """
-    Parses a list of characters, codepoints, or ranges into a set of codepoints.
-
-    Parameters
-    ----------
-    chars : list[str | int | tuple[int, int]]
-        A list containing single characters, integer codepoints, or tuples of start/end codepoints.
-
-    Returns
-    -------
-    set[int]
-        A set of integer codepoints.
-    """
-    codepoints = set()
-    for item in chars:
-        if isinstance(item, str):
-            if len(item) == 1:
-                codepoints.add(ord(item))
-        elif isinstance(item, int):
-            codepoints.add(item)
-        elif isinstance(item, tuple) and len(item) == 2:
-            start, end = item
-            codepoints.update(range(start, end + 1))
-    return codepoints
+def _calculate_optimal_rho(
+    english_ratio: float,
+    cjk_ratio: float,
+    weight_english: float,
+) -> float:
+    """Weighted geometric mean of English and half-CJK width-to-height ratios."""
+    weight_cjk = 1.0 - weight_english
+    ln_rho = (weight_english * math.log(english_ratio)
+              + weight_cjk * math.log(cjk_ratio / 2.0))
+    return math.exp(ln_rho)
 
 
-def get_glyph_dependencies(glyph_name: str, glyf_table: dict) -> set[str]:
-    """
-    Recursively finds all component glyphs required by a composite glyph.
+def compute_scale_params(
+    strategy: ScaleStrategy,
+    eng_upm: int,
+    cjk_upm: int,
+    upm: int,
+    eng_upm_scale: float,
+    scaled_eng_adv: float,
+    scaled_cjk_adv: float,
+    eng_typical_adv: int,
+    cjk_typical_adv: int,
+    weight_english: float,
+) -> ScaleParams:
+    """Derive concrete advance widths and scaling factors from the chosen strategy."""
+    if strategy is ScaleStrategy.ENGLISH_KEEP_CJK_SCALE_GAP:
+        target_adv_e = int(round(scaled_eng_adv))
+        return ScaleParams(
+            target_adv_e=target_adv_e,
+            target_adv_c=target_adv_e * 2,
+            eng_scale_x=eng_upm_scale,
+            eng_scale_y=eng_upm_scale,
+        )
 
-    Parameters
-    ----------
-    glyph_name : str
-        The name of the glyph to analyze.
-    glyf_table : dict
-        The font's glyph table mapping names to glyph objects.
+    if strategy is ScaleStrategy.ENGLISH_SCALE_GAP_CJK_KEEP:
+        target_adv_e = int(round(scaled_cjk_adv / 2.0))
+        ratio = target_adv_e / float(eng_typical_adv)
+        return ScaleParams(
+            target_adv_e=target_adv_e,
+            target_adv_c=target_adv_e * 2,
+            eng_scale_x=ratio,
+            eng_scale_y=ratio,
+        )
 
-    Returns
-    -------
-    set[str]
-        A set of glyph names that the target glyph depends on.
-    """
-    dependencies = {glyph_name}
+    if strategy is ScaleStrategy.ENGLISH_STRETCH_CJK_KEEP:
+        target_adv_e = int(round(scaled_cjk_adv / 2.0))
+        return ScaleParams(
+            target_adv_e=target_adv_e,
+            target_adv_c=target_adv_e * 2,
+            eng_scale_x=target_adv_e / float(eng_typical_adv),
+            eng_scale_y=eng_upm_scale,
+        )
 
-    if glyph_name not in glyf_table:
-        return dependencies
+    if strategy is ScaleStrategy.OPTIMAL_SCALE_BOTH:
+        eng_ratio = eng_typical_adv / float(eng_upm)
+        cjk_ratio = cjk_typical_adv / float(cjk_upm)
+        optimal_rho = _calculate_optimal_rho(eng_ratio, cjk_ratio, weight_english)
+        target_adv_e = int(round(upm * optimal_rho))
+        return ScaleParams(
+            target_adv_e=target_adv_e,
+            target_adv_c=target_adv_e * 2,
+            eng_scale_x=target_adv_e / float(eng_typical_adv),
+            eng_scale_y=eng_upm_scale,
+        )
 
-    glyph = glyf_table[glyph_name]
-    if glyph.isComposite():
-        for component in glyph.components:
-            dependencies.update(get_glyph_dependencies(component.glyphName, glyf_table))
-
-    return dependencies
-
-
-def get_typical_advance(font: TTFont, char_code: int) -> int:
-    """
-    Gets the advance width of a typical character for basis calculations.
-
-    Parameters
-    ----------
-    font : TTFont
-        The font object to extract metrics from.
-    char_code : int
-        The Unicode codepoint of the character.
-
-    Returns
-    -------
-    int
-        The advance width of the specified character.
-    """
-    cmap = font.getBestCmap()
-    if char_code in cmap:
-        glyph_name = cmap[char_code]
-        return font["hmtx"].metrics[glyph_name][0]
-    return font["head"].unitsPerEm // 2
+    # ScaleStrategy.NO_STRETCH
+    return ScaleParams(
+        target_adv_e=int(round(scaled_eng_adv)),
+        target_adv_c=int(round(scaled_cjk_adv)),
+        eng_scale_x=eng_upm_scale,
+        eng_scale_y=eng_upm_scale,
+    )
 
 
-def scale_font_glyphs(font: TTFont, scale_x: float, scale_y: float):
-    """
-    Scales all glyphs in the given font by the specified X and Y factors.
-    Also handles vertical metrics alignment for non-uniform scaling.
+# ---------------------------------------------------------------------------
+# Whole-font glyph scaling
+# ---------------------------------------------------------------------------
 
-    Parameters
-    ----------
-    font : TTFont
-        The font to apply scaling to.
-    scale_x : float
-        The horizontal scaling factor.
-    scale_y : float
-        The vertical scaling factor.
-    """
+
+def scale_font_glyphs(font: TTFont, scale_x: float, scale_y: float) -> None:
+    """Scale every glyph and its metrics by (*scale_x*, *scale_y*)."""
     if scale_x == 1.0 and scale_y == 1.0:
         return
 
     glyf = font["glyf"]
     hmtx = font["hmtx"]
-    has_vmtx = "vmtx" in font
-    
-    if has_vmtx:
-        vmtx = font["vmtx"]
+    vmtx = font["vmtx"] if "vmtx" in font else None
 
     for glyph_name, glyph in glyf.items():
-        if glyph.isComposite():
-            for comp in glyph.components:
-                if hasattr(comp, "x") and comp.x is not None:
-                    comp.x = int(round(comp.x * scale_x))
-                if hasattr(comp, "y") and comp.y is not None:
-                    comp.y = int(round(comp.y * scale_y))
-                if hasattr(comp, "transform"):
-                    try:
-                        (xx, xy), (yx, yy) = comp.transform
-                        comp.transform = ((xx * scale_x, xy * scale_x), (yx * scale_y, yy * scale_y))
-                    except ValueError:
-                        pass
-        else:
-            if hasattr(glyph, "coordinates"):
-                coords = []
-                for x, y in glyph.coordinates:
-                    coords.append((int(round(x * scale_x)), int(round(y * scale_y))))
-                glyph.coordinates = GlyphCoordinates(coords)
+        GlyphTransformer.scale(glyph, scale_x, scale_y)
 
         if glyph_name in hmtx.metrics:
             adv, lsb = hmtx.metrics[glyph_name]
-            hmtx.metrics[glyph_name] = (int(round(adv * scale_x)), int(round(lsb * scale_x)))
+            hmtx.metrics[glyph_name] = (
+                int(round(adv * scale_x)),
+                int(round(lsb * scale_x)),
+            )
 
-        if has_vmtx and glyph_name in vmtx.metrics:
+        if vmtx and glyph_name in vmtx.metrics:
             v_adv, tsb = vmtx.metrics[glyph_name]
-            vmtx.metrics[glyph_name] = (int(round(v_adv * scale_y)), int(round(tsb * scale_y)))
+            vmtx.metrics[glyph_name] = (
+                int(round(v_adv * scale_y)),
+                int(round(tsb * scale_y)),
+            )
 
 
-def shift_glyph_and_metrics(base_glyf: dict, base_hmtx: Any, glyph_name: str, shift_x: int, target_advance: int):
-    """
-    Shifts the glyph horizontally and updates its metrics.
+def scale_vertical_metrics(font: TTFont, scale: float) -> None:
+    """Scale all global vertical metric fields (OS/2, hhea, vhea) by *scale*."""
+    if scale == 1.0:
+        return
 
-    Parameters
-    ----------
-    base_glyf : dict
-        The base glyph table.
-    base_hmtx : dict
-        The horizontal metrics table.
-    glyph_name : str
-        The name of the glyph to shift.
-    shift_x : int
-        The horizontal shift distance.
-    target_advance : int
-        The new advance width for the metric table.
-    """
-    glyph = base_glyf[glyph_name]
-    if shift_x != 0:
-        if glyph.isComposite():
-            for comp in glyph.components:
-                if hasattr(comp, "x") and comp.x is not None:
-                    comp.x += shift_x
-        else:
-            if hasattr(glyph, "coordinates"):
-                coords = []
-                for x, y in glyph.coordinates:
-                    coords.append((x + shift_x, y))
-                glyph.coordinates = GlyphCoordinates(coords)
+    def _s(value: int) -> int:
+        return int(round(value * scale))
 
-    _, current_lsb = base_hmtx.metrics[glyph_name]
-    base_hmtx.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
+    os2 = font["OS/2"]
+    for attr in (
+        "sTypoAscender", "sTypoDescender", "sTypoLineGap",
+        "usWinAscent", "usWinDescent",
+        "sxHeight", "sCapHeight",
+        "ySubscriptXSize", "ySubscriptYSize",
+        "ySubscriptXOffset", "ySubscriptYOffset",
+        "ySuperscriptXSize", "ySuperscriptYSize",
+        "ySuperscriptXOffset", "ySuperscriptYOffset",
+        "yStrikeoutSize", "yStrikeoutPosition",
+    ):
+        setattr(os2, attr, _s(getattr(os2, attr)))
+
+    hhea = font["hhea"]
+    for attr in ("ascent", "descent", "lineGap", "caretSlopeRise", "caretOffset"):
+        setattr(hhea, attr, _s(getattr(hhea, attr)))
+
+    if "vhea" in font:
+        vhea = font["vhea"]
+        for attr in ("ascent", "descent", "lineGap"):
+            setattr(vhea, attr, _s(getattr(vhea, attr)))
 
 
-def merge_cjk_glyphs(
-    base_font: TTFont,
-    cjk_font: TTFont,
-    target_adv_c: int,
-    target_adv_e: int,
-    cjk_upm_scale: float,
-    y_offset: int,
-    typical_scaled_cjk_adv: float,
-    strategy: ScaleStrategy,
-    stretch_set: set[int],
-    alignment_map: dict[int, Alignment]
-):
-    """
-    Copies CJK glyphs from the CJK font to the base font, applying
-    scaling, Y-offset, and centering them within the designated advance width.
-
-    Parameters
-    ----------
-    base_font : TTFont
-        The base English font to merge into.
-    cjk_font : TTFont
-        The CJK font to merge from.
-    target_adv_c : int
-        The target advance width for fullwidth characters.
-    target_adv_e : int
-        The target advance width for halfwidth characters.
-    upm_scale : float
-        The scaling factor based on the difference in units per em.
-    y_offset : int
-        The vertical offset to align baselines.
-    typical_scaled_cjk_adv : float
-        The advance width of a standard scaled CJK character.
-    strategy : ScaleStrategy
-        The scaling strategy configured by the user.
-    stretch_set : set[int]
-        Codepoints that require horizontal stretching.
-    alignment_map : dict[int, Alignment]
-        Alignment configurations for specific codepoints.
-    """
-    base_cmap = base_font.getBestCmap()
-    cjk_cmap = cjk_font.getBestCmap()
-    cjk_unicodes = get_cjk_unicodes()
-
-    base_glyf = base_font["glyf"]
-    cjk_glyf = cjk_font["glyf"]
-    base_hmtx = base_font["hmtx"]
-    cjk_hmtx = cjk_font["hmtx"]
-
-    has_vmtx = "vmtx" in base_font and "vmtx" in cjk_font
-    if has_vmtx:
-        base_vmtx = base_font["vmtx"]
-        cjk_vmtx = cjk_font["vmtx"]
-
-    for codepoint in cjk_unicodes:
-        if codepoint in cjk_cmap:
-            cjk_glyph_name = cjk_cmap[codepoint]
-            dependencies = get_glyph_dependencies(cjk_glyph_name, cjk_glyf)
-
-            for dep_name in dependencies:
-                new_dep_name = f"cjk_{dep_name}"
-
-                if new_dep_name not in base_glyf:
-                    if dep_name in cjk_glyf:
-                        copied_glyph = copy.deepcopy(cjk_glyf[dep_name])
-
-                        if copied_glyph.isComposite():
-                            for comp in copied_glyph.components:
-                                if hasattr(comp, "x") and comp.x is not None:
-                                    comp.x = int(round(comp.x * cjk_upm_scale))
-                                if hasattr(comp, "y") and comp.y is not None:
-                                    comp.y = int(round(comp.y * cjk_upm_scale))
-                                    if dep_name == cjk_glyph_name:
-                                        comp.y += y_offset
-                        else:
-                            if hasattr(copied_glyph, "coordinates"):
-                                coords = []
-                                for x, y in copied_glyph.coordinates:
-                                    y_val = int(round(y * cjk_upm_scale))
-                                    if dep_name == cjk_glyph_name:
-                                        y_val += y_offset
-                                    coords.append((
-                                        int(round(x * cjk_upm_scale)),
-                                        y_val
-                                    ))
-                                copied_glyph.coordinates = GlyphCoordinates(coords)
-
-                        base_glyf[new_dep_name] = copied_glyph
-                        if new_dep_name not in base_font.glyphOrder:
-                            base_font.glyphOrder.append(new_dep_name)
-
-                    if dep_name in cjk_hmtx.metrics:
-                        adv, lsb = cjk_hmtx.metrics[dep_name]
-                        base_hmtx.metrics[new_dep_name] = (
-                            int(round(adv * cjk_upm_scale)),
-                            int(round(lsb * cjk_upm_scale))
-                        )
-
-                    if has_vmtx and dep_name in cjk_vmtx.metrics:
-                        v_adv, tsb = cjk_vmtx.metrics[dep_name]
-                        scaled_tsb = int(round(tsb * cjk_upm_scale))
-                        if dep_name == cjk_glyph_name:
-                            scaled_tsb -= y_offset
-                        base_vmtx.metrics[new_dep_name] = (
-                            int(round(v_adv * cjk_upm_scale)),
-                            scaled_tsb
-                        )
-
-            base_cmap[codepoint] = f"cjk_{cjk_glyph_name}"
-
-    processed_set = set()
-
-    for codepoint, cjk_glyph_name in cjk_cmap.items():
-        if codepoint in cjk_unicodes:
-            new_glyph_name = f"cjk_{cjk_glyph_name}"
-            
-            if new_glyph_name in base_glyf and new_glyph_name not in processed_set:
-                processed_set.add(new_glyph_name)
-
-                original_adv = cjk_hmtx.metrics[cjk_glyph_name][0]
-                scaled_adv = int(round(original_adv * cjk_upm_scale))
-
-                if strategy == ScaleStrategy.NO_STRETCH:
-                    final_target_adv = scaled_adv
-                else:
-                    if scaled_adv > typical_scaled_cjk_adv * 0.75:
-                        final_target_adv = target_adv_c
-                    else:
-                        final_target_adv = target_adv_e
-
-                if codepoint in stretch_set and scaled_adv > 0:
-                    scale_factor = final_target_adv / float(scaled_adv)
-                    glyph = base_glyf[new_glyph_name]
-                    
-                    if scale_factor != 1.0:
-                        if glyph.isComposite():
-                            for comp in glyph.components:
-                                if hasattr(comp, "x") and comp.x is not None:
-                                    comp.x = int(round(comp.x * scale_factor))
-                                if hasattr(comp, "transform"):
-                                    try:
-                                        (xx, xy), (yx, yy) = comp.transform
-                                        comp.transform = ((xx * scale_factor, xy * scale_factor), (yx, yy))
-                                    except ValueError:
-                                        pass
-                        else:
-                            if hasattr(glyph, "coordinates"):
-                                coords = []
-                                for x, y in glyph.coordinates:
-                                    coords.append((int(round(x * scale_factor)), y))
-                                glyph.coordinates = GlyphCoordinates(coords)
-                                
-                    _, current_lsb = base_hmtx.metrics[new_glyph_name]
-                    base_hmtx.metrics[new_glyph_name] = (
-                        final_target_adv,
-                        int(round(current_lsb * scale_factor))
-                    )
-                else:
-                    alignment = alignment_map.get(codepoint, Alignment.CENTER)
-                    
-                    if alignment == Alignment.LEFT:
-                        shift_x = 0
-                    elif alignment == Alignment.CENTER:
-                        shift_x = (final_target_adv - scaled_adv) // 2
-                    elif alignment == Alignment.RIGHT:
-                        shift_x = final_target_adv - scaled_adv
-                    else:
-                        shift_x = 0
-
-                    shift_glyph_and_metrics(
-                        base_glyf,
-                        base_hmtx,
-                        new_glyph_name,
-                        shift_x,
-                        final_target_adv
-                    )
-
-    ensure_cmap_format_12(base_font, base_cmap)
+# ---------------------------------------------------------------------------
+# Single-glyph width adjustments (pad / stretch / shift)
+# ---------------------------------------------------------------------------
 
 
-def pad_glyph_width(font: TTFont, codepoint: int, target_advance: int, alignment: Alignment):
-    """
-    Increases the advance width of a glyph by padding it with whitespace based on alignment.
+def _shift_glyph_and_metrics(
+    glyf_table: dict,
+    hmtx_table: Any,
+    glyph_name: str,
+    shift_x: int,
+    target_advance: int,
+) -> None:
+    """Shift a glyph horizontally and write *target_advance* into hmtx."""
+    GlyphTransformer.shift_horizontal(glyf_table[glyph_name], shift_x)
+    _, current_lsb = hmtx_table.metrics[glyph_name]
+    hmtx_table.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
 
-    Parameters
-    ----------
-    font : TTFont
-        The font object containing the glyph.
-    codepoint : int
-        The Unicode codepoint of the glyph to be padded.
-    target_advance : int
-        The target advance width to reach.
-    alignment : Alignment
-        The horizontal alignment.
-    """
+
+def pad_glyph_width(
+    font: TTFont,
+    codepoint: int,
+    target_advance: int,
+    alignment: Alignment,
+) -> None:
+    """Widen a glyph's advance width by adding whitespace on one or both sides."""
     cmap = font.getBestCmap()
     if codepoint not in cmap:
         return
@@ -566,47 +514,17 @@ def pad_glyph_width(font: TTFont, codepoint: int, target_advance: int, alignment
     if adv >= target_advance:
         return
 
-    diff = target_advance - adv
-
-    if alignment == Alignment.LEFT:
-        shift_x = 0
-    elif alignment == Alignment.CENTER:
-        shift_x = diff // 2
-    elif alignment == Alignment.RIGHT:
-        shift_x = diff
-    else:
-        shift_x = 0
-
-    if shift_x > 0:
-        glyph = glyf[glyph_name]
-
-        if glyph.isComposite():
-            for comp in glyph.components:
-                if hasattr(comp, "x") and comp.x is not None:
-                    comp.x += shift_x
-        else:
-            if hasattr(glyph, "coordinates"):
-                coords = []
-                for x, y in glyph.coordinates:
-                    coords.append((x + shift_x, y))
-                glyph.coordinates = GlyphCoordinates(coords)
-
+    shift_x = alignment.compute_shift(target_advance - adv)
+    GlyphTransformer.shift_horizontal(glyf[glyph_name], shift_x)
     hmtx.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
 
 
-def stretch_glyph_width(font: TTFont, codepoint: int, target_advance: int):
-    """
-    Stretches a specific glyph's geometry horizontally to match a new advance width.
-
-    Parameters
-    ----------
-    font : TTFont
-        The font object containing the glyph.
-    codepoint : int
-        The Unicode codepoint of the glyph to be stretched.
-    target_advance : int
-        The target advance width to reach.
-    """
+def stretch_glyph_width(
+    font: TTFont,
+    codepoint: int,
+    target_advance: int,
+) -> None:
+    """Horizontally stretch a glyph's geometry to fit *target_advance*."""
     cmap = font.getBestCmap()
     if codepoint not in cmap:
         return
@@ -623,39 +541,172 @@ def stretch_glyph_width(font: TTFont, codepoint: int, target_advance: int):
         return
 
     scale_factor = target_advance / float(adv)
-    glyph = glyf[glyph_name]
-
-    if glyph.isComposite():
-        for comp in glyph.components:
-            if hasattr(comp, "x") and comp.x is not None:
-                comp.x = int(round(comp.x * scale_factor))
-            if hasattr(comp, "transform"):
-                try:
-                    (xx, xy), (yx, yy) = comp.transform
-                    comp.transform = ((xx * scale_factor, xy), (yx * scale_factor, yy))
-                except ValueError:
-                    pass
-    else:
-        if hasattr(glyph, "coordinates"):
-            coords = []
-            for x, y in glyph.coordinates:
-                coords.append((int(round(x * scale_factor)), y))
-            glyph.coordinates = GlyphCoordinates(coords)
-
+    GlyphTransformer.scale_horizontal(glyf[glyph_name], scale_factor)
     hmtx.metrics[glyph_name] = (target_advance, int(round(lsb * scale_factor)))
 
 
-def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str):
-    """
-    Merges a symbol font into the base font, scaling it based on UPM ratios.
-    Directly overwrites glyphs and metrics if conflicts occur.
+# ---------------------------------------------------------------------------
+# CJK glyph merging (two-phase)
+# ---------------------------------------------------------------------------
 
-    Parameters
-    ----------
-    base_font : TTFont
-        The font object into which symbols will be merged.
-    symbol_font_path : str
-        The file path to the symbol font.
+
+def _copy_cjk_glyphs_to_base(
+    base_font: TTFont,
+    cjk_font: TTFont,
+    cjk_upm_scale: float,
+    y_offset: int,
+) -> None:
+    """Phase 1 \u2014 Deep-copy every CJK glyph (and its dependencies) from the CJK
+    font into the base font, applying UPM scaling and vertical offset.
+
+    Copied glyphs are prefixed with ``cjk_`` to avoid name collisions.
+    """
+    base_cmap = base_font.getBestCmap()
+    cjk_cmap = cjk_font.getBestCmap()
+
+    base_glyf = base_font["glyf"]
+    cjk_glyf = cjk_font["glyf"]
+    base_hmtx = base_font["hmtx"]
+    cjk_hmtx = cjk_font["hmtx"]
+
+    has_vmtx = "vmtx" in base_font and "vmtx" in cjk_font
+    base_vmtx = base_font["vmtx"] if has_vmtx else None
+    cjk_vmtx = cjk_font["vmtx"] if has_vmtx else None
+
+    for codepoint in CJK_CODEPOINT_LIST:
+        if codepoint not in cjk_cmap:
+            continue
+
+        cjk_glyph_name = cjk_cmap[codepoint]
+        dependencies = get_glyph_dependencies(cjk_glyph_name, cjk_glyf)
+
+        for dep_name in dependencies:
+            new_dep_name = f"cjk_{dep_name}"
+            if new_dep_name in base_glyf:
+                continue
+
+            # Copy and scale glyph outlines
+            if dep_name in cjk_glyf:
+                copied = copy.deepcopy(cjk_glyf[dep_name])
+                is_top_level = dep_name == cjk_glyph_name
+                GlyphTransformer.scale_and_offset_y(
+                    copied, cjk_upm_scale, y_offset, apply_y_offset=is_top_level,
+                )
+                base_glyf[new_dep_name] = copied
+                if new_dep_name not in base_font.glyphOrder:
+                    base_font.glyphOrder.append(new_dep_name)
+
+            # Copy and scale horizontal metrics
+            if dep_name in cjk_hmtx.metrics:
+                adv, lsb = cjk_hmtx.metrics[dep_name]
+                base_hmtx.metrics[new_dep_name] = (
+                    int(round(adv * cjk_upm_scale)),
+                    int(round(lsb * cjk_upm_scale)),
+                )
+
+            # Copy and scale vertical metrics
+            if base_vmtx and cjk_vmtx and dep_name in cjk_vmtx.metrics:
+                v_adv, tsb = cjk_vmtx.metrics[dep_name]
+                scaled_tsb = int(round(tsb * cjk_upm_scale))
+                if dep_name == cjk_glyph_name:
+                    scaled_tsb -= y_offset
+                base_vmtx.metrics[new_dep_name] = (
+                    int(round(v_adv * cjk_upm_scale)),
+                    scaled_tsb,
+                )
+
+        base_cmap[codepoint] = f"cjk_{cjk_glyph_name}"
+
+
+def _adjust_cjk_glyph_widths(
+    base_font: TTFont,
+    cjk_font: TTFont,
+    params: ScaleParams,
+    cjk_upm_scale: float,
+    typical_scaled_cjk_adv: float,
+    strategy: ScaleStrategy,
+    stretch_set: set[int],
+    alignment_map: dict[int, Alignment],
+) -> None:
+    """Phase 2 \u2014 Walk the CJK cmap and stretch or pad each copied glyph to its
+    target advance width (fullwidth or halfwidth)."""
+    cjk_cmap = cjk_font.getBestCmap()
+    base_glyf = base_font["glyf"]
+    base_hmtx = base_font["hmtx"]
+    cjk_hmtx = cjk_font["hmtx"]
+    processed: set[str] = set()
+
+    for codepoint, cjk_glyph_name in cjk_cmap.items():
+        if codepoint not in CJK_CODEPOINT_SET:
+            continue
+
+        new_glyph_name = f"cjk_{cjk_glyph_name}"
+        if new_glyph_name not in base_glyf or new_glyph_name in processed:
+            continue
+        processed.add(new_glyph_name)
+
+        # Determine target advance width
+        original_adv = cjk_hmtx.metrics[cjk_glyph_name][0]
+        scaled_adv = int(round(original_adv * cjk_upm_scale))
+
+        if strategy is ScaleStrategy.NO_STRETCH:
+            target_adv = scaled_adv
+        elif scaled_adv > typical_scaled_cjk_adv * 0.75:
+            target_adv = params.target_adv_c
+        else:
+            target_adv = params.target_adv_e
+
+        # Apply stretch or pad
+        if codepoint in stretch_set and scaled_adv > 0:
+            scale_factor = target_adv / float(scaled_adv)
+            if scale_factor != 1.0:
+                GlyphTransformer.scale_horizontal(base_glyf[new_glyph_name], scale_factor)
+            _, current_lsb = base_hmtx.metrics[new_glyph_name]
+            base_hmtx.metrics[new_glyph_name] = (
+                target_adv,
+                int(round(current_lsb * scale_factor)),
+            )
+        else:
+            alignment = alignment_map.get(codepoint, Alignment.CENTER)
+            shift_x = alignment.compute_shift(target_adv - scaled_adv)
+            _shift_glyph_and_metrics(
+                base_glyf, base_hmtx, new_glyph_name, shift_x, target_adv,
+            )
+
+
+def merge_cjk_glyphs(
+    base_font: TTFont,
+    cjk_font: TTFont,
+    params: ScaleParams,
+    cjk_upm_scale: float,
+    y_offset: int,
+    typical_scaled_cjk_adv: float,
+    strategy: ScaleStrategy,
+    stretch_set: set[int],
+    alignment_map: dict[int, Alignment],
+) -> None:
+    """Copy CJK glyphs into the base font and adjust their advance widths.
+
+    This is the public entry point that orchestrates the two internal phases.
+    """
+    _copy_cjk_glyphs_to_base(base_font, cjk_font, cjk_upm_scale, y_offset)
+    _adjust_cjk_glyph_widths(
+        base_font, cjk_font, params,
+        cjk_upm_scale, typical_scaled_cjk_adv,
+        strategy, stretch_set, alignment_map,
+    )
+    ensure_cmap_format_12(base_font, base_font.getBestCmap())
+
+
+# ---------------------------------------------------------------------------
+# Symbol font merging
+# ---------------------------------------------------------------------------
+
+
+def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str) -> None:
+    """Overlay a symbol font onto the base font, scaling by UPM ratio.
+
+    Existing glyphs are overwritten when names collide.
     """
     symbol_font = TTFont(symbol_font_path)
     base_cmap = base_font.getBestCmap()
@@ -667,57 +718,34 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str):
     symbol_hmtx = symbol_font["hmtx"]
 
     has_vmtx = "vmtx" in base_font and "vmtx" in symbol_font
-    if has_vmtx:
-        base_vmtx = base_font["vmtx"]
-        symbol_vmtx = symbol_font["vmtx"]
+    base_vmtx = base_font["vmtx"] if has_vmtx else None
+    symbol_vmtx = symbol_font["vmtx"] if has_vmtx else None
 
-    base_upem = base_font["head"].unitsPerEm
-    symbol_upem = symbol_font["head"].unitsPerEm
-    scale = base_upem / symbol_upem
+    scale = base_font["head"].unitsPerEm / symbol_font["head"].unitsPerEm
 
     for codepoint, sym_glyph_name in symbol_cmap.items():
-        dependencies = get_glyph_dependencies(sym_glyph_name, symbol_glyf)
-
-        for dep_name in dependencies:
+        for dep_name in get_glyph_dependencies(sym_glyph_name, symbol_glyf):
+            # Copy and scale glyph outlines
             if dep_name in symbol_glyf:
-                copied_glyph = copy.deepcopy(symbol_glyf[dep_name])
-
-                if copied_glyph.isComposite():
-                    for comp in copied_glyph.components:
-                        if scale != 1.0:
-                            if hasattr(comp, "x") and comp.x is not None:
-                                comp.x = int(round(comp.x * scale))
-                            if hasattr(comp, "y") and comp.y is not None:
-                                comp.y = int(round(comp.y * scale))
-                            if hasattr(comp, "transform"):
-                                try:
-                                    (xx, xy), (yx, yy) = comp.transform
-                                    comp.transform = ((xx * scale, xy * scale), (yx * scale, yy * scale))
-                                except ValueError:
-                                    pass
-                else:
-                    if scale != 1.0 and hasattr(copied_glyph, "coordinates"):
-                        coords = []
-                        for x, y in copied_glyph.coordinates:
-                            coords.append((int(round(x * scale)), int(round(y * scale))))
-                        copied_glyph.coordinates = GlyphCoordinates(coords)
-
-                base_glyf[dep_name] = copied_glyph
+                copied = copy.deepcopy(symbol_glyf[dep_name])
+                if scale != 1.0:
+                    GlyphTransformer.scale(copied, scale, scale)
+                base_glyf[dep_name] = copied
                 if dep_name not in base_font.glyphOrder:
                     base_font.glyphOrder.append(dep_name)
 
+            # Copy and scale horizontal metrics
             if dep_name in symbol_hmtx.metrics:
                 adv, lsb = symbol_hmtx.metrics[dep_name]
                 if scale != 1.0:
-                    adv = int(round(adv * scale))
-                    lsb = int(round(lsb * scale))
+                    adv, lsb = int(round(adv * scale)), int(round(lsb * scale))
                 base_hmtx.metrics[dep_name] = (adv, lsb)
 
-            if has_vmtx and dep_name in symbol_vmtx.metrics:
+            # Copy and scale vertical metrics
+            if base_vmtx and symbol_vmtx and dep_name in symbol_vmtx.metrics:
                 v_adv, tsb = symbol_vmtx.metrics[dep_name]
                 if scale != 1.0:
-                    v_adv = int(round(v_adv * scale))
-                    tsb = int(round(tsb * scale))
+                    v_adv, tsb = int(round(v_adv * scale)), int(round(tsb * scale))
                 base_vmtx.metrics[dep_name] = (v_adv, tsb)
 
         base_cmap[codepoint] = sym_glyph_name
@@ -726,238 +754,194 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str):
     symbol_font.close()
 
 
-def update_font_metadata(font: TTFont, config: FontMergeConfig):
-    """
-    Updates the naming and metadata tables for the merged font.
+# ---------------------------------------------------------------------------
+# Metadata & monospace helpers
+# ---------------------------------------------------------------------------
 
-    Parameters
-    ----------
-    font : TTFont
-        The font object to update metadata for.
-    config : FontMergeConfig
-        The configuration containing the metadata fields.
-    """
-    name_table = font["name"]
+
+def update_font_metadata(font: TTFont, config: FontMergeConfig) -> None:
+    """Rewrite the ``name`` table entries to reflect the merged font identity."""
     full_name = f"{config.new_font_family} {config.new_font_subfamily}"
-    ps_name = f"{config.new_font_family.replace(' ', '')}-{config.new_font_subfamily.replace(' ', '')}"
+    ps_name = (
+        f"{config.new_font_family.replace(' ', '')}"
+        f"-{config.new_font_subfamily.replace(' ', '')}"
+    )
 
-    for record in name_table.names:
-        text = record.toStr()
-        new_text = text
+    replacements: dict[int, str] = {
+        1:  config.new_font_family,
+        2:  config.new_font_subfamily,
+        3:  f"Merged:{full_name}",
+        4:  full_name,
+        6:  ps_name,
+        8:  config.new_author,
+        9:  config.new_author,
+        10: config.new_description,
+        16: config.new_font_family,
+        17: config.new_font_subfamily,
+    }
 
-        if record.nameID in (1, 16):
-            new_text = config.new_font_family
-        elif record.nameID in (2, 17):
-            new_text = config.new_font_subfamily
-        elif record.nameID == 3:
-            new_text = f"Merged:{full_name}"
-        elif record.nameID == 4:
-            new_text = full_name
-        elif record.nameID == 6:
-            new_text = ps_name
-        elif record.nameID in (8, 9):
-            new_text = config.new_author
-        elif record.nameID == 10:
-            new_text = config.new_description
-
-        if new_text != text:
+    for record in font["name"].names:
+        new_text = replacements.get(record.nameID)
+        if new_text is not None and new_text != record.toStr():
             record.string = new_text.encode(record.getEncoding())
 
 
-def scale_vertical_metrics(font: TTFont, scale: float):
-    """
-    Scales the vertical metrics tables (head, OS/2, hhea) by the given factor.
-
-    Parameters
-    ----------
-    font : TTFont
-        The font object to update.
-    scale : float
-        The scaling factor.
-    """
-    if scale == 1.0:
-        return
-
+def mark_font_as_monospace(font: TTFont, target_adv_e: int) -> None:
+    """Flag the font as monospaced in OS/2, panose, and post tables."""
     os2 = font["OS/2"]
-    os2.sTypoAscender = int(round(os2.sTypoAscender * scale))
-    os2.sTypoDescender = int(round(os2.sTypoDescender * scale))
-    os2.sTypoLineGap = int(round(os2.sTypoLineGap * scale))
-    os2.usWinAscent = int(round(os2.usWinAscent * scale))
-    os2.usWinDescent = int(round(os2.usWinDescent * scale))
-    os2.sxHeight = int(round(os2.sxHeight * scale))
-    os2.sCapHeight = int(round(os2.sCapHeight * scale))
-    os2.ySubscriptXSize = int(round(os2.ySubscriptXSize * scale))
-    os2.ySubscriptYSize = int(round(os2.ySubscriptYSize * scale))
-    os2.ySubscriptXOffset = int(round(os2.ySubscriptXOffset * scale))
-    os2.ySubscriptYOffset = int(round(os2.ySubscriptYOffset * scale))
-    os2.ySuperscriptXSize = int(round(os2.ySuperscriptXSize * scale))
-    os2.ySuperscriptYSize = int(round(os2.ySuperscriptYSize * scale))
-    os2.ySuperscriptXOffset = int(round(os2.ySuperscriptXOffset * scale))
-    os2.ySuperscriptYOffset = int(round(os2.ySuperscriptYOffset * scale))
-    os2.yStrikeoutSize = int(round(os2.yStrikeoutSize * scale))
-    os2.yStrikeoutPosition = int(round(os2.yStrikeoutPosition * scale))
+    os2.xAvgCharWidth = target_adv_e
 
-    hhea = font["hhea"]
-    hhea.ascent = int(round(hhea.ascent * scale))
-    hhea.descent = int(round(hhea.descent * scale))
-    hhea.lineGap = int(round(hhea.lineGap * scale))
-    hhea.caretSlopeRise = int(round(hhea.caretSlopeRise * scale))
-    hhea.caretOffset = int(round(hhea.caretOffset * scale))
+    # Family types 2\u20134 use bProportion=9 for monospaced; type 5 uses 3.
+    mono_proportion = {2: 9, 3: 9, 4: 9, 5: 3}
+    if os2.panose.bFamilyType in mono_proportion:
+        os2.panose.bProportion = mono_proportion[os2.panose.bFamilyType]
 
-    if "vhea" in font:
-        vhea = font["vhea"]
-        vhea.ascent = int(round(vhea.ascent * scale))
-        vhea.descent = int(round(vhea.descent * scale))
-        vhea.lineGap = int(round(vhea.lineGap * scale))
+    font["post"].isFixedPitch = 1
 
 
-def process_font(config: FontMergeConfig):
-    """
-    Executes the complete font merging process based on the given configuration.
+# ---------------------------------------------------------------------------
+# Baseline alignment
+# ---------------------------------------------------------------------------
 
-    Parameters
-    ----------
-    config : FontMergeConfig
-        The configuration for the processing steps.
+
+def compute_baseline_y_offset(
+    eng_font: TTFont,
+    cjk_font: TTFont,
+    cjk_upm_scale: float,
+) -> int:
+    """Calculate the vertical shift needed to align the CJK baseline
+    with the (already-scaled) English baseline."""
+    eng_os2 = eng_font["OS/2"]
+    cjk_os2 = cjk_font["OS/2"]
+    eng_center = (eng_os2.sTypoAscender + eng_os2.sTypoDescender) / 2.0
+    cjk_center = (cjk_os2.sTypoAscender + cjk_os2.sTypoDescender) / 2.0
+    return int(round(eng_center - cjk_center * cjk_upm_scale))
+
+
+# ---------------------------------------------------------------------------
+# Main pipeline
+# ---------------------------------------------------------------------------
+
+
+def process_font(config: FontMergeConfig) -> None:
+    """Execute the complete font merging pipeline:
+
+    1. Load fonts and compute UPM scaling factors.
+    2. Derive advance-width targets from the chosen strategy.
+    3. Scale the English font glyphs and metrics.
+    4. Copy and adjust CJK glyphs.
+    5. Stretch / pad designated English-side glyphs.
+    6. Overlay symbol fonts.
+    7. Write metadata and save.
     """
     eng_font = TTFont(config.english_font_path)
     cjk_font = TTFont(config.cjk_font_path)
 
+    # UPM normalisation
     eng_upm = eng_font["head"].unitsPerEm
     cjk_upm = cjk_font["head"].unitsPerEm
     upm = max(eng_upm, cjk_upm)
     eng_upm_scale = upm / float(eng_upm)
     cjk_upm_scale = upm / float(cjk_upm)
 
-    eng_typical_adv = get_typical_advance(eng_font, ord('A'))
-    cjk_typical_adv = get_typical_advance(cjk_font, ord('中'))
+    # Measure representative advance widths
+    eng_typical_adv = get_typical_advance(eng_font, ord("A"))
+    cjk_typical_adv = get_typical_advance(cjk_font, ord("\u4e2d"))
     scaled_eng_adv = eng_typical_adv * eng_upm_scale
     scaled_cjk_adv = cjk_typical_adv * cjk_upm_scale
 
-    if config.scaling_strategy == ScaleStrategy.ENGLISH_KEEP_CJK_SCALE_GAP:
-        target_adv_e = int(round(scaled_eng_adv))
-        eng_scale_x = eng_upm_scale
-        eng_scale_y = eng_upm_scale
-        target_adv_c = target_adv_e * 2
-
-    elif config.scaling_strategy == ScaleStrategy.ENGLISH_SCALE_GAP_CJK_KEEP:
-        target_adv_e = int(round(scaled_cjk_adv / 2.0))
-        ratio = target_adv_e / float(eng_typical_adv)
-        eng_scale_x = ratio
-        eng_scale_y = ratio
-        target_adv_c = target_adv_e * 2
-
-    elif config.scaling_strategy == ScaleStrategy.ENGLISH_STRETCH_CJK_KEEP:
-        target_adv_e = int(round(scaled_cjk_adv / 2.0))
-        eng_scale_x = target_adv_e / float(eng_typical_adv)
-        eng_scale_y = eng_upm_scale
-        target_adv_c = target_adv_e * 2
-
-    elif config.scaling_strategy == ScaleStrategy.OPTIMAL_SCALE_BOTH:
-        eng_ratio = eng_typical_adv / float(eng_upm)
-        cjk_ratio = cjk_typical_adv / float(cjk_upm)
-        optimal_rho = calculate_optimal_rho(eng_ratio, cjk_ratio, config.weight_english)
-
-        target_adv_e = int(round(upm * optimal_rho))
-        eng_scale_x = target_adv_e / float(eng_typical_adv)
-        eng_scale_y = eng_upm_scale
-        target_adv_c = target_adv_e * 2
-
-    elif config.scaling_strategy == ScaleStrategy.NO_STRETCH:
-        target_adv_e = int(round(scaled_eng_adv))
-        target_adv_c = int(round(scaled_cjk_adv))
-        eng_scale_x = eng_upm_scale
-        eng_scale_y = eng_upm_scale
-
-    scale_font_glyphs(eng_font, eng_scale_x, eng_scale_y)
-    scale_vertical_metrics(eng_font, eng_scale_y)
-
-    eng_font["head"].unitsPerEm = upm
-
-    y_offset = config.cjk_y_offset
-    if config.adjust_baseline:
-        # Use CJK font's original metrics and the upm scales (before glyph scaling was applied)
-        # English font's OS/2 has already been scaled by eng_scale_y above
-        eng_os2 = eng_font["OS/2"]
-        cjk_os2 = cjk_font["OS/2"]
-        eng_center = (eng_os2.sTypoAscender + eng_os2.sTypoDescender) / 2.0
-        cjk_center = (cjk_os2.sTypoAscender + cjk_os2.sTypoDescender) / 2.0
-        scaled_cjk_center = cjk_center * cjk_upm_scale
-        y_offset += int(round(eng_center - scaled_cjk_center))
-
-    stretch_set = get_codepoints(config.stretch_chars)
-    alignment_map: dict[int, Alignment] = {}
-    for pad_config in config.pad_configs:
-        for cp in get_codepoints(pad_config.chars):
-            alignment_map[cp] = pad_config.alignment
-
-    merge_cjk_glyphs(
-        eng_font,
-        cjk_font,
-        target_adv_c,
-        target_adv_e,
-        cjk_upm_scale,
-        y_offset,
-        scaled_cjk_adv,
-        config.scaling_strategy,
-        stretch_set,
-        alignment_map
+    # Compute strategy-dependent parameters
+    params = compute_scale_params(
+        strategy=config.scaling_strategy,
+        eng_upm=eng_upm, cjk_upm=cjk_upm, upm=upm,
+        eng_upm_scale=eng_upm_scale,
+        scaled_eng_adv=scaled_eng_adv, scaled_cjk_adv=scaled_cjk_adv,
+        eng_typical_adv=eng_typical_adv, cjk_typical_adv=cjk_typical_adv,
+        weight_english=config.weight_english,
     )
 
-    cjk_codepoint_set = set(get_cjk_unicodes())
+    # Scale English font
+    scale_font_glyphs(eng_font, params.eng_scale_x, params.eng_scale_y)
+    scale_vertical_metrics(eng_font, params.eng_scale_y)
+    eng_font["head"].unitsPerEm = upm
+
+    # Baseline alignment
+    y_offset = config.cjk_y_offset
+    if config.adjust_baseline:
+        y_offset += compute_baseline_y_offset(eng_font, cjk_font, cjk_upm_scale)
+
+    # Merge CJK glyphs
+    stretch_set = parse_codepoints(config.stretch_chars)
+    alignment_map = build_alignment_map(config.pad_configs)
+
+    merge_cjk_glyphs(
+        base_font=eng_font,
+        cjk_font=cjk_font,
+        params=params,
+        cjk_upm_scale=cjk_upm_scale,
+        y_offset=y_offset,
+        typical_scaled_cjk_adv=scaled_cjk_adv,
+        strategy=config.scaling_strategy,
+        stretch_set=stretch_set,
+        alignment_map=alignment_map,
+    )
+
+    # Stretch / pad English-side glyphs that fall outside CJK ranges
     for codepoint in stretch_set:
-        if codepoint not in cjk_codepoint_set:
-            stretch_glyph_width(eng_font, codepoint, target_adv_c)
+        if codepoint not in CJK_CODEPOINT_SET:
+            stretch_glyph_width(eng_font, codepoint, params.target_adv_c)
 
-    for pad_config in config.pad_configs:
-        pad_codepoints = get_codepoints(pad_config.chars)
-        for codepoint in pad_codepoints:
-            if codepoint not in cjk_codepoint_set:
-                pad_glyph_width(eng_font, codepoint, target_adv_c, pad_config.alignment)
+    for pad_cfg in config.pad_configs:
+        for codepoint in parse_codepoints(pad_cfg.chars):
+            if codepoint not in CJK_CODEPOINT_SET:
+                pad_glyph_width(eng_font, codepoint, params.target_adv_c, pad_cfg.alignment)
 
-    for symbol_font_path in config.symbol_font_paths:
-        merge_symbols_into_font(eng_font, symbol_font_path)
+    # Merge symbol fonts
+    for symbol_path in config.symbol_font_paths:
+        merge_symbols_into_font(eng_font, symbol_path)
 
+    # Metadata & monospace flag
     update_font_metadata(eng_font, config)
-    eng_font.save(config.output_filename)
+    if config.mark_as_monospace:
+        mark_font_as_monospace(eng_font, params.target_adv_e)
 
+    # Save
+    eng_font.save(config.output_filename)
     eng_font.close()
     cjk_font.close()
 
 
-def main():
-    """
-    Main entry point for configuring and processing font merging tasks.
-    """
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+
+def main() -> None:
+    """Configure and run font merging tasks."""
     configs = [
         FontMergeConfig(
             output_filename="MyMergedFont-Regular.ttf",
             english_font_path="SourceCodePro-Regular.ttf",
             cjk_font_path="LXGWBrightCodeTC-Regular.ttf",
             scaling_strategy=ScaleStrategy.OPTIMAL_SCALE_BOTH,
-            stretch_chars=["—", "…"],
+            stretch_chars=["\u2014", "\u2026"],
             pad_configs=[
-                PadConfig(
-                    chars=["‘", "“"],
-                    alignment=Alignment.RIGHT
-                ),
-                PadConfig(
-                    chars=["’", "”"],
-                    alignment=Alignment.LEFT
-                ),
-                PadConfig(
-                    chars=["．"],
-                    alignment=Alignment.CENTER
-                )
+                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
+                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
             ],
             weight_english=0.5,
-            symbol_font_paths=["SymbolsNerdFontMono-Regular.ttf", "FlogSymbols.ttf"],
+            symbol_font_paths=[
+                "SymbolsNerdFontMono-Regular.ttf",
+                "FlogSymbols.ttf",
+            ],
             adjust_baseline=True,
             cjk_y_offset=0,
             new_font_family="My Merged Code",
             new_font_subfamily="Regular",
             new_author="Automated Script",
-            new_description="A programmer font with optimized CJK spacing."
+            new_description="A programmer font with optimized CJK spacing.",
+            mark_as_monospace=True,
         ),
     ]
 
@@ -966,8 +950,8 @@ def main():
         try:
             process_font(config)
             print(f"Successfully saved {config.output_filename}")
-        except FileNotFoundError as error_msg:
-            print(f"Error: {error_msg}")
+        except FileNotFoundError as err:
+            print(f"Error: {err}")
 
 
 if __name__ == "__main__":
