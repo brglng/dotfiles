@@ -934,13 +934,11 @@ def process_font(config: FontMergeConfig) -> None:
 
     # Stretch / pad English-side glyphs that fall outside CJK ranges
     for codepoint in stretch_set:
-        if codepoint not in CJK_CODEPOINT_SET:
-            stretch_glyph_width(eng_font, codepoint, target_adv_c)
+        stretch_glyph_width(eng_font, codepoint, target_adv_c)
 
     for pad_cfg in config.pad_configs:
         for codepoint in parse_codepoints(pad_cfg.chars):
-            if codepoint not in CJK_CODEPOINT_SET:
-                pad_glyph_width(eng_font, codepoint, target_adv_c, pad_cfg.alignment)
+            pad_glyph_width(eng_font, codepoint, target_adv_c, pad_cfg.alignment)
 
     # Merge symbol fonts
     for symbol_path in config.symbol_font_paths:
