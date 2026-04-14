@@ -4,6 +4,7 @@ scaling factors, symbol font overlays, and metadata customization."""
 import copy
 from dataclasses import dataclass
 from enum import Enum
+import os
 from typing import Any
 
 from fontTools.pens.cu2quPen import Cu2QuPen
@@ -179,10 +180,14 @@ class FontMergeConfig:
         Path to the base English font.
     cjk_font_path : str
         Path to the CJK font.
-    english_scale : float
-        Scaling factor for English glyph width relative to half the CJK
-        glyph width.  The target English advance is
-        ``0.5 * cjk_advance * cjk_scale * english_scale``.
+    english_scale_x : float
+        Horizontal scaling factor applied to English glyph geometry after
+        normalising to half the CJK advance.  Values < 1 narrow the ink;
+        values > 1 widen it.  Does not affect the cell (advance) width.
+    english_scale_y : float
+        Vertical scaling factor applied to English glyph geometry after
+        normalising to half the CJK advance.  Values < 1 shorten the ink;
+        values > 1 stretch it.
     cjk_scale : float
         Uniform scaling factor applied to CJK font glyphs.
     stretch_chars : list[str | int | tuple[int, int]]
@@ -210,7 +215,8 @@ class FontMergeConfig:
     output_filename: str
     english_font_path: str
     cjk_font_path: str
-    english_scale: float
+    english_scale_x: float
+    english_scale_y: float
     cjk_scale: float
     stretch_chars: list[str | int | tuple[int, int]]
     pad_configs: list[PadConfig]
@@ -261,25 +267,6 @@ class GlyphTransformer:
             ])
 
     @staticmethod
-    def scale_horizontal(glyph: Any, scale_x: float) -> None:
-        """Scale only the horizontal axis (used for stretching)."""
-        if glyph.isComposite():
-            for comp in glyph.components:
-                if hasattr(comp, "x") and comp.x is not None:
-                    comp.x = int(round(comp.x * scale_x))
-                if hasattr(comp, "transform"):
-                    try:
-                        (xx, xy), (yx, yy) = comp.transform
-                        comp.transform = ((xx * scale_x, xy * scale_x), (yx, yy))
-                    except ValueError:
-                        pass
-        elif hasattr(glyph, "coordinates"):
-            glyph.coordinates = GlyphCoordinates([
-                (int(round(x * scale_x)), y)
-                for x, y in glyph.coordinates
-            ])
-
-    @staticmethod
     def shift_horizontal(glyph: Any, shift_x: int) -> None:
         """Translate all coordinates by *shift_x* on the X axis."""
         if shift_x == 0:
@@ -293,30 +280,137 @@ class GlyphTransformer:
                 (x + shift_x, y) for x, y in glyph.coordinates
             ])
 
-    @staticmethod
-    def scale_and_offset_y(
-        glyph: Any,
-        upm_scale: float,
-        y_offset: int,
-        apply_y_offset: bool,
-    ) -> None:
-        """Scale by *upm_scale* and optionally apply a vertical offset."""
-        if glyph.isComposite():
-            for comp in glyph.components:
-                if hasattr(comp, "x") and comp.x is not None:
-                    comp.x = int(round(comp.x * upm_scale))
-                if hasattr(comp, "y") and comp.y is not None:
-                    comp.y = int(round(comp.y * upm_scale))
-                    if apply_y_offset:
+
+# ---------------------------------------------------------------------------
+# Per-glyph metric helpers
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class _FontTables:
+    """Thin container that bundles the mutable tables edited during merging.
+
+    Avoids threading ``glyf``, ``hmtx``, and the optional ``vmtx`` through
+    every helper signature individually.
+    """
+
+    glyf: Any
+    hmtx: Any
+    vmtx: Any  # None when the font has no vmtx table
+
+    @classmethod
+    def from_font(cls, font: TTFont) -> "_FontTables":
+        return cls(
+            glyf=font["glyf"],
+            hmtx=font["hmtx"],
+            vmtx=font["vmtx"] if "vmtx" in font else None,
+        )
+
+
+def _scale_glyph_metrics(
+    tables: _FontTables,
+    glyph_name: str,
+    scale_x: float,
+    scale_y: float,
+) -> None:
+    """Scale the hmtx and vmtx metric entries for *glyph_name* in place."""
+    if glyph_name in tables.hmtx.metrics:
+        adv, lsb = tables.hmtx.metrics[glyph_name]
+        tables.hmtx.metrics[glyph_name] = (
+            int(round(adv * scale_x)),
+            int(round(lsb * scale_x)),
+        )
+    if tables.vmtx and glyph_name in tables.vmtx.metrics:
+        v_adv, tsb = tables.vmtx.metrics[glyph_name]
+        tables.vmtx.metrics[glyph_name] = (
+            int(round(v_adv * scale_y)),
+            int(round(tsb * scale_y)),
+        )
+
+
+def _stretch_glyph(
+    tables: _FontTables,
+    glyph_name: str,
+    target_advance: int,
+) -> None:
+    """Stretch *glyph_name* horizontally so its advance becomes *target_advance*.
+
+    Both the glyph outline and the hmtx entry are updated atomically.
+    """
+    if glyph_name not in tables.hmtx.metrics:
+        return
+    adv, lsb = tables.hmtx.metrics[glyph_name]
+    if adv == 0:
+        return
+    scale_x = target_advance / float(adv)
+    GlyphTransformer.scale(tables.glyf[glyph_name], scale_x, 1.0)
+    tables.hmtx.metrics[glyph_name] = (target_advance, int(round(lsb * scale_x)))
+
+
+def _shift_glyph(
+    tables: _FontTables,
+    glyph_name: str,
+    shift_x: int,
+    target_advance: int,
+) -> None:
+    """Shift *glyph_name* by *shift_x* and set its advance to *target_advance*.
+
+    Both the glyph outline and the hmtx LSB are updated atomically.
+    """
+    GlyphTransformer.shift_horizontal(tables.glyf[glyph_name], shift_x)
+    _, lsb = tables.hmtx.metrics[glyph_name]
+    tables.hmtx.metrics[glyph_name] = (target_advance, lsb + shift_x)
+
+
+def _copy_glyph_into(
+    src_tables: _FontTables,
+    dst_tables: _FontTables,
+    src_name: str,
+    dst_name: str,
+    dst_font: TTFont,
+    scale_x: float,
+    scale_y: float,
+    y_offset: int = 0,
+    apply_y_offset: bool = False,
+) -> None:
+    """Deep-copy one glyph (outline + metrics) from *src* into *dst*.
+
+    The outline is scaled by (*scale_x*, *scale_y*) and, when
+    *apply_y_offset* is ``True``, shifted vertically by *y_offset*.
+    The glyph is registered in ``dst_font.glyphOrder`` if not already present.
+    """
+    if src_name in src_tables.glyf:
+        copied = copy.deepcopy(src_tables.glyf[src_name])
+        GlyphTransformer.scale(copied, scale_x, scale_y)
+        if apply_y_offset and y_offset != 0:
+            if copied.isComposite():
+                for comp in copied.components:
+                    if hasattr(comp, "y") and comp.y is not None:
                         comp.y += y_offset
-        elif hasattr(glyph, "coordinates"):
-            coords = []
-            for x, y in glyph.coordinates:
-                y_val = int(round(y * upm_scale))
-                if apply_y_offset:
-                    y_val += y_offset
-                coords.append((int(round(x * upm_scale)), y_val))
-            glyph.coordinates = GlyphCoordinates(coords)
+            elif hasattr(copied, "coordinates"):
+                copied.coordinates = GlyphCoordinates([
+                    (x, y + y_offset) for x, y in copied.coordinates
+                ])
+        dst_tables.glyf[dst_name] = copied
+        if dst_name not in dst_font.glyphOrder:
+            dst_font.glyphOrder.append(dst_name)
+
+    if src_name in src_tables.hmtx.metrics:
+        adv, lsb = src_tables.hmtx.metrics[src_name]
+        dst_tables.hmtx.metrics[dst_name] = (
+            int(round(adv * scale_x)),
+            int(round(lsb * scale_x)),
+        )
+
+    if dst_tables.vmtx and src_tables.vmtx and src_name in src_tables.vmtx.metrics:
+        v_adv, tsb = src_tables.vmtx.metrics[src_name]
+        scaled_tsb = int(round(tsb * scale_y))
+        if apply_y_offset:
+            scaled_tsb -= y_offset
+        dst_tables.vmtx.metrics[dst_name] = (
+            int(round(v_adv * scale_y)),
+            scaled_tsb,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -399,78 +493,25 @@ def ensure_cmap_format_12(font: TTFont, cmap_mapping: dict[int, str]) -> None:
 # ---------------------------------------------------------------------------
 
 
-def scale_font_glyphs(font: TTFont, scale: float) -> None:
-    """Scale every glyph and its metrics uniformly by *scale*."""
-    if scale == 1.0:
-        return
+def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
+    """Scale every glyph and its metrics by (*scale_x*, *scale_y*).
 
-    glyf = font["glyf"]
-    hmtx = font["hmtx"]
-    vmtx = font["vmtx"] if "vmtx" in font else None
-
-    for glyph_name in glyf.keys():
-        glyph = glyf[glyph_name]
-        GlyphTransformer.scale(glyph, scale, scale)
-
-        if glyph_name in hmtx.metrics:
-            adv, lsb = hmtx.metrics[glyph_name]
-            hmtx.metrics[glyph_name] = (
-                int(round(adv * scale)),
-                int(round(lsb * scale)),
-            )
-
-        if vmtx and glyph_name in vmtx.metrics:
-            v_adv, tsb = vmtx.metrics[glyph_name]
-            vmtx.metrics[glyph_name] = (
-                int(round(v_adv * scale)),
-                int(round(tsb * scale)),
-            )
-
-
-def center_font_glyphs(
-    font: TTFont,
-    target_advance: int,
-    skip_codepoints: set[int],
-) -> None:
-    """Center every glyph whose advance differs from *target_advance*.
-
-    Glyphs mapped to codepoints in *skip_codepoints* are left untouched
-    (they will be positioned by an explicit ``PadConfig`` later).
+    Glyph outlines are scaled non-uniformly when the two factors differ.
+    Horizontal metrics (advance width, LSB) follow *scale_x*; vertical
+    metrics (vertical advance, TSB) and all global OS/2 / hhea / vhea
+    fields follow *scale_y*.
     """
-    cmap = font.getBestCmap()
-    glyf = font["glyf"]
-    hmtx = font["hmtx"]
+    tables = _FontTables.from_font(font)
 
-    # Build the set of glyph names to skip.
-    skip_names: set[str] = set()
-    for cp in skip_codepoints:
-        if cp in cmap:
-            skip_names.add(cmap[cp])
+    for glyph_name in tables.glyf.keys():
+        GlyphTransformer.scale(tables.glyf[glyph_name], scale_x, scale_y)
+        _scale_glyph_metrics(tables, glyph_name, scale_x, scale_y)
 
-    for glyph_name in glyf.keys():
-        if glyph_name in skip_names:
-            continue
-        if glyph_name not in hmtx.metrics:
-            continue
-
-        adv, lsb = hmtx.metrics[glyph_name]
-        if adv == target_advance:
-            continue
-
-        shift_x = (target_advance - adv) // 2
-        if shift_x != 0:
-            GlyphTransformer.shift_horizontal(glyf[glyph_name], shift_x)
-            lsb += shift_x
-        hmtx.metrics[glyph_name] = (target_advance, lsb)
-
-
-def scale_vertical_metrics(font: TTFont, scale: float) -> None:
-    """Scale all global vertical metric fields (OS/2, hhea, vhea) by *scale*."""
-    if scale == 1.0:
+    if scale_y == 1.0:
         return
 
     def _s(value: int) -> int:
-        return int(round(value * scale))
+        return int(round(value * scale_y))
 
     os2 = font["OS/2"]
     for attr in (
@@ -495,22 +536,35 @@ def scale_vertical_metrics(font: TTFont, scale: float) -> None:
             setattr(vhea, attr, _s(getattr(vhea, attr)))
 
 
-# ---------------------------------------------------------------------------
-# Single-glyph width adjustments (pad / stretch / shift)
-# ---------------------------------------------------------------------------
-
-
-def _shift_glyph_and_metrics(
-    glyf_table: dict,
-    hmtx_table: Any,
-    glyph_name: str,
-    shift_x: int,
+def center_font_glyphs(
+    font: TTFont,
     target_advance: int,
+    skip_codepoints: set[int],
 ) -> None:
-    """Shift a glyph horizontally and write *target_advance* into hmtx."""
-    GlyphTransformer.shift_horizontal(glyf_table[glyph_name], shift_x)
-    _, current_lsb = hmtx_table.metrics[glyph_name]
-    hmtx_table.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
+    """Center every glyph whose advance differs from *target_advance*.
+
+    Glyphs mapped to codepoints in *skip_codepoints* are left untouched
+    (they will be positioned by an explicit ``PadConfig`` later).
+    """
+    cmap = font.getBestCmap()
+    tables = _FontTables.from_font(font)
+
+    skip_names: set[str] = {cmap[cp] for cp in skip_codepoints if cp in cmap}
+
+    for glyph_name in tables.glyf.keys():
+        if glyph_name in skip_names or glyph_name not in tables.hmtx.metrics:
+            continue
+        adv, _ = tables.hmtx.metrics[glyph_name]
+        if adv == target_advance:
+            continue
+        _shift_glyph(tables, glyph_name, (target_advance - adv) // 2, target_advance)
+
+
+
+
+# ---------------------------------------------------------------------------
+# Single-glyph width adjustments (pad / stretch)
+# ---------------------------------------------------------------------------
 
 
 def pad_glyph_width(
@@ -523,21 +577,14 @@ def pad_glyph_width(
     cmap = font.getBestCmap()
     if codepoint not in cmap:
         return
-
     glyph_name = cmap[codepoint]
-    glyf = font["glyf"]
-    hmtx = font["hmtx"]
-
-    if glyph_name not in glyf or glyph_name not in hmtx.metrics:
+    tables = _FontTables.from_font(font)
+    if glyph_name not in tables.glyf or glyph_name not in tables.hmtx.metrics:
         return
-
-    adv, current_lsb = hmtx.metrics[glyph_name]
+    adv, _ = tables.hmtx.metrics[glyph_name]
     if adv >= target_advance:
         return
-
-    shift_x = alignment.compute_shift(target_advance - adv)
-    GlyphTransformer.shift_horizontal(glyf[glyph_name], shift_x)
-    hmtx.metrics[glyph_name] = (target_advance, current_lsb + shift_x)
+    _shift_glyph(tables, glyph_name, alignment.compute_shift(target_advance - adv), target_advance)
 
 
 def stretch_glyph_width(
@@ -549,21 +596,11 @@ def stretch_glyph_width(
     cmap = font.getBestCmap()
     if codepoint not in cmap:
         return
-
     glyph_name = cmap[codepoint]
-    glyf = font["glyf"]
-    hmtx = font["hmtx"]
-
-    if glyph_name not in glyf or glyph_name not in hmtx.metrics:
+    tables = _FontTables.from_font(font)
+    if glyph_name not in tables.glyf or glyph_name not in tables.hmtx.metrics:
         return
-
-    adv, lsb = hmtx.metrics[glyph_name]
-    if adv == 0:
-        return
-
-    scale_factor = target_advance / float(adv)
-    GlyphTransformer.scale_horizontal(glyf[glyph_name], scale_factor)
-    hmtx.metrics[glyph_name] = (target_advance, int(round(lsb * scale_factor)))
+    _stretch_glyph(tables, glyph_name, target_advance)
 
 
 # ---------------------------------------------------------------------------
@@ -577,68 +614,41 @@ def _copy_cjk_glyphs_to_base(
     cjk_upm_scale: float,
     y_offset: int,
 ) -> None:
-    """Phase 1 \u2014 Deep-copy every CJK glyph (and its dependencies) from the CJK
+    """Phase 1 — Deep-copy every CJK glyph (and its dependencies) from the CJK
     font into the base font, applying UPM scaling and vertical offset.
 
     Copied glyphs are prefixed with ``cjk_`` to avoid name collisions.
     """
     base_cmap = base_font.getBestCmap()
     cjk_cmap = cjk_font.getBestCmap()
-
-    base_glyf = base_font["glyf"]
-    cjk_glyf = cjk_font["glyf"]
-    base_hmtx = base_font["hmtx"]
-    cjk_hmtx = cjk_font["hmtx"]
-
-    has_vmtx = "vmtx" in base_font and "vmtx" in cjk_font
-    base_vmtx = base_font["vmtx"] if has_vmtx else None
-    cjk_vmtx = cjk_font["vmtx"] if has_vmtx else None
+    base_tables = _FontTables.from_font(base_font)
+    cjk_tables = _FontTables.from_font(cjk_font)
 
     for codepoint in CJK_CODEPOINT_LIST:
         if codepoint not in cjk_cmap:
             continue
 
         cjk_glyph_name = cjk_cmap[codepoint]
-        dependencies = get_glyph_dependencies(cjk_glyph_name, cjk_glyf)
+        dependencies = get_glyph_dependencies(cjk_glyph_name, cjk_tables.glyf)
 
         for dep_name in dependencies:
             new_dep_name = f"cjk_{dep_name}"
-            if new_dep_name in base_glyf:
+            if new_dep_name in base_tables.glyf:
                 continue
 
-            # Copy and scale glyph outlines
-            if dep_name in cjk_glyf:
-                copied = copy.deepcopy(cjk_glyf[dep_name])
-                is_top_level = dep_name == cjk_glyph_name
-                GlyphTransformer.scale_and_offset_y(
-                    copied, cjk_upm_scale, y_offset, apply_y_offset=is_top_level,
-                )
-                # Rename component references to use the cjk_ prefix.
-                if copied.isComposite():
-                    for comp in copied.components:
+            is_top_level = dep_name == cjk_glyph_name
+            _copy_glyph_into(
+                cjk_tables, base_tables, dep_name, new_dep_name, base_font,
+                scale_x=cjk_upm_scale, scale_y=cjk_upm_scale,
+                y_offset=y_offset, apply_y_offset=is_top_level,
+            )
+
+            # Rename component references to use the cjk_ prefix.
+            if new_dep_name in base_tables.glyf:
+                glyph = base_tables.glyf[new_dep_name]
+                if glyph.isComposite():
+                    for comp in glyph.components:
                         comp.glyphName = f"cjk_{comp.glyphName}"
-                base_glyf[new_dep_name] = copied
-                if new_dep_name not in base_font.glyphOrder:
-                    base_font.glyphOrder.append(new_dep_name)
-
-            # Copy and scale horizontal metrics
-            if dep_name in cjk_hmtx.metrics:
-                adv, lsb = cjk_hmtx.metrics[dep_name]
-                base_hmtx.metrics[new_dep_name] = (
-                    int(round(adv * cjk_upm_scale)),
-                    int(round(lsb * cjk_upm_scale)),
-                )
-
-            # Copy and scale vertical metrics
-            if base_vmtx and cjk_vmtx and dep_name in cjk_vmtx.metrics:
-                v_adv, tsb = cjk_vmtx.metrics[dep_name]
-                scaled_tsb = int(round(tsb * cjk_upm_scale))
-                if dep_name == cjk_glyph_name:
-                    scaled_tsb -= y_offset
-                base_vmtx.metrics[new_dep_name] = (
-                    int(round(v_adv * cjk_upm_scale)),
-                    scaled_tsb,
-                )
 
         base_cmap[codepoint] = f"cjk_{cjk_glyph_name}"
 
@@ -656,8 +666,7 @@ def _adjust_cjk_glyph_widths(
     """Phase 2 \u2014 Walk the CJK cmap and stretch or pad each copied glyph to its
     target advance width (fullwidth or halfwidth)."""
     cjk_cmap = cjk_font.getBestCmap()
-    base_glyf = base_font["glyf"]
-    base_hmtx = base_font["hmtx"]
+    base_tables = _FontTables.from_font(base_font)
     cjk_hmtx = cjk_font["hmtx"]
     processed: set[str] = set()
 
@@ -666,7 +675,7 @@ def _adjust_cjk_glyph_widths(
             continue
 
         new_glyph_name = f"cjk_{cjk_glyph_name}"
-        if new_glyph_name not in base_glyf or new_glyph_name in processed:
+        if new_glyph_name not in base_tables.glyf or new_glyph_name in processed:
             continue
         processed.add(new_glyph_name)
 
@@ -682,28 +691,14 @@ def _adjust_cjk_glyph_widths(
         # Apply stretch or pad, then center unless an explicit alignment exists
         alignment = alignment_map.get(codepoint)
         if codepoint in stretch_set and scaled_adv > 0:
-            scale_factor = target_adv / float(scaled_adv)
-            if scale_factor != 1.0:
-                GlyphTransformer.scale_horizontal(base_glyf[new_glyph_name], scale_factor)
-            _, current_lsb = base_hmtx.metrics[new_glyph_name]
-            new_lsb = int(round(current_lsb * scale_factor))
-            # After stretching the glyph ink already fills target_adv,
-            # but re-center if no explicit alignment was requested.
-            if alignment is None:
-                new_adv = int(round(scaled_adv * scale_factor))
-                shift_x = (target_adv - new_adv) // 2
-                if shift_x != 0:
-                    GlyphTransformer.shift_horizontal(
-                        base_glyf[new_glyph_name], shift_x,
-                    )
-                    new_lsb += shift_x
-            base_hmtx.metrics[new_glyph_name] = (target_adv, new_lsb)
+            _stretch_glyph(base_tables, new_glyph_name, target_adv)
         else:
             if alignment is None:
                 alignment = Alignment.CENTER
-            shift_x = alignment.compute_shift(target_adv - scaled_adv)
-            _shift_glyph_and_metrics(
-                base_glyf, base_hmtx, new_glyph_name, shift_x, target_adv,
+            _shift_glyph(
+                base_tables, new_glyph_name,
+                alignment.compute_shift(target_adv - scaled_adv),
+                target_adv,
             )
 
 
@@ -744,43 +739,20 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str) -> None:
     symbol_font = TTFont(symbol_font_path)
     base_cmap = base_font.getBestCmap()
     symbol_cmap = symbol_font.getBestCmap()
-
-    base_glyf = base_font["glyf"]
-    symbol_glyf = symbol_font["glyf"]
-    base_hmtx = base_font["hmtx"]
-    symbol_hmtx = symbol_font["hmtx"]
-
-    has_vmtx = "vmtx" in base_font and "vmtx" in symbol_font
-    base_vmtx = base_font["vmtx"] if has_vmtx else None
-    symbol_vmtx = symbol_font["vmtx"] if has_vmtx else None
-
+    base_tables = _FontTables.from_font(base_font)
+    sym_tables = _FontTables(
+        glyf=symbol_font["glyf"],
+        hmtx=symbol_font["hmtx"],
+        vmtx=symbol_font["vmtx"] if "vmtx" in base_font and "vmtx" in symbol_font else None,
+    )
     scale = base_font["head"].unitsPerEm / symbol_font["head"].unitsPerEm
 
     for codepoint, sym_glyph_name in symbol_cmap.items():
-        for dep_name in get_glyph_dependencies(sym_glyph_name, symbol_glyf):
-            # Copy and scale glyph outlines
-            if dep_name in symbol_glyf:
-                copied = copy.deepcopy(symbol_glyf[dep_name])
-                if scale != 1.0:
-                    GlyphTransformer.scale(copied, scale, scale)
-                base_glyf[dep_name] = copied
-                if dep_name not in base_font.glyphOrder:
-                    base_font.glyphOrder.append(dep_name)
-
-            # Copy and scale horizontal metrics
-            if dep_name in symbol_hmtx.metrics:
-                adv, lsb = symbol_hmtx.metrics[dep_name]
-                if scale != 1.0:
-                    adv, lsb = int(round(adv * scale)), int(round(lsb * scale))
-                base_hmtx.metrics[dep_name] = (adv, lsb)
-
-            # Copy and scale vertical metrics
-            if base_vmtx and symbol_vmtx and dep_name in symbol_vmtx.metrics:
-                v_adv, tsb = symbol_vmtx.metrics[dep_name]
-                if scale != 1.0:
-                    v_adv, tsb = int(round(v_adv * scale)), int(round(tsb * scale))
-                base_vmtx.metrics[dep_name] = (v_adv, tsb)
-
+        for dep_name in get_glyph_dependencies(sym_glyph_name, sym_tables.glyf):
+            _copy_glyph_into(
+                sym_tables, base_tables, dep_name, dep_name, base_font,
+                scale_x=scale, scale_y=scale,
+            )
         base_cmap[codepoint] = sym_glyph_name
 
     ensure_cmap_format_12(base_font, base_cmap)
@@ -907,7 +879,6 @@ def process_font(config: FontMergeConfig) -> None:
     eng_upm = eng_font["head"].unitsPerEm
     cjk_upm = cjk_font["head"].unitsPerEm
     upm = max(eng_upm, cjk_upm)
-    eng_upm_scale = upm / float(eng_upm)
     cjk_upm_scale = upm / float(cjk_upm)
 
     # Derive target advance widths in the unified UPM space.
@@ -918,16 +889,18 @@ def process_font(config: FontMergeConfig) -> None:
     cjk_typical_adv = get_typical_advance(cjk_font, ord("\u4e2d"))
     scaled_cjk_adv = int(round(cjk_typical_adv * cjk_upm_scale * config.cjk_scale))
     target_adv_c = scaled_cjk_adv
-    target_adv_e = target_adv_c // 2
+    target_adv_e = int(round(target_adv_c / 2))
 
-    # Scale English font glyphs uniformly so that the typical English
-    # advance equals half the CJK width, then center every glyph within
-    # the halfwidth cell.  english_scale shrinks/grows the glyph ink
-    # inside that cell without changing the cell width itself.
+    # Scale English font glyphs so that the typical English advance equals
+    # half the CJK width (the normalisation step), then apply the
+    # independent english_scale_x / english_scale_y factors to shrink or
+    # grow the glyph ink inside that cell without changing the cell width.
     eng_typical_adv = get_typical_advance(eng_font, ord("A"))
-    eng_geom_scale = target_adv_e * config.english_scale / float(eng_typical_adv)
-    scale_font_glyphs(eng_font, eng_geom_scale)
-    scale_vertical_metrics(eng_font, eng_geom_scale)
+    eng_norm_scale = target_adv_e / float(eng_typical_adv)
+    eng_geom_scale_x = eng_norm_scale * config.english_scale_x
+    eng_geom_scale_y = eng_norm_scale * config.english_scale_y
+    # Apply the (potentially non-uniform) geometry scale to every glyph.
+    scale_font(eng_font, eng_geom_scale_x, eng_geom_scale_y)
     eng_font["head"].unitsPerEm = upm
 
     # Center English glyphs within the target halfwidth cell, except
@@ -943,8 +916,8 @@ def process_font(config: FontMergeConfig) -> None:
 
     # Baseline alignment
     y_offset = config.cjk_y_offset
-    if config.adjust_baseline:
-        y_offset += compute_baseline_y_offset(eng_font, cjk_font, cjk_coord_scale)
+    # if config.adjust_baseline:
+    #     y_offset += compute_baseline_y_offset(eng_font, cjk_font, cjk_coord_scale)
 
     # Merge CJK glyphs
     merge_cjk_glyphs(
@@ -992,14 +965,15 @@ def process_font(config: FontMergeConfig) -> None:
 # ---------------------------------------------------------------------------
 
 
-def main() -> None:
+def main():
     """Configure and run font merging tasks."""
     configs = [
         FontMergeConfig(
-            output_filename="LXGW Bright TC Monaspace Argon NF Regular.ttf",
-            english_font_path="/Users/zpan/Library/Fonts/MonaspaceArgon-Regular.otf",
-            cjk_font_path="/Users/zpan/Library/Fonts/LXGWBrightTC-Regular.ttf",
-            english_scale=1.0,
+            output_filename="LXGW Bright TC Monaspace Argon NF Light.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Light.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.1,
             cjk_scale=1.0,
             stretch_chars=["\u2014", "\u2026"],
             pad_configs=[
@@ -1008,13 +982,138 @@ def main() -> None:
                 PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
             ],
             symbol_font_paths=[
-                "/Users/zpan/Library/Fonts/SymbolsNerdFont-Regular.ttf",
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            cjk_y_offset=0,
+            new_font_family="LXGW Bright TC Monaspace Argon NF",
+            new_font_subfamily="Light",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="LXGW Bright TC Monaspace Argon NF Light Italic.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-LightItalic.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.1,
+            cjk_scale=1.0,
+            stretch_chars=["\u2014", "\u2026"],
+            pad_configs=[
+                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
+                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            cjk_y_offset=0,
+            new_font_family="LXGW Bright TC Monaspace Argon NF",
+            new_font_subfamily="Light Italic",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="LXGW Bright TC Monaspace Argon NF Regular.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.1,
+            cjk_scale=1.0,
+            stretch_chars=["\u2014", "\u2026"],
+            pad_configs=[
+                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
+                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
                 "FlogSymbols.ttf",
             ],
             adjust_baseline=True,
             cjk_y_offset=0,
             new_font_family="LXGW Bright TC Monaspace Argon NF",
             new_font_subfamily="Regular",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="LXGW Bright TC Monaspace Argon NF Italic.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.1,
+            cjk_scale=1.0,
+            stretch_chars=["\u2014", "\u2026"],
+            pad_configs=[
+                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
+                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            cjk_y_offset=0,
+            new_font_family="LXGW Bright TC Monaspace Argon NF",
+            new_font_subfamily="Italic",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="LXGW Bright TC Monaspace Argon NF Medium.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Medium.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.1,
+            cjk_scale=1.0,
+            stretch_chars=["\u2014", "\u2026"],
+            pad_configs=[
+                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
+                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            cjk_y_offset=0,
+            new_font_family="LXGW Bright TC Monaspace Argon NF",
+            new_font_subfamily="Medium",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="LXGW Bright TC Monaspace Argon NF Medium Italic.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-MediumItalic.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.1,
+            cjk_scale=1.0,
+            stretch_chars=["\u2014", "\u2026"],
+            pad_configs=[
+                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
+                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            cjk_y_offset=0,
+            new_font_family="LXGW Bright TC Monaspace Argon NF",
+            new_font_subfamily="Medium Italic",
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
