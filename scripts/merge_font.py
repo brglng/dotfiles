@@ -973,7 +973,7 @@ def main():
             english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Light.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
             english_scale_x=1.0,
-            english_scale_y=1.1,
+            english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
             stretch_chars=["\u2014", "\u2026"],
             pad_configs=[
@@ -998,7 +998,7 @@ def main():
             english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-LightItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
             english_scale_x=1.0,
-            english_scale_y=1.1,
+            english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
             stretch_chars=["\u2014", "\u2026"],
             pad_configs=[
@@ -1023,7 +1023,7 @@ def main():
             english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
             english_scale_x=1.0,
-            english_scale_y=1.1,
+            english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
             stretch_chars=["\u2014", "\u2026"],
             pad_configs=[
@@ -1048,7 +1048,7 @@ def main():
             english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
             english_scale_x=1.0,
-            english_scale_y=1.1,
+            english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
             stretch_chars=["\u2014", "\u2026"],
             pad_configs=[
@@ -1073,7 +1073,7 @@ def main():
             english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Medium.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
             english_scale_x=1.0,
-            english_scale_y=1.1,
+            english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
             stretch_chars=["\u2014", "\u2026"],
             pad_configs=[
@@ -1098,7 +1098,7 @@ def main():
             english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-MediumItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
             english_scale_x=1.0,
-            english_scale_y=1.1,
+            english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
             stretch_chars=["\u2014", "\u2026"],
             pad_configs=[
