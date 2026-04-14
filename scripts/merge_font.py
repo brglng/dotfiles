@@ -198,8 +198,6 @@ class FontMergeConfig:
         Paths to symbol fonts to overlay.
     adjust_baseline : bool
         Whether to auto-align CJK baseline to English baseline.
-    cjk_y_offset : int
-        Manual vertical offset applied to CJK glyphs.
     new_font_family : str
         Font family name for the output.
     new_font_subfamily : str
@@ -222,7 +220,6 @@ class FontMergeConfig:
     pad_configs: list[PadConfig]
     symbol_font_paths: list[str]
     adjust_baseline: bool
-    cjk_y_offset: int
     new_font_family: str
     new_font_subfamily: str
     new_author: str
@@ -915,9 +912,9 @@ def process_font(config: FontMergeConfig) -> None:
     cjk_coord_scale = cjk_upm_scale * config.cjk_scale
 
     # Baseline alignment
-    y_offset = config.cjk_y_offset
-    # if config.adjust_baseline:
-    #     y_offset += compute_baseline_y_offset(eng_font, cjk_font, cjk_coord_scale)
+    y_offset = 0
+    if config.adjust_baseline:
+        y_offset += compute_baseline_y_offset(eng_font, cjk_font, cjk_coord_scale)
 
     # Merge CJK glyphs
     merge_cjk_glyphs(
@@ -975,18 +972,16 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
-            stretch_chars=["\u2014", "\u2026"],
+            stretch_chars=["…", "—"],
             pad_configs=[
-                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
-                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
             ],
             symbol_font_paths=[
                 os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
                 "FlogSymbols.ttf",
             ],
             adjust_baseline=True,
-            cjk_y_offset=0,
             new_font_family="LXGW Bright TC Monaspace Argon NF",
             new_font_subfamily="Light",
             new_author="Zhaosheng Pan",
@@ -1000,18 +995,16 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
-            stretch_chars=["\u2014", "\u2026"],
+            stretch_chars=["…", "—"],
             pad_configs=[
-                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
-                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
             ],
             symbol_font_paths=[
                 os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
                 "FlogSymbols.ttf",
             ],
             adjust_baseline=True,
-            cjk_y_offset=0,
             new_font_family="LXGW Bright TC Monaspace Argon NF",
             new_font_subfamily="Light Italic",
             new_author="Zhaosheng Pan",
@@ -1025,18 +1018,16 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
-            stretch_chars=["\u2014", "\u2026"],
+            stretch_chars=["…", "—"],
             pad_configs=[
-                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
-                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
             ],
             symbol_font_paths=[
                 os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
                 "FlogSymbols.ttf",
             ],
             adjust_baseline=True,
-            cjk_y_offset=0,
             new_font_family="LXGW Bright TC Monaspace Argon NF",
             new_font_subfamily="Regular",
             new_author="Zhaosheng Pan",
@@ -1050,18 +1041,16 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
-            stretch_chars=["\u2014", "\u2026"],
+            stretch_chars=["…", "—"],
             pad_configs=[
-                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
-                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
             ],
             symbol_font_paths=[
                 os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
                 "FlogSymbols.ttf",
             ],
             adjust_baseline=True,
-            cjk_y_offset=0,
             new_font_family="LXGW Bright TC Monaspace Argon NF",
             new_font_subfamily="Italic",
             new_author="Zhaosheng Pan",
@@ -1075,18 +1064,16 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
-            stretch_chars=["\u2014", "\u2026"],
+            stretch_chars=["…", "—"],
             pad_configs=[
-                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
-                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
             ],
             symbol_font_paths=[
                 os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
                 "FlogSymbols.ttf",
             ],
             adjust_baseline=True,
-            cjk_y_offset=0,
             new_font_family="LXGW Bright TC Monaspace Argon NF",
             new_font_subfamily="Medium",
             new_author="Zhaosheng Pan",
@@ -1100,18 +1087,16 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
-            stretch_chars=["\u2014", "\u2026"],
+            stretch_chars=["…", "—"],
             pad_configs=[
-                PadConfig(chars=["\u2018", "\u201C"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["\u2019", "\u201D"], alignment=Alignment.LEFT),
-                PadConfig(chars=["\uff0e"], alignment=Alignment.CENTER),
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
             ],
             symbol_font_paths=[
                 os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
                 "FlogSymbols.ttf",
             ],
             adjust_baseline=True,
-            cjk_y_offset=0,
             new_font_family="LXGW Bright TC Monaspace Argon NF",
             new_font_subfamily="Medium Italic",
             new_author="Zhaosheng Pan",
