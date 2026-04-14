@@ -533,11 +533,7 @@ def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
             setattr(vhea, attr, _s(getattr(vhea, attr)))
 
 
-def center_font_glyphs(
-    font: TTFont,
-    target_advance: int,
-    skip_codepoints: set[int],
-) -> None:
+def center_font_glyphs(font: TTFont, target_advance: int):
     """Center every glyph whose advance differs from *target_advance*.
 
     Glyphs mapped to codepoints in *skip_codepoints* are left untouched
@@ -546,10 +542,8 @@ def center_font_glyphs(
     cmap = font.getBestCmap()
     tables = _FontTables.from_font(font)
 
-    skip_names: set[str] = {cmap[cp] for cp in skip_codepoints if cp in cmap}
-
     for glyph_name in tables.glyf.keys():
-        if glyph_name in skip_names or glyph_name not in tables.hmtx.metrics:
+        if glyph_name not in tables.hmtx.metrics:
             continue
         adv, _ = tables.hmtx.metrics[glyph_name]
         if adv == target_advance:
@@ -900,12 +894,8 @@ def process_font(config: FontMergeConfig) -> None:
     scale_font(eng_font, eng_geom_scale_x, eng_geom_scale_y)
     eng_font["head"].unitsPerEm = upm
 
-    # Center English glyphs within the target halfwidth cell, except
-    # those that have an explicit PadConfig or are in the stretch set.
-    stretch_set = parse_codepoints(config.stretch_chars)
-    alignment_map = build_alignment_map(config.pad_configs)
-    skip_codepoints = set(alignment_map.keys()) | stretch_set
-    center_font_glyphs(eng_font, target_adv_e, skip_codepoints)
+    # Center English glyphs within the target halfwidth cell
+    center_font_glyphs(eng_font, target_adv_e)
 
     # The effective CJK coordinate scale combines UPM normalisation and
     # the user's cjk_scale.
@@ -915,6 +905,9 @@ def process_font(config: FontMergeConfig) -> None:
     y_offset = 0
     if config.adjust_baseline:
         y_offset += compute_baseline_y_offset(eng_font, cjk_font, cjk_coord_scale)
+
+    stretch_set = parse_codepoints(config.stretch_chars)
+    alignment_map = build_alignment_map(config.pad_configs)
 
     # Merge CJK glyphs
     merge_cjk_glyphs(
