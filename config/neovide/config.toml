@@ -1,18 +1,23 @@
 maximized = true
 tabs = false
+frame = "buttonless"
+title-hidden = true
 # no-multigrid = true
 # wsl = true
 # neovim-bin = "/home/brglng/.pixi/bin/nvim"
 
 [font]
 normal = [
-    "LXGW Bright Code TC NF",
+    "LXGW Bright TC Monaspace Argon NF"
     # "Maple Mono NF CN",
     # "Flog Symbols",
 ]
 hinting = "none"
 size = 16.0
 # width = 0.4
+
+[font.features]
+"LXGW Bright TC Monaspace Argon NF" = [ "+calt", "+ss01", "+ss02", "+ss03", "+ss04", "+ss05", "+ss06", "+ss07", "+ss08", "+ss09", "+ss10", "+liga" ]
 
 [box-drawing]
 mode = "native"
