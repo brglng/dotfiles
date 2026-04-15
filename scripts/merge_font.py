@@ -464,10 +464,14 @@ def get_typical_advance(font: TTFont, char_code: int) -> int:
 
 
 def ensure_cmap_format_12(font: TTFont, cmap_mapping: dict[int, str]) -> None:
-    """Add a Format 12 cmap subtable when non-BMP codepoints are present."""
-    has_format_12 = any(t.format == 12 for t in font["cmap"].tables)
+    """Ensure a Format 12 cmap subtable exists and is up to date.
 
-    if not has_format_12 and any(cp > 0xFFFF for cp in cmap_mapping):
+    Format 12 (platform 3, encoding 10) is required for non-BMP codepoints
+    (U+10000 and above) and is also the most capable Unicode subtable in
+    general.  This function always creates it when absent, then syncs every
+    Unicode subtable with *cmap_mapping*, respecting each table's range.
+    """
+    if not any(t.format == 12 for t in font["cmap"].tables):
         new_table = cmap_format_12(12)
         new_table.platformID = 3
         new_table.platEncID = 10
@@ -534,11 +538,7 @@ def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
 
 
 def center_font_glyphs(font: TTFont, target_advance: int):
-    """Center every glyph whose advance differs from *target_advance*.
-
-    Glyphs mapped to codepoints in *skip_codepoints* are left untouched
-    (they will be positioned by an explicit ``PadConfig`` later).
-    """
+    """Center every glyph whose advance differs from *target_advance*."""
     cmap = font.getBestCmap()
     tables = _FontTables.from_font(font)
 
@@ -714,7 +714,6 @@ def merge_cjk_glyphs(
         cjk_upm_scale, typical_scaled_cjk_adv,
         stretch_set, alignment_map,
     )
-    ensure_cmap_format_12(base_font, base_font.getBestCmap())
 
 
 # ---------------------------------------------------------------------------
@@ -746,7 +745,6 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str) -> None:
             )
         base_cmap[codepoint] = sym_glyph_name
 
-    ensure_cmap_format_12(base_font, base_cmap)
     symbol_font.close()
 
 
@@ -942,6 +940,10 @@ def process_font(config: FontMergeConfig) -> None:
     if config.mark_as_monospace:
         mark_font_as_monospace(eng_font, target_adv_e)
 
+    # Ensure Format 12 cmap subtable exists for any non-BMP codepoints
+    # accumulated across all merging stages.
+    ensure_cmap_format_12(eng_font, eng_font.getBestCmap())
+
     # Save
     eng_font.save(config.output_filename)
     eng_font.close()
@@ -1089,6 +1091,238 @@ def main():
             ],
             adjust_baseline=True,
             new_font_family="LXGW Bright TC Monaspace Argon NF",
+            new_font_subfamily="Medium Italic",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        # MonaspaceXenon-{ExtraBold,ExtraBoldItalic,Bold,BoldItalic,Light,LightItalic,Regular,Italic,SemiBold,SemiBoldItalic}.otf
+        # NotoSerifCJKtc-{Black,Bold,ExtraLight,Light,Medium,Regular,SemiBold}.otf
+        # FontMergeConfig(
+        #     output_filename="Monaspace Xenon Noto Serif CJK TC NF ExtraBold.ttf",
+        #     english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBold.otf"),
+        #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Black.otf"),
+        #     english_scale_x=1.0,
+        #     english_scale_y=1.0 / 0.9,
+        #     cjk_scale=1.0,
+        #     stretch_chars=["…", "—"],
+        #     pad_configs=[
+        #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+        #         PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+        #     ],
+        #     symbol_font_paths=[
+        #         os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+        #         "FlogSymbols.ttf",
+        #     ],
+        #     adjust_baseline=True,
+        #     new_font_family="Monaspace Xenon Noto Serif CJK TC NF",
+        #     new_font_subfamily="ExtraBold",
+        #     new_author="Zhaosheng Pan",
+        #     new_description="",
+        #     mark_as_monospace=True,
+        # ),
+        # FontMergeConfig(
+        #     output_filename="Monaspace Xenon Noto Serif CJK TC NF ExtraBold Italic.ttf",
+        #     english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBoldItalic.otf"),
+        #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Black.otf"),
+        #     english_scale_x=1.0,
+        #     english_scale_y=1.0 / 0.9,
+        #     cjk_scale=1.0,
+        #     stretch_chars=["…", "—"],
+        #     pad_configs=[
+        #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+        #         PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+        #     ],
+        #     symbol_font_paths=[
+        #         os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+        #         "FlogSymbols.ttf",
+        #     ],
+        #     adjust_baseline=True,
+        #     new_font_family="Monaspace Xenon Noto Serif CJK TC NF",
+        #     new_font_subfamily="ExtraBold Italic",
+        #     new_author="Zhaosheng Pan",
+        #     new_description="",
+        #     mark_as_monospace=True,
+        # ),
+        # FontMergeConfig(
+        #     output_filename="Monaspace Xenon Noto Serif CJK TC NF Bold.ttf",
+        #     english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Bold.otf"),
+        #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Bold.otf"),
+        #     english_scale_x=1.0,
+        #     english_scale_y=1.0 / 0.9,
+        #     cjk_scale=1.0,
+        #     stretch_chars=["…", "—"],
+        #     pad_configs=[
+        #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+        #         PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+        #     ],
+        #     symbol_font_paths=[
+        #         os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+        #         "FlogSymbols.ttf",
+        #     ],
+        #     adjust_baseline=True,
+        #     new_font_family="Monaspace Xenon Noto Serif CJK TC NF",
+        #     new_font_subfamily="Bold",
+        #     new_author="Zhaosheng Pan",
+        #     new_description="",
+        #     mark_as_monospace=True,
+        # ),
+        # FontMergeConfig(
+        #     output_filename="Monaspace Xenon Noto Serif CJK TC NF Bold Italic.ttf",
+        #     english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-BoldItalic.otf"),
+        #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Bold.otf"),
+        #     english_scale_x=1.0,
+        #     english_scale_y=1.0 / 0.9,
+        #     cjk_scale=1.0,
+        #     stretch_chars=["…", "—"],
+        #     pad_configs=[
+        #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+        #         PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+        #     ],
+        #     symbol_font_paths=[
+        #         os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+        #         "FlogSymbols.ttf",
+        #     ],
+        #     adjust_baseline=True,
+        #     new_font_family="Monaspace Xenon Noto Serif CJK TC NF",
+        #     new_font_subfamily="Bold Italic",
+        #     new_author="Zhaosheng Pan",
+        #     new_description="",
+        #     mark_as_monospace=True,
+        # ),
+        FontMergeConfig(
+            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Light.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Light.otf"),
+            english_scale_x=1.0,
+            english_scale_y=1.0 / 0.9,
+            cjk_scale=1.0,
+            stretch_chars=["…", "—"],
+            pad_configs=[
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
+            new_font_subfamily="Light",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light Italic.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-LightItalic.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.0 / 0.9,
+            cjk_scale=1.0,
+            stretch_chars=["…", "—"],
+            pad_configs=[
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
+            new_font_subfamily="Light Italic",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Regular.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Regular.otf"),
+            english_scale_x=1.0,
+            english_scale_y=1.0 / 0.9,
+            cjk_scale=1.0,
+            stretch_chars=["…", "—"],
+            pad_configs=[
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
+            new_font_subfamily="Regular",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Italic.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Italic.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.0 / 0.9,
+            cjk_scale=1.0,
+            stretch_chars=["…", "—"],
+            pad_configs=[
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
+            new_font_subfamily="Italic",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Medium.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Medium.otf"),
+            english_scale_x=1.0,
+            english_scale_y=1.0 / 0.9,
+            cjk_scale=1.0,
+            stretch_chars=["…", "—"],
+            pad_configs=[
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
+            new_font_subfamily="Medium",
+            new_author="Zhaosheng Pan",
+            new_description="",
+            mark_as_monospace=True,
+        ),
+        FontMergeConfig(
+            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium Italic.ttf",
+            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-MediumItalic.otf"),
+            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
+            english_scale_x=1.0,
+            english_scale_y=1.0 / 0.9,
+            cjk_scale=1.0,
+            stretch_chars=["…", "—"],
+            pad_configs=[
+                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
+                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
+            ],
+            symbol_font_paths=[
+                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+                "FlogSymbols.ttf",
+            ],
+            adjust_baseline=True,
+            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
             new_font_subfamily="Medium Italic",
             new_author="Zhaosheng Pan",
             new_description="",
