@@ -8,7 +8,8 @@ title-hidden = true
 
 [font]
 normal = [
-    "LXGW Bright TC Monaspace Argon NF"
+    "Monaspace Xenon Noto Serif LXGW CJK TC NF"
+    # "LXGW Bright TC Monaspace Argon NF"
     # "Maple Mono NF CN",
     # "Flog Symbols",
 ]
@@ -17,6 +18,7 @@ size = 16.0
 # width = 0.4
 
 [font.features]
+"Monaspace Xenon Noto Serif LXGW CJK TC NF" = [ "+calt", "+ss01", "+ss02", "+ss03", "+ss04", "+ss05", "+ss06", "+ss07", "+ss08", "+ss09", "+ss10", "+liga" ]
 "LXGW Bright TC Monaspace Argon NF" = [ "+calt", "+ss01", "+ss02", "+ss03", "+ss04", "+ss05", "+ss06", "+ss07", "+ss08", "+ss09", "+ss10", "+liga" ]
 
 [box-drawing]
