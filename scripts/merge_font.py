@@ -181,13 +181,13 @@ class FontMergeConfig:
     cjk_font_path : str
         Path to the CJK font.
     english_scale_x : float
-        Horizontal scaling factor applied to English glyph geometry after
-        normalising to half the CJK advance.  Values < 1 narrow the ink;
-        values > 1 widen it.  Does not affect the cell (advance) width.
+        Fraction of the final halfwidth cell (``target_adv_e``) that the
+        English ink should occupy horizontally.  1.0 fills the cell exactly;
+        values < 1 narrow the ink without changing the cell width.
     english_scale_y : float
-        Vertical scaling factor applied to English glyph geometry after
-        normalising to half the CJK advance.  Values < 1 shorten the ink;
-        values > 1 stretch it.
+        Additional vertical stretch applied on top of the uniform
+        x-normalisation scale.  1.0 keeps the aspect ratio produced by
+        ``english_scale_x``; values > 1 stretch the ink taller.
     cjk_scale : float
         Uniform scaling factor applied to CJK font glyphs.
     stretch_chars : list[str | int | tuple[int, int]]
@@ -208,6 +208,22 @@ class FontMergeConfig:
         Description written into metadata.
     mark_as_monospace : bool
         Whether to flag the output font as monospaced.
+    cjk_cell_expansion : float
+        When > 1.0, expands the advance-width cell of every CJK glyph by this
+        factor *without* stretching the ink — the original glyph is centred
+        inside the wider cell.  The English and symbol cells are expanded by
+        the same factor (half the CJK cell).
+
+        When this option is active the semantics of ``english_scale_x`` and
+        ``english_scale_y`` change:
+
+        * ``english_scale_x`` is the fraction of the *expanded* half-cell that
+          the English ink should occupy (1.0 = fill the half-cell exactly).
+        * ``english_scale_y`` is applied *on top of* the uniform x-scale, so
+          a value of 1.0 keeps the aspect ratio; values > 1 stretch taller.
+
+        After all scaling every English/symbol glyph advance is forced to
+        exactly half the expanded CJK cell, centring the ink as needed.
     """
 
     output_filename: str
@@ -225,6 +241,7 @@ class FontMergeConfig:
     new_author: str
     new_description: str
     mark_as_monospace: bool
+    cjk_cell_expansion: float
 
 
 # ---------------------------------------------------------------------------
@@ -537,18 +554,16 @@ def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
             setattr(vhea, attr, _s(getattr(vhea, attr)))
 
 
-def center_font_glyphs(font: TTFont, target_advance: int):
-    """Center every glyph whose advance differs from *target_advance*."""
-    cmap = font.getBestCmap()
+def normalize_font_advances(font: TTFont, target_advance: int) -> None:
+    """Set every glyph's advance width to *target_advance* without moving the ink."""
     tables = _FontTables.from_font(font)
 
     for glyph_name in tables.glyf.keys():
         if glyph_name not in tables.hmtx.metrics:
             continue
-        adv, _ = tables.hmtx.metrics[glyph_name]
-        if adv == target_advance:
-            continue
-        _shift_glyph(tables, glyph_name, (target_advance - adv) // 2, target_advance)
+        adv, lsb = tables.hmtx.metrics[glyph_name]
+        if adv != target_advance:
+            tables.hmtx.metrics[glyph_name] = (target_advance, lsb)
 
 
 
@@ -721,10 +736,18 @@ def merge_cjk_glyphs(
 # ---------------------------------------------------------------------------
 
 
-def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str) -> None:
+def merge_symbols_into_font(
+    base_font: TTFont,
+    symbol_font_path: str,
+    target_adv_e: int,
+) -> None:
     """Overlay a symbol font onto the base font, scaling by UPM ratio.
 
     Existing glyphs are overwritten when names collide.
+
+    Every top-level symbol glyph's advance
+    width is forced to that value after copying, ensuring the merged font has
+    a consistent halfwidth advance for all non-CJK glyphs.
     """
     symbol_font = TTFont(symbol_font_path)
     base_cmap = base_font.getBestCmap()
@@ -744,6 +767,12 @@ def merge_symbols_into_font(base_font: TTFont, symbol_font_path: str) -> None:
                 scale_x=scale, scale_y=scale,
             )
         base_cmap[codepoint] = sym_glyph_name
+
+        # Force the top-level glyph's advance to the target halfwidth value.
+        if target_adv_e > 0 and sym_glyph_name in base_tables.hmtx.metrics:
+            adv, lsb = base_tables.hmtx.metrics[sym_glyph_name]
+            if adv != target_adv_e:
+                base_tables.hmtx.metrics[sym_glyph_name] = (target_adv_e, lsb)
 
     symbol_font.close()
 
@@ -870,34 +899,37 @@ def process_font(config: FontMergeConfig) -> None:
     upm = max(eng_upm, cjk_upm)
     cjk_upm_scale = upm / float(cjk_upm)
 
-    # Derive target advance widths in the unified UPM space.
-    # CJK fullwidth advance is the CJK typical advance normalised then
-    # multiplied by cjk_scale.  English halfwidth advance is always
-    # exactly half the CJK fullwidth; english_scale only affects glyph
-    # geometry (the glyph is scaled and centered within the cell).
+    # The effective CJK coordinate scale combines UPM normalisation and
+    # the user's cjk_scale.
+    cjk_coord_scale = cjk_upm_scale * config.cjk_scale
+
+    # Derive baseline CJK advance width in the unified UPM space.
     cjk_typical_adv = get_typical_advance(cjk_font, ord("\u4e2d"))
-    scaled_cjk_adv = int(round(cjk_typical_adv * cjk_upm_scale * config.cjk_scale))
-    target_adv_c = scaled_cjk_adv
+    scaled_cjk_adv = int(round(cjk_typical_adv * cjk_coord_scale))
+
+    # Apply optional cell expansion: the CJK ink stays the same size but is
+    # centred inside a wider cell.  target_adv_c / target_adv_e are the
+    # *final* advance widths used throughout the rest of the pipeline.
+    target_adv_c = int(round(scaled_cjk_adv * config.cjk_cell_expansion))
     target_adv_e = int(round(target_adv_c / 2))
 
-    # Scale English font glyphs so that the typical English advance equals
-    # half the CJK width (the normalisation step), then apply the
-    # independent english_scale_x / english_scale_y factors to shrink or
-    # grow the glyph ink inside that cell without changing the cell width.
+    # ------------------------------------------------------------------ #
+    # English glyph scaling                                               #
+    # ------------------------------------------------------------------ #
+    # english_scale_x is the fraction of the final halfwidth cell the ink
+    # fills; english_scale_y is an additional y stretch on top of the
+    # uniform x-normalisation scale (1.0 keeps the aspect ratio).
     eng_typical_adv = get_typical_advance(eng_font, ord("A"))
-    eng_norm_scale = target_adv_e / float(eng_typical_adv)
-    eng_geom_scale_x = eng_norm_scale * config.english_scale_x
-    eng_geom_scale_y = eng_norm_scale * config.english_scale_y
+    eng_geom_scale_x = (config.english_scale_x * target_adv_e) / float(eng_typical_adv)
+    eng_geom_scale_y = eng_geom_scale_x * config.english_scale_y
+
     # Apply the (potentially non-uniform) geometry scale to every glyph.
     scale_font(eng_font, eng_geom_scale_x, eng_geom_scale_y)
     eng_font["head"].unitsPerEm = upm
 
-    # Center English glyphs within the target halfwidth cell
-    center_font_glyphs(eng_font, target_adv_e)
-
-    # The effective CJK coordinate scale combines UPM normalisation and
-    # the user's cjk_scale.
-    cjk_coord_scale = cjk_upm_scale * config.cjk_scale
+    # Requirement 3: force every English glyph's advance to the target
+    # halfwidth value without moving the ink.
+    normalize_font_advances(eng_font, target_adv_e)
 
     # Baseline alignment
     y_offset = 0
@@ -907,7 +939,8 @@ def process_font(config: FontMergeConfig) -> None:
     stretch_set = parse_codepoints(config.stretch_chars)
     alignment_map = build_alignment_map(config.pad_configs)
 
-    # Merge CJK glyphs
+    # Merge CJK glyphs (phase 1 copies them; phase 2 pads/stretches to the
+    # expanded target advances).
     merge_cjk_glyphs(
         base_font=eng_font,
         cjk_font=cjk_font,
@@ -923,7 +956,8 @@ def process_font(config: FontMergeConfig) -> None:
     # Expand vertical metrics to cover the CJK glyphs.
     merge_vertical_metrics(eng_font, cjk_font, cjk_coord_scale)
 
-    # Stretch / pad English-side glyphs that fall outside CJK ranges
+    # Stretch / pad English-side glyphs that fall outside CJK ranges.
+    # Use target_adv_c (the expanded fullwidth) as the double-width target.
     for codepoint in stretch_set:
         stretch_glyph_width(eng_font, codepoint, target_adv_c)
 
@@ -931,9 +965,25 @@ def process_font(config: FontMergeConfig) -> None:
         for codepoint in parse_codepoints(pad_cfg.chars):
             pad_glyph_width(eng_font, codepoint, target_adv_c, pad_cfg.alignment)
 
-    # Merge symbol fonts
+    # Force the advance of every stretched / padded glyph to target_adv_c so
+    # that ink repositioning never leaves a residual halfwidth advance.
+    fullwidth_cmap = eng_font.getBestCmap()
+    fullwidth_tables = _FontTables.from_font(eng_font)
+    fullwidth_codepoints = stretch_set | {
+        cp for cfg in config.pad_configs for cp in parse_codepoints(cfg.chars)
+    }
+    for codepoint in fullwidth_codepoints:
+        glyph_name = fullwidth_cmap.get(codepoint)
+        if glyph_name and glyph_name in fullwidth_tables.hmtx.metrics:
+            adv, lsb = fullwidth_tables.hmtx.metrics[glyph_name]
+            if adv != target_adv_c:
+                fullwidth_tables.hmtx.metrics[glyph_name] = (target_adv_c, lsb)
+
+    # Merge symbol fonts, normalising each symbol glyph's advance to
+    # target_adv_e so that all non-CJK glyphs end up with the same
+    # halfwidth cell.
     for symbol_path in config.symbol_font_paths:
-        merge_symbols_into_font(eng_font, symbol_path)
+        merge_symbols_into_font(eng_font, symbol_path, target_adv_e=target_adv_e)
 
     # Metadata & monospace flag
     update_font_metadata(eng_font, config)
@@ -965,6 +1015,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -988,6 +1039,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1011,6 +1063,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1034,6 +1087,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1057,6 +1111,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1080,6 +1135,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1105,6 +1161,7 @@ def main():
         #     english_scale_x=1.0,
         #     english_scale_y=1.0 / 0.9,
         #     cjk_scale=1.0,
+        #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
         #     pad_configs=[
         #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1128,6 +1185,7 @@ def main():
         #     english_scale_x=1.0,
         #     english_scale_y=1.0 / 0.9,
         #     cjk_scale=1.0,
+        #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
         #     pad_configs=[
         #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1151,6 +1209,7 @@ def main():
         #     english_scale_x=1.0,
         #     english_scale_y=1.0 / 0.9,
         #     cjk_scale=1.0,
+        #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
         #     pad_configs=[
         #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1174,6 +1233,7 @@ def main():
         #     english_scale_x=1.0,
         #     english_scale_y=1.0 / 0.9,
         #     cjk_scale=1.0,
+        #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
         #     pad_configs=[
         #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1197,6 +1257,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1220,6 +1281,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1243,6 +1305,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1266,6 +1329,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1289,6 +1353,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
@@ -1312,6 +1377,7 @@ def main():
             english_scale_x=1.0,
             english_scale_y=1.0 / 0.9,
             cjk_scale=1.0,
+            cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
             pad_configs=[
                 PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
