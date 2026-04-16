@@ -56,7 +56,13 @@ return {
         require("brglng.hl").transform_tbl {
             SnacksImageMath = { fg = "Normal.fg" },
         }
-            
+        local image_langs = Snacks.image.langs()
+        image_langs = vim.tbl_filter(function(lang)
+            return lang ~= "norg"
+        end, image_langs)
+        Snacks.image.langs = function()
+            return image_langs
+        end
     end,
     keys = {
         -- {
