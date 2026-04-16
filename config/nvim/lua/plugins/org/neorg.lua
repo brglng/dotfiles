@@ -156,12 +156,12 @@ return {
             table.insert(opts.load["core.defaults"].config.disable, "core.integrations.image")
         else
             opts.load["core.integrations.image"] = {}
-        --     opts.load["core.latex.renderer"] = {
-        --         config = {
-        --             conceal = true,
-        --             render_on_enter = true,
-        --         }
-        --     }
+            -- opts.load["core.latex.renderer"] = {
+            --     config = {
+            --         conceal = true,
+            --         render_on_enter = true,
+            --     }
+            -- }
         end
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "norg",
