@@ -270,11 +270,11 @@ config.allow_square_glyphs_to_overflow_width = "Always"
 config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
 config.freetype_load_target = "Light"
 config.freetype_render_target = "HorizontalLcd"
-config.cell_width = 0.9
+-- config.cell_width = 0.9
 config.font = wezterm.font_with_fallback {
-    { family = "Monaspace Xenon Noto Serif LXGW CJK TC NF", weight = "Medium" },
-    -- { family = "LXGW Bright Code TC NF", weight = "Medium" },
-    -- { family = "Maple Mono NF CN", weight = "Medium" },
+    { family = "Monaspace Xenon Noto Serif LXGW CJK TC NF" },
+    -- { family = "LXGW Bright Code TC NF" },
+    -- { family = "Maple Mono NF CN" },
     -- { family = "Flog Symbols" },
 }
 config.harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "liga" }
