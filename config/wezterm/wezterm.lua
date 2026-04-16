@@ -91,6 +91,7 @@ set_tabline_colors(config)
 
 -- GUI Appearance
 
+config.cursor_blink_rate = 0
 config.scrollback_lines = 10000
 config.enable_scroll_bar = false
 config.use_fancy_tab_bar = false
@@ -267,13 +268,16 @@ end)
 config.allow_square_glyphs_to_overflow_width = "Always"
 -- config.freetype_interpreter_version = 40
 config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
-config.freetype_load_target = "Normal"
-config.freetype_render_target = "Normal"
+config.freetype_load_target = "Light"
+config.freetype_render_target = "HorizontalLcd"
+config.cell_width = 0.9
 config.font = wezterm.font_with_fallback {
-    -- "LXGW Bright Code TC NF",
-    "Maple Mono NF CN",
-    "Flog Symbols",
+    { family = "Monaspace Xenon Noto Serif LXGW CJK TC NF", weight = "Medium" },
+    -- { family = "LXGW Bright Code TC NF", weight = "Medium" },
+    -- { family = "Maple Mono NF CN", weight = "Medium" },
+    -- { family = "Flog Symbols" },
 }
+config.harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "liga" }
 -- Fix cell width for CJK punctuations
 config.cell_widths = {
     --- CJK (中日韩) 基础范围 ---
@@ -313,12 +317,12 @@ config.cell_widths = {
 }
 
 if WINDOWS then
-    config.font_size = 10.0
+    config.font_size = 12.4
 else
-    config.font_size = 14.0
+    config.font_size = 16.0
 end
 
-config.enable_kitty_graphics = false
+config.enable_kitty_graphics = true
 
 -- Keys
 
