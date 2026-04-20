@@ -176,18 +176,18 @@ class FontMergeConfig:
     ----------
     output_filename : str
         Output font file path.
-    english_font_path : str
-        Path to the base English font.
+    western_font_path : str
+        Path to the base western font.
     cjk_font_path : str
         Path to the CJK font.
-    english_scale_x : float
-        Fraction of the final halfwidth cell (``target_adv_e``) that the
-        English ink should occupy horizontally.  1.0 fills the cell exactly;
+    western_scale_x : float
+        Fraction of the final halfwidth cell (``target_adv_w``) that the
+        western ink should occupy horizontally.  1.0 fills the cell exactly;
         values < 1 narrow the ink without changing the cell width.
-    english_scale_y : float
+    western_scale_y : float
         Additional vertical stretch applied on top of the uniform
         x-normalisation scale.  1.0 keeps the aspect ratio produced by
-        ``english_scale_x``; values > 1 stretch the ink taller.
+        ``western_scale_x``; values > 1 stretch the ink taller.
     cjk_scale : float
         Uniform scaling factor applied to CJK font glyphs.
     stretch_chars : list[str | int | tuple[int, int]]
@@ -208,29 +208,34 @@ class FontMergeConfig:
         Description written into metadata.
     mark_as_monospace : bool
         Whether to flag the output font as monospaced.
+    remove_hints : bool
+        When ``True``, all hinting data is stripped from the merged font before
+        it is saved.  This removes the font-level programs (``fpgm``, ``prep``,
+        ``cvt ``), display-optimisation tables (``hdmx``, ``LTSH``, ``VDMX``),
+        and every per-glyph instruction sequence stored in the ``glyf`` table.
     cjk_cell_expansion : float
         When > 1.0, expands the advance-width cell of every CJK glyph by this
         factor *without* stretching the ink — the original glyph is centred
         inside the wider cell.  The English and symbol cells are expanded by
         the same factor (half the CJK cell).
 
-        When this option is active the semantics of ``english_scale_x`` and
-        ``english_scale_y`` change:
+        When this option is active the semantics of ``western_scale_x`` and
+        ``western_scale_y`` change:
 
-        * ``english_scale_x`` is the fraction of the *expanded* half-cell that
-          the English ink should occupy (1.0 = fill the half-cell exactly).
-        * ``english_scale_y`` is applied *on top of* the uniform x-scale, so
+        * ``western_scale_x`` is the fraction of the *expanded* half-cell that
+          the western ink should occupy (1.0 = fill the half-cell exactly).
+        * ``western_scale_y`` is applied *on top of* the uniform x-scale, so
           a value of 1.0 keeps the aspect ratio; values > 1 stretch taller.
 
-        After all scaling every English/symbol glyph advance is forced to
+        After all scaling every western/symbol glyph advance is forced to
         exactly half the expanded CJK cell, centring the ink as needed.
     """
 
     output_filename: str
-    english_font_path: str
+    western_font_path: str
     cjk_font_path: str
-    english_scale_x: float
-    english_scale_y: float
+    western_scale_x: float
+    western_scale_y: float
     cjk_scale: float
     stretch_chars: list[str | int | tuple[int, int]]
     pad_configs: list[PadConfig]
@@ -241,6 +246,7 @@ class FontMergeConfig:
     new_author: str
     new_description: str
     mark_as_monospace: bool
+    remove_hints: bool
     cjk_cell_expansion: float
 
 
@@ -662,7 +668,7 @@ def _copy_cjk_glyphs_to_base(
 def _adjust_cjk_glyph_widths(
     base_font: TTFont,
     cjk_font: TTFont,
-    target_adv_e: int,
+    target_adv_w: int,
     target_adv_c: int,
     cjk_upm_scale: float,
     typical_scaled_cjk_adv: float,
@@ -692,26 +698,30 @@ def _adjust_cjk_glyph_widths(
         if scaled_adv > typical_scaled_cjk_adv * 0.75:
             target_adv = target_adv_c
         else:
-            target_adv = target_adv_e
+            target_adv = target_adv_w
 
         # Apply stretch or pad, then center unless an explicit alignment exists
         alignment = alignment_map.get(codepoint)
         if codepoint in stretch_set and scaled_adv > 0:
             _stretch_glyph(base_tables, new_glyph_name, target_adv)
-        else:
-            if alignment is None:
-                alignment = Alignment.CENTER
+        elif alignment is not None:
             _shift_glyph(
                 base_tables, new_glyph_name,
                 alignment.compute_shift(target_adv - scaled_adv),
                 target_adv,
+            )
+        else:
+            # No explicit alignment — just set the advance without moving ink.
+            base_tables.hmtx.metrics[new_glyph_name] = (
+                target_adv,
+                base_tables.hmtx.metrics[new_glyph_name][1],
             )
 
 
 def merge_cjk_glyphs(
     base_font: TTFont,
     cjk_font: TTFont,
-    target_adv_e: int,
+    target_adv_w: int,
     target_adv_c: int,
     cjk_upm_scale: float,
     y_offset: int,
@@ -725,7 +735,7 @@ def merge_cjk_glyphs(
     """
     _copy_cjk_glyphs_to_base(base_font, cjk_font, cjk_upm_scale, y_offset)
     _adjust_cjk_glyph_widths(
-        base_font, cjk_font, target_adv_e, target_adv_c,
+        base_font, cjk_font, target_adv_w, target_adv_c,
         cjk_upm_scale, typical_scaled_cjk_adv,
         stretch_set, alignment_map,
     )
@@ -739,7 +749,7 @@ def merge_cjk_glyphs(
 def merge_symbols_into_font(
     base_font: TTFont,
     symbol_font_path: str,
-    target_adv_e: int,
+    target_adv_w: int,
 ) -> None:
     """Overlay a symbol font onto the base font, scaling by UPM ratio.
 
@@ -769,12 +779,36 @@ def merge_symbols_into_font(
         base_cmap[codepoint] = sym_glyph_name
 
         # Force the top-level glyph's advance to the target halfwidth value.
-        if target_adv_e > 0 and sym_glyph_name in base_tables.hmtx.metrics:
+        if target_adv_w > 0 and sym_glyph_name in base_tables.hmtx.metrics:
             adv, lsb = base_tables.hmtx.metrics[sym_glyph_name]
-            if adv != target_adv_e:
-                base_tables.hmtx.metrics[sym_glyph_name] = (target_adv_e, lsb)
+            if adv != target_adv_w:
+                base_tables.hmtx.metrics[sym_glyph_name] = (target_adv_w, lsb)
 
     symbol_font.close()
+
+
+# ---------------------------------------------------------------------------
+# Hint removal
+# ---------------------------------------------------------------------------
+
+
+def remove_font_hints(font: TTFont) -> None:
+    """Strip all hinting data from *font* in place.
+
+    Removes font-level hint programs and tables, then clears every per-glyph
+    instruction sequence so the output is hint-free.
+    """
+    # Font-level hint tables.
+    for tag in ("fpgm", "prep", "cvt ", "hdmx", "LTSH", "VDMX"):
+        if tag in font:
+            del font[tag]
+
+    # Per-glyph instruction bytecode stored in the glyf table.
+    if "glyf" in font:
+        for glyph_name in font["glyf"].keys():
+            glyph = font["glyf"][glyph_name]
+            if hasattr(glyph, "program") and glyph.program is not None:
+                glyph.program = None
 
 
 # ---------------------------------------------------------------------------
@@ -809,7 +843,7 @@ def update_font_metadata(font: TTFont, config: FontMergeConfig) -> None:
             record.string = new_text.encode(record.getEncoding())
 
 
-def mark_font_as_monospace(font: TTFont, target_adv_e: int) -> None:
+def mark_font_as_monospace(font: TTFont, target_adv_w: int):
     """Hint the font as monospaced.
 
     For CJK-merged fonts the glyph set contains both halfwidth and
@@ -821,7 +855,7 @@ def mark_font_as_monospace(font: TTFont, target_adv_e: int) -> None:
     Only ``xAvgCharWidth`` is updated so that editors that inspect it
     can derive the intended halfwidth advance.
     """
-    font["OS/2"].xAvgCharWidth = target_adv_e
+    font["OS/2"].xAvgCharWidth = target_adv_w
 
 
 # ---------------------------------------------------------------------------
@@ -830,17 +864,17 @@ def mark_font_as_monospace(font: TTFont, target_adv_e: int) -> None:
 
 
 def compute_baseline_y_offset(
-    eng_font: TTFont,
+    western_font: TTFont,
     cjk_font: TTFont,
     cjk_upm_scale: float,
 ) -> int:
     """Calculate the vertical shift needed to align the CJK baseline
-    with the (already-scaled) English baseline."""
-    eng_os2 = eng_font["OS/2"]
+    with the (already-scaled) western baseline."""
+    western_os2 = western_font["OS/2"]
     cjk_os2 = cjk_font["OS/2"]
-    eng_center = (eng_os2.sTypoAscender + eng_os2.sTypoDescender) / 2.0
+    western_center = (western_os2.sTypoAscender + western_os2.sTypoDescender) / 2.0
     cjk_center = (cjk_os2.sTypoAscender + cjk_os2.sTypoDescender) / 2.0
-    return int(round(eng_center - cjk_center * cjk_upm_scale))
+    return int(round(western_center - cjk_center * cjk_upm_scale))
 
 
 def merge_vertical_metrics(
@@ -884,19 +918,19 @@ def process_font(config: FontMergeConfig) -> None:
     """Execute the complete font merging pipeline:
 
     1. Load fonts and compute scaling factors.
-    2. Scale the English and CJK fonts.
+    2. Scale the western and CJK fonts.
     3. Copy and adjust CJK glyphs.
     4. Stretch / pad designated English-side glyphs.
     5. Overlay symbol fonts.
     6. Write metadata and save.
     """
-    eng_font = load_font(config.english_font_path)
+    western_font = load_font(config.western_font_path)
     cjk_font = load_font(config.cjk_font_path)
 
     # UPM normalisation — use the larger UPM as the unified coordinate space.
-    eng_upm = eng_font["head"].unitsPerEm
+    western_upm = western_font["head"].unitsPerEm
     cjk_upm = cjk_font["head"].unitsPerEm
-    upm = max(eng_upm, cjk_upm)
+    upm = max(western_upm, cjk_upm)
     cjk_upm_scale = upm / float(cjk_upm)
 
     # The effective CJK coordinate scale combines UPM normalisation and
@@ -908,33 +942,33 @@ def process_font(config: FontMergeConfig) -> None:
     scaled_cjk_adv = int(round(cjk_typical_adv * cjk_coord_scale))
 
     # Apply optional cell expansion: the CJK ink stays the same size but is
-    # centred inside a wider cell.  target_adv_c / target_adv_e are the
+    # centred inside a wider cell.  target_adv_c / target_adv_w are the
     # *final* advance widths used throughout the rest of the pipeline.
     target_adv_c = int(round(scaled_cjk_adv * config.cjk_cell_expansion))
-    target_adv_e = int(round(target_adv_c / 2))
+    target_adv_w = int(round(target_adv_c / 2))
 
     # ------------------------------------------------------------------ #
-    # English glyph scaling                                               #
+    # Western glyph scaling                                              #
     # ------------------------------------------------------------------ #
-    # english_scale_x is the fraction of the final halfwidth cell the ink
-    # fills; english_scale_y is an additional y stretch on top of the
+    # western_scale_x is the fraction of the final halfwidth cell the ink
+    # fills; western_scale_y is an additional y stretch on top of the
     # uniform x-normalisation scale (1.0 keeps the aspect ratio).
-    eng_typical_adv = get_typical_advance(eng_font, ord("A"))
-    eng_geom_scale_x = (config.english_scale_x * target_adv_e) / float(eng_typical_adv)
-    eng_geom_scale_y = eng_geom_scale_x * config.english_scale_y
+    western_typical_adv = get_typical_advance(western_font, ord("A"))
+    western_geom_scale_x = (config.western_scale_x * target_adv_w) / float(western_typical_adv)
+    western_geom_scale_y = western_geom_scale_x * config.western_scale_y
 
     # Apply the (potentially non-uniform) geometry scale to every glyph.
-    scale_font(eng_font, eng_geom_scale_x, eng_geom_scale_y)
-    eng_font["head"].unitsPerEm = upm
+    scale_font(western_font, western_geom_scale_x, western_geom_scale_y)
+    western_font["head"].unitsPerEm = upm
 
-    # Requirement 3: force every English glyph's advance to the target
+    # Requirement 3: force every western glyph's advance to the target
     # halfwidth value without moving the ink.
-    normalize_font_advances(eng_font, target_adv_e)
+    normalize_font_advances(western_font, target_adv_w)
 
     # Baseline alignment
     y_offset = 0
     if config.adjust_baseline:
-        y_offset += compute_baseline_y_offset(eng_font, cjk_font, cjk_coord_scale)
+        y_offset += compute_baseline_y_offset(western_font, cjk_font, cjk_coord_scale)
 
     stretch_set = parse_codepoints(config.stretch_chars)
     alignment_map = build_alignment_map(config.pad_configs)
@@ -942,9 +976,9 @@ def process_font(config: FontMergeConfig) -> None:
     # Merge CJK glyphs (phase 1 copies them; phase 2 pads/stretches to the
     # expanded target advances).
     merge_cjk_glyphs(
-        base_font=eng_font,
+        base_font=western_font,
         cjk_font=cjk_font,
-        target_adv_e=target_adv_e,
+        target_adv_w=target_adv_w,
         target_adv_c=target_adv_c,
         cjk_upm_scale=cjk_coord_scale,
         y_offset=y_offset,
@@ -953,22 +987,19 @@ def process_font(config: FontMergeConfig) -> None:
         alignment_map=alignment_map,
     )
 
-    # Expand vertical metrics to cover the CJK glyphs.
-    merge_vertical_metrics(eng_font, cjk_font, cjk_coord_scale)
-
-    # Stretch / pad English-side glyphs that fall outside CJK ranges.
+    # Stretch / pad western-side glyphs that fall outside CJK ranges.
     # Use target_adv_c (the expanded fullwidth) as the double-width target.
     for codepoint in stretch_set:
-        stretch_glyph_width(eng_font, codepoint, target_adv_c)
+        stretch_glyph_width(western_font, codepoint, target_adv_c)
 
     for pad_cfg in config.pad_configs:
         for codepoint in parse_codepoints(pad_cfg.chars):
-            pad_glyph_width(eng_font, codepoint, target_adv_c, pad_cfg.alignment)
+            pad_glyph_width(western_font, codepoint, target_adv_c, pad_cfg.alignment)
 
     # Force the advance of every stretched / padded glyph to target_adv_c so
     # that ink repositioning never leaves a residual halfwidth advance.
-    fullwidth_cmap = eng_font.getBestCmap()
-    fullwidth_tables = _FontTables.from_font(eng_font)
+    fullwidth_cmap = western_font.getBestCmap()
+    fullwidth_tables = _FontTables.from_font(western_font)
     fullwidth_codepoints = stretch_set | {
         cp for cfg in config.pad_configs for cp in parse_codepoints(cfg.chars)
     }
@@ -980,23 +1011,27 @@ def process_font(config: FontMergeConfig) -> None:
                 fullwidth_tables.hmtx.metrics[glyph_name] = (target_adv_c, lsb)
 
     # Merge symbol fonts, normalising each symbol glyph's advance to
-    # target_adv_e so that all non-CJK glyphs end up with the same
+    # target_adv_w so that all non-CJK glyphs end up with the same
     # halfwidth cell.
     for symbol_path in config.symbol_font_paths:
-        merge_symbols_into_font(eng_font, symbol_path, target_adv_e=target_adv_e)
+        merge_symbols_into_font(western_font, symbol_path, target_adv_w=target_adv_w)
 
     # Metadata & monospace flag
-    update_font_metadata(eng_font, config)
+    update_font_metadata(western_font, config)
     if config.mark_as_monospace:
-        mark_font_as_monospace(eng_font, target_adv_e)
+        mark_font_as_monospace(western_font, target_adv_w)
+
+    # Remove hinting data if requested.
+    if config.remove_hints:
+        remove_font_hints(western_font)
 
     # Ensure Format 12 cmap subtable exists for any non-BMP codepoints
     # accumulated across all merging stages.
-    ensure_cmap_format_12(eng_font, eng_font.getBestCmap())
+    ensure_cmap_format_12(western_font, western_font.getBestCmap())
 
     # Save
-    eng_font.save(config.output_filename)
-    eng_font.close()
+    western_font.save(config.output_filename)
+    western_font.close()
     cjk_font.close()
 
 
@@ -1010,10 +1045,10 @@ def main():
     configs = [
         FontMergeConfig(
             output_filename="Monaspace Argon LXGW Bright TC NF Light.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Light.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Light.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1031,13 +1066,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Argon LXGW Bright TC NF Light Italic.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-LightItalic.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-LightItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1055,13 +1091,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Argon LXGW Bright TC NF Regular.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1079,13 +1116,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Argon LXGW Bright TC NF Italic.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1103,13 +1141,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Argon LXGW Bright TC NF Medium.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Medium.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Medium.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1127,13 +1166,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Argon LXGW Bright TC NF Medium Italic.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-MediumItalic.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-MediumItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1151,13 +1191,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         # FontMergeConfig(
         #     output_filename="Monaspace Xenon Noto Serif CJK TC NF ExtraBold.ttf",
-        #     english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBold.otf"),
+        #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBold.otf"),
         #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Black.otf"),
-        #     english_scale_x=1.0,
-        #     english_scale_y=1.0 / 0.9,
+        #     western_scale_x=1.0,
+        #     western_scale_y=1.0 / 0.9,
         #     cjk_scale=1.0,
         #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
@@ -1178,10 +1219,10 @@ def main():
         # ),
         # FontMergeConfig(
         #     output_filename="Monaspace Xenon Noto Serif CJK TC NF ExtraBold Italic.ttf",
-        #     english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBoldItalic.otf"),
+        #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBoldItalic.otf"),
         #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Black.otf"),
-        #     english_scale_x=1.0,
-        #     english_scale_y=1.0 / 0.9,
+        #     western_scale_x=1.0,
+        #     western_scale_y=1.0 / 0.9,
         #     cjk_scale=1.0,
         #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
@@ -1202,10 +1243,10 @@ def main():
         # ),
         # FontMergeConfig(
         #     output_filename="Monaspace Xenon Noto Serif CJK TC NF Bold.ttf",
-        #     english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Bold.otf"),
+        #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Bold.otf"),
         #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Bold.otf"),
-        #     english_scale_x=1.0,
-        #     english_scale_y=1.0 / 0.9,
+        #     western_scale_x=1.0,
+        #     western_scale_y=1.0 / 0.9,
         #     cjk_scale=1.0,
         #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
@@ -1226,10 +1267,10 @@ def main():
         # ),
         # FontMergeConfig(
         #     output_filename="Monaspace Xenon Noto Serif CJK TC NF Bold Italic.ttf",
-        #     english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-BoldItalic.otf"),
+        #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-BoldItalic.otf"),
         #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Bold.otf"),
-        #     english_scale_x=1.0,
-        #     english_scale_y=1.0 / 0.9,
+        #     western_scale_x=1.0,
+        #     western_scale_y=1.0 / 0.9,
         #     cjk_scale=1.0,
         #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
@@ -1250,10 +1291,10 @@ def main():
         # ),
         FontMergeConfig(
             output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Light.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Light.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Light.otf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1271,13 +1312,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light Italic.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-LightItalic.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-LightItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1295,13 +1337,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Regular.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Regular.otf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1319,13 +1362,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Italic.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Italic.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Italic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1343,13 +1387,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Medium.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Medium.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Medium.otf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1367,13 +1412,14 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
         FontMergeConfig(
             output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium Italic.ttf",
-            english_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-MediumItalic.otf"),
+            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-MediumItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-            english_scale_x=1.0,
-            english_scale_y=1.08,
+            western_scale_x=1.0,
+            western_scale_y=1.08,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1391,6 +1437,7 @@ def main():
             new_author="Zhaosheng Pan",
             new_description="",
             mark_as_monospace=True,
+            remove_hints=True,
         ),
     ]
 
