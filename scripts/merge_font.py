@@ -17,6 +17,7 @@ from fontTools.ttLib.tables._g_l_y_f import (
     table__g_l_y_f,
 )
 from fontTools.ttLib.tables._l_o_c_a import table__l_o_c_a
+from fontTools.ttLib.tables.ttProgram import Program as TTProgram
 
 
 # ---------------------------------------------------------------------------
@@ -807,8 +808,8 @@ def remove_font_hints(font: TTFont) -> None:
     if "glyf" in font:
         for glyph_name in font["glyf"].keys():
             glyph = font["glyf"][glyph_name]
-            if hasattr(glyph, "program") and glyph.program is not None:
-                glyph.program = None
+            if hasattr(glyph, "program"):
+                glyph.program = TTProgram()
 
 
 # ---------------------------------------------------------------------------
