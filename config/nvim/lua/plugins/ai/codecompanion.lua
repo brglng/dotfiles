@@ -32,7 +32,7 @@ return {
             chat = {
                 adapter = {
                     name = "copilot",
-                    model = "claude-sonnet-4.6",
+                    model = "gpt-5.2-codex",
                 },
                 keymaps = {
                     -- send = {
@@ -65,13 +65,13 @@ The user is working on a %s machine. Please respond with system specific command
             inline = {
                 adapter = {
                     name = "copilot",
-                    model = "claude-sonnet-4.6",
+                    model = "gpt-5.2-codex",
                 },
             },
             cmd = {
                 adapter = {
                     name = "copilot",
-                    model = "claude-sonnet-4.6",
+                    model = "gpt-5.2-codex",
                 },
             },
         },
