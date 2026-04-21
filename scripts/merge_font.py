@@ -532,10 +532,13 @@ def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
         GlyphTransformer.scale(tables.glyf[glyph_name], scale_x, scale_y)
         _scale_glyph_metrics(tables, glyph_name, scale_x, scale_y)
 
-    if scale_y == 1.0:
+    if scale_x == 1.0 and scale_y == 1.0:
         return
 
-    def _s(value: int) -> int:
+    def _sx(value: int) -> int:
+        return int(round(value * scale_x))
+
+    def _sy(value: int) -> int:
         return int(round(value * scale_y))
 
     os2 = font["OS/2"]
@@ -543,22 +546,38 @@ def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
         "sTypoAscender", "sTypoDescender", "sTypoLineGap",
         "usWinAscent", "usWinDescent",
         "sxHeight", "sCapHeight",
-        "ySubscriptXSize", "ySubscriptYSize",
-        "ySubscriptXOffset", "ySubscriptYOffset",
-        "ySuperscriptXSize", "ySuperscriptYSize",
-        "ySuperscriptXOffset", "ySuperscriptYOffset",
+        "ySubscriptYSize",
+        "ySubscriptYOffset",
+        "ySuperscriptYSize",
+        "ySuperscriptYOffset",
         "yStrikeoutSize", "yStrikeoutPosition",
     ):
-        setattr(os2, attr, _s(getattr(os2, attr)))
+        setattr(os2, attr, _sy(getattr(os2, attr)))
+    for attr in (
+        "xAvgCharWidth",
+        "ySubscriptXSize",
+        "ySubscriptXOffset",
+        "ySuperscriptXSize",
+        "ySuperscriptXOffset",
+    ):
+        setattr(os2, attr, _sx(getattr(os2, attr)))
 
     hhea = font["hhea"]
-    for attr in ("ascent", "descent", "lineGap", "caretSlopeRise", "caretOffset"):
-        setattr(hhea, attr, _s(getattr(hhea, attr)))
+    for attr in ("ascent", "descent", "lineGap"):
+        setattr(hhea, attr, _sy(getattr(hhea, attr)))
+    for attr in ("caretSlopeRise",):
+        setattr(hhea, attr, _sy(getattr(hhea, attr)))
+    for attr in ("caretSlopeRun", "caretOffset"):
+        setattr(hhea, attr, _sx(getattr(hhea, attr)))
 
     if "vhea" in font:
         vhea = font["vhea"]
         for attr in ("ascent", "descent", "lineGap"):
-            setattr(vhea, attr, _s(getattr(vhea, attr)))
+            setattr(vhea, attr, _sy(getattr(vhea, attr)))
+        for attr in ("caretSlopeRise",):
+            setattr(vhea, attr, _sy(getattr(vhea, attr)))
+        for attr in ("caretSlopeRun", "caretOffset"):
+            setattr(vhea, attr, _sx(getattr(vhea, attr)))
 
 
 def normalize_font_advances(font: TTFont, target_advance: int) -> None:
@@ -1049,7 +1068,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Light.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1074,7 +1093,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-LightItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1099,7 +1118,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1124,7 +1143,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1149,7 +1168,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Medium.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1174,7 +1193,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-MediumItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1199,7 +1218,7 @@ def main():
         #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBold.otf"),
         #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Black.otf"),
         #     western_scale_x=1.0,
-        #     western_scale_y=1.0 / 0.9,
+        #     western_scale_y=1.1,
         #     cjk_scale=1.0,
         #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
@@ -1217,13 +1236,14 @@ def main():
         #     new_author="Zhaosheng Pan",
         #     new_description="",
         #     mark_as_monospace=True,
+        #     remove_hints=True,
         # ),
         # FontMergeConfig(
         #     output_filename="Monaspace Xenon Noto Serif CJK TC NF ExtraBold Italic.ttf",
         #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBoldItalic.otf"),
         #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Black.otf"),
         #     western_scale_x=1.0,
-        #     western_scale_y=1.0 / 0.9,
+        #     western_scale_y=1.1,
         #     cjk_scale=1.0,
         #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
@@ -1241,13 +1261,14 @@ def main():
         #     new_author="Zhaosheng Pan",
         #     new_description="",
         #     mark_as_monospace=True,
+        #     remove_hints=True,
         # ),
         # FontMergeConfig(
         #     output_filename="Monaspace Xenon Noto Serif CJK TC NF Bold.ttf",
         #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Bold.otf"),
         #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Bold.otf"),
         #     western_scale_x=1.0,
-        #     western_scale_y=1.0 / 0.9,
+        #     western_scale_y=1.1,
         #     cjk_scale=1.0,
         #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
@@ -1265,13 +1286,14 @@ def main():
         #     new_author="Zhaosheng Pan",
         #     new_description="",
         #     mark_as_monospace=True,
+        #     remove_hints=True,
         # ),
         # FontMergeConfig(
         #     output_filename="Monaspace Xenon Noto Serif CJK TC NF Bold Italic.ttf",
         #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-BoldItalic.otf"),
         #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Bold.otf"),
         #     western_scale_x=1.0,
-        #     western_scale_y=1.0 / 0.9,
+        #     western_scale_y=1.1,
         #     cjk_scale=1.0,
         #     cjk_cell_expansion=1.0,
         #     stretch_chars=["…", "—"],
@@ -1289,13 +1311,14 @@ def main():
         #     new_author="Zhaosheng Pan",
         #     new_description="",
         #     mark_as_monospace=True,
+        #     remove_hints=True,
         # ),
         FontMergeConfig(
             output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light.ttf",
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Light.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Light.otf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1320,7 +1343,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-LightItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1345,7 +1368,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Regular.otf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1370,7 +1393,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Italic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1395,7 +1418,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Medium.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Medium.otf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
@@ -1420,7 +1443,7 @@ def main():
             western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-MediumItalic.otf"),
             cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
             western_scale_x=1.0,
-            western_scale_y=1.08,
+            western_scale_y=1.1,
             cjk_scale=1.0,
             cjk_cell_expansion=1.0,
             stretch_chars=["…", "—"],
