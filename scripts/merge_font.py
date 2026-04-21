@@ -173,6 +173,26 @@ class PadConfig:
 class FontMergeConfig:
     """Full configuration for a single font merging task.
 
+    Scaling is computed **automatically** — no user-supplied scale factors are
+    needed:
+
+    * Let ``C`` = natural CJK advance after UPM normalisation,
+      ``H_c`` = CJK typographic height (scaled), ``W`` = western reference
+      advance (capital 'A'), ``H_w`` = western typographic height.
+    * ``A = H_c · 2W / H_w`` is the ``target_adv_c`` that would give the
+      western glyph a perfectly uniform scale (scale_y / scale_x = 1).
+    * The optimal cell width balances two objectives — western
+      aspect-ratio distortion ``(A/T − 1)²`` and relative CJK blank space
+      ``((T−C)/T)²`` — and is given by the closed-form minimiser
+      ``T* = (A² + C²) / (A + C)``, clamped to ``≥ C`` so CJK ink always
+      fits in the cell.
+    * ``target_adv_w = T* // 2``.
+    * Western ``scale_x = target_adv_w / W`` (fills halfwidth cell);  
+      ``scale_y = H_c / H_w`` (forces western height to equal CJK height,
+      making the non-uniformity as small as the two fonts allow).
+    * CJK glyphs are scaled only by the UPM-normalisation ratio, then
+      centred inside ``target_adv_c`` with minimal blank padding.
+
     Attributes
     ----------
     output_filename : str
@@ -181,16 +201,6 @@ class FontMergeConfig:
         Path to the base western font.
     cjk_font_path : str
         Path to the CJK font.
-    western_scale_x : float
-        Fraction of the final halfwidth cell (``target_adv_w``) that the
-        western ink should occupy horizontally.  1.0 fills the cell exactly;
-        values < 1 narrow the ink without changing the cell width.
-    western_scale_y : float
-        Additional vertical stretch applied on top of the uniform
-        x-normalisation scale.  1.0 keeps the aspect ratio produced by
-        ``western_scale_x``; values > 1 stretch the ink taller.
-    cjk_scale : float
-        Uniform scaling factor applied to CJK font glyphs.
     stretch_chars : list[str | int | tuple[int, int]]
         Characters to stretch horizontally to double width.
     pad_configs : list[PadConfig]
@@ -214,30 +224,11 @@ class FontMergeConfig:
         it is saved.  This removes the font-level programs (``fpgm``, ``prep``,
         ``cvt ``), display-optimisation tables (``hdmx``, ``LTSH``, ``VDMX``),
         and every per-glyph instruction sequence stored in the ``glyf`` table.
-    cjk_cell_expansion : float
-        When > 1.0, expands the advance-width cell of every CJK glyph by this
-        factor *without* stretching the ink — the original glyph is centred
-        inside the wider cell.  The English and symbol cells are expanded by
-        the same factor (half the CJK cell).
-
-        When this option is active the semantics of ``western_scale_x`` and
-        ``western_scale_y`` change:
-
-        * ``western_scale_x`` is the fraction of the *expanded* half-cell that
-          the western ink should occupy (1.0 = fill the half-cell exactly).
-        * ``western_scale_y`` is applied *on top of* the uniform x-scale, so
-          a value of 1.0 keeps the aspect ratio; values > 1 stretch taller.
-
-        After all scaling every western/symbol glyph advance is forced to
-        exactly half the expanded CJK cell, centring the ink as needed.
     """
 
     output_filename: str
     western_font_path: str
     cjk_font_path: str
-    western_scale_x: float
-    western_scale_y: float
-    cjk_scale: float
     stretch_chars: list[str | int | tuple[int, int]]
     pad_configs: list[PadConfig]
     symbol_font_paths: list[str]
@@ -248,7 +239,122 @@ class FontMergeConfig:
     new_description: str
     mark_as_monospace: bool
     remove_hints: bool
-    cjk_cell_expansion: float
+
+
+# ---------------------------------------------------------------------------
+# Scaling parameters (shared across subfamilies)
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class _ScalingParams:
+    """Pre-computed scaling parameters derived from a reference subfamily.
+
+    Sharing one ``_ScalingParams`` instance across every subfamily in a
+    font family guarantees that all weights and styles have identical cell
+    sizes and western proportions, even when different CJK fonts are used
+    for upright vs italic variants.
+
+    Attributes
+    ----------
+    upm : int
+        The unified UPM (= max of western and CJK UPMs) used as the
+        common coordinate space for the whole family.
+    target_adv_c : int
+        Full-width (CJK) cell advance in unified UPM units.
+    target_adv_w : int
+        Half-width (western / symbol) cell advance; always ``target_adv_c // 2``.
+    western_scale_x : float
+        X scale applied to every western glyph.
+    western_scale_y : float
+        Y scale applied to every western glyph (matches CJK height).
+    scaled_cjk_adv : int
+        Natural CJK advance after UPM normalisation; used to distinguish
+        full-width from half-width CJK glyphs during merging.
+    """
+
+    upm: int
+    target_adv_c: int
+    target_adv_w: int
+    western_scale_x: float
+    western_scale_y: float
+    scaled_cjk_adv: int
+
+
+# ---------------------------------------------------------------------------
+# Font family config (subfamilies map)
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class SubfamilySpec:
+    """Font file paths for a single subfamily.
+
+    Attributes
+    ----------
+    western_font_path : str
+        Path to the western (Latin) font for this subfamily.
+    cjk_font_path : str
+        Path to the CJK font for this subfamily.  Italic subfamilies may
+        point to a different typeface than the upright ones.
+    output_filename : str
+        Destination path for the merged output font.
+    """
+
+    western_font_path: str
+    cjk_font_path: str
+    output_filename: str
+
+
+@dataclass
+class FontFamilySpec:
+    """Configuration for an entire font family.
+
+    Common settings (metadata, glyph adjustments, symbol overlays) are
+    declared once and shared across all subfamilies.  Scaling is computed
+    from the ``scaling_reference`` subfamily (default ``"Regular"``) and
+    then reused verbatim for every other subfamily, ensuring consistent
+    cell geometry even when italic subfamilies use a different CJK font.
+
+    Attributes
+    ----------
+    new_font_family : str
+        Font family name written into the output metadata.
+    new_author : str
+        Author name written into metadata.
+    new_description : str
+        Description written into metadata.
+    mark_as_monospace : bool
+        Whether to flag the output fonts as monospaced.
+    remove_hints : bool
+        Strip hinting data from the merged fonts.
+    adjust_baseline : bool
+        Auto-align CJK baseline to the western baseline.
+    stretch_chars : list[str | int | tuple[int, int]]
+        Characters to stretch horizontally to double width.
+    pad_configs : list[PadConfig]
+        Per-character padding rules.
+    symbol_font_paths : list[str]
+        Paths to symbol fonts to overlay.
+    subfamilies : dict[str, SubfamilySpec]
+        Ordered map of subfamily name → font paths.  The key is used
+        directly as ``new_font_subfamily`` in the output metadata.
+    scaling_reference : str
+        Which subfamily key to use when computing the shared
+        ``_ScalingParams``.  Defaults to ``"Regular"``.
+    """
+
+    new_font_family: str
+    new_author: str
+    new_description: str
+    mark_as_monospace: bool
+    remove_hints: bool
+    adjust_baseline: bool
+    stretch_chars: list[str | int | tuple[int, int]]
+    pad_configs: list[PadConfig]
+    symbol_font_paths: list[str]
+    subfamilies: dict[str, SubfamilySpec]
+    scaling_reference: str = "Regular"
 
 
 # ---------------------------------------------------------------------------
@@ -934,55 +1040,106 @@ def merge_vertical_metrics(
 # ---------------------------------------------------------------------------
 
 
-def process_font(config: FontMergeConfig) -> None:
-    """Execute the complete font merging pipeline:
+def compute_scaling_params(
+    western_font_path: str,
+    cjk_font_path: str,
+) -> _ScalingParams:
+    """Derive the optimal ``_ScalingParams`` from a western + CJK font pair.
 
-    1. Load fonts and compute scaling factors.
-    2. Scale the western and CJK fonts.
-    3. Copy and adjust CJK glyphs.
-    4. Stretch / pad designated English-side glyphs.
-    5. Overlay symbol fonts.
-    6. Write metadata and save.
+    This is the same closed-form calculation used inside ``process_font``
+    when no pre-computed scaling is supplied.  Factoring it out allows
+    ``process_family`` to run it once for the reference subfamily and then
+    share the result across all other subfamilies.
     """
-    western_font = load_font(config.western_font_path)
-    cjk_font = load_font(config.cjk_font_path)
+    western_font = load_font(western_font_path)
+    cjk_font = load_font(cjk_font_path)
 
-    # UPM normalisation — use the larger UPM as the unified coordinate space.
     western_upm = western_font["head"].unitsPerEm
     cjk_upm = cjk_font["head"].unitsPerEm
     upm = max(western_upm, cjk_upm)
     cjk_upm_scale = upm / float(cjk_upm)
 
-    # The effective CJK coordinate scale combines UPM normalisation and
-    # the user's cjk_scale.
-    cjk_coord_scale = cjk_upm_scale * config.cjk_scale
+    W = float(get_typical_advance(western_font, ord("A")))
+    C = get_typical_advance(cjk_font, ord("\u4e2d")) * cjk_upm_scale
 
-    # Derive baseline CJK advance width in the unified UPM space.
-    cjk_typical_adv = get_typical_advance(cjk_font, ord("\u4e2d"))
-    scaled_cjk_adv = int(round(cjk_typical_adv * cjk_coord_scale))
+    w_os2 = western_font["OS/2"]
+    c_os2 = cjk_font["OS/2"]
+    H_w = float(w_os2.sTypoAscender - w_os2.sTypoDescender)
+    H_c = (c_os2.sTypoAscender - c_os2.sTypoDescender) * cjk_upm_scale
 
-    # Apply optional cell expansion: the CJK ink stays the same size but is
-    # centred inside a wider cell.  target_adv_c / target_adv_w are the
-    # *final* advance widths used throughout the rest of the pipeline.
-    target_adv_c = int(round(scaled_cjk_adv * config.cjk_cell_expansion))
-    target_adv_w = int(round(target_adv_c / 2))
+    A = H_c * 2.0 * W / H_w
+    T_opt = (A * A + C * C) / (A + C)
+    target_adv_c = int(round(max(C, T_opt)))
+    target_adv_w = target_adv_c // 2
 
-    # ------------------------------------------------------------------ #
-    # Western glyph scaling                                              #
-    # ------------------------------------------------------------------ #
-    # western_scale_x is the fraction of the final halfwidth cell the ink
-    # fills; western_scale_y is an additional y stretch on top of the
-    # uniform x-normalisation scale (1.0 keeps the aspect ratio).
-    western_typical_adv = get_typical_advance(western_font, ord("A"))
-    western_geom_scale_x = (config.western_scale_x * target_adv_w) / float(western_typical_adv)
-    western_geom_scale_y = western_geom_scale_x * config.western_scale_y
+    params = _ScalingParams(
+        upm=upm,
+        target_adv_c=target_adv_c,
+        target_adv_w=target_adv_w,
+        western_scale_x=target_adv_w / W,
+        western_scale_y=H_c / H_w,
+        scaled_cjk_adv=int(round(C)),
+    )
 
-    # Apply the (potentially non-uniform) geometry scale to every glyph.
-    scale_font(western_font, western_geom_scale_x, western_geom_scale_y)
+    western_font.close()
+    cjk_font.close()
+    return params
+
+
+def process_font(config: FontMergeConfig, scaling: _ScalingParams | None = None) -> None:
+    """Execute the complete font merging pipeline:
+
+    1. Load fonts; use ``scaling`` if provided, otherwise compute it
+       automatically from the font pair.
+    2. Scale the western font and copy CJK glyphs at natural UPM-normalised
+       size (padded to ``target_adv_c``).
+    3. Copy and adjust CJK glyphs.
+    4. Stretch / pad designated English-side glyphs.
+    5. Overlay symbol fonts.
+    6. Write metadata and save.
+
+    Parameters
+    ----------
+    config :
+        Per-font settings (paths, metadata, glyph adjustments).
+    scaling :
+        Pre-computed cell geometry and western scale factors.  When
+        ``None`` the scaling is derived on-the-fly from *this* font pair,
+        which is equivalent to the standalone behaviour.  Pass a shared
+        ``_ScalingParams`` (from ``compute_scaling_params``) to keep all
+        subfamilies in a family metrically consistent.
+    """
+    western_font = load_font(config.western_font_path)
+    cjk_font = load_font(config.cjk_font_path)
+
+    cjk_upm = cjk_font["head"].unitsPerEm
+
+    if scaling is None:
+        scaling = compute_scaling_params(
+            config.western_font_path, config.cjk_font_path
+        )
+
+    upm = scaling.upm
+    # CJK UPM scale uses the shared UPM so that a different CJK font for an
+    # italic subfamily is still placed in the same coordinate space.
+    cjk_coord_scale = upm / float(cjk_upm)
+
+    target_adv_c = scaling.target_adv_c
+    target_adv_w = scaling.target_adv_w
+    scaled_cjk_adv = scaling.scaled_cjk_adv
+
+    print(
+        f"  cell: target_adv_c={target_adv_c}, target_adv_w={target_adv_w}\n"
+        f"  western scale_x={scaling.western_scale_x:.4f}, scale_y={scaling.western_scale_y:.4f} "
+        f"(non-uniformity={(scaling.western_scale_y / scaling.western_scale_x - 1) * 100:.1f}%)\n"
+        f"  CJK blank per side={(target_adv_c - scaled_cjk_adv) // 2} units"
+    )
+
+    # Apply the (non-uniform) geometry scale to every western glyph.
+    scale_font(western_font, scaling.western_scale_x, scaling.western_scale_y)
     western_font["head"].unitsPerEm = upm
 
-    # Requirement 3: force every western glyph's advance to the target
-    # halfwidth value without moving the ink.
+    # Force every western glyph's advance to the target halfwidth value.
     normalize_font_advances(western_font, target_adv_w)
 
     # Baseline alignment
@@ -1055,6 +1212,59 @@ def process_font(config: FontMergeConfig) -> None:
     cjk_font.close()
 
 
+def process_family(family: FontFamilySpec) -> None:
+    """Process all subfamilies of a font family.
+
+    Scaling is computed once from the ``scaling_reference`` subfamily
+    (default ``"Regular"``) and reused for every other subfamily.  This
+    guarantees that all weights and styles share the same cell geometry,
+    even when italic subfamilies use a different CJK typeface.
+    """
+    ref_name = family.scaling_reference
+    ref = family.subfamilies.get(ref_name)
+    if ref is None:
+        raise ValueError(
+            f"scaling_reference '{ref_name}' not found in subfamilies "
+            f"for family '{family.new_font_family}'"
+        )
+
+    print(
+        f"[{family.new_font_family}] "
+        f"Computing scaling from '{ref_name}' reference ..."
+    )
+    scaling = compute_scaling_params(ref.western_font_path, ref.cjk_font_path)
+    print(
+        f"  upm={scaling.upm}, target_adv_c={scaling.target_adv_c}, "
+        f"target_adv_w={scaling.target_adv_w}\n"
+        f"  scale_x={scaling.western_scale_x:.4f}, "
+        f"scale_y={scaling.western_scale_y:.4f} "
+        f"(non-uniformity={(scaling.western_scale_y / scaling.western_scale_x - 1) * 100:.1f}%)"
+    )
+
+    for subfamily_name, spec in family.subfamilies.items():
+        config = FontMergeConfig(
+            output_filename=spec.output_filename,
+            western_font_path=spec.western_font_path,
+            cjk_font_path=spec.cjk_font_path,
+            stretch_chars=family.stretch_chars,
+            pad_configs=family.pad_configs,
+            symbol_font_paths=family.symbol_font_paths,
+            adjust_baseline=family.adjust_baseline,
+            new_font_family=family.new_font_family,
+            new_font_subfamily=subfamily_name,
+            new_author=family.new_author,
+            new_description=family.new_description,
+            mark_as_monospace=family.mark_as_monospace,
+            remove_hints=family.remove_hints,
+        )
+        print(f"  Processing: {spec.output_filename} ...")
+        try:
+            process_font(config, scaling=scaling)
+            print(f"  Saved: {spec.output_filename}")
+        except FileNotFoundError as err:
+            print(f"  Error: {err}")
+
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
@@ -1062,416 +1272,102 @@ def process_font(config: FontMergeConfig) -> None:
 
 def main():
     """Configure and run font merging tasks."""
-    configs = [
-        FontMergeConfig(
-            output_filename="Monaspace Argon LXGW Bright TC NF Light.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Light.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
+    _L = os.path.expanduser  # shorthand for ~/Library/Fonts/... paths
+
+    _COMMON = dict(
+        new_author="Zhaosheng Pan",
+        new_description="",
+        mark_as_monospace=True,
+        remove_hints=True,
+        adjust_baseline=True,
+        stretch_chars=["\u2026", "\u2014"],
+        pad_configs=[
+            PadConfig(chars=["\u2018", "\u201c"], alignment=Alignment.RIGHT),
+            PadConfig(chars=["\u2019", "\u201d"], alignment=Alignment.LEFT),
+        ],
+        symbol_font_paths=[
+            _L("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+            "FlogSymbols.ttf",
+        ],
+    )
+
+    families = [
+        FontFamilySpec(
             new_font_family="Monaspace Argon LXGW Bright TC NF",
-            new_font_subfamily="Light",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
+            **_COMMON,
+            subfamilies={
+                "Light": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Light.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
+                    output_filename="Monaspace Argon LXGW Bright TC NF Light.ttf",
+                ),
+                "Light Italic": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-LightItalic.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
+                    output_filename="Monaspace Argon LXGW Bright TC NF Light Italic.ttf",
+                ),
+                "Regular": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
+                    output_filename="Monaspace Argon LXGW Bright TC NF Regular.ttf",
+                ),
+                "Italic": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
+                    output_filename="Monaspace Argon LXGW Bright TC NF Italic.ttf",
+                ),
+                "Medium": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Medium.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
+                    output_filename="Monaspace Argon LXGW Bright TC NF Medium.ttf",
+                ),
+                "Medium Italic": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-MediumItalic.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
+                    output_filename="Monaspace Argon LXGW Bright TC NF Medium Italic.ttf",
+                ),
+            },
         ),
-        FontMergeConfig(
-            output_filename="Monaspace Argon LXGW Bright TC NF Light Italic.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-LightItalic.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Argon LXGW Bright TC NF",
-            new_font_subfamily="Light Italic",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Argon LXGW Bright TC NF Regular.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Argon LXGW Bright TC NF",
-            new_font_subfamily="Regular",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Argon LXGW Bright TC NF Italic.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Argon LXGW Bright TC NF",
-            new_font_subfamily="Italic",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Argon LXGW Bright TC NF Medium.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-Medium.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Argon LXGW Bright TC NF",
-            new_font_subfamily="Medium",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Argon LXGW Bright TC NF Medium Italic.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceArgon-MediumItalic.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Argon LXGW Bright TC NF",
-            new_font_subfamily="Medium Italic",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        # FontMergeConfig(
-        #     output_filename="Monaspace Xenon Noto Serif CJK TC NF ExtraBold.ttf",
-        #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBold.otf"),
-        #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Black.otf"),
-        #     western_scale_x=1.0,
-        #     western_scale_y=1.1,
-        #     cjk_scale=1.0,
-        #     cjk_cell_expansion=1.0,
-        #     stretch_chars=["…", "—"],
-        #     pad_configs=[
-        #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-        #         PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-        #     ],
-        #     symbol_font_paths=[
-        #         os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-        #         "FlogSymbols.ttf",
-        #     ],
-        #     adjust_baseline=True,
-        #     new_font_family="Monaspace Xenon Noto Serif CJK TC NF",
-        #     new_font_subfamily="ExtraBold",
-        #     new_author="Zhaosheng Pan",
-        #     new_description="",
-        #     mark_as_monospace=True,
-        #     remove_hints=True,
-        # ),
-        # FontMergeConfig(
-        #     output_filename="Monaspace Xenon Noto Serif CJK TC NF ExtraBold Italic.ttf",
-        #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-ExtraBoldItalic.otf"),
-        #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Black.otf"),
-        #     western_scale_x=1.0,
-        #     western_scale_y=1.1,
-        #     cjk_scale=1.0,
-        #     cjk_cell_expansion=1.0,
-        #     stretch_chars=["…", "—"],
-        #     pad_configs=[
-        #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-        #         PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-        #     ],
-        #     symbol_font_paths=[
-        #         os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-        #         "FlogSymbols.ttf",
-        #     ],
-        #     adjust_baseline=True,
-        #     new_font_family="Monaspace Xenon Noto Serif CJK TC NF",
-        #     new_font_subfamily="ExtraBold Italic",
-        #     new_author="Zhaosheng Pan",
-        #     new_description="",
-        #     mark_as_monospace=True,
-        #     remove_hints=True,
-        # ),
-        # FontMergeConfig(
-        #     output_filename="Monaspace Xenon Noto Serif CJK TC NF Bold.ttf",
-        #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Bold.otf"),
-        #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Bold.otf"),
-        #     western_scale_x=1.0,
-        #     western_scale_y=1.1,
-        #     cjk_scale=1.0,
-        #     cjk_cell_expansion=1.0,
-        #     stretch_chars=["…", "—"],
-        #     pad_configs=[
-        #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-        #         PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-        #     ],
-        #     symbol_font_paths=[
-        #         os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-        #         "FlogSymbols.ttf",
-        #     ],
-        #     adjust_baseline=True,
-        #     new_font_family="Monaspace Xenon Noto Serif CJK TC NF",
-        #     new_font_subfamily="Bold",
-        #     new_author="Zhaosheng Pan",
-        #     new_description="",
-        #     mark_as_monospace=True,
-        #     remove_hints=True,
-        # ),
-        # FontMergeConfig(
-        #     output_filename="Monaspace Xenon Noto Serif CJK TC NF Bold Italic.ttf",
-        #     western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-BoldItalic.otf"),
-        #     cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Bold.otf"),
-        #     western_scale_x=1.0,
-        #     western_scale_y=1.1,
-        #     cjk_scale=1.0,
-        #     cjk_cell_expansion=1.0,
-        #     stretch_chars=["…", "—"],
-        #     pad_configs=[
-        #         PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-        #         PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-        #     ],
-        #     symbol_font_paths=[
-        #         os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-        #         "FlogSymbols.ttf",
-        #     ],
-        #     adjust_baseline=True,
-        #     new_font_family="Monaspace Xenon Noto Serif CJK TC NF",
-        #     new_font_subfamily="Bold Italic",
-        #     new_author="Zhaosheng Pan",
-        #     new_description="",
-        #     mark_as_monospace=True,
-        #     remove_hints=True,
-        # ),
-        FontMergeConfig(
-            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Light.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Light.otf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
+        FontFamilySpec(
             new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
-            new_font_subfamily="Light",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light Italic.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-LightItalic.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
-            new_font_subfamily="Light Italic",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Regular.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Regular.otf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
-            new_font_subfamily="Regular",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Italic.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Italic.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
-            new_font_subfamily="Italic",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-Medium.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/NotoSerifCJKtc-Medium.otf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
-            new_font_subfamily="Medium",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
-        ),
-        FontMergeConfig(
-            output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium Italic.ttf",
-            western_font_path=os.path.expanduser("~/Library/Fonts/MonaspaceXenon-MediumItalic.otf"),
-            cjk_font_path=os.path.expanduser("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-            western_scale_x=1.0,
-            western_scale_y=1.1,
-            cjk_scale=1.0,
-            cjk_cell_expansion=1.0,
-            stretch_chars=["…", "—"],
-            pad_configs=[
-                PadConfig(chars=["‘", "“"], alignment=Alignment.RIGHT),
-                PadConfig(chars=["’", "”"], alignment=Alignment.LEFT),
-            ],
-            symbol_font_paths=[
-                os.path.expanduser("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
-                "FlogSymbols.ttf",
-            ],
-            adjust_baseline=True,
-            new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
-            new_font_subfamily="Medium Italic",
-            new_author="Zhaosheng Pan",
-            new_description="",
-            mark_as_monospace=True,
-            remove_hints=True,
+            **_COMMON,
+            subfamilies={
+                "Light": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Light.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/NotoSerifCJKtc-Light.otf"),
+                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light.ttf",
+                ),
+                "Light Italic": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-LightItalic.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
+                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light Italic.ttf",
+                ),
+                "Regular": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/NotoSerifCJKtc-Regular.otf"),
+                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Regular.ttf",
+                ),
+                "Italic": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Italic.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
+                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Italic.ttf",
+                ),
+                "Medium": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Medium.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/NotoSerifCJKtc-Medium.otf"),
+                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium.ttf",
+                ),
+                "Medium Italic": SubfamilySpec(
+                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-MediumItalic.otf"),
+                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
+                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium Italic.ttf",
+                ),
+            },
         ),
     ]
 
-    for config in configs:
-        print(f"Processing: {config.output_filename} ...")
-        try:
-            process_font(config)
-            print(f"Successfully saved {config.output_filename}")
-        except FileNotFoundError as err:
-            print(f"Error: {err}")
+    for family in families:
+        process_family(family)
 
 
 if __name__ == "__main__":
