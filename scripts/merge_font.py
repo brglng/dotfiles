@@ -239,6 +239,7 @@ class FontMergeConfig:
     new_description: str
     mark_as_monospace: bool
     remove_hints: bool
+    western_scale_y: float
 
 
 # ---------------------------------------------------------------------------
@@ -266,18 +267,18 @@ class _ScalingParams:
         Half-width (western / symbol) cell advance; always ``target_adv_c // 2``.
     western_scale_x : float
         X scale applied to every western glyph.
-    western_scale_y : float
-        Y scale applied to every western glyph (matches CJK height).
     scaled_cjk_adv : int
-        Natural CJK advance after UPM normalisation; used to distinguish
-        full-width from half-width CJK glyphs during merging.
+        After uniform CJK scaling the typical CJK glyph fills
+        ``target_adv_c`` exactly, so this equals ``target_adv_c``.  Kept
+        as a separate field so ``_adjust_cjk_glyph_widths`` can use it
+        as a threshold for distinguishing full-width from half-width CJK
+        glyphs.
     """
 
     upm: int
     target_adv_c: int
     target_adv_w: int
     western_scale_x: float
-    western_scale_y: float
     scaled_cjk_adv: int
 
 
@@ -304,6 +305,7 @@ class SubfamilySpec:
     western_font_path: str
     cjk_font_path: str
     output_filename: str
+    western_scale_y: float = 1.0
 
 
 @dataclass
@@ -1044,12 +1046,15 @@ def compute_scaling_params(
     western_font_path: str,
     cjk_font_path: str,
 ) -> _ScalingParams:
-    """Derive the optimal ``_ScalingParams`` from a western + CJK font pair.
+    """Derive ``_ScalingParams`` from a western + CJK font pair.
 
-    This is the same closed-form calculation used inside ``process_font``
-    when no pre-computed scaling is supplied.  Factoring it out allows
-    ``process_family`` to run it once for the reference subfamily and then
-    share the result across all other subfamilies.
+    * CJK glyphs are **not** scaled beyond UPM normalisation.
+    * Western glyphs are scaled **only horizontally** so that the reference
+      advance (capital 'A') equals exactly half the natural CJK advance.
+      The vertical scale is left at 1.0 so western glyph height is
+      preserved exactly.
+    * The output font metrics are taken from the western font after
+      x-only scaling, so the line height = the unmodified western height.
     """
     western_font = load_font(western_font_path)
     cjk_font = load_font(cjk_font_path)
@@ -1062,14 +1067,8 @@ def compute_scaling_params(
     W = float(get_typical_advance(western_font, ord("A")))
     C = get_typical_advance(cjk_font, ord("\u4e2d")) * cjk_upm_scale
 
-    w_os2 = western_font["OS/2"]
-    c_os2 = cjk_font["OS/2"]
-    H_w = float(w_os2.sTypoAscender - w_os2.sTypoDescender)
-    H_c = (c_os2.sTypoAscender - c_os2.sTypoDescender) * cjk_upm_scale
-
-    A = H_c * 2.0 * W / H_w
-    T_opt = (A * A + C * C) / (A + C)
-    target_adv_c = int(round(max(C, T_opt)))
+    # CJK cell = natural CJK advance; western cell = half of that.
+    target_adv_c = int(round(C))
     target_adv_w = target_adv_c // 2
 
     params = _ScalingParams(
@@ -1077,8 +1076,7 @@ def compute_scaling_params(
         target_adv_c=target_adv_c,
         target_adv_w=target_adv_w,
         western_scale_x=target_adv_w / W,
-        western_scale_y=H_c / H_w,
-        scaled_cjk_adv=int(round(C)),
+        scaled_cjk_adv=target_adv_c,
     )
 
     western_font.close()
@@ -1112,31 +1110,24 @@ def process_font(config: FontMergeConfig, scaling: _ScalingParams | None = None)
     western_font = load_font(config.western_font_path)
     cjk_font = load_font(config.cjk_font_path)
 
-    cjk_upm = cjk_font["head"].unitsPerEm
-
     if scaling is None:
         scaling = compute_scaling_params(
             config.western_font_path, config.cjk_font_path
         )
 
     upm = scaling.upm
-    # CJK UPM scale uses the shared UPM so that a different CJK font for an
-    # italic subfamily is still placed in the same coordinate space.
+    # CJK is only UPM-normalised — no extra scaling applied.
+    cjk_upm = cjk_font["head"].unitsPerEm
     cjk_coord_scale = upm / float(cjk_upm)
 
     target_adv_c = scaling.target_adv_c
     target_adv_w = scaling.target_adv_w
     scaled_cjk_adv = scaling.scaled_cjk_adv
 
-    print(
-        f"  cell: target_adv_c={target_adv_c}, target_adv_w={target_adv_w}\n"
-        f"  western scale_x={scaling.western_scale_x:.4f}, scale_y={scaling.western_scale_y:.4f} "
-        f"(non-uniformity={(scaling.western_scale_y / scaling.western_scale_x - 1) * 100:.1f}%)\n"
-        f"  CJK blank per side={(target_adv_c - scaled_cjk_adv) // 2} units"
-    )
-
-    # Apply the (non-uniform) geometry scale to every western glyph.
-    scale_font(western_font, scaling.western_scale_x, scaling.western_scale_y)
+    # Apply western scaling: x shrinks to fill the halfwidth cell;
+    # y is stretched by config.western_scale_y (relative to scale_x),
+    # computed once from the reference subfamily and shared across all others.
+    scale_font(western_font, scaling.western_scale_x, scaling.western_scale_x * config.western_scale_y)
     western_font["head"].unitsPerEm = upm
 
     # Force every western glyph's advance to the target halfwidth value.
@@ -1233,13 +1224,9 @@ def process_family(family: FontFamilySpec) -> None:
         f"Computing scaling from '{ref_name}' reference ..."
     )
     scaling = compute_scaling_params(ref.western_font_path, ref.cjk_font_path)
-    print(
-        f"  upm={scaling.upm}, target_adv_c={scaling.target_adv_c}, "
-        f"target_adv_w={scaling.target_adv_w}\n"
-        f"  scale_x={scaling.western_scale_x:.4f}, "
-        f"scale_y={scaling.western_scale_y:.4f} "
-        f"(non-uniformity={(scaling.western_scale_y / scaling.western_scale_x - 1) * 100:.1f}%)"
-    )
+    # western_scale_y is taken from the reference subfamily and applied to
+    # every subfamily so all share the same target height.
+    western_scale_y = ref.western_scale_y
 
     for subfamily_name, spec in family.subfamilies.items():
         config = FontMergeConfig(
@@ -1256,6 +1243,7 @@ def process_family(family: FontFamilySpec) -> None:
             new_description=family.new_description,
             mark_as_monospace=family.mark_as_monospace,
             remove_hints=family.remove_hints,
+            western_scale_y=western_scale_y,
         )
         print(f"  Processing: {spec.output_filename} ...")
         try:
@@ -1310,6 +1298,7 @@ def main():
                     western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
                     cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
                     output_filename="Monaspace Argon LXGW Bright TC NF Regular.ttf",
+                    western_scale_y=1.1,
                 ),
                 "Italic": SubfamilySpec(
                     western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
@@ -1346,6 +1335,7 @@ def main():
                     western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
                     cjk_font_path=_L("~/Library/Fonts/NotoSerifCJKtc-Regular.otf"),
                     output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Regular.ttf",
+                    western_scale_y=1.1,
                 ),
                 "Italic": SubfamilySpec(
                     western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Italic.otf"),
