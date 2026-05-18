@@ -20,7 +20,7 @@ return {
         provider_selector = function(bufnr, filetype, buftype)
             return { 'treesitter', 'indent' }
         end,
-        disabled = { "neo-tree", "NeogitStatus", "toggleterm" }
+        disabled = { "neo-tree*", "Neogit*", "toggleterm" }
     },
     config = function (_, opts)
         require('ufo').setup(opts)
@@ -29,7 +29,7 @@ return {
         vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
 
         vim.api.nvim_create_autocmd('FileType', {
-            pattern = { 'neo-tree' },
+            pattern = { 'neo-tree*', 'Neogit*', 'toggleterm' },
             callback = function()
                 require('ufo').detach()
                 vim.opt_local.foldenable = false
