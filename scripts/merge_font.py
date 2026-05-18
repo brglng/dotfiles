@@ -1298,7 +1298,7 @@ def main():
                     western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
                     cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
                     output_filename="Monaspace Argon LXGW Bright TC NF Regular.ttf",
-                    western_scale_y=1.1,
+                    western_scale_y=1.1111,
                 ),
                 "Italic": SubfamilySpec(
                     western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
@@ -1335,7 +1335,7 @@ def main():
                     western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
                     cjk_font_path=_L("~/Library/Fonts/NotoSerifCJKtc-Regular.otf"),
                     output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Regular.ttf",
-                    western_scale_y=1.1,
+                    western_scale_y=1.1111,
                 ),
                 "Italic": SubfamilySpec(
                     western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Italic.otf"),

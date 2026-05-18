@@ -99,6 +99,7 @@ $env.NU_PLUGIN_DIRS = [
 
 if (uname | get operating-system) == 'Darwin' {
     $env.PATH = (/usr/libexec/path_helper | parse 'PATH="{path}";{_}').path
+    $env.ANDROID_NDK_HOME = '/opt/homebrew/share/android-ndk'
 } else if (uname | get operating-system) == 'Linux' {
     $env.PATH = (^/bin/bash -l -c 'echo $PATH')
 }

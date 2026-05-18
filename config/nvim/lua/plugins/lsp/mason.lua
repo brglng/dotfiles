@@ -59,7 +59,7 @@ return {
                 "lemminx",
                 -- "lua-language-server",
                 "marksman",
-                "matlab-language-server",
+                -- "matlab-language-server",
                 "nickel-lang-lsp",
                 "perlnavigator",
                 "powershell-editor-services",

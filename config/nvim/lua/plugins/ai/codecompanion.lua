@@ -21,6 +21,24 @@ return {
     opts = {
         adapters = {
             http = {
+                openrouter = function()
+                    return require("codecompanion.adapters").extend("openai_compatible", {
+                        env = {
+                            url = "https://openrouter.ai/api",
+                            api_key = "OPENROUTER_API_KEY",
+                            chat_url = "/v1/chat/completions",
+                        },
+                        schema = {
+                            model = {
+                                default = "deepseek/deepseek-v4-pro",
+                                choices = {
+                                    ["deepseek/deepseek-v4-pro"] = {},
+                                    ["deepseek/deepseek-v4-flash"] = {},
+                                },
+                            },
+                        },
+                    })
+                end,
                 opts = {
                     allow_insecure = true,
                     proxy = "socks5://127.0.0.1:1086",
@@ -31,8 +49,10 @@ return {
         interactions = {
             chat = {
                 adapter = {
-                    name = "copilot",
-                    model = "claude-sonnet-4.6",
+                    -- name = "copilot",
+                    -- model = "claude-sonnet-4.6",
+                    name = "openrouter",
+                    model = "deepseek/deepseek-v4-pro",
                 },
                 keymaps = {
                     -- send = {
@@ -64,14 +84,18 @@ The user is working on a %s machine. Please respond with system specific command
             },
             inline = {
                 adapter = {
-                    name = "copilot",
-                    model = "claude-sonnet-4.6",
+                    -- name = "copilot",
+                    -- model = "claude-sonnet-4.6",
+                    name = "openrouter",
+                    model = "deepseek/deepseek-v4-pro",
                 },
             },
             cmd = {
                 adapter = {
-                    name = "copilot",
-                    model = "claude-sonnet-4.6",
+                    -- name = "copilot",
+                    -- model = "claude-sonnet-4.6",
+                    name = "openrouter",
+                    model = "deepseek/deepseek-v4-pro",
                 },
             },
         },
