@@ -38,10 +38,10 @@ CJK_UNICODE_RANGES = [
 # Pre-built collections for O(1) membership tests throughout the pipeline.
 CJK_CODEPOINT_SET: set[int] = set()
 CJK_CODEPOINT_LIST: list[int] = []
-for _start, _end in CJK_UNICODE_RANGES:
-    _block = range(_start, _end + 1)
-    CJK_CODEPOINT_SET.update(_block)
-    CJK_CODEPOINT_LIST.extend(_block)
+for start, end in CJK_UNICODE_RANGES:
+    block = range(start, end + 1)
+    CJK_CODEPOINT_SET.update(block)
+    CJK_CODEPOINT_LIST.extend(block)
 
 
 # ---------------------------------------------------------------------------
@@ -150,7 +150,6 @@ class Alignment(Enum):
             return available_space // 2
         if self is Alignment.RIGHT:
             return available_space
-        return 0
 
 
 @dataclass
@@ -173,40 +172,12 @@ class PadConfig:
 class FontMergeConfig:
     """Full configuration for a single font merging task.
 
-    Scaling is computed **automatically** — no user-supplied scale factors are
-    needed:
-
-    * Let ``C`` = natural CJK advance after UPM normalisation,
-      ``H_c`` = CJK typographic height (scaled), ``W`` = western reference
-      advance (capital 'A'), ``H_w`` = western typographic height.
-    * ``A = H_c · 2W / H_w`` is the ``target_adv_c`` that would give the
-      western glyph a perfectly uniform scale (scale_y / scale_x = 1).
-    * The optimal cell width balances two objectives — western
-      aspect-ratio distortion ``(A/T − 1)²`` and relative CJK blank space
-      ``((T−C)/T)²`` — and is given by the closed-form minimiser
-      ``T* = (A² + C²) / (A + C)``, clamped to ``≥ C`` so CJK ink always
-      fits in the cell.
-    * ``target_adv_w = T* // 2``.
-    * Western ``scale_x = target_adv_w / W`` (fills halfwidth cell);  
-      ``scale_y = H_c / H_w`` (forces western height to equal CJK height,
-      making the non-uniformity as small as the two fonts allow).
-    * CJK glyphs are scaled only by the UPM-normalisation ratio, then
-      centred inside ``target_adv_c`` with minimal blank padding.
-
     Attributes
     ----------
-    output_filename : str
-        Output font file path.
-    western_font_path : str
-        Path to the base western font.
-    cjk_font_path : str
-        Path to the CJK font.
     stretch_chars : list[str | int | tuple[int, int]]
         Characters to stretch horizontally to double width.
     pad_configs : list[PadConfig]
         Per-character padding rules.
-    symbol_font_paths : list[str]
-        Paths to symbol fonts to overlay.
     adjust_baseline : bool
         Whether to auto-align CJK baseline to English baseline.
     new_font_family : str
@@ -219,27 +190,30 @@ class FontMergeConfig:
         Description written into metadata.
     mark_as_monospace : bool
         Whether to flag the output font as monospaced.
+    cjk_scale : float
+        Uniform scale applied to CJK glyphs after UPM normalisation.
+    western_scale_x : float
+        Additional X-axis scale applied to western glyphs after the uniform
+        'A'-advance normalisation.  May be larger or smaller than 1.0.
+    western_scale_y : float
+        Additional Y-axis scale applied to western glyphs after the uniform
+        'A'-advance normalisation.  May be larger or smaller than 1.0.
     remove_hints : bool
-        When ``True``, all hinting data is stripped from the merged font before
-        it is saved.  This removes the font-level programs (``fpgm``, ``prep``,
-        ``cvt ``), display-optimisation tables (``hdmx``, ``LTSH``, ``VDMX``),
-        and every per-glyph instruction sequence stored in the ``glyf`` table.
+        Whether to strip all hinting data from the output font.
     """
 
-    output_filename: str
-    western_font_path: str
-    cjk_font_path: str
     stretch_chars: list[str | int | tuple[int, int]]
     pad_configs: list[PadConfig]
-    symbol_font_paths: list[str]
     adjust_baseline: bool
     new_font_family: str
     new_font_subfamily: str
     new_author: str
     new_description: str
     mark_as_monospace: bool
-    remove_hints: bool
+    cjk_scale: float
+    western_scale_x: float
     western_scale_y: float
+    remove_hints: bool
 
 
 # ---------------------------------------------------------------------------
@@ -248,38 +222,28 @@ class FontMergeConfig:
 
 
 @dataclass
-class _ScalingParams:
-    """Pre-computed scaling parameters derived from a reference subfamily.
+class ScalingParams:
+    """Pre-computed scaling parameters shared across every subfamily.
 
-    Sharing one ``_ScalingParams`` instance across every subfamily in a
-    font family guarantees that all weights and styles have identical cell
-    sizes and western proportions, even when different CJK fonts are used
-    for upright vs italic variants.
+    Computed from the union of **all** subfamily font files so that cell
+    geometry is consistent across weights and styles.
 
     Attributes
     ----------
     upm : int
-        The unified UPM (= max of western and CJK UPMs) used as the
-        common coordinate space for the whole family.
+        Unified UPM — maximum found across every western and CJK font in
+        the family.
     target_adv_c : int
         Full-width (CJK) cell advance in unified UPM units.
+        Always ``2 * target_adv_w``.
     target_adv_w : int
-        Half-width (western / symbol) cell advance; always ``target_adv_c // 2``.
-    western_scale_x : float
-        X scale applied to every western glyph.
-    scaled_cjk_adv : int
-        After uniform CJK scaling the typical CJK glyph fills
-        ``target_adv_c`` exactly, so this equals ``target_adv_c``.  Kept
-        as a separate field so ``_adjust_cjk_glyph_widths`` can use it
-        as a threshold for distinguishing full-width from half-width CJK
-        glyphs.
+        Half-width (western / symbol) cell advance — the maximum
+        UPM-normalised advance of ``'A'`` across all western subfamilies.
     """
 
     upm: int
     target_adv_c: int
     target_adv_w: int
-    western_scale_x: float
-    scaled_cjk_adv: int
 
 
 # ---------------------------------------------------------------------------
@@ -289,22 +253,36 @@ class _ScalingParams:
 
 @dataclass
 class SubfamilySpec:
-    """Font file paths for a single subfamily.
+    """Font file paths and per-subfamily settings.
 
     Attributes
     ----------
+    name : str
+        Subfamily name (e.g. ``"Regular"``, ``"Bold Italic"``) used directly
+        as ``new_font_subfamily`` in the output metadata and to derive the
+        output filename.
     western_font_path : str
         Path to the western (Latin) font for this subfamily.
     cjk_font_path : str
         Path to the CJK font for this subfamily.  Italic subfamilies may
         point to a different typeface than the upright ones.
-    output_filename : str
-        Destination path for the merged output font.
+    cjk_scale : float
+        Uniform scale applied to CJK glyphs after UPM normalisation.
+    western_scale_x : float
+        Additional X-axis scale applied to western glyphs after the uniform
+        'A'-advance normalisation.  May be larger or smaller than 1.0.
+        Defaults to 1.0 (no extra horizontal scaling).
+    western_scale_y : float
+        Additional Y-axis scale applied to western glyphs after the uniform
+        'A'-advance normalisation.  May be larger or smaller than 1.0.
+        Defaults to 1.0 (no extra vertical scaling).
     """
 
+    name: str
     western_font_path: str
     cjk_font_path: str
-    output_filename: str
+    cjk_scale: float = 1.0
+    western_scale_x: float = 1.0
     western_scale_y: float = 1.0
 
 
@@ -314,9 +292,9 @@ class FontFamilySpec:
 
     Common settings (metadata, glyph adjustments, symbol overlays) are
     declared once and shared across all subfamilies.  Scaling is computed
-    from the ``scaling_reference`` subfamily (default ``"Regular"``) and
-    then reused verbatim for every other subfamily, ensuring consistent
-    cell geometry even when italic subfamilies use a different CJK font.
+    from all pre-loaded subfamily fonts so that cell geometry is consistent
+    across weights and styles, even when italic subfamilies use a different
+    CJK font.
 
     Attributes
     ----------
@@ -328,8 +306,6 @@ class FontFamilySpec:
         Description written into metadata.
     mark_as_monospace : bool
         Whether to flag the output fonts as monospaced.
-    remove_hints : bool
-        Strip hinting data from the merged fonts.
     adjust_baseline : bool
         Auto-align CJK baseline to the western baseline.
     stretch_chars : list[str | int | tuple[int, int]]
@@ -338,25 +314,25 @@ class FontFamilySpec:
         Per-character padding rules.
     symbol_font_paths : list[str]
         Paths to symbol fonts to overlay.
-    subfamilies : dict[str, SubfamilySpec]
-        Ordered map of subfamily name → font paths.  The key is used
-        directly as ``new_font_subfamily`` in the output metadata.
-    scaling_reference : str
-        Which subfamily key to use when computing the shared
-        ``_ScalingParams``.  Defaults to ``"Regular"``.
+    remove_hints : bool
+        Strip all hinting data (``fpgm``, ``prep``, ``cvt ``, per-glyph
+        programs, and hint-dependent metric tables) from the output fonts.
+    subfamilies : list[SubfamilySpec]
+        Ordered list of per-subfamily font paths and settings.  Each entry's
+        ``name`` field is used as ``new_font_subfamily`` in the output
+        metadata and to derive the output filename.
     """
 
     new_font_family: str
     new_author: str
     new_description: str
     mark_as_monospace: bool
-    remove_hints: bool
     adjust_baseline: bool
     stretch_chars: list[str | int | tuple[int, int]]
     pad_configs: list[PadConfig]
     symbol_font_paths: list[str]
-    subfamilies: dict[str, SubfamilySpec]
-    scaling_reference: str = "Regular"
+    remove_hints: bool
+    subfamilies: list[SubfamilySpec]
 
 
 # ---------------------------------------------------------------------------
@@ -409,6 +385,20 @@ class GlyphTransformer:
                 (x + shift_x, y) for x, y in glyph.coordinates
             ])
 
+    @staticmethod
+    def shift_vertical(glyph: Any, shift_y: int) -> None:
+        """Translate all coordinates by *shift_y* on the Y axis."""
+        if shift_y == 0:
+            return
+        if glyph.isComposite():
+            for comp in glyph.components:
+                if hasattr(comp, "y") and comp.y is not None:
+                    comp.y += shift_y
+        elif hasattr(glyph, "coordinates"):
+            glyph.coordinates = GlyphCoordinates([
+                (x, y + shift_y) for x, y in glyph.coordinates
+            ])
+
 
 # ---------------------------------------------------------------------------
 # Per-glyph metric helpers
@@ -416,7 +406,7 @@ class GlyphTransformer:
 
 
 @dataclass
-class _FontTables:
+class FontTables:
     """Thin container that bundles the mutable tables edited during merging.
 
     Avoids threading ``glyf``, ``hmtx``, and the optional ``vmtx`` through
@@ -428,7 +418,7 @@ class _FontTables:
     vmtx: Any  # None when the font has no vmtx table
 
     @classmethod
-    def from_font(cls, font: TTFont) -> "_FontTables":
+    def from_font(cls, font: TTFont) -> "FontTables":
         return cls(
             glyf=font["glyf"],
             hmtx=font["hmtx"],
@@ -436,8 +426,8 @@ class _FontTables:
         )
 
 
-def _scale_glyph_metrics(
-    tables: _FontTables,
+def scale_glyph_metrics(
+    tables: FontTables,
     glyph_name: str,
     scale_x: float,
     scale_y: float,
@@ -457,8 +447,8 @@ def _scale_glyph_metrics(
         )
 
 
-def _stretch_glyph(
-    tables: _FontTables,
+def stretch_glyph(
+    tables: FontTables,
     glyph_name: str,
     target_advance: int,
 ) -> None:
@@ -476,8 +466,8 @@ def _stretch_glyph(
     tables.hmtx.metrics[glyph_name] = (target_advance, int(round(lsb * scale_x)))
 
 
-def _shift_glyph(
-    tables: _FontTables,
+def shift_glyph(
+    tables: FontTables,
     glyph_name: str,
     shift_x: int,
     target_advance: int,
@@ -491,9 +481,9 @@ def _shift_glyph(
     tables.hmtx.metrics[glyph_name] = (target_advance, lsb + shift_x)
 
 
-def _copy_glyph_into(
-    src_tables: _FontTables,
-    dst_tables: _FontTables,
+def copy_glyph_into(
+    src_tables: FontTables,
+    dst_tables: FontTables,
     src_name: str,
     dst_name: str,
     dst_font: TTFont,
@@ -510,16 +500,14 @@ def _copy_glyph_into(
     """
     if src_name in src_tables.glyf:
         copied = copy.deepcopy(src_tables.glyf[src_name])
+        # Drop instructions: they reference the source font's fpgm/prep/cvt
+        # tables, which are not present in the destination font.  Leaving
+        # them in would produce invalid bytecode at render time.
+        if hasattr(copied, "program"):
+            copied.program = TTProgram()
         GlyphTransformer.scale(copied, scale_x, scale_y)
-        if apply_y_offset and y_offset != 0:
-            if copied.isComposite():
-                for comp in copied.components:
-                    if hasattr(comp, "y") and comp.y is not None:
-                        comp.y += y_offset
-            elif hasattr(copied, "coordinates"):
-                copied.coordinates = GlyphCoordinates([
-                    (x, y + y_offset) for x, y in copied.coordinates
-                ])
+        if apply_y_offset:
+            GlyphTransformer.shift_vertical(copied, y_offset)
         dst_tables.glyf[dst_name] = copied
         if dst_name not in dst_font.glyphOrder:
             dst_font.glyphOrder.append(dst_name)
@@ -559,15 +547,6 @@ def parse_codepoints(chars: list[str | int | tuple[int, int]]) -> set[int]:
         elif isinstance(item, tuple) and len(item) == 2:
             codepoints.update(range(item[0], item[1] + 1))
     return codepoints
-
-
-def build_alignment_map(pad_configs: list[PadConfig]) -> dict[int, Alignment]:
-    """Build a codepoint \u2192 Alignment lookup from a list of PadConfigs."""
-    mapping: dict[int, Alignment] = {}
-    for cfg in pad_configs:
-        for cp in parse_codepoints(cfg.chars):
-            mapping[cp] = cfg.alignment
-    return mapping
 
 
 # ---------------------------------------------------------------------------
@@ -626,6 +605,39 @@ def ensure_cmap_format_12(font: TTFont, cmap_mapping: dict[int, str]) -> None:
 # ---------------------------------------------------------------------------
 
 
+def scale_gpos_values(table: Any, sx, sy) -> None:
+    """Recursively scale every ``ValueRecord``-style positioning value in a
+    GPOS subtable tree.  Anchors and ValueRecords are the only places
+    GPOS stores font-unit coordinates, so we only need to touch those.
+    """
+    x_attrs = ("XPlacement", "XAdvance", "XCoordinate")
+    y_attrs = ("YPlacement", "YAdvance", "YCoordinate")
+    seen: set[int] = set()
+
+    def walk(obj: Any, depth: int = 0) -> None:
+        if depth > 20 or id(obj) in seen:
+            return
+        seen.add(id(obj))
+        for attr in x_attrs:
+            if hasattr(obj, attr):
+                v = getattr(obj, attr)
+                if isinstance(v, int) and v:
+                    setattr(obj, attr, sx(v))
+        for attr in y_attrs:
+            if hasattr(obj, attr):
+                v = getattr(obj, attr)
+                if isinstance(v, int) and v:
+                    setattr(obj, attr, sy(v))
+        if isinstance(obj, (list, tuple)):
+            for item in obj:
+                walk(item, depth + 1)
+        elif hasattr(obj, "__dict__"):
+            for item in obj.__dict__.values():
+                walk(item, depth + 1)
+
+    walk(table)
+
+
 def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
     """Scale every glyph and its metrics by (*scale_x*, *scale_y*).
 
@@ -634,19 +646,19 @@ def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
     metrics (vertical advance, TSB) and all global OS/2 / hhea / vhea
     fields follow *scale_y*.
     """
-    tables = _FontTables.from_font(font)
+    tables = FontTables.from_font(font)
 
     for glyph_name in tables.glyf.keys():
         GlyphTransformer.scale(tables.glyf[glyph_name], scale_x, scale_y)
-        _scale_glyph_metrics(tables, glyph_name, scale_x, scale_y)
+        scale_glyph_metrics(tables, glyph_name, scale_x, scale_y)
 
     if scale_x == 1.0 and scale_y == 1.0:
         return
 
-    def _sx(value: int) -> int:
+    def sx(value: int) -> int:
         return int(round(value * scale_x))
 
-    def _sy(value: int) -> int:
+    def sy(value: int) -> int:
         return int(round(value * scale_y))
 
     os2 = font["OS/2"]
@@ -660,7 +672,7 @@ def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
         "ySuperscriptYOffset",
         "yStrikeoutSize", "yStrikeoutPosition",
     ):
-        setattr(os2, attr, _sy(getattr(os2, attr)))
+        setattr(os2, attr, sy(getattr(os2, attr)))
     for attr in (
         "xAvgCharWidth",
         "ySubscriptXSize",
@@ -668,43 +680,136 @@ def scale_font(font: TTFont, scale_x: float, scale_y: float) -> None:
         "ySuperscriptXSize",
         "ySuperscriptXOffset",
     ):
-        setattr(os2, attr, _sx(getattr(os2, attr)))
+        setattr(os2, attr, sx(getattr(os2, attr)))
 
     hhea = font["hhea"]
-    for attr in ("ascent", "descent", "lineGap"):
-        setattr(hhea, attr, _sy(getattr(hhea, attr)))
-    for attr in ("caretSlopeRise",):
-        setattr(hhea, attr, _sy(getattr(hhea, attr)))
+    for attr in ("ascent", "descent", "lineGap", "caretSlopeRise"):
+        setattr(hhea, attr, sy(getattr(hhea, attr)))
     for attr in ("caretSlopeRun", "caretOffset"):
-        setattr(hhea, attr, _sx(getattr(hhea, attr)))
+        setattr(hhea, attr, sx(getattr(hhea, attr)))
+
+    # post: underline metrics are expressed in font units, so they must
+    # follow the vertical scale.  Without this, after a non-trivial UPM
+    # change the underline ends up at the wrong depth and the wrong
+    # thickness, making the font look subtly "lighter" / off-balance.
+    post = font["post"]
+    for attr in ("underlinePosition", "underlineThickness"):
+        if hasattr(post, attr) and getattr(post, attr) is not None:
+            setattr(post, attr, sy(getattr(post, attr)))
+
+    # GPOS: scale every numeric placement / advance adjustment.  Most
+    # monospace fonts have an empty GPOS, but kerning-aware fonts
+    # (and ligature-anchor fonts) will look misaligned after a UPM
+    # change if we leave these untouched.
+    if "GPOS" in font:
+        scale_gpos_values(font["GPOS"].table, sx, sy)
+
+    # Keep the head bbox in sync; fontTools recomputes it on save when
+    # glyphs change but updating it here keeps the in-memory font
+    # self-consistent for any intermediate inspection / further scaling.
+    head = font["head"]
+    head.xMin = sx(head.xMin)
+    head.xMax = sx(head.xMax)
+    head.yMin = sy(head.yMin)
+    head.yMax = sy(head.yMax)
 
     if "vhea" in font:
         vhea = font["vhea"]
-        for attr in ("ascent", "descent", "lineGap"):
-            setattr(vhea, attr, _sy(getattr(vhea, attr)))
-        for attr in ("caretSlopeRise",):
-            setattr(vhea, attr, _sy(getattr(vhea, attr)))
+        for attr in ("ascent", "descent", "lineGap", "caretSlopeRise"):
+            setattr(vhea, attr, sy(getattr(vhea, attr)))
         for attr in ("caretSlopeRun", "caretOffset"):
-            setattr(vhea, attr, _sx(getattr(vhea, attr)))
+            setattr(vhea, attr, sx(getattr(vhea, attr)))
+
+    # Scale the Control Value Table (cvt) so TrueType hint instructions
+    # continue to round to the correct positions after the coordinate
+    # rescaling.  Most CVT entries are vertical measurements (stem widths,
+    # reference Y positions), so we scale by scale_y.  When scale_x ==
+    # scale_y (uniform) this is unambiguous; otherwise an averaged scale
+    # is the best generic approximation.
+    if "cvt " in font:
+        cvt_scale = scale_y if scale_x == scale_y else (scale_x + scale_y) / 2.0
+        cvt = font["cvt "]
+        cvt.values = type(cvt.values)(
+            cvt.values.typecode,
+            (int(round(v * cvt_scale)) for v in cvt.values),
+        )
 
 
-def normalize_font_advances(font: TTFont, target_advance: int) -> None:
-    """Set every glyph's advance width to *target_advance* without moving the ink."""
-    tables = _FontTables.from_font(font)
-
-    for glyph_name in tables.glyf.keys():
-        if glyph_name not in tables.hmtx.metrics:
-            continue
-        adv, lsb = tables.hmtx.metrics[glyph_name]
-        if adv != target_advance:
-            tables.hmtx.metrics[glyph_name] = (target_advance, lsb)
+# ---------------------------------------------------------------------------
+# Hint removal
+# ---------------------------------------------------------------------------
 
 
+def remove_hinting(font: TTFont) -> None:
+    """Strip all TrueType hinting data from *font* in place.
+
+    Removes the three global hint tables (``fpgm``, ``prep``, ``cvt ``),
+    clears per-glyph bytecode programs, drops the hint-dependent metric
+    tables (``hdmx``, ``LTSH``, ``VDMX``), zeroes the hint-capacity fields
+    in ``maxp``, and clears the hint-related bits in ``head.flags``.
+    """
+    # Global hint tables.
+    for tag in ("fpgm", "prep", "cvt "):
+        if tag in font:
+            del font[tag]
+
+    # Per-glyph bytecode programs.
+    if "glyf" in font:
+        for glyph in font["glyf"].glyphs.values():
+            if hasattr(glyph, "program"):
+                glyph.program = TTProgram()
+
+    # Hint-dependent metric tables (values change with hinting on/off).
+    for tag in ("hdmx", "LTSH", "VDMX"):
+        if tag in font:
+            del font[tag]
+
+    # Zero all hint-capacity fields in maxp so the font declares no
+    # interpreter resources are needed.
+    maxp = font["maxp"]
+    for attr in (
+        "maxZones",
+        "maxTwilightPoints",
+        "maxStorage",
+        "maxFunctionDefs",
+        "maxInstructionDefs",
+        "maxStackElements",
+        "maxSizeOfInstructions",
+    ):
+        if hasattr(maxp, attr):
+            setattr(maxp, attr, 0)
+    # maxZones must be at least 1 (zone 0 always exists).
+    if hasattr(maxp, "maxZones"):
+        maxp.maxZones = 1
+
+    # Clear head flag bits that only apply when hints are present:
+    #   bit 3 — force ppem to integer values
+    #   bit 4 — instructions may change advance widths
+    font["head"].flags &= ~((1 << 3) | (1 << 4))
 
 
 # ---------------------------------------------------------------------------
 # Single-glyph width adjustments (pad / stretch)
 # ---------------------------------------------------------------------------
+
+
+def resolve_glyph(
+    font: TTFont,
+    codepoint: int,
+) -> tuple[str, FontTables] | None:
+    """Look up *codepoint* in *font* and return ``(glyph_name, tables)``.
+
+    Returns ``None`` when the codepoint is absent from the cmap, the glyph
+    has no outline, or its hmtx entry is missing.
+    """
+    cmap = font.getBestCmap()
+    if codepoint not in cmap:
+        return None
+    glyph_name = cmap[codepoint]
+    tables = FontTables.from_font(font)
+    if glyph_name not in tables.glyf or glyph_name not in tables.hmtx.metrics:
+        return None
+    return glyph_name, tables
 
 
 def pad_glyph_width(
@@ -714,17 +819,14 @@ def pad_glyph_width(
     alignment: Alignment,
 ) -> None:
     """Widen a glyph's advance width by adding whitespace on one or both sides."""
-    cmap = font.getBestCmap()
-    if codepoint not in cmap:
+    resolved = resolve_glyph(font, codepoint)
+    if resolved is None:
         return
-    glyph_name = cmap[codepoint]
-    tables = _FontTables.from_font(font)
-    if glyph_name not in tables.glyf or glyph_name not in tables.hmtx.metrics:
-        return
+    glyph_name, tables = resolved
     adv, _ = tables.hmtx.metrics[glyph_name]
     if adv >= target_advance:
         return
-    _shift_glyph(tables, glyph_name, alignment.compute_shift(target_advance - adv), target_advance)
+    shift_glyph(tables, glyph_name, alignment.compute_shift(target_advance - adv), target_advance)
 
 
 def stretch_glyph_width(
@@ -733,14 +835,11 @@ def stretch_glyph_width(
     target_advance: int,
 ) -> None:
     """Horizontally stretch a glyph's geometry to fit *target_advance*."""
-    cmap = font.getBestCmap()
-    if codepoint not in cmap:
+    resolved = resolve_glyph(font, codepoint)
+    if resolved is None:
         return
-    glyph_name = cmap[codepoint]
-    tables = _FontTables.from_font(font)
-    if glyph_name not in tables.glyf or glyph_name not in tables.hmtx.metrics:
-        return
-    _stretch_glyph(tables, glyph_name, target_advance)
+    glyph_name, tables = resolved
+    stretch_glyph(tables, glyph_name, target_advance)
 
 
 # ---------------------------------------------------------------------------
@@ -748,7 +847,7 @@ def stretch_glyph_width(
 # ---------------------------------------------------------------------------
 
 
-def _copy_cjk_glyphs_to_base(
+def copy_cjk_glyphs_to_base(
     base_font: TTFont,
     cjk_font: TTFont,
     cjk_upm_scale: float,
@@ -761,8 +860,8 @@ def _copy_cjk_glyphs_to_base(
     """
     base_cmap = base_font.getBestCmap()
     cjk_cmap = cjk_font.getBestCmap()
-    base_tables = _FontTables.from_font(base_font)
-    cjk_tables = _FontTables.from_font(cjk_font)
+    base_tables = FontTables.from_font(base_font)
+    cjk_tables = FontTables.from_font(cjk_font)
 
     for codepoint in CJK_CODEPOINT_LIST:
         if codepoint not in cjk_cmap:
@@ -777,7 +876,7 @@ def _copy_cjk_glyphs_to_base(
                 continue
 
             is_top_level = dep_name == cjk_glyph_name
-            _copy_glyph_into(
+            copy_glyph_into(
                 cjk_tables, base_tables, dep_name, new_dep_name, base_font,
                 scale_x=cjk_upm_scale, scale_y=cjk_upm_scale,
                 y_offset=y_offset, apply_y_offset=is_top_level,
@@ -793,20 +892,24 @@ def _copy_cjk_glyphs_to_base(
         base_cmap[codepoint] = f"cjk_{cjk_glyph_name}"
 
 
-def _adjust_cjk_glyph_widths(
+def adjust_cjk_glyph_widths(
     base_font: TTFont,
     cjk_font: TTFont,
     target_adv_w: int,
     target_adv_c: int,
     cjk_upm_scale: float,
-    typical_scaled_cjk_adv: float,
-    stretch_set: set[int],
-    alignment_map: dict[int, Alignment],
+    cjk_scale: float,
 ) -> None:
-    """Phase 2 \u2014 Walk the CJK cmap and stretch or pad each copied glyph to its
-    target advance width (fullwidth or halfwidth)."""
+    """Phase 2 — Walk the CJK cmap and centre each copied glyph within its
+    target advance width (fullwidth or halfwidth).
+
+    When *cjk_scale* differs from 1.0 the glyph outline is scaled uniformly by
+    that factor and then centred horizontally within the target advance cell.
+    CJK codepoints must not appear in the stretch or pad configuration;
+    any such adjustments must be applied to the merged font separately.
+    """
     cjk_cmap = cjk_font.getBestCmap()
-    base_tables = _FontTables.from_font(base_font)
+    base_tables = FontTables.from_font(base_font)
     cjk_hmtx = cjk_font["hmtx"]
     processed: set[str] = set()
 
@@ -823,27 +926,25 @@ def _adjust_cjk_glyph_widths(
         original_adv = cjk_hmtx.metrics[cjk_glyph_name][0]
         scaled_adv = int(round(original_adv * cjk_upm_scale))
 
-        if scaled_adv > typical_scaled_cjk_adv * 0.75:
+        if scaled_adv > target_adv_c * 0.75:
             target_adv = target_adv_c
         else:
             target_adv = target_adv_w
 
-        # Apply stretch or pad, then center unless an explicit alignment exists
-        alignment = alignment_map.get(codepoint)
-        if codepoint in stretch_set and scaled_adv > 0:
-            _stretch_glyph(base_tables, new_glyph_name, target_adv)
-        elif alignment is not None:
-            _shift_glyph(
-                base_tables, new_glyph_name,
-                alignment.compute_shift(target_adv - scaled_adv),
-                target_adv,
-            )
-        else:
-            # No explicit alignment — just set the advance without moving ink.
-            base_tables.hmtx.metrics[new_glyph_name] = (
-                target_adv,
-                base_tables.hmtx.metrics[new_glyph_name][1],
-            )
+        # Centre the glyph within its target cell, optionally pre-scaling by
+        # cjk_scale.  When the UPM-normalised advance is larger than target_adv
+        # the glyph is centred with blanks added on both sides; when smaller it
+        # is simply centred.
+        if cjk_scale != 1.0:
+            GlyphTransformer.scale(base_tables.glyf[new_glyph_name], cjk_scale, cjk_scale)
+        effective_adv = scaled_adv * cjk_scale
+        shift_x = int(round((target_adv - effective_adv) / 2.0))
+        _, lsb = base_tables.hmtx.metrics[new_glyph_name]
+        GlyphTransformer.shift_horizontal(base_tables.glyf[new_glyph_name], shift_x)
+        base_tables.hmtx.metrics[new_glyph_name] = (
+            target_adv,
+            int(round(lsb * cjk_scale)) + shift_x,
+        )
 
 
 def merge_cjk_glyphs(
@@ -853,19 +954,18 @@ def merge_cjk_glyphs(
     target_adv_c: int,
     cjk_upm_scale: float,
     y_offset: int,
-    typical_scaled_cjk_adv: float,
-    stretch_set: set[int],
-    alignment_map: dict[int, Alignment],
+    cjk_scale: float = 1.0,
 ) -> None:
     """Copy CJK glyphs into the base font and adjust their advance widths.
 
-    This is the public entry point that orchestrates the two internal phases.
+    Orchestrates the two phases: ``copy_cjk_glyphs_to_base`` followed by
+    ``adjust_cjk_glyph_widths``.
     """
-    _copy_cjk_glyphs_to_base(base_font, cjk_font, cjk_upm_scale, y_offset)
-    _adjust_cjk_glyph_widths(
+    copy_cjk_glyphs_to_base(base_font, cjk_font, cjk_upm_scale, y_offset)
+    adjust_cjk_glyph_widths(
         base_font, cjk_font, target_adv_w, target_adv_c,
-        cjk_upm_scale, typical_scaled_cjk_adv,
-        stretch_set, alignment_map,
+        cjk_upm_scale,
+        cjk_scale=cjk_scale,
     )
 
 
@@ -876,22 +976,19 @@ def merge_cjk_glyphs(
 
 def merge_symbols_into_font(
     base_font: TTFont,
-    symbol_font_path: str,
+    symbol_font: TTFont,
     target_adv_w: int,
 ) -> None:
     """Overlay a symbol font onto the base font, scaling by UPM ratio.
 
-    Existing glyphs are overwritten when names collide.
-
-    Every top-level symbol glyph's advance
-    width is forced to that value after copying, ensuring the merged font has
-    a consistent halfwidth advance for all non-CJK glyphs.
+    Existing glyphs are overwritten when names collide.  Every top-level
+    symbol glyph's advance width is forced to *target_adv_w* after copying,
+    ensuring a consistent halfwidth advance for all non-CJK glyphs.
     """
-    symbol_font = TTFont(symbol_font_path)
     base_cmap = base_font.getBestCmap()
     symbol_cmap = symbol_font.getBestCmap()
-    base_tables = _FontTables.from_font(base_font)
-    sym_tables = _FontTables(
+    base_tables = FontTables.from_font(base_font)
+    sym_tables = FontTables(
         glyf=symbol_font["glyf"],
         hmtx=symbol_font["hmtx"],
         vmtx=symbol_font["vmtx"] if "vmtx" in base_font and "vmtx" in symbol_font else None,
@@ -900,7 +997,7 @@ def merge_symbols_into_font(
 
     for codepoint, sym_glyph_name in symbol_cmap.items():
         for dep_name in get_glyph_dependencies(sym_glyph_name, sym_tables.glyf):
-            _copy_glyph_into(
+            copy_glyph_into(
                 sym_tables, base_tables, dep_name, dep_name, base_font,
                 scale_x=scale, scale_y=scale,
             )
@@ -911,32 +1008,6 @@ def merge_symbols_into_font(
             adv, lsb = base_tables.hmtx.metrics[sym_glyph_name]
             if adv != target_adv_w:
                 base_tables.hmtx.metrics[sym_glyph_name] = (target_adv_w, lsb)
-
-    symbol_font.close()
-
-
-# ---------------------------------------------------------------------------
-# Hint removal
-# ---------------------------------------------------------------------------
-
-
-def remove_font_hints(font: TTFont) -> None:
-    """Strip all hinting data from *font* in place.
-
-    Removes font-level hint programs and tables, then clears every per-glyph
-    instruction sequence so the output is hint-free.
-    """
-    # Font-level hint tables.
-    for tag in ("fpgm", "prep", "cvt ", "hdmx", "LTSH", "VDMX"):
-        if tag in font:
-            del font[tag]
-
-    # Per-glyph instruction bytecode stored in the glyf table.
-    if "glyf" in font:
-        for glyph_name in font["glyf"].keys():
-            glyph = font["glyf"][glyph_name]
-            if hasattr(glyph, "program"):
-                glyph.program = TTProgram()
 
 
 # ---------------------------------------------------------------------------
@@ -993,48 +1064,25 @@ def mark_font_as_monospace(font: TTFont, target_adv_w: int):
 
 def compute_baseline_y_offset(
     western_font: TTFont,
+    western_y_scale: float,
     cjk_font: TTFont,
     cjk_upm_scale: float,
+    cjk_scale: float,
 ) -> int:
     """Calculate the vertical shift needed to align the CJK baseline
-    with the (already-scaled) western baseline."""
+    with the (already-scaled) western baseline.
+
+    *y_offset* is applied to CJK glyphs in phase 1 (copy), **before**
+    *cjk_scale* is applied in phase 2 (centre).  Because phase 2 scales
+    around the origin, the offset is magnified by *cjk_scale*, so we must
+    pre-divide the western target by *cjk_scale* to arrive at the correct
+    pre-phase-2 position.
+    """
     western_os2 = western_font["OS/2"]
     cjk_os2 = cjk_font["OS/2"]
     western_center = (western_os2.sTypoAscender + western_os2.sTypoDescender) / 2.0
     cjk_center = (cjk_os2.sTypoAscender + cjk_os2.sTypoDescender) / 2.0
-    return int(round(western_center - cjk_center * cjk_upm_scale))
-
-
-def merge_vertical_metrics(
-    base_font: TTFont,
-    cjk_font: TTFont,
-    cjk_coord_scale: float,
-) -> None:
-    """Expand the base font's vertical metrics so they cover the CJK glyphs.
-
-    Each metric is set to ``max(base, scaled_cjk)`` for ascenders and
-    ``min(base, scaled_cjk)`` (i.e. largest magnitude) for descenders.
-    """
-    def _sc(v: int) -> int:
-        return int(round(v * cjk_coord_scale))
-
-    b_os2 = base_font["OS/2"]
-    c_os2 = cjk_font["OS/2"]
-    b_os2.sTypoAscender  = max(b_os2.sTypoAscender,  _sc(c_os2.sTypoAscender))
-    b_os2.sTypoDescender = min(b_os2.sTypoDescender, _sc(c_os2.sTypoDescender))
-    b_os2.usWinAscent    = max(b_os2.usWinAscent,    _sc(c_os2.usWinAscent))
-    b_os2.usWinDescent   = max(b_os2.usWinDescent,   _sc(c_os2.usWinDescent))
-
-    b_hhea = base_font["hhea"]
-    c_hhea = cjk_font["hhea"]
-    b_hhea.ascent  = max(b_hhea.ascent,  _sc(c_hhea.ascent))
-    b_hhea.descent = min(b_hhea.descent, _sc(c_hhea.descent))
-
-    if "vhea" in base_font and "vhea" in cjk_font:
-        b_vhea = base_font["vhea"]
-        c_vhea = cjk_font["vhea"]
-        b_vhea.ascent  = max(b_vhea.ascent,  _sc(c_vhea.ascent))
-        b_vhea.descent = min(b_vhea.descent, _sc(c_vhea.descent))
+    return int(round(western_center * western_y_scale / cjk_scale - cjk_center * cjk_upm_scale))
 
 
 # ---------------------------------------------------------------------------
@@ -1042,117 +1090,137 @@ def merge_vertical_metrics(
 # ---------------------------------------------------------------------------
 
 
+def make_output_filename(family: str, subfamily: str) -> str:
+    """Derive the output .ttf filename from family and subfamily names."""
+    return f"{family.replace(' ', '')}-{subfamily.replace(' ', '')}.ttf"
+
+
 def compute_scaling_params(
-    western_font_path: str,
-    cjk_font_path: str,
-) -> _ScalingParams:
-    """Derive ``_ScalingParams`` from a western + CJK font pair.
+    loaded_subfamilies: dict[str, tuple[TTFont, TTFont]],
+    symbol_fonts: list[TTFont] = [],
+) -> ScalingParams:
+    """Derive ``ScalingParams`` from **all** pre-loaded subfamily font pairs.
 
-    * CJK glyphs are **not** scaled beyond UPM normalisation.
-    * Western glyphs are scaled **only horizontally** so that the reference
-      advance (capital 'A') equals exactly half the natural CJK advance.
-      The vertical scale is left at 1.0 so western glyph height is
-      preserved exactly.
-    * The output font metrics are taken from the western font after
-      x-only scaling, so the line height = the unmodified western height.
+    The unified UPM is the maximum found across every western, CJK, and
+    symbol font in the family, so that all source coordinates can be
+    expressed losslessly in the output font.
+
+    ``target_adv_w`` (the halfwidth cell advance) is derived **only from
+    the western fonts** — the western font determines the typographic
+    rhythm of the merged result.  CJK and symbol fonts must adapt to
+    that cell, not the other way around: letting a wider CJK 'A' or a
+    Nerd Font's geometry inflate the cell would force the western
+    glyphs to be scaled up and would change the perceived size of the
+    western text compared to the original.
+
+    ``target_adv_c = 2 * target_adv_w``.
     """
-    western_font = load_font(western_font_path)
-    cjk_font = load_font(cjk_font_path)
+    upm = 1
+    # Collect (adv_for_A, source_upm) pairs from the WESTERN fonts only;
+    # normalisation is deferred until the global UPM is known.
+    western_adv_samples: list[tuple[int, int]] = []
 
-    western_upm = western_font["head"].unitsPerEm
-    cjk_upm = cjk_font["head"].unitsPerEm
-    upm = max(western_upm, cjk_upm)
-    cjk_upm_scale = upm / float(cjk_upm)
+    for w_font, c_font in loaded_subfamilies.values():
+        upm = max(upm, w_font["head"].unitsPerEm, c_font["head"].unitsPerEm)
+        western_adv_samples.append((
+            get_typical_advance(w_font, ord("A")),
+            w_font["head"].unitsPerEm,
+        ))
 
-    W = float(get_typical_advance(western_font, ord("A")))
-    C = get_typical_advance(cjk_font, ord("\u4e2d")) * cjk_upm_scale
+    # Symbol fonts still contribute to UPM (so their outlines can be
+    # represented at full fidelity) but NOT to target_adv_w.
+    for s_font in symbol_fonts:
+        upm = max(upm, s_font["head"].unitsPerEm)
 
-    # CJK cell = natural CJK advance; western cell = half of that.
-    target_adv_c = int(round(C))
-    target_adv_w = target_adv_c // 2
+    # target_adv_w = max UPM-normalised advance of 'A' across western fonts.
+    target_adv_w = 0
+    for adv, src_upm in western_adv_samples:
+        normalised = int(round(adv * upm / float(src_upm)))
+        target_adv_w = max(target_adv_w, normalised)
 
-    params = _ScalingParams(
+    target_adv_c = 2 * target_adv_w
+
+    return ScalingParams(
         upm=upm,
         target_adv_c=target_adv_c,
         target_adv_w=target_adv_w,
-        western_scale_x=target_adv_w / W,
-        scaled_cjk_adv=target_adv_c,
     )
 
-    western_font.close()
-    cjk_font.close()
-    return params
 
-
-def process_font(config: FontMergeConfig, scaling: _ScalingParams | None = None) -> None:
+def process_font(
+    config: FontMergeConfig,
+    scaling: ScalingParams,
+    western_font: TTFont,
+    cjk_font: TTFont,
+    symbol_fonts: list[TTFont],
+) -> None:
     """Execute the complete font merging pipeline:
 
-    1. Load fonts; use ``scaling`` if provided, otherwise compute it
-       automatically from the font pair.
-    2. Scale the western font and copy CJK glyphs at natural UPM-normalised
-       size (padded to ``target_adv_c``).
-    3. Copy and adjust CJK glyphs.
-    4. Stretch / pad designated English-side glyphs.
-    5. Overlay symbol fonts.
-    6. Write metadata and save.
+    1. Scale the western font to the unified UPM, normalise its 'A' advance
+       to ``target_adv_w``, and apply the per-axis ``western_scale_x`` /
+       ``western_scale_y`` adjustments — all in a single ``scale_font`` pass.
+    2. Copy CJK glyphs and centre each one within its target cell
+       (fullwidth or halfwidth).
+    3. Stretch / pad designated western-side glyphs to ``target_adv_c``.
+    4. Overlay symbol fonts.
+    5. Write metadata and save.
 
     Parameters
     ----------
     config :
         Per-font settings (paths, metadata, glyph adjustments).
     scaling :
-        Pre-computed cell geometry and western scale factors.  When
-        ``None`` the scaling is derived on-the-fly from *this* font pair,
-        which is equivalent to the standalone behaviour.  Pass a shared
-        ``_ScalingParams`` (from ``compute_scaling_params``) to keep all
-        subfamilies in a family metrically consistent.
+        Pre-computed cell geometry shared across all subfamilies in a
+        family (from ``compute_scaling_params``).
+    western_font :
+        Pre-loaded western (Latin) font.  Mutated and saved in place.
+    cjk_font :
+        Pre-loaded CJK font.  Read-only during this call.
+    symbol_fonts :
+        Pre-loaded symbol fonts.  Read-only during this call.
     """
-    western_font = load_font(config.western_font_path)
-    cjk_font = load_font(config.cjk_font_path)
-
-    if scaling is None:
-        scaling = compute_scaling_params(
-            config.western_font_path, config.cjk_font_path
-        )
 
     upm = scaling.upm
-    # CJK is only UPM-normalised — no extra scaling applied.
     cjk_upm = cjk_font["head"].unitsPerEm
-    cjk_coord_scale = upm / float(cjk_upm)
+    cjk_upm_scale = upm / float(cjk_upm)
 
-    target_adv_c = scaling.target_adv_c
     target_adv_w = scaling.target_adv_w
-    scaled_cjk_adv = scaling.scaled_cjk_adv
+    target_adv_c = scaling.target_adv_c
 
-    # Apply western scaling: x shrinks to fill the halfwidth cell;
-    # y is stretched by config.western_scale_y (relative to scale_x),
-    # computed once from the reference subfamily and shared across all others.
-    scale_font(western_font, scaling.western_scale_x, scaling.western_scale_x * config.western_scale_y)
-    western_font["head"].unitsPerEm = upm
+    # Compute the uniform scale that normalises the western 'A' advance to
+    # target_adv_w, then derive the total per-axis scales by folding in the
+    # per-subfamily adjustments.  Both are computed before any mutation so
+    # that compute_baseline_y_offset sees the original font metrics.
+    western_scale = target_adv_w / float(get_typical_advance(western_font, ord("A")))
+    total_western_scale_x = western_scale * config.western_scale_x
+    total_western_scale_y = western_scale * config.western_scale_y
 
-    # Force every western glyph's advance to the target halfwidth value.
-    normalize_font_advances(western_font, target_adv_w)
-
-    # Baseline alignment
+    # Baseline alignment — must be computed before the western font is mutated.
     y_offset = 0
     if config.adjust_baseline:
-        y_offset += compute_baseline_y_offset(western_font, cjk_font, cjk_coord_scale)
+        y_offset = compute_baseline_y_offset(
+            western_font, total_western_scale_y, cjk_font, cjk_upm_scale,
+            config.cjk_scale,
+        )
+
+    # Scale the western font: uniform 'A'-advance normalisation combined with
+    # the per-axis adjustments in a single pass to avoid double-rounding.
+    if total_western_scale_x != 1.0 or total_western_scale_y != 1.0:
+        scale_font(western_font, total_western_scale_x, total_western_scale_y)
+    western_font["head"].unitsPerEm = upm
 
     stretch_set = parse_codepoints(config.stretch_chars)
-    alignment_map = build_alignment_map(config.pad_configs)
 
-    # Merge CJK glyphs (phase 1 copies them; phase 2 pads/stretches to the
-    # expanded target advances).
+    # Merge CJK glyphs: phase 1 copies them at UPM-normalised size;
+    # phase 2 centres each glyph within its target fullwidth or halfwidth cell.
     merge_cjk_glyphs(
         base_font=western_font,
         cjk_font=cjk_font,
         target_adv_w=target_adv_w,
         target_adv_c=target_adv_c,
-        cjk_upm_scale=cjk_coord_scale,
+        cjk_upm_scale=cjk_upm_scale,
         y_offset=y_offset,
-        typical_scaled_cjk_adv=scaled_cjk_adv,
-        stretch_set=stretch_set,
-        alignment_map=alignment_map,
+        cjk_scale=config.cjk_scale,
     )
 
     # Stretch / pad western-side glyphs that fall outside CJK ranges.
@@ -1167,7 +1235,7 @@ def process_font(config: FontMergeConfig, scaling: _ScalingParams | None = None)
     # Force the advance of every stretched / padded glyph to target_adv_c so
     # that ink repositioning never leaves a residual halfwidth advance.
     fullwidth_cmap = western_font.getBestCmap()
-    fullwidth_tables = _FontTables.from_font(western_font)
+    fullwidth_tables = FontTables.from_font(western_font)
     fullwidth_codepoints = stretch_set | {
         cp for cfg in config.pad_configs for cp in parse_codepoints(cfg.chars)
     }
@@ -1181,76 +1249,93 @@ def process_font(config: FontMergeConfig, scaling: _ScalingParams | None = None)
     # Merge symbol fonts, normalising each symbol glyph's advance to
     # target_adv_w so that all non-CJK glyphs end up with the same
     # halfwidth cell.
-    for symbol_path in config.symbol_font_paths:
-        merge_symbols_into_font(western_font, symbol_path, target_adv_w=target_adv_w)
+    for symbol_font in symbol_fonts:
+        merge_symbols_into_font(western_font, symbol_font, target_adv_w=target_adv_w)
 
     # Metadata & monospace flag
     update_font_metadata(western_font, config)
     if config.mark_as_monospace:
         mark_font_as_monospace(western_font, target_adv_w)
 
-    # Remove hinting data if requested.
-    if config.remove_hints:
-        remove_font_hints(western_font)
-
     # Ensure Format 12 cmap subtable exists for any non-BMP codepoints
     # accumulated across all merging stages.
     ensure_cmap_format_12(western_font, western_font.getBestCmap())
 
-    # Save
-    western_font.save(config.output_filename)
-    western_font.close()
-    cjk_font.close()
+    # Remove hinting data if requested.  Done last so that any hint tables
+    # copied in from source fonts (e.g. via symbol merging) are also covered.
+    if config.remove_hints:
+        remove_hinting(western_font)
+
+    # Save — filename derived from family and subfamily names.
+    western_font.save(make_output_filename(config.new_font_family, config.new_font_subfamily))
 
 
 def process_family(family: FontFamilySpec) -> None:
     """Process all subfamilies of a font family.
 
-    Scaling is computed once from the ``scaling_reference`` subfamily
-    (default ``"Regular"``) and reused for every other subfamily.  This
-    guarantees that all weights and styles share the same cell geometry,
-    even when italic subfamilies use a different CJK typeface.
+    Each font file is opened exactly once.  Scaling is computed from all
+    pre-loaded subfamily fonts, then every subfamily is processed in turn
+    using the same open font objects.  All fonts are closed at the end.
     """
-    ref_name = family.scaling_reference
-    ref = family.subfamilies.get(ref_name)
-    if ref is None:
-        raise ValueError(
-            f"scaling_reference '{ref_name}' not found in subfamilies "
-            f"for family '{family.new_font_family}'"
-        )
+    # Load symbol fonts once; they are read-only across all subfamily runs.
+    symbol_fonts: list[TTFont] = []
+    for sym_path in family.symbol_font_paths:
+        try:
+            symbol_fonts.append(load_font(sym_path))
+        except (FileNotFoundError, OSError) as err:
+            print(f"  Warning: could not load symbol font {sym_path!r}: {err}")
+
+    # Load western and CJK fonts for every subfamily.
+    loaded: dict[str, tuple[TTFont, TTFont]] = {}
+    for spec in family.subfamilies:
+        try:
+            loaded[spec.name] = (
+                load_font(spec.western_font_path),
+                load_font(spec.cjk_font_path),
+            )
+        except FileNotFoundError as err:
+            print(f"  Error loading fonts for {spec.name!r}: {err}")
 
     print(
         f"[{family.new_font_family}] "
-        f"Computing scaling from '{ref_name}' reference ..."
+        f"Computing scaling from all {len(loaded)} subfamilies ..."
     )
-    scaling = compute_scaling_params(ref.western_font_path, ref.cjk_font_path)
-    # western_scale_y is taken from the reference subfamily and applied to
-    # every subfamily so all share the same target height.
-    western_scale_y = ref.western_scale_y
+    scaling = compute_scaling_params(loaded, symbol_fonts)
 
-    for subfamily_name, spec in family.subfamilies.items():
-        config = FontMergeConfig(
-            output_filename=spec.output_filename,
-            western_font_path=spec.western_font_path,
-            cjk_font_path=spec.cjk_font_path,
-            stretch_chars=family.stretch_chars,
-            pad_configs=family.pad_configs,
-            symbol_font_paths=family.symbol_font_paths,
-            adjust_baseline=family.adjust_baseline,
-            new_font_family=family.new_font_family,
-            new_font_subfamily=subfamily_name,
-            new_author=family.new_author,
-            new_description=family.new_description,
-            mark_as_monospace=family.mark_as_monospace,
-            remove_hints=family.remove_hints,
-            western_scale_y=western_scale_y,
-        )
-        print(f"  Processing: {spec.output_filename} ...")
-        try:
-            process_font(config, scaling=scaling)
-            print(f"  Saved: {spec.output_filename}")
-        except FileNotFoundError as err:
-            print(f"  Error: {err}")
+    try:
+        for spec in family.subfamilies:
+            if spec.name not in loaded:
+                continue
+            western_font, cjk_font = loaded[spec.name]
+            output_filename = make_output_filename(family.new_font_family, spec.name)
+            config = FontMergeConfig(
+                stretch_chars=family.stretch_chars,
+                pad_configs=family.pad_configs,
+                adjust_baseline=family.adjust_baseline,
+                new_font_family=family.new_font_family,
+                new_font_subfamily=spec.name,
+                new_author=family.new_author,
+                new_description=family.new_description,
+                mark_as_monospace=family.mark_as_monospace,
+                cjk_scale=spec.cjk_scale,
+                western_scale_x=spec.western_scale_x,
+                western_scale_y=spec.western_scale_y,
+                remove_hints=family.remove_hints,
+            )
+            print(f"  Processing: {output_filename} ...")
+            try:
+                process_font(config, scaling=scaling,
+                             western_font=western_font, cjk_font=cjk_font,
+                             symbol_fonts=symbol_fonts)
+                print(f"  Saved: {output_filename}")
+            except FileNotFoundError as err:
+                print(f"  Error: {err}")
+    finally:
+        for w_font, c_font in loaded.values():
+            w_font.close()
+            c_font.close()
+        for s_font in symbol_fonts:
+            s_font.close()
 
 
 # ---------------------------------------------------------------------------
@@ -1260,9 +1345,9 @@ def process_family(family: FontFamilySpec) -> None:
 
 def main():
     """Configure and run font merging tasks."""
-    _L = os.path.expanduser  # shorthand for ~/Library/Fonts/... paths
+    fonts_dir = os.path.expanduser("~/Library/Fonts")
 
-    _COMMON = dict(
+    COMMON = dict(
         new_author="Zhaosheng Pan",
         new_description="",
         mark_as_monospace=True,
@@ -1274,7 +1359,7 @@ def main():
             PadConfig(chars=["\u2019", "\u201d"], alignment=Alignment.LEFT),
         ],
         symbol_font_paths=[
-            _L("~/Library/Fonts/SymbolsNerdFont-Regular.ttf"),
+            f"{fonts_dir}/SymbolsNerdFont-Regular.ttf",
             "FlogSymbols.ttf",
         ],
     )
@@ -1282,77 +1367,141 @@ def main():
     families = [
         FontFamilySpec(
             new_font_family="Monaspace Argon LXGW Bright TC NF",
-            **_COMMON,
-            subfamilies={
-                "Light": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Light.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-                    output_filename="Monaspace Argon LXGW Bright TC NF Light.ttf",
+            **COMMON,
+            subfamilies=[
+                SubfamilySpec(
+                    name="Light",
+                    western_font_path=f"{fonts_dir}/MonaspaceArgon-Light.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Light.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-                "Light Italic": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-LightItalic.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-                    output_filename="Monaspace Argon LXGW Bright TC NF Light Italic.ttf",
+                SubfamilySpec(
+                    name="Light Italic",
+                    western_font_path=f"{fonts_dir}/MonaspaceArgon-LightItalic.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Light.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-                "Regular": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Regular.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-                    output_filename="Monaspace Argon LXGW Bright TC NF Regular.ttf",
-                    western_scale_y=1.1111,
+                SubfamilySpec(
+                    name="Regular",
+                    western_font_path=f"{fonts_dir}/MonaspaceArgon-Regular.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Regular.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-                "Italic": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Italic.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-                    output_filename="Monaspace Argon LXGW Bright TC NF Italic.ttf",
+                SubfamilySpec(
+                    name="Italic",
+                    western_font_path=f"{fonts_dir}/MonaspaceArgon-Italic.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Regular.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-                "Medium": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-Medium.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-                    output_filename="Monaspace Argon LXGW Bright TC NF Medium.ttf",
+                SubfamilySpec(
+                    name="Medium",
+                    western_font_path=f"{fonts_dir}/MonaspaceArgon-Medium.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Medium.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-                "Medium Italic": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceArgon-MediumItalic.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-                    output_filename="Monaspace Argon LXGW Bright TC NF Medium Italic.ttf",
+                SubfamilySpec(
+                    name="Medium Italic",
+                    western_font_path=f"{fonts_dir}/MonaspaceArgon-MediumItalic.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Medium.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-            },
+            ],
         ),
         FontFamilySpec(
             new_font_family="Monaspace Xenon Noto Serif LXGW CJK TC NF",
-            **_COMMON,
-            subfamilies={
-                "Light": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Light.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/NotoSerifCJKtc-Light.otf"),
-                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light.ttf",
+            **COMMON,
+            subfamilies=[
+                SubfamilySpec(
+                    name="Light",
+                    western_font_path=f"{fonts_dir}/MonaspaceXenon-Light.otf",
+                    cjk_font_path=f"{fonts_dir}/NotoSerifCJKtc-Light.otf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.13,
                 ),
-                "Light Italic": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-LightItalic.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Light.ttf"),
-                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Light Italic.ttf",
+                SubfamilySpec(
+                    name="Light Italic",
+                    western_font_path=f"{fonts_dir}/MonaspaceXenon-LightItalic.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Light.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-                "Regular": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Regular.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/NotoSerifCJKtc-Regular.otf"),
-                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Regular.ttf",
-                    western_scale_y=1.1111,
+                SubfamilySpec(
+                    name="Regular",
+                    western_font_path=f"{fonts_dir}/MonaspaceXenon-Regular.otf",
+                    cjk_font_path=f"{fonts_dir}/NotoSerifCJKtc-Regular.otf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.13,
                 ),
-                "Italic": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Italic.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Regular.ttf"),
-                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Italic.ttf",
+                SubfamilySpec(
+                    name="Italic",
+                    western_font_path=f"{fonts_dir}/MonaspaceXenon-Italic.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Regular.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-                "Medium": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-Medium.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/NotoSerifCJKtc-Medium.otf"),
-                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium.ttf",
+                SubfamilySpec(
+                    name="Medium",
+                    western_font_path=f"{fonts_dir}/MonaspaceXenon-Medium.otf",
+                    cjk_font_path=f"{fonts_dir}/NotoSerifCJKtc-Medium.otf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.13,
                 ),
-                "Medium Italic": SubfamilySpec(
-                    western_font_path=_L("~/Library/Fonts/MonaspaceXenon-MediumItalic.otf"),
-                    cjk_font_path=_L("~/Library/Fonts/LXGWBrightTC-Medium.ttf"),
-                    output_filename="Monaspace Xenon Noto Serif LXGW CJK TC NF Medium Italic.ttf",
+                SubfamilySpec(
+                    name="Medium Italic",
+                    western_font_path=f"{fonts_dir}/MonaspaceXenon-MediumItalic.otf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Medium.ttf",
+                    western_scale_x=0.9,
+                    cjk_scale=1.18,
                 ),
-            },
+            ],
+        ),
+        FontFamilySpec(
+            new_font_family="JetBrains Mono Noto Sans LXGW CJK TC NF",
+            **COMMON,
+            subfamilies=[
+                SubfamilySpec(
+                    name="Light",
+                    western_font_path=f"{fonts_dir}/JetBrainsMono-Light.ttf",
+                    cjk_font_path=f"{fonts_dir}/NotoSansCJKtc-Light.otf",
+                    cjk_scale=1.15,
+                ),
+                SubfamilySpec(
+                    name="Light Italic",
+                    western_font_path=f"{fonts_dir}/JetBrainsMono-LightItalic.ttf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Light.ttf",
+                    cjk_scale=1.2,
+                ),
+                SubfamilySpec(
+                    name="Regular",
+                    western_font_path=f"{fonts_dir}/JetBrainsMono-Regular.ttf",
+                    cjk_font_path=f"{fonts_dir}/NotoSansCJKtc-Regular.otf",
+                    cjk_scale=1.15,
+                ),
+                SubfamilySpec(
+                    name="Italic",
+                    western_font_path=f"{fonts_dir}/JetBrainsMono-Italic.ttf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Regular.ttf",
+                    cjk_scale=1.2,
+                ),
+                SubfamilySpec(
+                    name="Medium",
+                    western_font_path=f"{fonts_dir}/JetBrainsMono-Medium.ttf",
+                    cjk_font_path=f"{fonts_dir}/NotoSansCJKtc-Medium.otf",
+                    cjk_scale=1.15,
+                ),
+                SubfamilySpec(
+                    name="Medium Italic",
+                    western_font_path=f"{fonts_dir}/JetBrainsMono-MediumItalic.ttf",
+                    cjk_font_path=f"{fonts_dir}/LXGWBrightTC-Medium.ttf",
+                    cjk_scale=1.2,
+                ),
+            ],
         ),
     ]
 
