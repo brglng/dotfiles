@@ -8,13 +8,13 @@ title-hidden = true
 
 [font]
 normal = [
-    "Monaspace Xenon Noto Serif LXGW CJK TC NF"
-    # "LXGW Bright TC Monaspace Argon NF"
     # "Maple Mono NF CN",
-    # "Flog Symbols",
+    # "Monaspace Argon LXGW TC NF"
+    # "Monaspace Xenon Noto LXGW TC NF"
+    "JetBrains Mono Noto LXGW TC NF",
 ]
 hinting = "none"
-size = 16.0
+size = 14.0
 # width = 0.4
 
 [font.features]

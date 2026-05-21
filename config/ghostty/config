@@ -1,9 +1,10 @@
 # font-family = Maple Mono NF CN
-# font-family = Monaspace Argon LXGW Bright TC NF
-font-family = Monaspace Xenon Noto Serif LXGW CJK TC NF
-# font-family = Victor Mono
-# font-family = Cascadia Code
-font-size = 16
+# font-family = Monaspace Argon LXGW TC NF
+# font-family = Monaspace Xenon Noto LXGW TC NF
+font-family = JetBrains Noto LXGW TC NF
+# font-family = Symbols Nerd Font
+# font-family = Flog Symbols
+font-size = 14
 font-feature = calt, ss01, ss02, ss03, ss04, ss05, ss06, ss07, ss08, ss09, ss10, liga
 font-thicken = true
 font-thicken-strength = 96
