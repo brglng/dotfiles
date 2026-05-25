@@ -6,7 +6,7 @@ import sys
 def rgba_from_str(rgba: str):
     if rgba.startswith('0x'):
         rgba_stripped = rgba[2:]
-    if rgba.startswith('#'):
+    elif rgba.startswith('#'):
         rgba_stripped = rgba[1:]
     else:
         rgba_stripped = rgba
@@ -26,7 +26,7 @@ def rgba_from_str(rgba: str):
 def rgb_from_str(rgb: str):
     if rgb.startswith('0x'):
         rgb_stripped = rgb[2:]
-    if rgb.startswith('#'):
+    elif rgb.startswith('#'):
         rgb_stripped = rgb[1:]
     else:
         rgb_stripped = rgb
