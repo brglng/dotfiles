@@ -5,9 +5,9 @@ return {
         "nvim-treesitter/nvim-treesitter",
         "zbirenbaum/copilot.lua",
         "ravitemer/codecompanion-history.nvim",
-        "franco-ruggeri/codecompanion-spinner.nvim"
+        "franco-ruggeri/codecompanion-spinner.nvim",
+        "Davidyz/codecompanion-dap.nvim"
     },
-    -- event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     enabled = true,
     cmd = {
         "CodeCompanion",
@@ -73,7 +73,7 @@ The current date is %s.
 The user's Neovim version is %s.
 The user is working on a %s machine. Please respond with system specific commands if applicable.
 ]],
-                            ctx.language,
+                            -- ctx.language,
                             ctx.cwd,
                             ctx.date,
                             ctx.nvim_version,
@@ -107,6 +107,9 @@ The user is working on a %s machine. Please respond with system specific command
             }
         },
         extensions = {
+            dap = {
+                enabled = true,
+            },
             history = {
                 enabled = true,
                 opts = {

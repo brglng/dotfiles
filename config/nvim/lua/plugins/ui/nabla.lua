@@ -3,7 +3,13 @@ return {
     dependencies = {
         "williamboman/mason.nvim",
     },
-    ft = { "norg", "markdown", "codecompanion" },
+    ft = (function()
+        if vim.g.neovide or vim.fn.has("win32") == 1 then
+            return { "norg", "markdown", "codecompanion" }
+        else
+            return { "norg" }
+        end
+    end)(),
     lazy = true,
     config = function()
         if vim.g.neovide or vim.fn.has("win32") == 1 then

@@ -11,11 +11,10 @@ normal = [
     # "Maple Mono NF CN",
     # "Monaspace Argon LXGW TC NF"
     # "Monaspace Xenon Noto LXGW TC NF"
-    "JetBrains Mono Noto LXGW TC NF",
+    "JetBrains Noto LXGW TC NF",
 ]
 hinting = "none"
 size = 14.0
-# width = 0.4
 
 [font.features]
 "Monaspace Xenon Noto LXGW TC NF" = [ "+calt", "+ss01", "+ss02", "+ss03", "+ss04", "+ss05", "+ss06", "+ss07", "+ss08", "+ss09", "+ss10", "+liga" ]
