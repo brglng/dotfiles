@@ -13,7 +13,8 @@ normal = [
     # "Monaspace Xenon Noto LXGW TC NF"
     "JetBrains Noto LXGW TC NF",
 ]
-hinting = "none"
+hinting = "full"
+edging = "subpixelantialias"
 size = 14.0
 
 [font.features]
