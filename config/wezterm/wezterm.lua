@@ -5,7 +5,7 @@ local MAC = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_tri
 
 local config = wezterm.config_builder()
 
-config.front_end = "OpenGL"
+-- config.front_end = "OpenGL"
 
 if WINDOWS then
     config.set_environment_variables = {
@@ -267,17 +267,18 @@ end)
 
 config.allow_square_glyphs_to_overflow_width = "Always"
 -- config.freetype_interpreter_version = 40
-config.freetype_load_flags = "NO_HINTING|NO_AUTOHINT"
-config.freetype_load_target = "Light"
+config.freetype_load_flags = "NO_AUTOHINT"
+config.freetype_load_target = "HorizontalLcd"
 config.freetype_render_target = "HorizontalLcd"
 -- config.cell_width = 0.9
 config.font = wezterm.font_with_fallback {
-    { family = "Monaspace Xenon Noto Serif LXGW CJK TC NF" },
-    -- { family = "LXGW Bright Code TC NF" },
     -- { family = "Maple Mono NF CN" },
+    -- { family = "Monaspace Xenon Noto LXGW TC NF" },
+    { family = "JetBrains Noto LXGW TC NF" },
     -- { family = "Flog Symbols" },
 }
-config.harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "liga" }
+-- config.harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "liga" }
+config.harfbuzz_features = { "calt", "liga" }
 -- Fix cell width for CJK punctuations
 config.cell_widths = {
     --- CJK (中日韩) 基础范围 ---
@@ -317,12 +318,12 @@ config.cell_widths = {
 }
 
 if WINDOWS then
-    config.font_size = 12.4
+    config.font_size = 10
 else
-    config.font_size = 16.0
+    config.font_size = 14
 end
 
-config.enable_kitty_graphics = true
+config.enable_kitty_graphics = false
 
 -- Keys
 

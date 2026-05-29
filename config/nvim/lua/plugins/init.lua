@@ -1,5 +1,4 @@
 return {
-    { import = "plugins.util" },
     { import = "plugins.lsp" },
     { import = "plugins.treesitter" },
     { import = "plugins.coding" },
@@ -14,4 +13,6 @@ return {
     { import = "plugins.session" },
     { import = "plugins.org" },
     { import = "plugins.colors" },
+    { import = "plugins.integrations" },
+    { import = "plugins.misc" }
 }

@@ -1,0 +1,25 @@
+return {
+    "ChuYanLon/telegram.nvim",
+    build = "npm i",
+    event = "VeryLazy",
+    dependencies = {
+        "MunifTanjim/nui.nvim",
+        -- "folke/snacks.nvim",   -- optional: enables fuzzy-find chat picker
+    },
+    -- keys = {
+        -- { "<leader>tt", "<cmd>Tg<Cr>", desc = "Toggle Telegram" },
+        -- { "<leader>tL", "<cmd>TgLogout<Cr>", desc = "Logout Telegram" },
+        -- { "<leader>tp", "<cmd>TgPr<Cr>", desc = "Create PR" },
+        -- { "<leader>ti", "<cmd>TgIssue<Cr>", desc = "Manage Issues" },
+    -- },
+    cmd = {
+        "Tg",
+        "TgLogout",
+        "TgPr",
+        "TgIssue",
+    },
+    opts = {
+        -- tdlib_path = "/path/to/libtdjson.so",         -- optional: .so (Linux) / .dylib (macOS) / .dll (Windows)
+        proxy = "socks5://127.0.0.1:1086",
+    },
+}
