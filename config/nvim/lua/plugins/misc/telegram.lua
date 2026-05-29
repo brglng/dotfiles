@@ -21,5 +21,7 @@ return {
     opts = {
         -- tdlib_path = "/path/to/libtdjson.so",         -- optional: .so (Linux) / .dylib (macOS) / .dll (Windows)
         proxy = "socks5://127.0.0.1:1086",
+        http_port = 8081,
+        ws_port = 8082
     },
 }

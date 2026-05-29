@@ -12,6 +12,7 @@ normal = [
     # "Monaspace Argon LXGW TC NF"
     # "Monaspace Xenon Noto LXGW TC NF"
     "JetBrains Noto LXGW TC NF",
+    # "Flog Symbols"
 ]
 hinting = "full"
 edging = "subpixelantialias"

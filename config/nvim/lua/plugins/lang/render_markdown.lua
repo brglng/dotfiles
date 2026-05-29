@@ -8,7 +8,7 @@ return {
     opts = {
         file_types = { 'markdown', 'rmd', 'quarto', 'Avante', 'codecompanion' },
         latex = {
-            enabled = true,
+            enabled = false,
             highlight = "Normal"
         }
     }

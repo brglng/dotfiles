@@ -28,6 +28,11 @@ return {
                             api_key = "OPENROUTER_API_KEY",
                             chat_url = "/v1/chat/completions",
                         },
+                        headers = {
+                            ["Content-Type"] = "application/json",
+                            ["HTTP-Referer"] = "https://github.com/olimorris/codecompanion.nvim", -- Optional but recommended by OpenRouter
+                            ["X-Title"] = "Neovim CodeCompanion", -- Optional OpenRouter app title
+                        },
                         schema = {
                             model = {
                                 default = "deepseek/deepseek-v4-pro",
@@ -65,13 +70,33 @@ return {
                 opts = {
                     system_prompt = function(ctx)
                         return ctx.default_system_prompt .. string.format(
-                            [[Additional context:
-All non-code text responses must be written in the same language as the language of the user's request regardless of the language of the code.
-All code including comments must be written in English regardless of the language of the user's request.
-The user's current working directory is %s.
-The current date is %s.
-The user's Neovim version is %s.
-The user is working on a %s machine. Please respond with system specific commands if applicable.
+                            [[
+- All non-code text responses must be written in the same language as the language of the user's prompt regardless of the language of the code.
+- All code including comments must be written in English regardless of the language of the user's request, except for the following cases:
+    - Keep any latin/western/Russian people names, place/street names, country/state names, etc. in their original language and do not translate them to English.
+    - For non-latin (especially CJK) people names, place/street names, country/state names, etc., if the original language is not English, translate them to English, and add a pair of parentheses after the English translation containing the original name in its original language. For example, if the original name is "张三", translate it to "San Zhang (张三)".
+- Strip leading spaces or tabs in blank lines in the code.
+
+When writing code in Python, follow the following code conventions:
+
+- Import standard library packages first, followed by third-party packages, and finally local scripts, with a blank line between these three parts, and each part must be strictly sorted alphabetically.
+- Add two blank lines between each function or method.
+- Nested classes and nested functions are prohibited (except when they are really useful or small, or being explicitly asked for), but lambda functions are allowed.
+- Function default parameters should be avoided when they are not really necessary.
+- Importing inside a function is strictly prohibited except when the import is only used in a function which is only executed during testing.
+- Wrap the main program in a `main` function instead of write directly under a `if __name__ == "__main__:` block.
+- Type hints are preferred where the types are not obvious and at function prototypes. The `None` return type must be omitted. Types should be imported to the global namespace if they do not conflict. Built-in type names such as `list`, `tuple`, and `dict` should be preferred over the counterparts in the `typing` package, such as `typing.List`, `typing.Tuple`, and `typing.Dict`.
+- Prefer `numpy.typing.NDArray` over `np.ndarray`.
+- Use type parameters.
+- Add assertions at the beginning of functions for the shapes of `NDArray`s and `Tensor`s.
+- If there is docstring, prefer NumPy style.
+
+Additional context:
+
+- The user's current working directory is %s.
+- The current date is %s.
+- The user's Neovim version is %s.
+- The user is working on a %s machine. Please respond with system specific commands if applicable.
 ]],
                             -- ctx.language,
                             ctx.cwd,
