@@ -12,6 +12,8 @@ normal = [
     # "Monaspace Argon LXGW TC NF"
     # "Monaspace Xenon Noto LXGW TC NF"
     "JetBrains Noto LXGW TC NF",
+    # "JetBrains Mono",
+    # "Symbols Nerd Font Mono",
     # "Flog Symbols"
 ]
 hinting = "full"
@@ -19,8 +21,10 @@ edging = "subpixelantialias"
 size = 14.0
 
 [font.features]
+"Maple Mono NF CN" = [ "+calt", "+liga" ]
 "Monaspace Xenon Noto LXGW TC NF" = [ "+calt", "+ss01", "+ss02", "+ss03", "+ss04", "+ss05", "+ss06", "+ss07", "+ss08", "+ss09", "+ss10", "+liga" ]
 "Monaspace Argon LXGW TC NF" = [ "+calt", "+ss01", "+ss02", "+ss03", "+ss04", "+ss05", "+ss06", "+ss07", "+ss08", "+ss09", "+ss10", "+liga" ]
+"JetBrains Noto LXGW TC NF" = [ "+calt", "+liga" ]
 
 [box-drawing]
 mode = "native"

@@ -1,5 +1,6 @@
 return {
     "ChuYanLon/telegram.nvim",
+    cond = false,
     build = "npm i",
     event = "VeryLazy",
     dependencies = {
