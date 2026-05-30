@@ -44,7 +44,7 @@ return {
             ["core.dirman"] = {
                 config = {
                     workspaces = {
-                        mynorg = "~/github/mynorg"
+                        mynorg = "~/github/brglng/mynorg"
                     },
                     default_workspace = function()
                         if vim.fn.argc(-1) ~= 0 then
