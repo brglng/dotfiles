@@ -311,30 +311,27 @@ $env.config = {
                         $env.PIXI_SAVE_ENV | where {|e| $e.v == null } | each {|e| $e.k } | hide-env ...$in
                         hide-env PIXI_SAVE_ENV
                     }
-                    hide-env PIXI_IN_SHELL
                 }
 
                 if $found_project {
-                    let new_env = pixi shell-hook --no-progress --json | from json | get environment_variables | default {}
-                    let project_name = if "PIXI_PROJECT_NAME" in $new_env {
-                        $new_env.PIXI_PROJECT_NAME
-                    } else {
-                        # If there is already PIXI_PROJECT_NAME in the environment, pixi shell-hook does not return it,
-                        # so use the one from the existing environment.
-                        $env.PIXI_PROJECT_NAME
-                    }
-                    # print $"(ansi blue)Activating (ansi attr_bold)($project_name)(ansi reset)"
-                    let envs_to_save = $new_env | transpose k v | each {|new_e|
-                        if $new_e.k in $env {
-                            { k: $new_e.k, v: ($env | get $new_e.k) }
+                    # Get the pixi activation script for nushell
+                    let hook_script = (pixi shell-hook -s nushell --manifest-path ([$project_root, "pixi.toml"] | path join))
+                    # Extract only $env.X = ... lines, excluding PROMPT_COMMAND
+                    let env_lines = ($hook_script | lines | where {|l| ($l | str starts-with "$env.") and not ($l | str contains "PROMPT_COMMAND") })
+                    let env_keys = ($env_lines | each {|l| $l | parse "$env.{key} = {rest}" | get 0.key })
+                    # Run the activation in a subshell and capture the resulting env vars
+                    let new_env = (nu -c ($env_lines | append $"$env | select ...($env_keys) | to nuon" | str join "\n") | from nuon)
+
+                    # Save current values of those keys for later restoration
+                    let envs_to_save = $env_keys | each {|k|
+                        if $k in $env {
+                            { k: $k, v: ($env | get $k) }
                         } else {
-                            { k: $new_e.k, v: null }
+                            { k: $k, v: null }
                         }
                     }
                     $env.PIXI_SAVE_ENV = $envs_to_save
                     $new_env | load-env
-                    $env.PATH = $env.PATH | split row (char env_sep)
-                    $env.Path = $env.Path | split row (char env_sep)
                     $env.PIXI_OLD_PROMPT = $env.PROMPT_COMMAND
                     $env.PROMPT_COMMAND = {||
                         let old_prompt = (do $env.PIXI_OLD_PROMPT)
@@ -345,7 +342,6 @@ $env.config = {
                         } else {
                             echo $"($env.PIXI_PROMPT)($old_prompt)"
                         }
-
                     }
                 }
             }
