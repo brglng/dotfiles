@@ -33,7 +33,7 @@ local function activate(project_root)
                             vim.notify("Activated Pixi environment " .. project_name .. " at " .. project_root, vim.log.levels.INFO)
                             for _, v in ipairs({ "basedpyright", "pyrefly", "pyright", "ruff", "ty" }) do
                                 if #vim.lsp.get_clients({ name = v }) > 0 then
-                                    vim.cmd("LspRestart " .. v)
+                                    vim.cmd("lsp restart " .. v)
                                 end
                             end
                         else
