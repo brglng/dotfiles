@@ -30,6 +30,7 @@ local function activate(project_root)
                             end
                             vim.g.pixi_save_env = save_env
                             local project_name = vim.env.PIXI_PROJECT_NAME or "<NO NAME>"
+                            vim.env.PIXI_IN_SHELL = "1"
                             vim.notify("Activated Pixi environment " .. project_name .. " at " .. project_root, vim.log.levels.INFO)
                             for _, v in ipairs({ "basedpyright", "pyrefly", "pyright", "ruff", "ty" }) do
                                 if #vim.lsp.get_clients({ name = v }) > 0 then
