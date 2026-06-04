@@ -1,6 +1,5 @@
 return {
     "ChuYanLon/telegram.nvim",
-    cond = false,
     build = "npm i",
     event = "VeryLazy",
     dependencies = {
@@ -20,7 +19,7 @@ return {
         "TgIssue",
     },
     opts = {
-        -- tdlib_path = "/path/to/libtdjson.so",         -- optional: .so (Linux) / .dylib (macOS) / .dll (Windows)
+        tdlib_path = vim.env.HOME .. "/.local/lib/libtdjson.dylib",
         proxy = "socks5://127.0.0.1:1086",
         http_port = 8081,
         ws_port = 8082
