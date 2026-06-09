@@ -10,12 +10,6 @@ return {
                 accept_word = nil,
             }
         },
-        filetypes = {
-            yaml = true,
-            markdown = true,
-            gitcommit = true,
-            hgcommit = true,
-        }
     },
     config = function(_, opts)
         local brglng = require("brglng")
