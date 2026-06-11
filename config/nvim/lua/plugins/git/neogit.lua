@@ -17,8 +17,8 @@ return {
     config = function(_, opts)
         local neogit = require('neogit')
         neogit.setup(opts)
-        vim.cmd [[ autocmd FileType Neogit* setlocal foldcolumn=0 nofoldenable ]]
-        vim.cmd [[ autocmd FileType NeogitStatus,NeogitPopup,NeogitLogView wincmd J ]]
+        vim.cmd [[ autocmd FileType Neogit*,gitcommit setlocal foldcolumn=0 nofoldenable ]]
+        -- vim.cmd [[ autocmd FileType NeogitStatus,NeogitPopup,NeogitLogView wincmd J ]]
     end,
     keys = {
         { '<Leader>gg', mode = { "n" }, function() require("neogit").open() end, desc = 'Neogit' },
