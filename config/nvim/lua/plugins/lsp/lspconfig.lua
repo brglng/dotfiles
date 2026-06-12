@@ -194,6 +194,9 @@ return {
                 },
                 single_file_support = true
             },
+            -- mesonlsp = {
+            --     enabled = true,
+            -- },
             nushell = {
                 enabled = true
             },

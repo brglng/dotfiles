@@ -280,10 +280,11 @@ return {
                         },
                         schema = {
                             model = {
-                                default = "deepseek/deepseek-v4-pro",
+                                default = "qwen/qwen3.7-max",
                                 choices = {
                                     ["deepseek/deepseek-v4-pro"] = {},
                                     ["deepseek/deepseek-v4-flash"] = {},
+                                    ["qwen/qwen3.7-max"] = {}
                                 },
                             },
                         },
@@ -302,7 +303,7 @@ return {
                     -- name = "copilot",
                     -- model = "gpt-5.5",
                     name = "openrouter",
-                    model = "deepseek/deepseek-v4-pro",
+                    model = "qwen/qwen3.7-max",
                 },
                 keymaps = {
                     -- send = {
@@ -423,7 +424,7 @@ When writing code in Python, follow the following code conventions:
                     -- name = "copilot",
                     -- model = "gpt-5.5",
                     name = "openrouter",
-                    model = "deepseek/deepseek-v4-pro",
+                    model = "qwen/qwen3.7-max",
                 },
             },
             cmd = {
@@ -431,7 +432,7 @@ When writing code in Python, follow the following code conventions:
                     -- name = "copilot",
                     -- model = "gpt-5.5",
                     name = "openrouter",
-                    model = "deepseek/deepseek-v4-pro",
+                    model = "qwen/qwen3.7-max",
                 },
             },
         },

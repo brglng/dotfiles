@@ -60,6 +60,7 @@ return {
                 -- "lua-language-server",
                 "marksman",
                 -- "matlab-language-server",
+                "mesonlsp",
                 "nickel-lang-lsp",
                 "perlnavigator",
                 "powershell-editor-services",
