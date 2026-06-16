@@ -23,7 +23,7 @@ return {
     keys = {
         { '<Leader>gg', mode = { "n" }, function() require("neogit").open() end, desc = 'Neogit' },
         { '<Leader>gb', mode = { "n" }, function() require("neogit").open({ "branch", kind = "split" }) end, desc = 'Neogit branch' },
-        { '<Leader>gc', mode = { "n" }, function() require("neogit").open({ "commit", kind = "split" }) end, desc = 'Neogit commit' },
+        -- { '<Leader>gc', mode = { "n" }, function() require("neogit").open({ "commit", kind = "split" }) end, desc = 'Neogit commit' },
         { '<Leader>gf', mode = { "n" }, function() require("neogit").open({ "fetch", kind = "split" }) end, desc = 'Neogit fetch' },
         { '<Leader>gla', mode = { "n" }, function() require("neogit").action("log", 'log_all_references', { '--graph', '--decorate', '--date-order' })() end, desc = 'Neogit log all references' },
         { '<Leader>gll', mode = { "n" }, "<Cmd>NeogitLogCurrent<CR>", desc = 'Neogit log current' },

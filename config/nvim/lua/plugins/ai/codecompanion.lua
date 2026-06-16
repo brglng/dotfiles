@@ -6,9 +6,11 @@ return {
         "zbirenbaum/copilot.lua",
         "ravitemer/codecompanion-history.nvim",
         "franco-ruggeri/codecompanion-spinner.nvim",
-        "Davidyz/codecompanion-dap.nvim"
+        "Davidyz/codecompanion-dap.nvim",
+        "jinzhongjia/codecompanion-gitcommit.nvim"
     },
     enabled = true,
+    ft = { "codecompanion", "gitcommit" },
     cmd = {
         "CodeCompanion",
         "CodeCompanionActions",
@@ -280,11 +282,19 @@ return {
                         },
                         schema = {
                             model = {
-                                default = "qwen/qwen3.7-max",
+                                default = "~openai/gpt-5.5-pro",
                                 choices = {
+                                    ["~anthropic/claude-fable-lateset"] = {},
+                                    ["~anthropic/claude-haiku-lateset"] = {},
+                                    ["~anthropic/claude-sonnet-lateset"] = {},
+                                    ["~anthropic/claude-opus-lateset"] = {},
+                                    ["openai/gpt-5.5"] = {},
+                                    ["openai/gpt-5.5-pro"] = {},
                                     ["deepseek/deepseek-v4-pro"] = {},
                                     ["deepseek/deepseek-v4-flash"] = {},
-                                    ["qwen/qwen3.7-max"] = {}
+                                    ["qwen/qwen3.7-max"] = {},
+                                    ["qwen/qwen3.7-plus"] = {},
+                                    ["qwen/qwen3.7-flash"] = {},
                                 },
                             },
                         },
@@ -303,7 +313,7 @@ return {
                     -- name = "copilot",
                     -- model = "gpt-5.5",
                     name = "openrouter",
-                    model = "qwen/qwen3.7-max",
+                    model = "openai/gpt-5.5-pro",
                 },
                 keymaps = {
                     -- send = {
@@ -424,7 +434,7 @@ When writing code in Python, follow the following code conventions:
                     -- name = "copilot",
                     -- model = "gpt-5.5",
                     name = "openrouter",
-                    model = "qwen/qwen3.7-max",
+                    model = "openai/gpt-5.5-pro",
                 },
             },
             cmd = {
@@ -432,7 +442,7 @@ When writing code in Python, follow the following code conventions:
                     -- name = "copilot",
                     -- model = "gpt-5.5",
                     name = "openrouter",
-                    model = "qwen/qwen3.7-max",
+                    model = "openai/gpt-5.5-pro",
                 },
             },
         },
@@ -464,6 +474,15 @@ When writing code in Python, follow the following code conventions:
                         delete = { n = "d", i = "<C-d>" },
                         duplicate = { n = "<C-y>", i = "<C-y>" },
                     }
+                }
+            },
+            gitcommit = {
+                opts = {
+                    -- adapter = "copilot",
+                    -- model = "gpt-5.5",
+                    adapter = "openrouter",
+                    model = "deepseek/deepseek-v4-flash",
+                    languages = { "English" }
                 }
             },
             spinner = {}
