@@ -282,7 +282,7 @@ return {
                         },
                         schema = {
                             model = {
-                                default = "~openai/gpt-5.5-pro",
+                                default = "~openai/gpt-5.5",
                                 choices = {
                                     ["~anthropic/claude-fable-lateset"] = {},
                                     ["~anthropic/claude-haiku-lateset"] = {},
@@ -310,10 +310,10 @@ return {
         interactions = {
             chat = {
                 adapter = {
-                    -- name = "copilot",
-                    -- model = "gpt-5.5",
-                    name = "openrouter",
-                    model = "openai/gpt-5.5-pro",
+                    name = "copilot",
+                    model = "gpt-5.5",
+                    -- name = "openrouter",
+                    -- model = "openai/gpt-5.5-pro",
                 },
                 keymaps = {
                     -- send = {
@@ -431,18 +431,18 @@ When writing code in Python, follow the following code conventions:
             },
             inline = {
                 adapter = {
-                    -- name = "copilot",
-                    -- model = "gpt-5.5",
-                    name = "openrouter",
-                    model = "openai/gpt-5.5-pro",
+                    name = "copilot",
+                    model = "gpt-5.5",
+                    -- name = "openrouter",
+                    -- model = "openai/gpt-5.5-pro",
                 },
             },
             cmd = {
                 adapter = {
-                    -- name = "copilot",
-                    -- model = "gpt-5.5",
-                    name = "openrouter",
-                    model = "openai/gpt-5.5-pro",
+                    name = "copilot",
+                    model = "gpt-5.5",
+                    -- name = "openrouter",
+                    -- model = "openai/gpt-5.5-pro",
                 },
             },
         },
@@ -478,10 +478,10 @@ When writing code in Python, follow the following code conventions:
             },
             gitcommit = {
                 opts = {
-                    -- adapter = "copilot",
-                    -- model = "gpt-5.5",
-                    adapter = "openrouter",
-                    model = "deepseek/deepseek-v4-flash",
+                    adapter = "copilot",
+                    model = "claude-sonnet-4.6",
+                    -- adapter = "openrouter",
+                    -- model = "deepseek/deepseek-v4-flash",
                     languages = { "English" }
                 }
             },
