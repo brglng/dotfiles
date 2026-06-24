@@ -311,7 +311,7 @@ return {
             chat = {
                 adapter = {
                     name = "copilot",
-                    model = "gpt-5.5",
+                    model = "claude-opus-4.8",
                     -- name = "openrouter",
                     -- model = "openai/gpt-5.5-pro",
                 },
@@ -432,7 +432,7 @@ When writing code in Python, follow the following code conventions:
             inline = {
                 adapter = {
                     name = "copilot",
-                    model = "gpt-5.5",
+                    model = "claude-sonnet-4.6",
                     -- name = "openrouter",
                     -- model = "openai/gpt-5.5-pro",
                 },
@@ -440,7 +440,7 @@ When writing code in Python, follow the following code conventions:
             cmd = {
                 adapter = {
                     name = "copilot",
-                    model = "gpt-5.5",
+                    model = "claude-sonnet-4.6",
                     -- name = "openrouter",
                     -- model = "openai/gpt-5.5-pro",
                 },

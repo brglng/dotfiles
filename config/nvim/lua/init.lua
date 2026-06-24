@@ -1,7 +1,7 @@
 vim.o.mousemoveevent = true
 vim.o.splitkeep = "screen"
 -- vim.o.termsync = false
-vim.g.maplocalleader = ","
+vim.g.maplocalleader = "\\"
 
 if vim.g.neovide then
     if vim.uv.os_uname().sysname == "Windows_NT" or vim.fn.has("wsl") == 1 then
