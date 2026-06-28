@@ -1,6 +1,7 @@
 return {
     "ChuYanLon/telegram.nvim",
     build = "npm i",
+    enabled = false,
     event = "VeryLazy",
     dependencies = {
         "MunifTanjim/nui.nvim",
