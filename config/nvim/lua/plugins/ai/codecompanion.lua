@@ -165,7 +165,7 @@ return {
                             end,
 
                             chat_output = function(self, data, tools)
-                                local adapter_utils = require("codecompanion.utils.adapters")
+                                local adapter_utils = require("codecompanion.adapters.utils")
                                 if not data or data == "" then
                                     return nil
                                 end
@@ -284,10 +284,8 @@ return {
                             model = {
                                 default = "~openai/gpt-5.5",
                                 choices = {
-                                    ["~anthropic/claude-fable-lateset"] = {},
-                                    ["~anthropic/claude-haiku-lateset"] = {},
-                                    ["~anthropic/claude-sonnet-lateset"] = {},
-                                    ["~anthropic/claude-opus-lateset"] = {},
+                                    ["anthropic/claude-sonnet-4.6"] = {},
+                                    ["anthropic/claude-opus-4.8"] = {},
                                     ["openai/gpt-5.5"] = {},
                                     ["openai/gpt-5.5-pro"] = {},
                                     ["deepseek/deepseek-v4-pro"] = {},
@@ -310,10 +308,8 @@ return {
         interactions = {
             chat = {
                 adapter = {
-                    name = "copilot",
-                    model = "claude-opus-4.8",
-                    -- name = "openrouter",
-                    -- model = "openai/gpt-5.5-pro",
+                    name = "openrouter",
+                    model = "anthropic/claude-opus-4.8",
                 },
                 keymaps = {
                     -- send = {
@@ -431,18 +427,14 @@ When writing code in Python, follow the following code conventions:
             },
             inline = {
                 adapter = {
-                    name = "copilot",
-                    model = "claude-sonnet-4.6",
-                    -- name = "openrouter",
-                    -- model = "openai/gpt-5.5-pro",
+                    name = "openrouter",
+                    model = "anthropic/claude-opus-4.8",
                 },
             },
             cmd = {
                 adapter = {
-                    name = "copilot",
-                    model = "claude-sonnet-4.6",
-                    -- name = "openrouter",
-                    -- model = "openai/gpt-5.5-pro",
+                    name = "openrouter",
+                    model = "anthropic/claude-opus-4.8",
                 },
             },
         },
@@ -478,10 +470,8 @@ When writing code in Python, follow the following code conventions:
             },
             gitcommit = {
                 opts = {
-                    adapter = "copilot",
-                    model = "claude-sonnet-4.6",
-                    -- adapter = "openrouter",
-                    -- model = "deepseek/deepseek-v4-flash",
+                    adapter = "openrouter",
+                    model = "anthropic/claude-opus-4.8",
                     languages = { "English" }
                 }
             },
