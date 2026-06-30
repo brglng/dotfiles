@@ -147,8 +147,10 @@ return {
                         cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
                     elseif luasnip.locally_jumpable(1) then
                         luasnip.jump(1)
-                    elseif require("copilot.suggestion").is_visible() then
-                        require("copilot.suggestion").accept()
+                    -- elseif require("copilot.suggestion").is_visible() then
+                    --     require("copilot.suggestion").accept()
+                    elseif require("minuet.virtualtext").action.is_visible() then
+                        require("minuet.virtualtext").action.accept()
                     else
                         fallback()
                     end
@@ -193,8 +195,10 @@ return {
                     i = function(fallback)
                         if cmp.visible() then
                             cmp.abort()
-                        elseif require("copilot.suggestion").is_visible() then
-                            require("copilot.suggestion").accept_line()
+                        -- elseif require("copilot.suggestion").is_visible() then
+                        --     require("copilot.suggestion").accept_line()
+                        elseif require("minuet.virtualtext").action.is_visible() then
+                            require("minuet.virtualtext").action.accept_line()
                         elseif vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
                             fallback()
                         else

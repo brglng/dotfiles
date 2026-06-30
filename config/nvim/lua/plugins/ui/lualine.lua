@@ -51,8 +51,9 @@ return {
             lualine_c = {
                 {
                     function()
-                        return require("opencode").statusline()
-                    end
+                        return require("minuet.lualine")
+                    end,
+                    display_on_idle = true,
                 },
                 {
                     function()
