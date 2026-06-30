@@ -49,12 +49,12 @@ return {
                 },
             },
             lualine_c = {
-                {
-                    function()
-                        return require("minuet.lualine")
-                    end,
-                    display_on_idle = true,
-                },
+                -- {
+                --     function()
+                --         return require("minuet.lualine")
+                --     end,
+                --     display_on_idle = true,
+                -- },
                 {
                     function()
                         local clients = vim.lsp.get_clients()
