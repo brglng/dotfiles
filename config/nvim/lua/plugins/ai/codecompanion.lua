@@ -281,7 +281,7 @@ return {
                         },
                         schema = {
                             model = {
-                                default = "~openai/gpt-5.5",
+                                default = "z-ai/glm-5.2",
                                 choices = {
                                     ["anthropic/claude-sonnet-4.6"] = {},
                                     ["anthropic/claude-opus-4.8"] = {},
@@ -292,6 +292,7 @@ return {
                                     ["qwen/qwen3.7-max"] = {},
                                     ["qwen/qwen3.7-plus"] = {},
                                     ["qwen/qwen3.7-flash"] = {},
+                                    ["z-ai/glm-5.2"] = {},
                                 },
                             },
                         },
@@ -308,7 +309,7 @@ return {
             chat = {
                 adapter = {
                     name = "openrouter",
-                    model = "anthropic/claude-opus-4.8",
+                    model = "z-ai/glm-5.2",
                 },
                 keymaps = {
                     -- send = {
@@ -427,13 +428,13 @@ When writing code in Python, follow the following code conventions:
             inline = {
                 adapter = {
                     name = "openrouter",
-                    model = "anthropic/claude-opus-4.8",
+                    model = "z-ai/glm-5.2",
                 },
             },
             cmd = {
                 adapter = {
                     name = "openrouter",
-                    model = "anthropic/claude-opus-4.8",
+                    model = "z-ai/glm-5.2",
                 },
             },
         },
@@ -470,7 +471,7 @@ When writing code in Python, follow the following code conventions:
             gitcommit = {
                 opts = {
                     adapter = "openrouter",
-                    model = "anthropic/claude-opus-4.8",
+                    model = "z-ai/glm-5.2",
                     languages = { "English" }
                 }
             },
