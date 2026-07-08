@@ -34,6 +34,8 @@ set -g @status_y_fg '#ebbcba'
 set -g @status_y_bg '#26233a'
 set -g @status_z_fg '#191724'
 set -g @status_z_bg '#ebbcba'
+set -g @pane_active_border_fg '#ebbcba'
+set -g @pane_active_border_bg '#191724'
 EOF
     else
         cat > "$THEME_FILE" << EOF
@@ -52,6 +54,8 @@ set -g @status_y_fg '#d7827e'
 set -g @status_y_bg '#f2e9e1'
 set -g @status_z_fg '#faf4ed'
 set -g @status_z_bg '#d7827e'
+set -g @pane_active_border_fg '#d7827e'
+set -g @pane_active_border_bg '#faf4ed'
 EOF
     fi
 }
