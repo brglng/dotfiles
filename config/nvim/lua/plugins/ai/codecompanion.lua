@@ -298,8 +298,57 @@ return {
                         },
                     })
                 end,
+                poe = function()
+                    return require("codecompanion.adapters").extend("openai_compatible", {
+                        env = {
+                            url = "https://api.poe.com",
+                            api_key = "POE_API_KEY",
+                            chat_url = "/v1/chat/completions",
+                        },
+                        headers = {
+                            ["Content-Type"] = "application/json",
+                        },
+                        opts = {
+                            stream = true,
+                        },
+                        schema = {
+                            model = {
+                                default = "glm-5.2",
+                                choices = {
+                                    ["claude-sonnet-4.6"] = {},
+                                    ["claude-opus-4.6"] = {},
+                                    ["claude-opus-4.8"] = {},
+                                    ["glm-5.2"] = {},
+                                },
+                            },
+                        }
+                    })
+                end,
+                aliyun_bailian_tokenplan = function()
+                    return require("codecompanion.adapters").extend("openai_compatible", {
+                        env = {
+                            url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+                            api_key = "ALIYUN_BAILIAN_API_KEY",
+                            chat_url = "/v1/chat/completions",
+                        },
+                        headers = {
+                            ["Content-Type"] = "application/json",
+                        },
+                        opts = {
+                            stream = true,
+                        },
+                        schema = {
+                            model = {
+                                default = "glm-5.2",
+                                choices = {
+                                    ["glm-5.2"] = {},
+                                },
+                            },
+                        }
+                    })
+                end,
                 opts = {
-                    allow_insecure = true,
+                    allow_insecure = false,
                     proxy = "socks5://127.0.0.1:1086",
                     show_model_choices = true
                 }
