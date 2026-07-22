@@ -3,8 +3,8 @@ return {
     -- version = "*", -- Pin Neorg to the latest stable release
     dependencies = {
         "nvim-treesitter/nvim-treesitter",
-        { 'nvim-neorg/tree-sitter-norg', cond = (not vim.fn.hostname():find("^zpan%-MacBookPro2016")) },
-        { 'nvim-neorg/tree-sitter-norg-meta', cond = (not vim.fn.hostname():find("^zpan%-MacBookPro2016")) },
+        { 'nvim-neorg/tree-sitter-norg', cond = (not vim.fn.hostname():find("^zpan%-mbp2016")) },
+        { 'nvim-neorg/tree-sitter-norg-meta', cond = (not vim.fn.hostname():find("^zpan%-mbp2016")) },
         { "3rd/image.nvim", cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0) },
         -- { "folke/snacks.nvim" },
         { "jbyuki/nabla.nvim" },
