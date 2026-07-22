@@ -313,7 +313,7 @@ return {
                         },
                         schema = {
                             model = {
-                                default = "glm-5.2",
+                                default = "kimi-k3",
                                 choices = {
                                     ["claude-sonnet-4.6"] = {},
                                     ["claude-opus-4.6"] = {},
@@ -349,7 +349,7 @@ return {
                 end,
                 opts = {
                     allow_insecure = false,
-                    proxy = "socks5://127.0.0.1:1086",
+                    -- proxy = "socks5://127.0.0.1:1086",
                     show_model_choices = true
                 }
             }
@@ -357,8 +357,8 @@ return {
         interactions = {
             chat = {
                 adapter = {
-                    name = "openrouter",
-                    model = "z-ai/glm-5.2",
+                    name = "poe",
+                    model = "kimi-k3"
                 },
                 keymaps = {
                     -- send = {
@@ -380,7 +380,7 @@ return {
 
 When writing code in Python, follow the following code conventions:
 
-- Import standard library packages first, followed by third-party packages, and finally local scripts, with a blank line between these three parts, and each part must be strictly sorted alphabetically.
+- Import standard library packages first, followed by third-party packages, and finally local scripts, and each part must be strictly sorted alphabetically.
 - Add two blank lines between each function or method.
 - Nested classes and nested functions are prohibited (except when they are really useful or small, or being explicitly asked for), but lambda functions are allowed.
 - Function default parameters should be avoided when they are not really necessary.
@@ -476,14 +476,14 @@ When writing code in Python, follow the following code conventions:
             },
             inline = {
                 adapter = {
-                    name = "openrouter",
-                    model = "z-ai/glm-5.2",
+                    name = "poe",
+                    model = "kimi-k3"
                 },
             },
             cmd = {
                 adapter = {
-                    name = "openrouter",
-                    model = "z-ai/glm-5.2",
+                    name = "poe",
+                    model = "kimi-k3"
                 },
             },
         },
@@ -519,8 +519,8 @@ When writing code in Python, follow the following code conventions:
             },
             gitcommit = {
                 opts = {
-                    adapter = "openrouter",
-                    model = "z-ai/glm-5.2",
+                    adapter = "poe",
+                    model = "kimi-k3",
                     languages = { "English" }
                 }
             },
