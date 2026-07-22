@@ -339,9 +339,10 @@ return {
                         },
                         schema = {
                             model = {
-                                default = "glm-5.2",
+                                default = "kimi-k3",
                                 choices = {
                                     ["glm-5.2"] = {},
+                                    ["kimi-k3"] = {},
                                 },
                             },
                         }
