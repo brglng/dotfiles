@@ -9,6 +9,7 @@ if vim.g.neovide then
     end
     -- vim.o.linespace = -0
     vim.g.neovide_hide_mouse_when_typing = true
+    vim.g.neovide_progress_bar_enabled = true
     vim.g.experimental_layer_grouping = true
     vim.g.neovide_input_macos_option_key_is_meta = 'both'
     -- vim.g.neovide_floating_corner_radius = 0.2
