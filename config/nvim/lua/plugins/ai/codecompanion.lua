@@ -34,7 +34,6 @@ return {
                         env = {
                             url = "https://api.poe.com",
                             api_key = "POE_API_KEY",
-                            chat_url = "/v1/chat/completions",
                         },
                         headers = {
                             ["Content-Type"] = "application/json",
@@ -44,13 +43,7 @@ return {
                         },
                         schema = {
                             model = {
-                                default = "kimi-k3",
-                                choices = {
-                                    ["claude-sonnet-4.6"] = {},
-                                    ["claude-opus-4.6"] = {},
-                                    ["claude-opus-4.8"] = {},
-                                    ["glm-5.2"] = {},
-                                },
+                                default = "claude-opus-4.8",
                             },
                         }
                     })
@@ -58,9 +51,20 @@ return {
                 aliyun_bailian_tokenplan = function()
                     return require("codecompanion.adapters").extend("openai_compatible", {
                         env = {
-                            url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+                            url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode",
                             api_key = "ALIYUN_BAILIAN_API_KEY",
-                            chat_url = "/chat/completions",
+                        },
+                        handlers = {
+                            parse_message_meta = function(self, data)
+                                local extra = data.extra
+                                if extra and extra.reasoning_content then
+                                    data.output.reasoning = { content = extra.reasoning_content }
+                                    if data.output.content == "" then
+                                        data.output.content = nil
+                                    end
+                                end
+                                return data
+                            end,
                         },
                         headers = {
                             ["Content-Type"] = "application/json",
@@ -71,10 +75,6 @@ return {
                         schema = {
                             model = {
                                 default = "glm-5.2",
-                                choices = {
-                                    ["glm-5.2"] = {},
-                                    ["kimi-k3"] = {},
-                                },
                             },
                         }
                     })
@@ -251,8 +251,8 @@ When writing code in Python, follow the following code conventions:
             },
             gitcommit = {
                 opts = {
-                    adapter = "poe",
-                    model = "kimi-k3",
+                    adapter = "aliyun_bailian_tokenplan",
+                    model = "glm-5.2",
                     languages = { "English" }
                 }
             },
