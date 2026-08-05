@@ -1,7 +1,7 @@
 return {
     "nvim-neorg/neorg",
     -- version = "*", -- Pin Neorg to the latest stable release
-    cond = (not (vim.fn.has("mac") == 1 and vim.uv.os_uname().machine == "arm64")),
+    cond = (not (vim.fn.has("mac") == 1 and vim.uv.os_uname().machine == "x86_64")),
     dependencies = {
         "nvim-treesitter/nvim-treesitter",
         { "3rd/image.nvim", cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0) },
