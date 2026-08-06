@@ -261,6 +261,19 @@ return {
                     case_mode = 'smart_case',
                 },
                 asynctasks = {
+                    layout_strategy = (function()
+                        if not vim.g.neovide then
+                            return 'brglng_term_nopreview'
+                        end
+                    end)(),
+                    borderchars = (function ()
+                        if not vim.g.neovide then
+                            return {
+                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+                            }
+                        end
+                    end)(),
                     layout_config = {
                         width = 0.3,
                         height = 0.3,
@@ -376,6 +389,6 @@ return {
         { '<Leader>fo', mode = 'n', function() require('telescope.builtin').vim_options() end, desc = 'Vim Options' },
         { '<Leader>fs', mode = 'n', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'LSP Document Symbols' },
         { '<Leader>fr', mode = 'n', function() require('telescope.builtin').resume() end, desc = 'Resume Previous Picker' },
-        { "<Leader>t", mode = "n",  function() require("telescope").extensions.asynctasks.all() end, desc = "Tasks" },
+        -- { "<Leader>t", mode = "n",  function() require("telescope").extensions.asynctasks.all() end, desc = "Tasks" },
     }
 }
