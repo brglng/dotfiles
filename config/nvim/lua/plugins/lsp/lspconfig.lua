@@ -86,6 +86,10 @@ return {
         codelens = {
             enabled = true,
         },
+        on_type_formatting = {
+            enabled = false,
+            -- trigger_characters = { ";", "}", "\r", "\n" }
+        },
         servers = {
             basedpyright = {
                 enabled = false,
@@ -350,7 +354,7 @@ return {
         end
 
         for server, server_opts in pairs(opts.servers) do
-            local server_opts = vim.tbl_deep_extend('force',
+            local server_opts_ = vim.tbl_deep_extend('force',
                 {
                     capabilities = vim.tbl_deep_extend('force',
                         vim.lsp.protocol.make_client_capabilities(),
@@ -371,8 +375,11 @@ return {
             if opts.codelens.enabled then
                 vim.lsp.codelens.enable(true)
             end
-            vim.lsp.config(server, server_opts)
-            if server_opts.enabled then
+            if opts.on_type_formatting.enabled then
+                vim.lsp.on_type_formatting.enable(true)
+            end
+            vim.lsp.config(server, server_opts_)
+            if server_opts_.enabled then
                 vim.lsp.enable(server, true)
             end
         end
@@ -427,6 +434,16 @@ return {
         vim.api.nvim_create_autocmd('LspAttach', {
             group = vim.api.nvim_create_augroup('UserLspConfig', {}),
             callback = function(ev)
+                if opts.on_type_formatting.enabled then
+                    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                    if client and client.supports_method('textDocument/onTypeFormatting') then
+                        -- Override trigger characters
+                        if opts.on_type_formatting.trigger_characters and client.server_capabilities and client.server_capabilities.documentOnTypeFormattingProvider then
+                            client.server_capabilities.documentOnTypeFormattingProvider.triggerCharacters = opts.on_type_formatting.trigger_characters
+                        end
+                    end
+                end
+
                 -- Enable completion triggered by <c-x><c-o>
                 vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
