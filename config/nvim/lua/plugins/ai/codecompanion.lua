@@ -34,6 +34,7 @@ return {
                         env = {
                             url = "https://api.poe.com",
                             api_key = "POE_API_KEY",
+                            char_url = "/v1/chat/completions",
                         },
                         headers = {
                             ["Content-Type"] = "application/json",
@@ -48,11 +49,12 @@ return {
                         }
                     })
                 end,
-                aliyun_bailian_tokenplan = function()
+                aliyun_bailian_tokenplan_enterprise = function()
                     return require("codecompanion.adapters").extend("openai_compatible", {
                         env = {
                             url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode",
                             api_key = "ALIYUN_BAILIAN_API_KEY",
+                            char_url = "/v1/chat/completions",
                         },
                         handlers = {
                             parse_message_meta = function(self, data)
@@ -89,8 +91,8 @@ return {
         interactions = {
             chat = {
                 adapter = {
-                    name = "poe",
-                    model = "kimi-k3"
+                    name = "aliyun_bailian_tokenplan_enterprise",
+                    model = "glm-5.2",
                 },
                 keymaps = {
                     -- send = {
@@ -251,7 +253,7 @@ When writing code in Python, follow the following code conventions:
             },
             gitcommit = {
                 opts = {
-                    adapter = "aliyun_bailian_tokenplan",
+                    adapter = "aliyun_bailian_tokenplan_enterprise",
                     model = "glm-5.2",
                     languages = { "English" }
                 }
