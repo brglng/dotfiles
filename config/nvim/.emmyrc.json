@@ -16,9 +16,10 @@
     },
     "workspace": {
         "library": [
-            "$VIMRUNTIME",
+            "$HOME/.config/nvim",
             "$HOME/.local/share/nvim/lazy",
-            "$LOCALAPPDATA/nvim-data/lazy"
+            "$LOCALAPPDATA/nvim-data/lazy",
+            "$VIMRUNTIME"
         ]
     }
 }
