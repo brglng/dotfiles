@@ -13,6 +13,10 @@ return {
     opts = {
         mappings = {
             disabled_filetypes = { 'TelescopePrompt', 'help', 'markdown', 'norg' },
+            wrap = {
+                ['<C-b>'] = false,
+                ['<C-S-b>'] = false
+            }
         },
         highlights = {
             enabled = true,
