@@ -387,7 +387,7 @@ runtime init/plugins/sidebar_manager.vim
 " Editing Plugins
 " runtime init/plugins/nerd_commenter.vim
 " runtime init/plugins/tcomment.vim
-runtime init/plugins/easy_align.vim
+" runtime init/plugins/easy_align.vim
 " runtime init/plugins/endwise.vim
 " runtime init/plugins/sleuth.vim
 runtime init/plugins/repeat.vim
@@ -406,8 +406,8 @@ runtime init/plugins/cycle.vim
 " runtime init/plugins/fugitive.vim
 
 " Project management
-runtime init/plugins/asyncrun.vim
-runtime init/plugins/asynctasks.vim
+" runtime init/plugins/asyncrun.vim
+" runtime init/plugins/asynctasks.vim
 
 " LSP
 " runtime init/plugins/coc.vim
