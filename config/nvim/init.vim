@@ -1,13 +1,28 @@
 let s:SEP = has('win32') ? '\' : '/'
+let s:script_dir = expand('<sfile>:p:h')
 
-" The default runtimepath on windows is $USERPROFILE/vimfiles, but I am not going to use it
-if ((has('win32') || has('win64')) && !has('win32unix')) && !has('nvim')
-    let &runtimepath = $HOME . '\.vim,' . &runtimepath . ',' . $HOME . '\.vim\after'
-endif
+function s:insert_after(rtp, dirs)
+    if a:rtp[-1] =~# '[\\/]after[\\/]\?$'
+        for dir in a:dirs
+            call insert(a:rtp, dir, -1)
+        endfor
+    else
+        call extend(a:rtp, a:dirs)
+    endif
+endfunction
 
-if !has('nvim')
-    let &runtimepath = &runtimepath . ',' . s:SEP . 'usr'. s:SEP . 'local' . s:SEP . 'share' . s:SEP . 'vim' . s:SEP . 'vimfiles'
-endif
+function s:insert_runtimepath()
+    let rtp = split(&runtimepath, ',')
+    let after_dirs = [s:script_dir . s:SEP . 'after']
+    if !has('nvim') && !has('win32')
+        call insert(rtp, '/usr/local/share/vim/vimfiles', 1)
+        call insert(after_dirs,  '/usr/local/share/vim/vimfiles/after')
+    endif
+    call insert(rtp, s:script_dir, 1)
+    call s:insert_after(rtp, after_dirs)
+    let &runtimepath = join(rtp, ',')
+endfunction
+call s:insert_runtimepath()
 
 if exists('g:neovide')
     if has('win32')
@@ -424,11 +439,11 @@ call plug#end()
 
 call brglng#install_missing_plugins(v:true)
 
+runtime init/keymaps.vim
+runtime init/ui.vim
+
 if has('nvim')
     runtime lua/init.lua
 endif
-
-runtime init/keymaps.vim
-runtime init/ui.vim
 
 " vim: ts=8 sts=4 sw=4 et
