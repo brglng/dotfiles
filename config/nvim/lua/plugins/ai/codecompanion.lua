@@ -53,7 +53,7 @@ return {
                     return require("codecompanion.adapters").extend("openai_compatible", {
                         env = {
                             url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode",
-                            api_key = "ALIYUN_BAILIAN_API_KEY",
+                            api_key = "ALIYUN_BAILIAN_TOKENPLAN_ENTERPRISE_API_KEY",
                             char_url = "/v1/chat/completions",
                         },
                         handlers = {
