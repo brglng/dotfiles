@@ -146,6 +146,31 @@ EOF
 )"
 }
 
+function update_nushell_env {
+    update_file "$1" \
+        '#[ \t]*BEGIN[ \t]*brglng\/dotfiles' \
+        '#[ \t]*END[ \t]*brglng\/dotfiles' \
+        "$(cat << EOF
+# BEGIN brglng/dotfiles
+\$env.BRGLNG_DOTFILES_DIR = "$PWD"
+source "$PWD/config/nushell/env.nu"
+# END brglng/dotfiles
+EOF
+)"
+}
+
+function update_nushell_config {
+    update_file "$1" \
+        '#[ \t]*BEGIN[ \t]*brglng\/dotfiles' \
+        '#[ \t]*END[ \t]*brglng\/dotfiles' \
+        "$(cat << EOF
+# BEGIN brglng/dotfiles
+source "$PWD/config/nushell/config.nu"
+# END brglng/dotfiles
+EOF
+)"
+}
+
 function link_common() {
     link "$PWD/config/neovide"                              "$HOME/.config/neovide"
     link "$PWD/config/powerline"                            "$HOME/.config/powerline"
@@ -163,7 +188,7 @@ function link_common() {
 
     update_vimrc
     update_gvimrc
-    upddate_nvim_init_lua
+    update_nvim_init_lua
     # update_alacritty_toml
     # link "$PWD/config/alacritty/colors"                     "$HOME/config/.alacritty/colors"
     update_gitconfig
@@ -175,16 +200,16 @@ function link_common() {
 function link_linux() {
     update_bashrc                               "$HOME/.bashrc"
     mkdir -p "$HOME/.config/nushell"
-    link "$PWD/config/nushell/env.nu"           "$HOME/.config/nushell/env.nu"
-    link "$PWD/config/nushell/config.nu"        "$HOME/.config/nushell/config.nu"
+    update_nushell_env                          "$HOME/.config/nushell/env.nu"
+    update_nushell_config                       "$HOME/.config/nushell/config.nu"
     link_common
 }
 
 function link_mac() {
     update_bashrc                               "$HOME/.bash_profile"
     mkdir -p "$HOME/Library/Application Support/nushell"
-    link "$PWD/config/nushell/env.nu"           "$HOME/Library/Application Support/nushell/env.nu"
-    link "$PWD/config/nushell/config.nu"        "$HOME/Library/Application Support/nushell/config.nu"
+    update_nushell_env                          "$HOME/Library/Application Support/nushell/env.nu"
+    update_nushell_config                       "$HOME/Library/Application Support/nushell/config.nu"
     link_common
 }
 
