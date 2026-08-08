@@ -1,19 +1,30 @@
 #!/bin/bash
 
-# Adds or updates a marker-delimited block in a file.
+# Adds or updates a brglng/dotfiles marker block in a file.
 #
-# If a fifth argument is given, it is treated as the name of a variable in the
-# caller's scope (like a C pointer) which is set to 1 when the target file did
-# not exist before the call (i.e. a brand new file was created), and to 0 when
-# the file already existed.
+# The block is delimited by BEGIN/END markers prefixed with the given comment
+# prefix (e.g. "#", '"', "--").  The corresponding regex patterns are built
+# automatically from the prefix.
+#
+# Arguments:
+#   $1: comment prefix
+#   $2: target file path
+#   $3: inner content (without markers)
+#   $4: (optional) name of variable to set to 1 if file was newly created
 function update_file {
-    local file=$1
-    local begin_regex=$2
-    local end_regex=$3
-    local content=$4
+    local prefix=$1
+    local file=$2
+    local content=$3
 
-    if [[ -n $5 ]]; then
-        local -n created_ref=$5
+    local block="$prefix BEGIN brglng/dotfiles
+$content
+$prefix END brglng/dotfiles"
+
+    local begin_regex="${prefix}[ \t]*BEGIN[ \t]*brglng\/dotfiles"
+    local end_regex="${prefix}[ \t]*END[ \t]*brglng\/dotfiles"
+
+    if [[ -n $4 ]]; then
+        local -n created_ref=$4
         if [[ ! -e "$file" ]]; then
             created_ref=1
         else
@@ -21,12 +32,14 @@ function update_file {
         fi
     fi
 
+    mkdir -p "$(dirname "$file")"
+
     if [[ ! -e "$file" || $(perl -n0e "print \$1 if /($begin_regex.*$end_regex)/s" "$file") = "" ]]; then
         echo "Creating $file"
-        echo "$content" >> "$file"
+        echo "$block" >> "$file"
     else
         echo "Updating $file"
-        echo "$content" | perl -i -p0e "s/$begin_regex.*$end_regex[^\n]*\n/<STDIN>/gse" "$file"
+        echo "$block" | perl -i -p0e "s/$begin_regex.*$end_regex[^\n]*\n/<STDIN>/gse" "$file"
     fi
 }
 
