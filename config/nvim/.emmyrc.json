@@ -19,7 +19,8 @@
             "$HOME/.config/nvim",
             "$HOME/.local/share/nvim/lazy",
             "$LOCALAPPDATA/nvim-data/lazy",
-            "$VIMRUNTIME"
+            "$VIMRUNTIME",
+            "$BRGLNG_DOTFILES_DIR/lua"
         ]
     }
 }
