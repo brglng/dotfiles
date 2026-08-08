@@ -1,10 +1,25 @@
 #!/bin/bash
 
+# Adds or updates a marker-delimited block in a file.
+#
+# If a fifth argument is given, it is treated as the name of a variable in the
+# caller's scope (like a C pointer) which is set to 1 when the target file did
+# not exist before the call (i.e. a brand new file was created), and to 0 when
+# the file already existed.
 function update_file {
     local file=$1
     local begin_regex=$2
     local end_regex=$3
     local content=$4
+
+    if [[ -n $5 ]]; then
+        local -n created_ref=$5
+        if [[ ! -e "$file" ]]; then
+            created_ref=1
+        else
+            created_ref=0
+        fi
+    fi
 
     if [[ ! -e "$file" || $(perl -n0e "print \$1 if /($begin_regex.*$end_regex)/s" "$file") = "" ]]; then
         echo "Creating $file"
