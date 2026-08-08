@@ -1,12 +1,14 @@
+-- Derive the dotfiles root from the path of this script so that the setup
+-- works regardless of how the file is loaded (e.g. via dofile from the
+-- bootstrap in ~/.config/nvim/init.lua).
 -- Source the legacy Vimscript init.vim first (rtp setup, vim-plug, options, keymaps).
--- BRGLNG_DOTFILES_DIR is set by the loader in ~/.config/nvim/init.lua.
-if vim.env.BRGLNG_DOTFILES_DIR then
-    package.path = vim.env.BRGLNG_DOTFILES_DIR .. "/lua/?.lua;"
-        .. vim.env.BRGLNG_DOTFILES_DIR .. "/lua/?/init.lua;"
-        .. package.path
+local dotfiles_dir = vim.fs.dirname(vim.fs.dirname(debug.getinfo(1, "S").source:sub(2)))
 
-    vim.cmd("source " .. vim.env.BRGLNG_DOTFILES_DIR .. "/config/nvim/init.vim")
-end
+package.path = dotfiles_dir .. "/lua/?.lua;"
+    .. dotfiles_dir .. "/lua/?/init.lua;"
+    .. package.path
+
+vim.cmd("source " .. dotfiles_dir .. "/config/nvim/init.vim")
 
 vim.o.mousemoveevent = true
 vim.o.splitkeep = "screen"
