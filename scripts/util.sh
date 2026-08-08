@@ -6,12 +6,12 @@ function update_file {
     local end_regex=$3
     local content=$4
 
-    if [[ ! -e $1 || $(perl -n0e "print \$1 if /($begin_regex.*$end_regex)/s" $file) = "" ]]; then
+    if [[ ! -e "$file" || $(perl -n0e "print \$1 if /($begin_regex.*$end_regex)/s" "$file") = "" ]]; then
         echo "Creating $file"
-        echo "$content" >> $file
+        echo "$content" >> "$file"
     else
         echo "Updating $file"
-        echo "$content" | perl -i -p0e "s/$begin_regex.*$end_regex[^\n]*\n/<STDIN>/gse" $file
+        echo "$content" | perl -i -p0e "s/$begin_regex.*$end_regex[^\n]*\n/<STDIN>/gse" "$file"
     fi
 }
 
