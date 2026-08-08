@@ -147,12 +147,17 @@ return {
                         cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
                     elseif luasnip.locally_jumpable(1) then
                         luasnip.jump(1)
-                    elseif require("copilot.suggestion").is_visible() then
-                        require("copilot.suggestion").accept()
+                    -- elseif require("copilot.suggestion").is_visible() then
+                    --     require("copilot.suggestion").accept()
                     -- elseif require("minuet.virtualtext").action.is_visible() then
                     --     require("minuet.virtualtext").action.accept()
                     else
-                        fallback()
+                        local status = require("codeium.virtual_text").status()
+                        if status.state == "completions" and status.total > 0 then
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(require("codeium.virtual_text").accept(), true, true, true), 'n', true)
+                        else
+                            fallback()
+                        end
                     end
                 end, { 'i', 's' }),
                 ['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -174,7 +179,7 @@ return {
                         if cmp.visible() then
                             cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'i', true)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Down>', true, true, true), 'n', true)
                         end
                     end,
                 }),
@@ -183,7 +188,7 @@ return {
                         if cmp.visible() then
                             cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'i', true)
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Up>', true, true, true), 'n', true)
                         end
                     end,
                 }),
@@ -195,14 +200,19 @@ return {
                     i = function(fallback)
                         if cmp.visible() then
                             cmp.abort()
-                        elseif require("copilot.suggestion").is_visible() then
-                            require("copilot.suggestion").accept_line()
+                        -- elseif require("copilot.suggestion").is_visible() then
+                        --     require("copilot.suggestion").accept_line()
                         -- elseif require("minuet.virtualtext").action.is_visible() then
                         --     require("minuet.virtualtext").action.accept_line()
-                        elseif vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
-                            fallback()
                         else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'i', true)
+                            local status = require("codeium.virtual_text").status()
+                            if status.state == "completions" and status.total > 0 then
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(require("codeium.virtual_text").accept_next_line(), true, true, true), 'n', true)
+                            elseif vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
+                                fallback()
+                            else
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'n', true)
+                            end
                         end
                     end,
                     c = function(fallback)
@@ -212,7 +222,7 @@ return {
                             if vim.fn.getcmdpos() > vim.fn.strlen(vim.fn.getcmdline()) then
                                 fallback()
                             else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'c', true)
+                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'n', true)
                             end
                         end
                     end
