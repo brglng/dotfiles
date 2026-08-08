@@ -5,7 +5,9 @@ set columns=100
 " autocmd GUIEnter * simalt ~x
 " endif
 
-set guioptions+=aA
+if !exists('g:neovide')
+    set guioptions+=aA
+endif
 set guioptions-=T
 " set guioptions-=r
 " set guioptions-=L
