@@ -1,3 +1,12 @@
+-- Add the repository-root `lua/` directory to the Lua module search path so the
+-- shared `brglng.color` library can be found. BRGLNG_DOTFILES_DIR is exported by
+-- the loader in ~/.config/nvim/lua/init.lua.
+if vim.env.BRGLNG_DOTFILES_DIR then
+    package.path = vim.env.BRGLNG_DOTFILES_DIR .. "/lua/?.lua;"
+        .. vim.env.BRGLNG_DOTFILES_DIR .. "/lua/?/init.lua;"
+        .. package.path
+end
+
 vim.o.mousemoveevent = true
 vim.o.splitkeep = "screen"
 -- vim.o.termsync = false

@@ -1,3 +1,18 @@
+-- brglng.color: a small OKLCH-based color manipulation library shared between
+-- the Neovim and WezTerm configurations.
+--
+-- The high-level helpers (lighten/darken/emboss/deboss/interpolate/middle/
+-- blend) accept a color in either representation and return the same one:
+--   * a "#RRGGBB" hex string (used by WezTerm)
+--   * a packed 0xRRGGBB integer (used by Neovim highlight groups)
+-- The representation is auto-detected from the input type: strings are treated
+-- as hex, numbers as packed integers.
+--
+-- Requires the LuaJIT `bit` library, which is available in both Neovim and
+-- WezTerm.
+
+local bit = require("bit")
+
 local M = {}
 
 -- sRGB to Linear RGB
@@ -254,7 +269,7 @@ function M.interpolate_rgb(r1, g1, b1, r2, g2, b2, mix)
 end
 
 -- Blend a foreground color over a background color with given opacity using OKLCH color space
--- Input: 
+-- Input:
 --   fr, fg, fb: foreground RGB color in [0.0, 1.0] range
 --   br, bg, bb: background RGB color in [0.0, 1.0] range
 --   opacity: the opacity of the foreground color in [0.0, 1.0] range
@@ -288,6 +303,55 @@ function M.blend_rgb(fg_r, fg_g, fg_b, bg_r, bg_g, bg_b, opacity)
     return M.oklch_to_rgb(L, C, fg_h)
 end
 
+-- Pack separate RGB components into a single integer
+---@param r number [0.0, 1.0]
+---@param g number [0.0, 1.0]
+---@param b number [0.0, 1.0]
+---@return integer
+function M.pack_rgb(r, g, b)
+    -- Convert from [0.0, 1.0] to [0, 255]
+    local r_byte = math.floor(r * 255 + 0.5)
+    local g_byte = math.floor(g * 255 + 0.5)
+    local b_byte = math.floor(b * 255 + 0.5)
+
+    -- Ensure values are in [0, 255] range
+    r_byte = math.max(0, math.min(255, r_byte))
+    g_byte = math.max(0, math.min(255, g_byte))
+    b_byte = math.max(0, math.min(255, b_byte))
+
+    -- Pack into a single number (R in high bits, B in low bits)
+    -- Using LuaJIT bit operations
+    local number = bit.bor(
+        bit.lshift(r_byte, 16),
+        bit.lshift(g_byte, 8),
+        b_byte
+    )
+
+    return number
+end
+
+-- Unpack a RGB integer into separate RGB components
+---@param packed integer
+---@return number, number, number
+function M.unpack_rgb(packed)
+    -- Extract the individual RGB bytes using LuaJIT bit operations
+    local r_byte = bit.band(bit.rshift(packed, 16), 0xFF)
+    local g_byte = bit.band(bit.rshift(packed, 8), 0xFF)
+    local b_byte = bit.band(packed, 0xFF)
+
+    -- Convert from [0, 255] to [0.0, 1.0]
+    local r = r_byte / 255
+    local g = g_byte / 255
+    local b = b_byte / 255
+
+    return r, g, b
+end
+
+-- Format separate RGB components into a "#RRGGBB" hex string
+---@param r number [0.0, 1.0]
+---@param g number [0.0, 1.0]
+---@param b number [0.0, 1.0]
+---@return string
 function M.rgb_to_hex(r, g, b)
     -- Convert from [0.0, 1.0] to [0, 255]
     local r_byte = math.floor(r * 255 + 0.5)
@@ -303,6 +367,7 @@ function M.rgb_to_hex(r, g, b)
     return string.format("#%02X%02X%02X", r_byte, g_byte, b_byte)
 end
 
+-- Parse a "#RRGGBB" hex string into separate RGB components
 ---@param hex string
 ---@return number, number, number
 function M.hex_to_rgb(hex)
@@ -324,73 +389,105 @@ function M.hex_to_rgb(hex)
     return r, g, b
 end
 
----@param rgb string
+-- Decode a color (hex string or packed integer) into r, g, b floats plus the
+-- kind of representation ("hex" or "int") so it can be re-encoded later.
+---@param color string | integer
+---@return number, number, number, "hex" | "int"
+local function decode_color(color)
+    if type(color) == "string" then
+        local r, g, b = M.hex_to_rgb(color)
+        return r, g, b, "hex"
+    else
+        local r, g, b = M.unpack_rgb(color)
+        return r, g, b, "int"
+    end
+end
+
+-- Encode r, g, b floats back into the given representation.
+---@param r number
+---@param g number
+---@param b number
+---@param kind "hex" | "int"
+---@return string | integer
+local function encode_color(r, g, b, kind)
+    if kind == "hex" then
+        return M.rgb_to_hex(r, g, b)
+    else
+        return M.pack_rgb(r, g, b)
+    end
+end
+
+---@param rgb string | integer
 ---@param amount number [0.0, 1.0]
----@return string
+---@return string | integer
 function M.lighten(rgb, amount)
-    local r, g, b = M.hex_to_rgb(rgb)
+    local r, g, b, kind = decode_color(rgb)
     r, g, b = M.lighten_rgb(r, g, b, amount)
-    return M.rgb_to_hex(r, g, b)
+    return encode_color(r, g, b, kind)
 end
 
----@param rgb string
+---@param rgb string | integer
 ---@param amount number [0.0, 1.0]
----@return string
+---@return string | integer
 function M.darken(rgb, amount)
-    local r, g, b = M.hex_to_rgb(rgb)
+    local r, g, b, kind = decode_color(rgb)
     r, g, b = M.darken_rgb(r, g, b, amount)
-    return M.rgb_to_hex(r, g, b)
+    return encode_color(r, g, b, kind)
 end
 
----@param rgb string
+-- Emboss: lighten on dark backgrounds, darken on light backgrounds.
+---@param rgb string | integer
 ---@param amount number [0.0, 1.0]
----@return string
-function M.emboss(rgb, amount)
-    if vim.o.background == "dark" then
+---@param background "dark" | "light"
+---@return string | integer
+function M.emboss(rgb, amount, background)
+    if background == "dark" then
         return M.lighten(rgb, amount)
     else
         return M.darken(rgb, amount)
     end
 end
 
----@param rgb string
+-- Deboss: the inverse of emboss.
+---@param rgb string | integer
 ---@param amount number [0.0, 1.0]
----@return string
-function M.deboss(rgb, amount)
-    if vim.o.background == "dark" then
+---@param background "dark" | "light"
+---@return string | integer
+function M.deboss(rgb, amount, background)
+    if background == "dark" then
         return M.darken(rgb, amount)
     else
         return M.lighten(rgb, amount)
     end
 end
 
----@param rgb1 string
----@param rgb2 string
+---@param rgb1 string | integer
+---@param rgb2 string | integer
 ---@param mix number [0.0, 1.0]
----@return string
+---@return string | integer
 function M.interpolate(rgb1, rgb2, mix)
-    local r1, g1, b1 = M.hex_to_rgb(rgb1)
-    local r2, g2, b2 = M.hex_to_rgb(rgb2)
+    local r1, g1, b1, kind = decode_color(rgb1)
+    local r2, g2, b2 = decode_color(rgb2)
     local r, g, b = M.interpolate_rgb(r1, g1, b1, r2, g2, b2, mix)
-    return M.rgb_to_hex(r, g, b)
+    return encode_color(r, g, b, kind)
 end
 
----@param rgb1 string
----@param rgb2 string
----@return string
+---@param rgb1 string | integer
+---@param rgb2 string | integer
+---@return string | integer
 function M.middle(rgb1, rgb2)
     return M.interpolate(rgb1, rgb2, 0.5)
 end
 
----@param fg string
----@param bg string
+---@param fg string | integer
+---@param bg string | integer
 ---@param opacity number
----@return string
+---@return string | integer
 function M.blend(fg, bg, opacity)
-    local fg_r, fg_g, fg_b = M.hex_to_rgb(fg)
-    local bg_r, bg_g, bg_b = M.hex_to_rgb(bg)
+    local fg_r, fg_g, fg_b, kind = decode_color(fg)
+    local bg_r, bg_g, bg_b = decode_color(bg)
     local r, g, b = M.blend_rgb(fg_r, fg_g, fg_b, bg_r, bg_g, bg_b, opacity)
-    return M.rgb_to_hex(r, g, b)
+    return encode_color(r, g, b, kind)
 end
 
 return M

@@ -60,11 +60,11 @@ function M.transform_one(opts)
     elseif transform == "emboss" then
         assert(type(opts.from) == "number" or type(opts.from) == "string" or type(opts.from) == "table", "emboss requires `from`")
         assert(type(opts.amount) == "number", "emboss requires `amount`")
-        return color.emboss(M.get_attr(opts.from), opts.amount)
+        return color.emboss(M.get_attr(opts.from), opts.amount, vim.o.background)
     elseif transform == "deboss" then
         assert(type(opts.from) == "number" or type(opts.from) == "string" or type(opts.from) == "table", "deboss requires `from`")
         assert(type(opts.amount) == "number", "deboss requires `amount`")
-        return color.deboss(M.get_attr(opts.from), opts.amount)
+        return color.deboss(M.get_attr(opts.from), opts.amount, vim.o.background)
     elseif transform == "interpolate" then
         assert(type(opts.from) == "number" or type(opts.from) == "table" and #opts.from >= 2, "interpolate requires `from`")
         assert(type(opts.mix) == "number", "interpolate requires `mix`")

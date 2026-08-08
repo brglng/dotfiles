@@ -1,4 +1,13 @@
 local wezterm = require('wezterm')
+
+-- Add the repository-root `lua/` directory to the module search path so the
+-- shared `brglng.color` library can be found. BRGLNG_DOTFILES_DIR is set by the
+-- loader in ~/.config/wezterm/wezterm.lua; fall back to wezterm.config_dir/..
+local brglng_dotfiles_dir = BRGLNG_DOTFILES_DIR or (wezterm.config_dir .. "/../..")
+package.path = brglng_dotfiles_dir .. "/lua/?.lua;"
+    .. brglng_dotfiles_dir .. "/lua/?/init.lua;"
+    .. package.path
+
 local brglng = require("brglng")
 local WINDOWS = (wezterm.target_triple == "x86_64-pc-windows-msvc")
 local MAC = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin"
