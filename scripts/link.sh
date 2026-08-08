@@ -50,6 +50,8 @@ function update_gitconfig {
 # BEGIN brglng/dotfiles
 [include]
 	path = "$PWD/gitconfig"
+[core]
+	excludesfile = "$PWD/gitignore_global"
 # END brglng/dotfiles
 EOF
 )"
@@ -68,6 +70,58 @@ import = [
 # END brglng/dotfiles
 EOF
 )"
+}
+
+function update_tmux_conf {
+    update_file "$1" \
+        '#[ \t]*BEGIN[ \t]brglng\/dotfiles' \
+        '#[ \t]*END[ \t]brglng\/dotfiles' \
+        "$(cat <<EOF
+# BEGIN brglng/dotfiles
+set-environment -g BRGLNG_DOTFILES_DIR "$PWD"
+source-file "$PWD/tmux.conf"
+# END brglng/dotfiles
+EOF
+)"
+}
+
+function update_ghostty_config {
+    mkdir -p "$HOME/.config/ghostty"
+    update_file "$HOME/.config/ghostty/config" \
+        '#[ \t]*BEGIN[ \t]brglng\/dotfiles' \
+        '#[ \t]*END[ \t]brglng\/dotfiles' \
+        "$(cat <<EOF
+# BEGIN brglng/dotfiles
+config-file = $PWD/config/ghostty/config
+# END brglng/dotfiles
+EOF
+)"
+}
+
+function update_wezterm {
+    mkdir -p "$HOME/.config/wezterm"
+    local created
+    update_file "$HOME/.config/wezterm/wezterm.lua" \
+        '--[ \t]*BEGIN[ \t]brglng\/dotfiles' \
+        '--[ \t]*END[ \t]brglng\/dotfiles' \
+        "$(cat <<EOF
+-- BEGIN brglng/dotfiles
+BRGLNG_DOTFILES_DIR = "$PWD"
+package.path = BRGLNG_DOTFILES_DIR .. "/config/wezterm/?.lua;"
+    .. BRGLNG_DOTFILES_DIR .. "/config/wezterm/?/init.lua;"
+    .. package.path
+config = dofile(BRGLNG_DOTFILES_DIR .. "/config/wezterm/wezterm.lua")
+-- END brglng/dotfiles
+EOF
+)" \
+        created
+
+    # Only a freshly created file needs the final `return`; if the file already
+    # existed the user is expected to keep their own `return config` below the
+    # marker block so they can add custom content.
+    if [[ $created -eq 1 ]]; then
+        echo "return config" >> "$HOME/.config/wezterm/wezterm.lua"
+    fi
 }
 
 function update_kitty_conf {
@@ -173,19 +227,17 @@ EOF
 
 function link_common() {
     link "$PWD/config/neovide"                              "$HOME/.config/neovide"
-    link "$PWD/config/powerline"                            "$HOME/.config/powerline"
+    # link "$PWD/config/powerline"                            "$HOME/.config/powerline"
     link "$PWD/config/starship.toml"                        "$HOME/.config/starship.toml"
-    link "$PWD/config/wezterm"                              "$HOME/.config/wezterm"
-    link "$PWD/config/tmux"                                 "$HOME/.config/tmux"
-    link "$PWD/gitignore_global"                            "$HOME/.gitignore_global"
-    link "$PWD/tmux.conf"                                   "$HOME/.tmux.conf"
     link "$PWD/zimrc"                                       "$HOME/.zimrc"
     link "$PWD/config/kitty/themes"                         "$HOME/.config/kitty/themes"
     link "$PWD/config/kitty/dark-theme.auto.conf"           "$HOME/.config/kitty/dark-theme.auto.conf"
     link "$PWD/config/kitty/light-theme.auto.conf"          "$HOME/.config/kitty/light-theme.auto.conf"
     link "$PWD/config/kitty/no-preference-theme.auto.conf"  "$HOME/.config/kitty/no-preference-theme.auto.conf"
-    link "$PWD/config/ghostty"                              "$HOME/.config/ghostty"
 
+    update_tmux_conf                                        "$HOME/.tmux.conf"
+    update_ghostty_config
+    update_wezterm
     update_vimrc
     update_gvimrc
     update_nvim_init_lua

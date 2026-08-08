@@ -1,6 +1,5 @@
 [core]
 	autocrlf = false
-	excludesfile = ~/.gitignore_global
 	filemodes = true
 	fileMode = true
 	longpaths = true
