@@ -442,8 +442,4 @@ call brglng#install_missing_plugins(v:true)
 runtime init/keymaps.vim
 runtime init/ui.vim
 
-if has('nvim')
-    runtime lua/init.lua
-endif
-
 " vim: ts=8 sts=4 sw=4 et

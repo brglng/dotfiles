@@ -10,7 +10,11 @@
 #   $1: comment prefix
 #   $2: target file path
 #   $3: inner content (without markers)
-#   $4: (optional) name of variable to set to 1 if file was newly created
+#
+# Output:
+#   Prints "created" to stdout if the file was newly created, or "updated" if
+#   an existing marker block was replaced.  This can be captured by the caller
+#   if needed.
 function update_file {
     local prefix=$1
     local file=$2
@@ -23,23 +27,16 @@ $prefix END brglng/dotfiles"
     local begin_regex="${prefix}[ \t]*BEGIN[ \t]*brglng\/dotfiles"
     local end_regex="${prefix}[ \t]*END[ \t]*brglng\/dotfiles"
 
-    if [[ -n $4 ]]; then
-        local -n created_ref=$4
-        if [[ ! -e "$file" ]]; then
-            created_ref=1
-        else
-            created_ref=0
-        fi
-    fi
-
     mkdir -p "$(dirname "$file")"
 
     if [[ ! -e "$file" || $(perl -n0e "print \$1 if /($begin_regex.*$end_regex)/s" "$file") = "" ]]; then
-        echo "Creating $file"
+        echo "Creating $file" >&2
         echo "$block" >> "$file"
+        echo "created"
     else
-        echo "Updating $file"
+        echo "Updating $file" >&2
         echo "$block" | perl -i -p0e "s/$begin_regex.*$end_regex[^\n]*\n/<STDIN>/gse" "$file"
+        echo "updated"
     fi
 }
 

@@ -66,19 +66,19 @@ EOF
 function update_wezterm {
     mkdir -p "$HOME/.config/wezterm"
     local created
-    update_file "--" "$HOME/.config/wezterm/wezterm.lua" "$(cat <<EOF
+    created=$(update_file "--" "$HOME/.config/wezterm/wezterm.lua" "$(cat <<EOF
 BRGLNG_DOTFILES_DIR = "$PWD"
 package.path = BRGLNG_DOTFILES_DIR .. "/config/wezterm/?.lua;"
     .. BRGLNG_DOTFILES_DIR .. "/config/wezterm/?/init.lua;"
     .. package.path
 config = dofile(BRGLNG_DOTFILES_DIR .. "/config/wezterm/wezterm.lua")
 EOF
-)" created
+)")
 
     # Only a freshly created file needs the final `return`; if the file already
     # existed the user is expected to keep their own `return config` below the
     # marker block so they can add custom content.
-    if [[ $created -eq 1 ]]; then
+    if [[ "$created" = "created" ]]; then
         echo "return config" >> "$HOME/.config/wezterm/wezterm.lua"
     fi
 }
@@ -105,14 +105,6 @@ EOF
 )"
 }
 
-function update_nvim_init_vim {
-    update_file '"' "$HOME/.config/nvim/init.vim" "$(cat <<EOF
-let $BRGLNG_DOTFILES_DIR = '$PWD'
-source $PWD/config/nvim/init.vim
-EOF
-)"
-}
-
 function update_nvim_ginit_vim {
     update_file '"' "$HOME/.config/nvim/ginit.vim" "$(cat <<EOF
 let $BRGLNG_DOTFILES_DIR = '$PWD'
@@ -122,7 +114,7 @@ EOF
 }
 
 function update_nvim_init_lua {
-    update_file "--" "$HOME/.config/nvim/lua/init.lua" "$(cat <<EOF
+    update_file "--" "$HOME/.config/nvim/init.lua" "$(cat <<EOF
 vim.env.BRGLNG_DOTFILES_DIR="$PWD"
 dofile(vim.env.BRGLNG_DOTFILES_DIR .. "/config/nvim/init.lua")
 EOF
