@@ -359,87 +359,87 @@ function! NeovimOnly(...)
 endfunction
 
 " Generic Plugins
-runtime init/plugins/cppman.vim
-" runtime init/plugins/nvim_yarp.vim
-" runtime init/plugins/hug_neovim_rpc.vim
-" runtime init/plugins/tmux_focus_events.vim
-" runtime init/plugins/tmux_clipboard.vim
-runtime init/plugins/im_select.vim
+runtime brglng/plugins/cppman.vim
+" runtime brglng/plugins/nvim_yarp.vim
+" runtime brglng/plugins/hug_neovim_rpc.vim
+" runtime brglng/plugins/tmux_focus_events.vim
+" runtime brglng/plugins/tmux_clipboard.vim
+runtime brglng/plugins/im_select.vim
 
 " Documentation
-" runtime init/plugins/doge.vim
-" runtime init/plugins/dasht.vim
+" runtime brglng/plugins/doge.vim
+" runtime brglng/plugins/dasht.vim
 
 " UI Plugins
-" runtime init/plugins/devicons.vim
-" runtime init/plugins/dirvish.vim
-" runtime init/plugins/lightline.vim
-" runtime init/plugins/fencview.vim
-runtime init/plugins/undotree.vim
-" runtime init/plugins/startify.vim
-" runtime init/plugins/which_key.vim
-runtime init/plugins/sidebar_manager.vim
-" runtime init/plugins/defx.vim
-" runtime init/plugins/netrw.vim
-" runtime init/plugins/terminal_help.vim
-" runtime init/plugins/vista.vim
-" runtime init/plugins/dein_ui.vim
-" runtime init/plugins/indent_line.vim
+" runtime brglng/plugins/devicons.vim
+" runtime brglng/plugins/dirvish.vim
+" runtime brglng/plugins/lightline.vim
+" runtime brglng/plugins/fencview.vim
+runtime brglng/plugins/undotree.vim
+" runtime brglng/plugins/startify.vim
+" runtime brglng/plugins/which_key.vim
+runtime brglng/plugins/sidebar_manager.vim
+" runtime brglng/plugins/defx.vim
+" runtime brglng/plugins/netrw.vim
+" runtime brglng/plugins/terminal_help.vim
+" runtime brglng/plugins/vista.vim
+" runtime brglng/plugins/dein_ui.vim
+" runtime brglng/plugins/indent_line.vim
 
 " Fuzzy Finder
-" runtime init/plugins/denite.vim
-" runtime init/plugins/leaderf.vim
-" runtime init/plugins/clap.vim
+" runtime brglng/plugins/denite.vim
+" runtime brglng/plugins/leaderf.vim
+" runtime brglng/plugins/clap.vim
 
 " Moving Plugins
-" runtime init/plugins/clever_f.vim
-" runtime init/plugins/unimpaired.vim
-" runtime init/plugins/surround.vim
-" runtime init/plugins/targets.vim
-" runtime init/plugins/matchup.vim
-" runtime init/plugins/textobj.vim
+" runtime brglng/plugins/clever_f.vim
+" runtime brglng/plugins/unimpaired.vim
+" runtime brglng/plugins/surround.vim
+" runtime brglng/plugins/targets.vim
+" runtime brglng/plugins/matchup.vim
+" runtime brglng/plugins/textobj.vim
 
 " Editing Plugins
-" runtime init/plugins/nerd_commenter.vim
-" runtime init/plugins/tcomment.vim
-" runtime init/plugins/easy_align.vim
-" runtime init/plugins/endwise.vim
-" runtime init/plugins/sleuth.vim
-runtime init/plugins/repeat.vim
-runtime init/plugins/abolish.vim
-runtime init/plugins/cycle.vim
-" runtime init/plugins/vim_visual_multi.vim
+" runtime brglng/plugins/nerd_commenter.vim
+" runtime brglng/plugins/tcomment.vim
+" runtime brglng/plugins/easy_align.vim
+" runtime brglng/plugins/endwise.vim
+" runtime brglng/plugins/sleuth.vim
+runtime brglng/plugins/repeat.vim
+runtime brglng/plugins/abolish.vim
+runtime brglng/plugins/cycle.vim
+" runtime brglng/plugins/vim_visual_multi.vim
 
 " FileType Plugins
-" runtime init/plugins/ps1.vim
-" runtime init/plugins/plantuml_syntax.vim
-" runtime init/plugins/python_pep8_indent.vim
-" runtime init/plugins/polyglot.vim
-" runtime init/plugins/tmux.vim
+" runtime brglng/plugins/ps1.vim
+" runtime brglng/plugins/plantuml_syntax.vim
+" runtime brglng/plugins/python_pep8_indent.vim
+" runtime brglng/plugins/polyglot.vim
+" runtime brglng/plugins/tmux.vim
 
 " Source Control Plugins
-" runtime init/plugins/fugitive.vim
+" runtime brglng/plugins/fugitive.vim
 
 " Project management
-" runtime init/plugins/asyncrun.vim
-" runtime init/plugins/asynctasks.vim
+" runtime brglng/plugins/asyncrun.vim
+" runtime brglng/plugins/asynctasks.vim
 
 " LSP
-" runtime init/plugins/coc.vim
-" runtime init/plugins/coc_explorer.vim
-" runtime init/plugins/coc_smartf.vim
-" runtime init/plugins/snippets.vim
-" runtime init/plugins/any_jump.vim
-" runtime init/plugins/neoformat.vim
+" runtime brglng/plugins/coc.vim
+" runtime brglng/plugins/coc_explorer.vim
+" runtime brglng/plugins/coc_smartf.vim
+" runtime brglng/plugins/snippets.vim
+" runtime brglng/plugins/any_jump.vim
+" runtime brglng/plugins/neoformat.vim
 
 " ColorSchemes
-runtime init/plugins/colors/init.vim
+runtime brglng/plugins/colors/init.vim
 
 call plug#end()
 
 call brglng#install_missing_plugins(v:true)
 
-runtime init/keymaps.vim
-runtime init/ui.vim
+runtime brglng/keymaps.vim
+runtime brglng/ui.vim
 
 " vim: ts=8 sts=4 sw=4 et

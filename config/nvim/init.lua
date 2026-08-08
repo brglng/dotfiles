@@ -143,7 +143,7 @@ vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
 })
 
 vim.api.nvim_set_hl(0, "LazyNormal", { link = "Normal" })
-require("lazy").setup("plugins", {
+require("lazy").setup("brglng/plugins", {
     lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
     concurrency = 4,
     git = {
