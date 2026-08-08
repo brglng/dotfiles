@@ -31,45 +31,43 @@ return {
                 end,
                 poe = function()
                     return require("codecompanion.adapters").extend("openai_compatible", {
+                        name = "poe",
+                        vendor = "poe",
+                        formatted_name = "Poe",
                         env = {
                             url = "https://api.poe.com",
+                            chat_url = "/v1/chat/completions",
                             api_key = "POE_API_KEY",
-                            char_url = "/v1/chat/completions",
-                        },
-                        headers = {
-                            ["Content-Type"] = "application/json",
                         },
                         opts = {
                             stream = true,
                         },
                         schema = {
                             model = {
-                                default = "claude-opus-4.8",
+                                default = "kimi-k3",
+                                choices = {
+                                    "kimi-k3",
+                                    "claude-sonnet-4.6",
+                                    "claude-opus-4.8",
+                                    "zpan-fable5-code",
+                                    "zpan-gpt5.5-code",
+                                    "zpan-gpt5.5pro-code",
+                                    "zpan-opus-5-agent",
+                                }
                             },
                         }
                     })
                 end,
                 aliyun_bailian_tokenplan_enterprise = function()
                     return require("codecompanion.adapters").extend("openai_compatible", {
+                        -- url = "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1/messages",
+                        vendor = "alibaba",
+                        name = "aliyun_bailian_tokenplan_enterprise",
+                        formatted_name = "阿里云百炼 Token Plan 企业版",
                         env = {
                             url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode",
+                            chat_url = "/v1/chat/completions",
                             api_key = "ALIYUN_BAILIAN_TOKENPLAN_ENTERPRISE_API_KEY",
-                            char_url = "/v1/chat/completions",
-                        },
-                        handlers = {
-                            parse_message_meta = function(self, data)
-                                local extra = data.extra
-                                if extra and extra.reasoning_content then
-                                    data.output.reasoning = { content = extra.reasoning_content }
-                                    if data.output.content == "" then
-                                        data.output.content = nil
-                                    end
-                                end
-                                return data
-                            end,
-                        },
-                        headers = {
-                            ["Content-Type"] = "application/json",
                         },
                         opts = {
                             stream = true,
@@ -77,13 +75,17 @@ return {
                         schema = {
                             model = {
                                 default = "glm-5.2",
+                                choices = {
+                                    "glm-5.2",
+                                    "deepseek-v4-flash-0731",
+                                    "qwen3.8-max"
+                                }
                             },
                         }
                     })
                 end,
                 opts = {
                     allow_insecure = false,
-                    -- proxy = "socks5://127.0.0.1:1086",
                     show_model_choices = true
                 }
             }
@@ -95,12 +97,15 @@ return {
                     model = "glm-5.2",
                 },
                 keymaps = {
-                    -- send = {
-                    --     modes = { n = "<C-CR>", i = "<C-CR>" },
-                    -- },
-                    -- close = {
-                    --     modes = { n = "q", i = "<C-c>" },
-                    -- }
+                    send = {
+                        modes = { n = "<CR>", i = "<C-CR>" },
+                    },
+                    close = {
+                        modes = { n = "q", i = "<C-d>" },
+                    },
+                    stop = {
+                        modes = { n = "<C-c>", i = "<C-c>" }
+                    }
                 },
                 opts = {
                     system_prompt = function(ctx)
@@ -211,13 +216,13 @@ When writing code in Python, follow the following code conventions:
             inline = {
                 adapter = {
                     name = "poe",
-                    model = "kimi-k3"
+                    model = "claude-opus-4.8"
                 },
             },
             cmd = {
                 adapter = {
                     name = "poe",
-                    model = "kimi-k3"
+                    model = "claude-opus-4.8"
                 },
             },
         },
@@ -253,8 +258,8 @@ When writing code in Python, follow the following code conventions:
             },
             gitcommit = {
                 opts = {
-                    adapter = "aliyun_bailian_tokenplan_enterprise",
-                    model = "glm-5.2",
+                    adapter = "poe",
+                    model = "claude-opus-4.8",
                     languages = { "English" }
                 }
             },
