@@ -158,6 +158,7 @@ return {
                     -- hidden = true,
                     find_command = {
                         "fd",
+                        "-t", "f",
                         "-H",
                         "-I",
                         "--exclude={.DS_Store,Thumbs.db,*.swp,*.swo,.clangd,.git,.idea,.vscode,.sass-cache,.mypy_cache,node_modules,build,.vscode-server,.virtualenvs,.venv*,.cache,.ghcup,.conda,.rustup,.cargo,target,.stfolder,.vs,*.pyc,*.egg-info,.pixi,.conan,.conan2}",
