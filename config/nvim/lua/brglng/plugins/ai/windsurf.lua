@@ -9,11 +9,17 @@ return {
         enable_cmp_source = false,
         virtual_text = {
             enabled = true,
+            filetypes = {
+                TelescopePrompt = false
+            },
+            default_filetype_enabled = true,
             key_bindings = {
-                accept = "<Plug>(CodiumAccept)",
-                accept_word = "<Plug>(CodiumAcceptWord)",
-                accept_line = "<Plug>(CodiumAcceptLine)",
-                clear = "<Plug>(CodiumClear)",
+                accept = "<Plug>(CodeiumAccept)",
+                accept_word = "<Plug>(CodeiumAcceptWord)",
+                accept_line = "<Plug>(CodeiumAcceptLine)",
+                clear = "<Plug>(CodeiumClear)",
+                next = "<M-]>",
+                prev = "<M-[>",
             }
         }
     },

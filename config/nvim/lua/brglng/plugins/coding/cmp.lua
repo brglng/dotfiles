@@ -151,13 +151,10 @@ return {
                     --     require("copilot.suggestion").accept()
                     -- elseif require("minuet.virtualtext").action.is_visible() then
                     --     require("minuet.virtualtext").action.accept()
+                    elseif require("codeium.virtual_text").get_current_completion_item() then
+                        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(CodeiumAccept)", true, true, true), "n ", false)
                     else
-                        local status = require("codeium.virtual_text").status()
-                        if status.state == "completions" and status.total > 0 then
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(require("codeium.virtual_text").accept(), true, true, true), 'n', true)
-                        else
-                            fallback()
-                        end
+                        fallback()
                     end
                 end, { 'i', 's' }),
                 ['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -204,15 +201,12 @@ return {
                         --     require("copilot.suggestion").accept_line()
                         -- elseif require("minuet.virtualtext").action.is_visible() then
                         --     require("minuet.virtualtext").action.accept_line()
+                        elseif require("codeium.virtual_text").get_current_completion_item() then
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(CodeiumAcceptLine)", true, true, true), "n ", false)
+                        elseif vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
+                            fallback()
                         else
-                            local status = require("codeium.virtual_text").status()
-                            if status.state == "completions" and status.total > 0 then
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(require("codeium.virtual_text").accept_next_line(), true, true, true), 'n', true)
-                            elseif vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
-                                fallback()
-                            else
-                                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'n', true)
-                            end
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<End>', true, true, true), 'n', true)
                         end
                     end,
                     c = function(fallback)
