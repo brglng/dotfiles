@@ -12,6 +12,7 @@ return {
             filetypes = {
                 TelescopePrompt = false,
                 OverseerForm = false,
+                ["neo-tree-popup"] = false,
             },
             default_filetype_enabled = true,
             key_bindings = {
