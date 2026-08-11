@@ -82,13 +82,10 @@ return {
                 -- },
             },
             lualine_x = {
+                "overseer",
                 {
-                    function()
-                        return require("noice").api.status.command.get
-                    end,
-                    cond = function()
-                        return require("noice").api.status.command.has
-                    end
+                    function() return require("noice").api.status.command.get end,
+                    cond = function() return require("noice").api.status.command.has end
                 },
                 'encoding',
                 {
