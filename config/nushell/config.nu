@@ -6,7 +6,7 @@ if (uname).operating-system =~ 'MS/Windows' {
 
 $env.config.show_banner = false
 $env.config.use_ansi_coloring = true
-$env.config.use_kitty_protocol = true # enables keyboard enhancement protocol implemented by kitty console, only if your terminal support this.
+$env.config.use_kitty_protocol = true
 
 # osc2 abbreviates the path if in the home_dir which we do not want here.
 $env.config.shell_integration.osc2 = false
@@ -87,7 +87,6 @@ $env.config.hooks.pre_execution = [{
     }
 }]
 
-# Only the IDE completion menu is customized; the rest use Nushell defaults.
 $env.config.menus = ($env.config.menus | append {
     name: ide_completion_menu
     only_buffer_difference: false
