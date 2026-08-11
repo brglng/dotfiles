@@ -91,6 +91,13 @@ EOF
 )"
 }
 
+function update_clang_format {
+    update_file "#" "$HOME/.clang-format" "$(cat <<EOF
+BasedOnStyle: "InheritParentConfig=$PWD"
+EOF
+)"
+}
+
 function update_vimrc {
     update_file '"' "$HOME/.vimrc" "$(cat <<EOF
 source $PWD/config/nvim/init.vim
@@ -156,6 +163,7 @@ function link_common() {
     # link "$PWD/config/alacritty/colors"                     "$HOME/config/.alacritty/colors"
     update_gitconfig
     update_kitty_conf
+    update_clang_format
     update_zprofile
     update_zshrc
 }
