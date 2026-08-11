@@ -91,13 +91,6 @@ EOF
 )"
 }
 
-function update_clang_format {
-    update_file "#" "$HOME/.clang-format" "$(cat <<EOF
-BasedOnStyle: "InheritParentConfig=$PWD"
-EOF
-)"
-}
-
 function update_vimrc {
     update_file '"' "$HOME/.vimrc" "$(cat <<EOF
 source $PWD/config/nvim/init.vim
@@ -147,11 +140,12 @@ function link_common() {
     link "$PWD/config/neovide"                              "$HOME/.config/neovide"
     # link "$PWD/config/powerline"                            "$HOME/.config/powerline"
     link "$PWD/config/starship.toml"                        "$HOME/.config/starship.toml"
-    link "$PWD/zimrc"                                       "$HOME/.zimrc"
     link "$PWD/config/kitty/themes"                         "$HOME/.config/kitty/themes"
     link "$PWD/config/kitty/dark-theme.auto.conf"           "$HOME/.config/kitty/dark-theme.auto.conf"
     link "$PWD/config/kitty/light-theme.auto.conf"          "$HOME/.config/kitty/light-theme.auto.conf"
     link "$PWD/config/kitty/no-preference-theme.auto.conf"  "$HOME/.config/kitty/no-preference-theme.auto.conf"
+    link "$PWD/clang-format"                                "$HOME/.clang-format"
+    link "$PWD/zimrc"                                       "$HOME/.zimrc"
 
     update_tmux_conf                                        "$HOME/.tmux.conf"
     update_ghostty_config
@@ -163,7 +157,6 @@ function link_common() {
     # link "$PWD/config/alacritty/colors"                     "$HOME/config/.alacritty/colors"
     update_gitconfig
     update_kitty_conf
-    update_clang_format
     update_zprofile
     update_zshrc
 }

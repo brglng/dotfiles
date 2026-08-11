@@ -1,0 +1,40 @@
+---
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+AlignEscapedNewlines: Left
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Inline
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: Always
+  SplitEmptyFunction: false
+  SplitEmptyNamespace: false
+  SplitEmptyRecord: false
+BreakStringLiterals: false
+ColumnLimit: 0
+CommentPragmas: '^[ \t]*[@\\]'
+IndentCaseLabels: true
+IndentWidth: 4
+KeepEmptyLines:
+  AtStartOfBlock: false
+PenaltyBreakAssignment: 4
+PointerAlignment: Left
+ReflowComments: Never
+---
+Language: Cpp
+AlignConsecutiveAssignments:
+  Enabled: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+AlignConsecutiveMacros:
+  Enabled: true
+AllowShortLambdasOnASingleLine: Inline
+BreakAfterJavaFieldAnnotations: true
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+ObjCBlockIndentWidth: 4
+PackConstructorInitializers: NextLine
+SpacesInContainerLiterals: false
+Standard: c++17
+...
