@@ -129,20 +129,10 @@ case $UNAME_S in
         ;;
 esac
 
-if ! infocmp tmux-256color &> /dev/null; then
-    tic -x terminfo/tmux-256color.terminfo
-fi
-if ! infocmp xterm-256color-italic &> /dev/null; then
-    tic -x terminfo/xterm-256color-italic.terminfo
-fi
-
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git git-lfs subversion rustup-init cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli node npm
+    brew install git git-lfs subversion rustup-init cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli node npm rust rustup
 fi
-
-mkdir -p ~/.terminfo
-sudo chown -R $USER ~/.terminfo
 
 if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/bin/rustup-init" ]]; then
     "$HOMEBREW_PREFIX/bin/rustup-init" -y
@@ -151,7 +141,7 @@ else
 fi
 [[ -s "$HOME/.cargo/env" ]] && source $HOME/.cargo/env
 rustup update
-rustup component add rust-analysis rust-src rustfmt
+rustup component add rust-src
 
 if type brew &>/dev/null; then
     scripts/linuxbrew_post_install.sh
@@ -161,7 +151,7 @@ if [[ $UNAME_S = "Linux" ]]; then
     ln -sf /home/linuxbrew/.linuxbrew/bin/pixi $HOME/.local/bin
 fi
 
-pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn numba powerline-status
+pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn numba
 
 if [[ $UNAME_S = "Linux" ]]; then
     pixi global install -e default pytorch pytorch-gpu torchaudio cuda cudnn
@@ -202,7 +192,7 @@ else
 fi
 rm -f .zgen/init.zsh
 
-scripts/disable_sudo_secure_path.sh
+# scripts/disable_sudo_secure_path.sh
 
 scripts/link.sh
 
