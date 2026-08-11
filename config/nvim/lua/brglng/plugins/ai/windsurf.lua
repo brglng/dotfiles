@@ -10,14 +10,15 @@ return {
         virtual_text = {
             enabled = true,
             filetypes = {
-                TelescopePrompt = false
+                TelescopePrompt = false,
+                OverseerForm = false,
             },
             default_filetype_enabled = true,
             key_bindings = {
                 accept = "<Plug>(CodeiumAccept)",
                 accept_word = "<Plug>(CodeiumAcceptWord)",
                 accept_line = "<Plug>(CodeiumAcceptLine)",
-                clear = "<Plug>(CodeiumClear)",
+                clear = "<C-]>",
                 next = "<M-]>",
                 prev = "<M-[>",
             }
