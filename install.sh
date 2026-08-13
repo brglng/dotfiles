@@ -45,7 +45,7 @@ install_linux() {
 
     # Fix for vim
     if [[ -e ~/.viminfo ]]; then
-        sudo chown $USER:$(id -g -n $USER) $HOME/.viminfo
+        sudo chown "$USER:$(id -g -n $USER)" "$HOME/.viminfo"
     fi
 
     mkdir -p ~/.local/share/fonts
@@ -58,7 +58,7 @@ install_linux() {
     fc-cache
 
     if [[ $distname != "Arch" ]]; then
-        ln -sf $PWD/local/bin/brew $HOME/.local/bin
+        ln -sf "$PWD/local/bin/brew" "$HOME/.local/bin"
 
         # Install Homebrew for Linux
         if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
@@ -89,13 +89,7 @@ function install_mac() {
       	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake ninja git git-lfs reattach-to-user-namespace wezterm@nightly font-maple-mono-nf-cn font-symbols-only-nerd-font # font-lxgw-bright-code-tc
-
-    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCode.7z | 7zr x -o~/Library/Fonts/
-    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCodeGB.7z | 7zr x -o~/Library/Fonts/
-    curl https://github.com/lxgw/LxgwBright-Code/releases/latest/download/LxgwBrightCodeTC.7z | 7zr x -o~/Library/Fonts/
-    curl https://github.com/rbong/flog-symbols/raw/refs/heads/main/FlogSymbols.ttf -o ~/Library/Fonts/FlogSymbols.ttf
-
+    brew install coreutils gnu-sed gawk make automake autoconf libtool pkg-config cmake ninja git git-lfs reattach-to-user-namespace wezterm@nightly font-maple-mono-nf-cn font-symbols-only-nerd-font
     brew install --cask macvim-app neovide-app mactex
 
     brew tap daipeihust/tap
@@ -107,7 +101,7 @@ if [[ $(id -u) -eq 0 ]] || [[ $(id -g) -eq 0 ]]; then
     exit 1
 fi
 
-mkdir -p $HOME/.local/bin
+mkdir -p "$HOME/.local/bin"
 export PATH=$HOME/.local/bin:$PATH
 
 UNAME_S=$(uname -s)
@@ -131,7 +125,7 @@ esac
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git git-lfs subversion rustup-init cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli node npm rust rustup
+    brew install git git-lfs subversion rustup-init cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli node npm rust rustup pi-coding-agent
 fi
 
 if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/bin/rustup-init" ]]; then
@@ -139,7 +133,7 @@ if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/bin/rustup-init" ]]; then
 else
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
-[[ -s "$HOME/.cargo/env" ]] && source $HOME/.cargo/env
+[[ -s "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
 rustup update
 rustup component add rust-src
 
@@ -148,7 +142,7 @@ if type brew &>/dev/null; then
 fi
 
 if [[ $UNAME_S = "Linux" ]]; then
-    ln -sf /home/linuxbrew/.linuxbrew/bin/pixi $HOME/.local/bin
+    ln -sf /home/linuxbrew/.linuxbrew/bin/pixi "$HOME/.local/bin"
 fi
 
 pixi global install -e default python pip numpy scipy matplotlib librosa jupyter ipython jupyterlab pynvim uv sympy pandas scikit-learn numba
