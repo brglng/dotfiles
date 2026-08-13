@@ -48,7 +48,7 @@ EOF
 }
 
 function update_tmux_conf {
-    update_file "#" "$1" "$(cat <<EOF
+    update_file "#" "$HOME/.tmux.conf" "$(cat <<EOF
 set-environment -g BRGLNG_DOTFILES_DIR "$PWD"
 source-file "$PWD/tmux.conf"
 EOF
@@ -137,26 +137,34 @@ EOF
 }
 
 function link_common() {
-    link "$PWD/config/neovide"                              "$HOME/.config/neovide"
-    # link "$PWD/config/powerline"                            "$HOME/.config/powerline"
-    link "$PWD/config/starship.toml"                        "$HOME/.config/starship.toml"
-    link "$PWD/config/kitty/themes"                         "$HOME/.config/kitty/themes"
-    link "$PWD/config/kitty/dark-theme.auto.conf"           "$HOME/.config/kitty/dark-theme.auto.conf"
-    link "$PWD/config/kitty/light-theme.auto.conf"          "$HOME/.config/kitty/light-theme.auto.conf"
-    link "$PWD/config/kitty/no-preference-theme.auto.conf"  "$HOME/.config/kitty/no-preference-theme.auto.conf"
-    link "$PWD/clang-format"                                "$HOME/.clang-format"
-    link "$PWD/zimrc"                                       "$HOME/.zimrc"
+    link "config/neovide"
+    # link "config/powerline"
+    link "config/starship.toml"
+    link "config/kitty/themes"
+    link "config/kitty/dark-theme.auto.conf"
+    link "config/kitty/light-theme.auto.conf"
+    link "config/kitty/no-preference-theme.auto.conf"
+    link "clang-format"
+    link "zimrc"
+    link "pi/agent/extensions/pi-sandbox/config.json"
+    link "pi/agent/keybindings.json"
+    link "pi/agent/models.json"
+    link "pi/agent/settings.json"
 
-    update_tmux_conf                                        "$HOME/.tmux.conf"
-    update_ghostty_config
-    update_wezterm
-    update_vimrc
-    update_gvimrc
-    update_nvim_init_lua
     # update_alacritty_toml
-    # link "$PWD/config/alacritty/colors"                     "$HOME/config/.alacritty/colors"
+    # link "config/alacritty/colors"
+
+    update_ghostty_config
     update_gitconfig
+    update_gvimrc
     update_kitty_conf
+    update_nushell_config
+    update_nushell_env
+    update_nvim_init_lua
+    update_nvim_ginit_vim
+    update_tmux_conf
+    update_vimrc
+    update_wezterm
     update_zprofile
     update_zshrc
 }

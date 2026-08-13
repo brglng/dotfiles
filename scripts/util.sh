@@ -29,26 +29,31 @@ $prefix END brglng/dotfiles"
 
     mkdir -p "$(dirname "$file")"
 
-    if [[ ! -e "$file" || $(perl -n0e "print \$1 if /($begin_regex.*$end_regex)/s" "$file") = "" ]]; then
+    if [[ ! -e "$file" || $(perl -n0e "print \$1 if /(${begin_regex}.*${end_regex})/s" "$file") = "" ]]; then
         echo "Creating $file" >&2
         echo "$block" >> "$file"
         echo "created"
     else
         echo "Updating $file" >&2
-        echo "$block" | perl -i -p0e "s/$begin_regex.*$end_regex[^\n]*\n/<STDIN>/gse" "$file"
+        echo "$block" | perl -i -p0e "s/${begin_regex}.*${end_regex}[^\n]*\n/<STDIN>/gse" "$file"
         echo "updated"
     fi
 }
 
 if [[ $(uname -s) = Darwin ]]; then
-    function readlinkf() { echo $(greadlink -f "$1"); }
+    function readlinkf() { greadlink -f "$1"; }
 else
-    function readlinkf() { echo $(readlink -f "$1"); }
+    function readlinkf() { readlink -f "$1"; }
 fi
 
 function link {
     local src=$1
     local dst=$2
+
+    if [[ "$2" == "" ]]; then
+        dst="${HOME}.$1"
+    fi
+    src="$PWD/$1"
 
     if [[ -e "$dst" || -L "$dst" ]]; then
         if [[ $(readlinkf "$dst") = $(readlinkf "$src") ]]; then
@@ -57,24 +62,24 @@ function link {
             echo "Original $dst is renamed to $dst.orig"
             mv "$dst" "$dst.orig"
             echo "Linking $dst -> $src"
-            mkdir -p $(dirname "$dst")
+            mkdir -p "$(dirname "$dst")"
             ln -s "$src" "$dst"
         fi
     else
         echo "Linking $dst -> $src"
-        mkdir -p $(dirname "$dst")
+        mkdir -p "$(dirname "$dst")"
         ln -s "$src" "$dst"
     fi
 }
 
 function ask_setup_proxy() {
     while true; do
-        read -p "Do you want to setup a proxy? (y/n): " yn
+        read -r -p "Do you want to setup a proxy? (y/n): " yn
         echo
         case $yn in
             [Yy]*)
                 while true; do
-                    read -p "Please input your proxy address (e.g., http://127.0.0.1:8118): " proxy_address
+                    read -r -p "Please input your proxy address (e.g., http://127.0.0.1:8118): " proxy_address
                     echo
                     if [[ "$proxy_address" =~ ^http:// ]]; then
                         break
