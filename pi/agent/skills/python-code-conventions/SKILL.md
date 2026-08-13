@@ -11,14 +11,14 @@ Apply these rules when writing or editing Python code, in addition to the `code-
 
 ## Rules
 
-- Import standard library packages first, followed by third-party packages, and finally local scripts, and each part must be strictly sorted alphabetically.
-- Add two blank lines between each function or method.
-- Nested classes and nested functions are prohibited (except when they are really useful or small, or being explicitly asked for), but lambda functions are allowed.
-- Function default parameters should be avoided when they are not really necessary.
-- Importing inside a function is strictly prohibited except when the import is only used in a function which is only executed during testing.
-- Wrap the main program in a `main` function instead of write directly under a `if __name__ == "__main__:` block.
-- Type hints are preferred where the types are not obvious and at function prototypes. The `None` return type must be omitted. Types should be imported to the global namespace if they do not conflict. Built-in type names such as `list`, `tuple`, and `dict` should be preferred over the counterparts in the `typing` package, such as `typing.List`, `typing.Tuple`, and `typing.Dict`.
+- Order imports as follows: standard library packages first, third-party packages next, and local scripts last; sort each group strictly alphabetically.
+- Add two blank lines between every function or method.
+- Nested classes and nested functions are prohibited unless they are genuinely useful, small, or explicitly requested; lambda functions are always allowed.
+- Avoid function default parameters unless they are truly necessary.
+- Do not import inside a function, except when the import is used solely by a function that runs only during testing.
+- Wrap the main program in a `main` function instead of writing it directly under an `if __name__ == "__main__":` block.
+- Prefer type hints where the types are not obvious and on function signatures. Omit the `None` return type. Import types in the global namespace when their names do not conflict. Prefer built-in types such as `list`, `tuple`, and `dict` over their `typing` counterparts such as `typing.List`, `typing.Tuple`, and `typing.Dict`.
 - Prefer `numpy.typing.NDArray` over `np.ndarray`.
-- Use type parameters.
-- Add assertions at the beginning of functions for the shapes of `NDArray`s and `Tensor`s.
-- If there is docstring, prefer NumPy style.
+- Use type parameters (generics).
+- Add shape assertions for `NDArray`s and `Tensor`s at the beginning of functions.
+- Prefer NumPy style when writing docstrings.

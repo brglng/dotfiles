@@ -7,11 +7,11 @@ description: Mandatory conventions for writing or editing code in any programmin
 
 ## When to Use
 
-Apply these rules whenever you write or edit code in any language. Read this file when the task involves producing code; skip it only for pure text responses.
+Apply these rules whenever you write or edit code in any language. Read this file when the task involves producing code; it is not needed for text-only responses.
 
 ## Rules
 
-- All code including comments must be written in English regardless of the language of the user's request, except for the following cases:
-  - Keep any latin/western/Russian people names, place/street names, country/state names, etc. in their original language and do not translate them to English.
-  - For non-latin (especially CJK) people names, place/street names, country/state names, etc., if the original language is not English, translate them to English, and add a pair of parentheses after the English translation containing the original name in its original language. For example, if the original name is "张三", translate it to "San Zhang (张三)".
-- Strip leading spaces or tabs in blank lines in the code.
+- All code, including comments, must be written in English, regardless of the language of the user's request, except for the following cases:
+  - For names written in the Latin or Cyrillic script (e.g. Western or Russian names) — people, places, streets, countries/states, etc. — keep them in their original language and do not translate them to English.
+  - For non-Latin (especially CJK) names — people, places, streets, countries/states, etc. — if the original language is not English, translate them to English and append the original name in parentheses after the translation. For example, translate "张三" to "San Zhang (张三)".
+- Blank lines in code must not contain any spaces or tabs.
