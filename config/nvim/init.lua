@@ -12,7 +12,7 @@ vim.cmd("source " .. dotfiles_dir .. "/config/nvim/init.vim")
 
 vim.o.mousemoveevent = true
 vim.o.splitkeep = "screen"
-vim.o.termsync = false
+vim.o.termsync = true
 vim.g.maplocalleader = "\\"
 
 if vim.g.neovide then
