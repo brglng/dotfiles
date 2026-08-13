@@ -20,25 +20,27 @@ return {
 
         local actions = require("telescope.actions")
 
-        require('telescope.pickers.layout_strategies').brglng_term = function(picker, columns, lines, layout_config)
-            local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
-            config.prompt.width = config.results.width + 1
+        local layout_strategies = require('telescope.pickers.layout_strategies')
+        layout_strategies.brglng_term = function(picker, columns, lines, layout_config)
+            local config = layout_strategies.horizontal(picker, columns, lines, layout_config)
             config.results.height = config.results.height + 1
             config.results.width = config.results.width + 1
             config.results.line = config.results.line - 1
-            return config
-        end
-        require('telescope.pickers.layout_strategies').brglng_term_nopreview = function(picker, columns, lines, layout_config)
-            local config = require('telescope.pickers.layout_strategies').horizontal(picker, columns, lines, layout_config)
-            config.results.height = config.results.height + 1
-            config.results.line = config.results.line - 1
+            if picker.previewer and config.preview then
+                config.prompt.width = config.results.width + 1
+                config.prompt.borderchars = { "─", "│", "─", "│", "╭", "─", "─", "├" }
+                config.results.borderchars = { "─", "│", "─", "│", "├", "┤", "┴", "╰" }
+                config.preview.borderchars = { "─", "│", "─", "│", "┬", "╮", "╯", "┴" }
+            else
+                config.prompt.borderchars = { "─", "│", "─", "│", "╭", "╮", "┤", "├" }
+                config.results.borderchars = { "─", "│", "─", "│", "├", "┤", "╯", "╰" }
+            end
             return config
         end
 
         require("telescope").setup {
             defaults = {
                 sorting_strategy = "ascending",
-                -- layout_strategy = 'brglng',
                 layout_strategy = (function()
                     if not vim.g.neovide then
                         return 'brglng_term'
@@ -56,15 +58,6 @@ return {
                             prompt = { 1, 1, 1, 1 },
                             results = { 1, 1, 1, 1 },
                             preview = { 1, 1, 1, 1 },
-                        }
-                    end
-                end)(),
-                borderchars = (function()
-                    if not vim.g.neovide then
-                        return {
-                            prompt = { "─", "│", "─", "│", "╭", "─", "─", "├" },
-                            results = { "─", "│", "─", "│", "├", "┤", "┴", "╰" },
-                            preview = { "─", "│", "─", "│", "┬", "╮", "╯", "┴" },
                         }
                     end
                 end)(),
@@ -91,19 +84,6 @@ return {
             pickers = {
                 buffers = {
                     previewer = false,
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term_nopreview'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                     ignore_current_buffer = true,
                     sort_mru = true,
                     layout_config = {
@@ -120,38 +100,12 @@ return {
                 },
                 current_buffer_fuzzy_find = {
                     previewer = false,
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term_nopreview'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                     layout_config = {
                         -- width = 0.62,
                     },
                 },
                 find_files = {
                     previewer = false,
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term_nopreview'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                     layout_config = {
                         -- width = 0.62
                     },
@@ -221,36 +175,10 @@ return {
                 },
                 lsp_document_symbols = {
                     previewer = false,
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term_nopreview'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                     symbol_width = 0.8
                 },
                 oldfiles = {
                     previewer = false,
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term_nopreview'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                     hidden = true,
                 },
             },
@@ -262,19 +190,6 @@ return {
                     case_mode = 'smart_case',
                 },
                 asynctasks = {
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term_nopreview'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                     layout_config = {
                         width = 0.3,
                         height = 0.3,
@@ -282,54 +197,15 @@ return {
                 },
                 file_browser = {
                     previewer = false,
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term_nopreview'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                     hijack_netrw = false
                 },
                 ["ui-select"] = {
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term_nopreview'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                     layout_config = {
                         width = 0.5,
                         height = 0.5
                     }
                 },
                 luasnip = {
-                    layout_strategy = (function()
-                        if not vim.g.neovide then
-                            return 'brglng_term'
-                        end
-                    end)(),
-                    borderchars = (function ()
-                        if not vim.g.neovide then
-                            return {
-                                prompt = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-                                results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                            }
-                        end
-                    end)(),
                 }
             }
         }
