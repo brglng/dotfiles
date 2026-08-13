@@ -1,0 +1,12 @@
+{
+  "authorizerChain": ["pi-auto-review"],
+  "permission": {
+    "read": "allow",
+    "grep": "allow",
+    "find": "allow",
+    "ls": "allow",
+    "bash": {
+      "*": "ask"
+    }
+  }
+}
