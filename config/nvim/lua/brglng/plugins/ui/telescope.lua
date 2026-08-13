@@ -24,10 +24,10 @@ return {
         layout_strategies.brglng_term = function(picker, columns, lines, layout_config)
             local config = layout_strategies.horizontal(picker, columns, lines, layout_config)
             config.results.height = config.results.height + 1
-            config.results.width = config.results.width + 1
             config.results.line = config.results.line - 1
             if picker.previewer and config.preview then
-                config.prompt.width = config.results.width + 1
+                config.prompt.width = config.prompt.width + 1
+                config.results.width = config.results.width + 1
                 config.prompt.borderchars = { "─", "│", "─", "│", "╭", "─", "─", "├" }
                 config.results.borderchars = { "─", "│", "─", "│", "├", "┤", "┴", "╰" }
                 config.preview.borderchars = { "─", "│", "─", "│", "┬", "╮", "╯", "┴" }
