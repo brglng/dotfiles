@@ -149,6 +149,7 @@ function link_common() {
     link "pi/agent/extensions/pi-sandbox/config.json"
     link "pi/agent/extensions/pi-auto-review/config.json"
     link "pi/agent/extensions/pi-permission-system/config.json"
+    link "pi-lens/config.json"
     link "pi/agent/keybindings.json"
     link "pi/agent/models.json"
     link "pi/agent/settings.json"
