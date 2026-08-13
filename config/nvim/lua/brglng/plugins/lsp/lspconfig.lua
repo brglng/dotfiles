@@ -87,7 +87,7 @@ return {
             enabled = true,
         },
         on_type_formatting = {
-            enabled = false,
+            enabled = true,
             -- trigger_characters = { ";", "}", "\r", "\n" }
         },
         servers = {
