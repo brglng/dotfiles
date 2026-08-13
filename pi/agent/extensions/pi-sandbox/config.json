@@ -1,0 +1,6 @@
+{
+    "subagents": {
+        "provider": "pi-subagents",
+        "externalWorkerIsolation": "enforce"
+    }
+}

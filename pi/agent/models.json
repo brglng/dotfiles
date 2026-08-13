@@ -1,0 +1,313 @@
+{
+    "providers": {
+        "poe": {
+            "apiKey": "$POE_API_KEY",
+            "models": [
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "zpan-fable-5-agent",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": "none",
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": "xhigh",
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 10.10,
+                        "output": 50.51,
+                        "cacheRead": 1.01,
+                        "cacheWrite": 10.11
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "zpan-opus-5-agent",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": "none",
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": "xhigh",
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 5.05,
+                        "output": 25.25,
+                        "cacheRead": 0.51,
+                        "cacheWrite": 6.32
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "zpan-sonnet-5",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": "none",
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": "xhigh",
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 2.02,
+                        "output": 10.10,
+                        "cacheRead": 0.20,
+                        "cacheWrite": 2.53
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com",
+                    "id": "claude-opus-4.8",
+                    "api": "anthropic-messages",
+                    "reasoning": true,
+                    "input": ["text", "image"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": "none",
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": "xhigh",
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 4.29,
+                        "output": 21.46,
+                        "cacheRead": 0.43,
+                        "cacheWrite": 5.37
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com",
+                    "id": "claude-sonnet-4.6",
+                    "api": "anthropic-messages",
+                    "reasoning": true,
+                    "input": ["text", "image"],
+                    "contextWindow": 983040,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": "none",
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 2.58,
+                        "output": 12.88,
+                        "cacheRead": 0.26,
+                        "cacheWrite": 3.22
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "zpan-gpt-5.6-sol",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1050000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": "none",
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": "xhigh",
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 4.55,
+                        "output": 27.27,
+                        "cacheRead": 0.46,
+                        "cacheWrite": 6.82,
+                        "tiers": [
+                            {
+                                "inputTokensAbove": 272000,
+                                "input": 9.1,
+                                "output": 54.54,
+                                "cacheRead": 0.91,
+                                "cacheWrite": 13.64
+                            }
+                        ]
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "zpan-gpt-5.6-terra",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1050000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": "none",
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": "xhigh",
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 1.82,
+                        "output": 10.91,
+                        "cacheRead": 0.19,
+                        "cacheWrite": 2.73,
+                        "tiers": [
+                            {
+                                "inputTokensAbove": 272000,
+                                "input": 3.64,
+                                "output": 21.82,
+                                "cacheRead": 0.37,
+                                "cacheWrite": 5.46
+                            }
+                        ]
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "zpan-gpt-5.6-luna",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1050000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": "none",
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": "xhigh",
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 0.18,
+                        "output": 1.09,
+                        "cacheRead": 0.02,
+                        "cacheWrite": 0.28,
+                        "tiers": [
+                            {
+                                "inputTokensAbove": 272000,
+                                "input": 0.36,
+                                "output": 2.18,
+                                "cacheRead": 0.04,
+                                "cacheWrite": 0.57
+                            }
+                        ]
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "kimi-k3",
+                    "reasoning": true,
+                    "input": ["text", "image"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": "low",
+                        "medium": null,
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 3.03,
+                        "output": 15.15,
+                        "cacheRead": 0.30,
+                        "cacheWrite": 3.79
+                    }
+                }
+            ]
+        },
+        "aliyun_bailian_tokenplan_enterprise": {
+            "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic",
+            "api": "anthropic-messages",
+            "apiKey": "$ALIYUN_BAILIAN_TOKENPLAN_ENTERPRISE_API_KEY",
+            "compat": {
+                "supportsDeveloperRole": false
+            },
+            "models": [
+                {
+                    "id": "glm-5.2",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1048576,
+                    "maxTokens": 131072,
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": null,
+                        "medium": null,
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    }
+                },
+                {
+                    "id": "deepseek-v4-flash-0731",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 384192,
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": null,
+                        "medium": null,
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    }
+                },
+                {
+                    "id": "deepseek-v4-pro-0813",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 384192,
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": null,
+                        "medium": null,
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    }
+                },
+                {
+                    "id": "qwen3.8-max",
+                    "reasoning": true,
+                    "input": ["text", "image"],
+                    "contextWindow": 983616,
+                    "maxTokens": 131072,
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": "low",
+                        "medium": "medium",
+                        "high": "high",
+                        "xhigh": "xhigh",
+                        "max": null
+                    }
+                }
+            ]
+        }
+    }
+}
