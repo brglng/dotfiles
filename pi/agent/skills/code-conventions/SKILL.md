@@ -12,6 +12,7 @@ Apply these rules whenever you write or edit code in any language. Read this fil
 ## Rules
 
 - All code, including comments, must be written in English, regardless of the language of the user's request, except for names (see below).
+- When editing an existing file, follow the code style already used in that file (indentation, quoting, naming, formatting conventions, etc.); do not reformat the whole file into a different style.
 - Blank lines in code must not contain any spaces or tabs.
 
 ### Names
