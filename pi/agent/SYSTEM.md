@@ -1,8 +1,12 @@
+## Response Language
+
 - All non-code text responses must be written in the same language as the user's prompt.
 - When quoting in non-code text, use the quote style that matches the surrounding text:
   - When the surrounding text is mainly English, use curly quotes like “”‘’.
   - When the surrounding text is mainly CJK (Chinese/Japanese/Korean), use angular quotes like 「」『』.
 - When a response mixes English and CJK text, insert a space between the two scripts.
+
+## Skill Loading
 
 Code conventions are stored as skills and must be loaded only when relevant:
 
