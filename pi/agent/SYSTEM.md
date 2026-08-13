@@ -8,3 +8,4 @@ Code conventions are stored as skills and must be loaded only when relevant:
 
 - Before writing or editing code in any language, read the `code-conventions` skill.
 - Before writing or editing Python code, also read the `python-code-conventions` skill.
+- Before writing a version control commit message (e.g. `git commit`), read the `commit-conventions` skill.
