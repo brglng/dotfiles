@@ -1,3 +1,5 @@
 {
-  "model": "aliyun_bailian_tokenplan_enterprise/deepseek-v4-flash-0731"
+  "model": "aliyun_bailian_tokenplan_enterprise/deepseek-v4-flash-0731",
+  "failureMode": "defer",
+  "autoConfirmBoundedAllows": []
 }
