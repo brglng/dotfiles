@@ -290,11 +290,23 @@ return {
                     find = "heartbeat failed"
                 },
                 opts = { skip = true }
+            },
+            {
+                filter = {
+                    event = "notify",
+                    error = true,
+                    cond = function(message)
+                        return message.opts and type(message.opts.title) == "string"
+                            and message.opts.title:find("Codeium", 1, true) ~= nil
+                    end,
+                },
+                opts = { skip = true }
             }
         }
     },
     config = function(_, opts)
         require("noice").setup(opts)
+        require('telescope').load_extension('noice')
 
         local set_noice_color = function()
             local brglng = require("brglng")
