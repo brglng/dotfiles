@@ -263,6 +263,7 @@ return {
         { '<Leader>fl', mode = 'n', function() require('telescope.builtin').current_buffer_fuzzy_find() end, desc = 'Lines' },
         { "<Leader>f'", mode = 'n', function() require('telescope.builtin').marks() end, desc = 'Marks' },
         { '<Leader>fm', mode = 'n', function() require('telescope.builtin').man_pages() end, desc = 'Man Pages' },
+        { '<Leader>fn', mode = 'n', function() require('telescope').extensions.noice.noice() end, desc = 'Notifications' },
         { '<Leader>fo', mode = 'n', function() require('telescope.builtin').vim_options() end, desc = 'Vim Options' },
         { '<Leader>fs', mode = 'n', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'LSP Document Symbols' },
         { '<Leader>fr', mode = 'n', function() require('telescope.builtin').resume() end, desc = 'Resume Previous Picker' },
