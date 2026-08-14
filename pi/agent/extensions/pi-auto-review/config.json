@@ -1,5 +1,5 @@
 {
-  "model": "poe/kimi-k3",
+  "model": "poe/deepseek-v4-pro",
   "failureMode": "defer",
   "autoConfirmBoundedAllows": []
 }
