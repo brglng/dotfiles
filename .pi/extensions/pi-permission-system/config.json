@@ -1,8 +1,0 @@
-{
-  "permission": {
-    "external_directory": {
-      "*": "ask",
-      "~/github/brglng/*": "allow"
-    }
-  }
-}
