@@ -15,6 +15,9 @@
     "npm:pi-interactive-shell",
     "npm:context-mode",
     "npm:@brglng/pi-permission-auto-review",
-    "npm:@brglng/pi-permission-system"
+    "npm:@brglng/pi-permission-system",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-auto-theme",
+    "npm:pi-session-auto-rename"
   ]
 }
