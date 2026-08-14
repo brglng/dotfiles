@@ -236,12 +236,58 @@
                         "cacheRead": 0.30,
                         "cacheWrite": 3.79
                     }
+                },
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "deepseek-v4-pro",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": "low",
+                        "medium": null,
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 1.76,
+                        "output": 3.52,
+                        "cacheRead": 0.18,
+                        "cacheWrite": 0.88
+                    }
+                },
+                {
+                    "baseUrl": "https://api.poe.com/v1",
+                    "api": "openai-completions",
+                    "id": "deepseek-v4-flash",
+                    "reasoning": true,
+                    "input": ["text"],
+                    "contextWindow": 1000000,
+                    "maxTokens": 128000,
+                    "thinkingLevelMap": {
+                        "minimal": null,
+                        "low": "low",
+                        "medium": null,
+                        "high": "high",
+                        "xhigh": null,
+                        "max": "max"
+                    },
+                    "cost": {
+                        "input": 0.14,
+                        "output": 0.28,
+                        "cacheRead": 0.01,
+                        "cacheWrite": 0.07
+                    }
                 }
             ]
         },
         "aliyun_bailian_tokenplan_enterprise": {
-            "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic",
-            "api": "anthropic-messages",
+            "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+            "api": "openai-completions",
             "apiKey": "$ALIYUN_BAILIAN_TOKENPLAN_ENTERPRISE_API_KEY",
             "compat": {
                 "supportsDeveloperRole": false
@@ -275,6 +321,9 @@
                         "high": "high",
                         "xhigh": null,
                         "max": "max"
+                    },
+                    "compat": {
+                        "thinkingFormat": "deepseek"
                     }
                 },
                 {
@@ -290,6 +339,9 @@
                         "high": "high",
                         "xhigh": null,
                         "max": "max"
+                    },
+                    "compat": {
+                        "thinkingFormat": "deepseek"
                     }
                 },
                 {

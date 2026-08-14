@@ -1,5 +1,5 @@
 {
-  "model": "poe/deepseek-v4-pro",
+  "model": "openrouter/deepseek/deepseek-v4-flash",
   "failureMode": "defer",
   "autoConfirmBoundedAllows": []
 }
