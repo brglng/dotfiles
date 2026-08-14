@@ -5,6 +5,22 @@
   "defaultProvider": "openrouter",
   "defaultModel": "deepseek/deepseek-v4-flash-0731",
   "defaultThinkingLevel": "high",
+  "session": {
+    "titleGeneration": {
+      "enabled": true,
+      "language": "auto",
+      "model": "openrouter/deepseek/deepseek-v4-pro-0813:max",
+      "retries": 3,
+      "emojis": false,
+      "maxLength": 52,
+      "scopeMaxLength": 12,
+      "maxMessageCount": -1,
+      "includeTools": true,
+      "useTags": true,
+      "builtinTags": true,
+      "tags": []
+    }
+  },
   "packages": [
     "npm:pi-lens",
     "npm:pi-intercom",
