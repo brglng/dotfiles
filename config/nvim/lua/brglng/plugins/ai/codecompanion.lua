@@ -269,6 +269,28 @@ Additional context:
             ]], ctx.cwd, ctx.date, ctx.nvim_version, ctx.os) .. skills.render_available_skills()
         end
         require("codecompanion").setup(opts)
+
+        local function set_cli_win_options()
+            vim.cmd("startinsert")
+            vim.o.signcolumn = 'no'
+            vim.o.foldcolumn = '0'
+            vim.o.foldenable = false
+            vim.o.statuscolumn = ''
+            vim.o.number = false
+        end
+
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "codecompanion_cli",
+            callback = set_cli_win_options
+        })
+        vim.api.nvim_create_autocmd("BufWinEnter", {
+            pattern = "*",
+            callback = function ()
+                if vim.o.filetype == "codecompanion_cli" then
+                    set_cli_win_options()
+                end
+            end
+        })
     end,
     keys = {
         { "<leader>cc", "<Cmd>CodeCompanionChat Toggle<CR>", mode = { "n", "v" }, desc = "CodeCompanionChat Toggle" },

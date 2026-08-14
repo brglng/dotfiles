@@ -41,6 +41,11 @@ return {
             vim.keymap.set('t', '<M-L>', [[<Cmd>wincmd l<CR>]], opts)
             vim.keymap.set('t', '<M-W>', [[<Cmd>wincmd w<CR>]], opts)
             vim.keymap.set('t', '<M-P>', [[<Cmd>wincmd p<CR>]], opts)
+            vim.o.signcolumn = 'no'
+            vim.o.foldcolumn = '0'
+            vim.o.foldenable = false
+            vim.o.statuscolumn = ''
+            vim.o.number = false
         end
 
         vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
