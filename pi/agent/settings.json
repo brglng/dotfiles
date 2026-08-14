@@ -15,7 +15,6 @@
     "npm:pi-interactive-shell",
     "npm:context-mode",
     "npm:@erichll/pi-auto-review",
-    "npm:@erichll/pi-sandbox",
-    "npm:@gotgenes/pi-permission-system"
+    "npm:@brglng/pi-permission-system"
   ]
 }
