@@ -9,6 +9,15 @@ description: "Mandatory conventions for writing version control commit messages 
 
 Apply these rules whenever you write a version control commit message: `git commit`, `git commit --amend`, staged rebase/squash messages, or PR merge titles. Read this file before producing any commit message.
 
+## When to Commit
+
+Do not commit code changes automatically unless the user explicitly asks you to. When you have staged or completed changes that could be committed:
+
+- Ask the user whether they want you to commit (and how), or
+- Leave the changes uncommitted and let the user commit them manually.
+
+Never run `git commit` on your own initiative. Let the user decide the timing and granularity of commits.
+
 ## Rules
 
 - Commit messages must be written in English, regardless of the language of the user's prompt or the changes being committed.
