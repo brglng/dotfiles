@@ -1,5 +1,31 @@
 #!/bin/bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+get_time() {
+    date "+%Y-%m-%d %H:%M:%S"
+}
+
+log_info() {
+    echo -e "${GREEN}[$(get_time)][INFO] $1${NC}" >&2
+}
+
+log_warn() {
+    echo -e "${YELLOW}[$(get_time)][WARN] $1${NC}" >&2
+}
+
+log_error() {
+    echo -e "${RED}[$(get_time)][ERROR] $1${NC}" >&2
+}
+
+log_debug() {
+    echo -e "${BLUE}[$(get_time)][DEBUG] $1${NC}" >&2
+}
+
 # Adds or updates a brglng/dotfiles marker block in a file.
 #
 # The block is delimited by BEGIN/END markers prefixed with the given comment
@@ -30,11 +56,11 @@ $prefix END brglng/dotfiles"
     mkdir -p "$(dirname "$file")"
 
     if [[ ! -e "$file" || $(perl -n0e "print \$1 if /(${begin_regex}.*${end_regex})/s" "$file") = "" ]]; then
-        echo "Creating $file" >&2
+        log_info "Creating $file" >&2
         echo "$block" >> "$file"
         echo "created"
     else
-        echo "Updating $file" >&2
+        log_info "Updating $file" >&2
         echo "$block" | perl -i -p0e "s/${begin_regex}.*${end_regex}[^\n]*\n/<STDIN>/gse" "$file"
         echo "updated"
     fi
@@ -57,16 +83,16 @@ function link {
 
     if [[ -e "$dst" || -L "$dst" ]]; then
         if [[ $(readlinkf "$dst") = $(readlinkf "$src") ]]; then
-            echo "$dst is already linked, ignored."
+            log_warn "$dst is already linked, ignored."
         else
-            echo "Original $dst is renamed to $dst.orig"
+            log_warn "Original $dst is renamed to $dst.orig"
             mv "$dst" "$dst.orig"
-            echo "Linking $dst -> $src"
+            log_info "Linking $dst -> $src"
             mkdir -p "$(dirname "$dst")"
             ln -s "$src" "$dst"
         fi
     else
-        echo "Linking $dst -> $src"
+        log_info "Linking $dst -> $src"
         mkdir -p "$(dirname "$dst")"
         ln -s "$src" "$dst"
     fi
