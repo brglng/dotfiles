@@ -2,7 +2,8 @@
   "authorizerChain": ["pi-auto-review"],
   "permission": {
     "external_directory": {
-      "~/.pi/*": "allow"
+      "~/.pi/*": "allow",
+      "~/.local/share/nvim/*": "allow"
     },
     "read": "allow",
     "grep": "allow",
