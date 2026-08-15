@@ -153,6 +153,7 @@ function link_common() {
     link "pi/agent/models.json"
     link "pi/agent/settings.json"
     link "pi/agent/skills"
+    link "pi/agent/SYSTEM.md"
     link "pi/agent/zentui.json"
     link "pi-lens/config.json"
     link "zimrc"
