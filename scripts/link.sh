@@ -164,8 +164,6 @@ function link_common() {
     update_gitconfig
     update_gvimrc
     update_kitty_conf
-    update_nushell_config
-    update_nushell_env
     update_nvim_init_lua
     update_nvim_ginit_vim
     update_tmux_conf
@@ -176,18 +174,16 @@ function link_common() {
 }
 
 function link_linux() {
-    update_bashrc                               "$HOME/.bashrc"
-    mkdir -p "$HOME/.config/nushell"
-    update_nushell_env                          "$HOME/.config/nushell/env.nu"
-    update_nushell_config                       "$HOME/.config/nushell/config.nu"
+    update_bashrc           "$HOME/.bashrc"
+    update_nushell_env      "$HOME/.config/nushell/env.nu"
+    update_nushell_config   "$HOME/.config/nushell/config.nu"
     link_common
 }
 
 function link_mac() {
-    update_bashrc                               "$HOME/.bash_profile"
-    mkdir -p "$HOME/Library/Application Support/nushell"
-    update_nushell_env                          "$HOME/Library/Application Support/nushell/env.nu"
-    update_nushell_config                       "$HOME/Library/Application Support/nushell/config.nu"
+    update_bashrc           "$HOME/.bash_profile"
+    update_nushell_env      "$HOME/Library/Application Support/nushell/env.nu"
+    update_nushell_config   "$HOME/Library/Application Support/nushell/config.nu"
     link_common
 }
 
