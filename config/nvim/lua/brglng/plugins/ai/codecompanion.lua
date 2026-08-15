@@ -226,7 +226,12 @@ Additional context:
                         end
                     end)()
                 }
-            }
+            },
+            -- cli = {
+            --     window = {
+            --         layout = "tab",
+            --     }
+            -- }
         },
         extensions = {
             dap = {
