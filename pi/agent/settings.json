@@ -34,6 +34,7 @@
     "npm:@brglng/pi-permission-system",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-auto-theme",
-    "git:https://github.com/furbyhaxx/pi-session-naming"
+    "git:https://github.com/furbyhaxx/pi-session-naming",
+    "npm:pi-background-tasks"
   ]
 }
