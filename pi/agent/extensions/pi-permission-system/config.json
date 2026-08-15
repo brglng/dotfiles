@@ -1,6 +1,9 @@
 {
   "authorizerChain": ["pi-auto-review"],
   "permission": {
+    "external_directory": {
+      "~/.pi/*": "allow"
+    },
     "read": "allow",
     "grep": "allow",
     "find": "allow",
