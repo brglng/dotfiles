@@ -145,7 +145,6 @@ function link_common() {
     link "config/kitty/light-theme.auto.conf"
     link "config/kitty/no-preference-theme.auto.conf"
     link "clang-format"
-    link "zimrc"
     link "pi/agent/extensions/pi-auto-review/config.json"
     link "pi/agent/extensions/pi-permission-system/config.json"
     # link "pi/agent/extensions/pi-sandbox/config.json"
@@ -156,6 +155,7 @@ function link_common() {
     link "pi/agent/skills"
     link "pi/agent/zentui.json"
     link "pi-lens/config.json"
+    link "zimrc"
 
     # update_alacritty_toml
     # link "config/alacritty/colors"
