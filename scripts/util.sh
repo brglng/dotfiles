@@ -51,7 +51,7 @@ function link {
     local dst=$2
 
     if [[ "$2" == "" ]]; then
-        dst="${HOME}.$1"
+        dst="${HOME}/.$1"
     fi
     src="$PWD/$1"
 
