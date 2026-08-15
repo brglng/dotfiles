@@ -4,12 +4,12 @@
   "tuiMode": "fullscreen",
   "defaultProvider": "aliyun_bailian_tokenplan_enterprise",
   "defaultModel": "glm-5.2",
-  "defaultThinkingLevel": "max",
+  "defaultThinkingLevel": "high",
   "session": {
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "glm-5.2",
+      "model": "aliyun_bailian_tokenplan_enterprise/glm-5.2:high",
       "retries": 3,
       "emojis": false,
       "maxLength": 52,
@@ -38,5 +38,6 @@
     "npm:pi-background-tasks",
     "npm:pi-zentui",
     "npm:pi-list-tools"
-  ]
+  ],
+  "hideThinkingBlock": false
 }

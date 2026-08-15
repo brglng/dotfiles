@@ -1,1 +1,7 @@
-{}
+{
+  "components": {
+    "userMessages": {
+      "style": "compact"
+    }
+  }
+}
