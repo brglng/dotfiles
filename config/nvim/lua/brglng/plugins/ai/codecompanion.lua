@@ -249,8 +249,8 @@ Additional context:
             },
             gitcommit = {
                 opts = {
-                    adapter = "poe",
-                    model = "claude-opus-4.8",
+                    adapter = "openrouter",
+                    model = "z-ai/glm-5.2",
                     languages = { "English" }
                 }
             },
