@@ -155,6 +155,7 @@ function link_common() {
     link "pi/agent/keybindings.json"
     link "pi/agent/models.json"
     link "pi/agent/settings.json"
+    link "pi/agent/zentui.json"
 
     # update_alacritty_toml
     # link "config/alacritty/colors"
