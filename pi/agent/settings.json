@@ -2,14 +2,14 @@
   "lastChangelogVersion": "0.84.1",
   "theme": "dark",
   "tuiMode": "fullscreen",
-  "defaultProvider": "阿里云百炼 Token Plan 企业版",
+  "defaultProvider": "aliyun_bailian_tokenplan_enterprise",
   "defaultModel": "glm-5.2",
-  "defaultThinkingLevel": "high",
+  "defaultThinkingLevel": "max",
   "session": {
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "openrouter/deepseek/deepseek-v4-pro-0813:max",
+      "model": "glm-5.2",
       "retries": 3,
       "emojis": false,
       "maxLength": 52,
@@ -36,6 +36,7 @@
     "npm:pi-auto-theme",
     "npm:@furbyhaxx/pi-session-naming",
     "npm:pi-background-tasks",
-    "npm:pi-zentui"
+    "npm:pi-zentui",
+    "npm:pi-list-tools"
   ]
 }

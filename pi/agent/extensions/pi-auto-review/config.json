@@ -1,5 +1,5 @@
 {
-  "model": "openrouter/deepseek/deepseek-v4-flash",
+  "model": "aliyun_bailian_tokenplan_enterprise/deepseek-v4-flash-0731",
   "failureMode": "defer",
   "autoConfirmBoundedAllows": []
 }
