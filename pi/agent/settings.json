@@ -2,8 +2,8 @@
   "lastChangelogVersion": "0.84.1",
   "theme": "dark",
   "tuiMode": "fullscreen",
-  "defaultProvider": "openrouter",
-  "defaultModel": "deepseek/deepseek-v4-flash-0731",
+  "defaultProvider": "阿里云百炼 Token Plan 企业版",
+  "defaultModel": "glm-5.2",
   "defaultThinkingLevel": "high",
   "session": {
     "titleGeneration": {
