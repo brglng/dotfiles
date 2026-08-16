@@ -15,10 +15,19 @@
 -- Font private-use areas (U+E000..U+F8FF, U+F0000..U+FFFFD) so Nerd Font icons
 -- keep their single width. See cell_widths.txt for the full list.
 
+local function module_dir()
+    -- Locate this module's directory without debug.getinfo, which is not
+    -- available in WezTerm's sandboxed Lua. package.searchpath resolves the
+    -- module file from the active package.path; debug is only a fallback.
+    local file = package.searchpath("brglng.cell_widths", package.path)
+    if file then
+        return file:match("(.*)[/\\]")
+    end
+    return debug.getinfo(1, "S").source:match("^@(.*)[/\\]") or "."
+end
+
 local function parse()
-    local source = debug.getinfo(1, "S").source
-    local dir = source:match("^@(.*)[/\\]") or "."
-    local path = dir .. "/cell_widths.txt"
+    local path = module_dir() .. "/cell_widths.txt"
     local entries = {}
     local f = assert(io.open(path, "r"))
     for raw in f:lines() do

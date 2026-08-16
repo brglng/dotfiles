@@ -8,10 +8,11 @@
 -- The representation is auto-detected from the input type: strings are treated
 -- as hex, numbers as packed integers.
 --
--- Requires the LuaJIT `bit` library, which is available in both Neovim and
--- WezTerm.
-
-local bit = require("bit")
+-- The pack/unpack helpers use plain integer arithmetic (byte values are small
+-- enough that it is exact), so the module runs on both LuaJIT (Neovim) and
+-- Lua 5.4 (WezTerm) without depending on the LuaJIT `bit` library.
+-- math.atan2 was removed in Lua 5.3; math.atan(y, x) is its replacement.
+local atan2 = math.atan2 or math.atan
 
 local M = {}
 
@@ -116,7 +117,7 @@ end
 ---@return number, number, number
 function M.oklab_to_oklch(L, a, b)
     local C = math.sqrt(a * a + b * b)
-    local h = math.atan2(b, a)
+    local h = atan2(b, a)
     -- Convert h to degrees
     h = h * 180 / math.pi
     -- Ensure h is in [0, 360]
@@ -320,24 +321,19 @@ function M.pack_rgb(r, g, b)
     b_byte = math.max(0, math.min(255, b_byte))
 
     -- Pack into a single number (R in high bits, B in low bits)
-    -- Using LuaJIT bit operations
-    local number = bit.bor(
-        bit.lshift(r_byte, 16),
-        bit.lshift(g_byte, 8),
-        b_byte
-    )
-
-    return number
+    -- Plain integer arithmetic: equivalent to (r_byte << 16) | (g_byte << 8) | b_byte
+    return r_byte * 65536 + g_byte * 256 + b_byte
 end
 
 -- Unpack a RGB integer into separate RGB components
 ---@param packed integer
 ---@return number, number, number
 function M.unpack_rgb(packed)
-    -- Extract the individual RGB bytes using LuaJIT bit operations
-    local r_byte = bit.band(bit.rshift(packed, 16), 0xFF)
-    local g_byte = bit.band(bit.rshift(packed, 8), 0xFF)
-    local b_byte = bit.band(packed, 0xFF)
+    -- Extract the individual RGB bytes using plain integer arithmetic
+    -- (equivalent to (packed >> 16) & 0xFF, (packed >> 8) & 0xFF, packed & 0xFF)
+    local r_byte = math.floor(packed / 65536) % 256
+    local g_byte = math.floor(packed / 256) % 256
+    local b_byte = packed % 256
 
     -- Convert from [0, 255] to [0.0, 1.0]
     local r = r_byte / 255
