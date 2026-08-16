@@ -147,6 +147,7 @@ function link_common() {
     link "clang-format"
     link "pi/agent/extensions/pi-auto-review/config.json"
     link "pi/agent/extensions/pi-permission-system/config.json"
+    link "pi/agent/extensions/pi-portable-sessions/config.json"
     # link "pi/agent/extensions/pi-sandbox/config.json"
     # link "pi/agent/extensions/pi-session-auto-rename.json"
     link "pi/agent/keybindings.json"

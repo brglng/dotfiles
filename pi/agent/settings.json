@@ -1,15 +1,15 @@
 {
   "lastChangelogVersion": "0.84.1",
-  "theme": "dark",
+  "theme": "light",
   "tuiMode": "fullscreen",
-  "defaultProvider": "aliyun_bailian_tokenplan_enterprise",
-  "defaultModel": "glm-5.2",
-  "defaultThinkingLevel": "high",
+  "defaultProvider": "openrouter",
+  "defaultModel": "deepseek/deepseek-v4-flash-0731",
+  "defaultThinkingLevel": "xhigh",
   "session": {
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "aliyun_bailian_tokenplan_enterprise/glm-5.2:high",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731:high",
       "retries": 3,
       "emojis": false,
       "maxLength": 52,
@@ -37,7 +37,8 @@
     "npm:@furbyhaxx/pi-session-naming",
     "npm:pi-background-tasks",
     "npm:pi-zentui",
-    "npm:pi-list-tools"
+    "npm:pi-list-tools",
+    "npm:@brglng/pi-portable-sessions"
   ],
   "hideThinkingBlock": false
 }

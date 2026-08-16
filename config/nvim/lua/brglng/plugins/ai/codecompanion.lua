@@ -250,7 +250,7 @@ Additional context:
             gitcommit = {
                 opts = {
                     adapter = "openrouter",
-                    model = "z-ai/glm-5.2",
+                    model = "deepseek/deepseek-v4-flash-0731",
                     languages = { "English" }
                 }
             },
