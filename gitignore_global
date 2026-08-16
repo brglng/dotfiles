@@ -24,3 +24,7 @@ node_modules
 .pixi
 .conan
 .conan2
+
+!.pi/settings.json
+!.pi/extensions/config.json
+.pi/

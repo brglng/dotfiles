@@ -31,3 +31,7 @@ doc/tags
 *.log
 history.txt
 history.sqlite3*
+
+!.pi/settings.json
+!.pi/extensions/config.json
+.pi/
