@@ -7,6 +7,9 @@
     "ls": "allow",
     "bash": {
       "*": "ask"
+    },
+    "external_directory": {
+      "/tmp/*": "allow"
     }
   }
 }
