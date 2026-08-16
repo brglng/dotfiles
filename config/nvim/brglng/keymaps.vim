@@ -113,6 +113,10 @@ cnoremap <silent>   <C-a>       <Home>
 nnoremap <silent>   <M-Left>    <C-o>
 nnoremap <silent>   <M-Right>   <C-i>
 
+noremap <silent> <M-{> :tabprevious<CR>
+noremap <silent> <M-}> :tabnext<CR>
+inoremap <silent> <M-{> <C-o>:tabprevious<CR>
+inoremap <silent> <M-}> <C-o>:tabnext<CR>
 nnoremap <silent> <expr> Q tabpagenr('$') > 1 ? ":tabclose\<CR>" : ":confirm qall\<CR>"
 
 if has('nvim')
