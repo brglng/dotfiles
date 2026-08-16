@@ -1,0 +1,121 @@
+# Canonical double-width character table for CJK contexts.
+#
+# One range per line: <first>-<last> in hex (a single codepoint may omit the
+# "-<last>" part). '#' starts a comment. Every listed range is forced to
+# double width by its consumers:
+#   - Vim/Neovim:  config/nvim/brglng/ui.vim      -> setcellwidths()
+#   - WezTerm:     lua/brglng/cell_widths.lua     -> config.cell_widths
+#
+# The table covers the Unicode East Asian Width "Wide" (W) and "Fullwidth" (F)
+# ranges -- the characters that are habitually double-width in CJK environments
+# -- plus a handful of "Ambiguous" (A) punctuation marks that CJK typesetting
+# renders full-width. All ranges deliberately avoid the Nerd Font private-use
+# areas (U+E000..U+F8FF, U+F0000..U+FFFFD), so Nerd Font icons keep their
+# single width.
+
+# --- Hangul (谚文/한글) ---
+1100-115f        # Hangul Jamo
+3131-318e        # Hangul Compatibility Jamo
+a960-a97f        # Hangul Jamo Extended-A
+ac00-d7a3        # Hangul Syllables
+d7b0-d7ff        # Hangul Jamo Extended-B
+
+# --- Bopomofo / Kanbun / Kana extensions (注音/漢文/假名扩展) ---
+3100-312f        # Bopomofo
+3190-319f        # Kanbun
+31a0-31bf        # Bopomofo Extended
+31f0-31ff        # Katakana Phonetic Extensions
+1aff0-1affe      # Kana Extended-B (covers 1AFF0-1AFF3, 1AFF5-1AFFB, 1AFFD-1AFFE)
+1b000-1b0ff      # Kana Supplement
+1b100-1b167      # Kana Extended-A (also covers 1B132, 1B150-1B152, 1B155, 1B164-1B167)
+
+# --- CJK ideographs, radicals and kana (汉字/部首/假名) ---
+2e80-2eff        # CJK Radicals Supplement
+2f00-2fdf        # Kangxi Radicals
+2ff0-2fff        # Ideographic Description Characters
+3000-303f        # CJK Symbols and Punctuation (incl. ideographic space U+3000)
+3040-309f        # Hiragana
+30a0-30ff        # Katakana
+31c0-31ef        # CJK Strokes
+3200-32ff        # Enclosed CJK Letters and Months
+3300-33ff        # CJK Compatibility
+3400-4dbf        # CJK Unified Ideographs Extension A
+4dc0-4dff        # Yijing Hexagram Symbols
+4e00-9fff        # CJK Unified Ideographs
+f900-faff        # CJK Compatibility Ideographs
+16fe0-16fe4      # Ideographic Symbols and Punctuation (Tangut/Nushu marks)
+16ff0-16ff1      # Vietnamese Alternate Reading Marks
+17000-187f7      # Tangut
+18800-18aff      # Tangut Components
+18b00-18cd5      # Khitan Small Script
+18d00-18d08      # Tangut Supplement
+1b170-1b2fb      # Nushu
+20000-2fffd      # CJK Unified Ideographs Extension B-I + Compatibility Ideographs Supplement
+30000-3fffd      # CJK Unified Ideographs Extension G/H/I
+
+# --- Yi (彝文) ---
+a000-a48f        # Yi Syllables
+a490-a4cf        # Yi Radicals
+
+# --- Fullwidth / vertical / compatibility punctuation forms (全角/竖排标点) ---
+fe10-fe1f        # Vertical Forms
+fe30-fe4f        # CJK Compatibility Forms
+ff01-ff60        # Fullwidth Forms (fullwidth ASCII + white parentheses)
+ffe0-ffe6        # Fullwidth Signs
+
+# --- Ambiguous-width punctuation treated as full-width in CJK text ---
+2014             # em dash
+2018-2019        # single quotation marks
+201c-201d        # double quotation marks
+2026             # horizontal ellipsis
+2460-24ff        # Enclosed Alphanumerics (① ⑴ ⒜ …)
+
+# --- Emoji & pictographs (East Asian Width = Wide) ---
+231a-231b        # watch / hourglass
+2329-232a        # angle brackets
+23e9-23ec        # media control symbols
+23f0             # alarm clock
+23f3             # hourglass with flowing sand
+25fd-25fe        # white/black medium-small squares
+2614-2615        # umbrella with rain drops / hot beverage
+2648-2653        # zodiac signs
+267f             # wheelchair symbol
+2693             # anchor
+26a1             # high voltage
+26aa-26ab        # medium white/black circles
+26bd-26be        # soccer ball / baseball
+26c4-26c5        # snowman / sun behind cloud
+26ce             # Ophiuchus
+26d4             # no entry
+26ea             # church
+26f2-26f3        # fountain / flag in hole
+26f5             # sailboat
+26fa             # tent
+26fd             # fuel pump
+2705             # white heavy check mark
+270a-270b        # raised fist / raised hand
+2728             # sparkles
+274c             # cross mark
+274e             # negative squared cross mark
+2753-2755        # question/exclamation marks
+2757             # heavy exclamation mark
+2795-2797        # heavy plus / minus / division signs
+27b0             # curly loop
+27bf             # double curly loop
+2b1b-2b1c        # black/white large squares
+2b50             # star
+2b55             # heavy large circle
+1f004            # mahjong tile red dragon
+1f0cf            # playing card black joker
+1f100-1f1ff      # Enclosed Alphanumeric Supplement + Regional Indicators
+1f200-1f202      # Enclosed Ideographic Supplement
+1f210-1f23b      # Enclosed Ideographic Supplement (more)
+1f240-1f248      # Torii/rect-bracket ideographs
+1f250-1f251      # Circled ideographs (可/否)
+1f260-1f265      # Rounded Symbols
+1f300-1f5ff      # Misc Symbols and Pictographs
+1f600-1f64f      # Emoticons
+1f680-1f6ff      # Transport and Map Symbols
+1f7e0-1f7eb      # Geometric Shapes Extended (colored circles/squares)
+1f900-1f9ff      # Supplemental Symbols and Pictographs
+1fa70-1faff      # Symbols and Pictographs Extended-A

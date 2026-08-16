@@ -288,43 +288,11 @@ config.font = wezterm.font_with_fallback {
 }
 -- config.harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "liga" }
 config.harfbuzz_features = { "calt", "liga" }
--- Fix cell width for CJK punctuations
-config.cell_widths = {
-    --- CJK (中日韩) 基础范围 ---
-    { first = 0x1100, last = 0x115f, width = 2 },
-    { first = 0x2e80, last = 0x2eff, width = 2 },
-    { first = 0x3000, last = 0x303f, width = 2 },
-    { first = 0x3040, last = 0x309f, width = 2 },
-    { first = 0x30a0, last = 0x30ff, width = 2 },
-    { first = 0x31c0, last = 0x31ef, width = 2 },
-    { first = 0x3200, last = 0x32ff, width = 2 },
-    { first = 0x4e00, last = 0x9fff, width = 2 },
-    { first = 0xac00, last = 0xd7af, width = 2 },
-    { first = 0xf900, last = 0xfaff, width = 2 },
-
-    --- 2. 标点与符号 (非 PUA，不冲突 Nerd Font) ---
-    --- 包含全角冒号、感叹号、带圈数字等
-    { first = 0xfe30, last = 0xfe4f, width = 2 },
-    { first = 0xff01, last = 0xff60, width = 2 },
-    { first = 0xffe0, last = 0xffe6, width = 2 },
-    { first = 0x2460, last = 0x24ff, width = 2 },
-
-    --- 省略号 和 破折号 ---
-    { first = 0x2014, last = 0x2014, width = 2},
-    { first = 0x2026, last = 0x2026, width = 2},
-
-    --- 单双引号 ---
-    { first = 0x2018, last = 0x2019, width = 2 },
-    { first = 0x201c, last = 0x201d, width = 2 },
-
-    --- 3. Emoji 表情符号 (位于 SMP 平面) ---
-    --- 修复火箭、笑脸等 Emoji 的宽度，不影响 Nerd Font
-    { first = 0x1f100, last = 0x1f1ff, width = 2 },
-    { first = 0x1f300, last = 0x1f5ff, width = 2 },
-    { first = 0x1f600, last = 0x1f64f, width = 2 },
-    { first = 0x1f680, last = 0x1f6ff, width = 2 },
-    { first = 0x1f900, last = 0x1f9ff, width = 2 },
-}
+-- Fix cell width for CJK, Symbols and Emojis (double width in CJK contexts).
+-- The canonical range table is lua/brglng/cell_widths.txt, shared with
+-- Vim/Neovim (config/nvim/brglng/ui.vim). All ranges avoid the Nerd Font
+-- private-use areas so Nerd Font icons stay single width.
+config.cell_widths = require("brglng.cell_widths").wezterm()
 
 if WINDOWS then
     config.font_size = 10

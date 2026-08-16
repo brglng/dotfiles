@@ -309,59 +309,31 @@ else
     set signcolumn=yes
 endif
 
-" Fix cell width for CJK punctuations
-call setcellwidths([
-\   [0x3000, 0x303f, 2]
-\ ])
+" Fix cell width for CJK, Symbols and Emojis (double width in CJK contexts).
+" The canonical range table is lua/brglng/cell_widths.txt, shared with WezTerm
+" (loaded via lua/brglng/cell_widths.lua). All ranges avoid the Nerd Font
+" private-use areas (U+E000..U+F8FF, U+F0000..U+FFFFD) so Nerd Font icons stay
+" single width. Edit only the table file to change the rules.
+function! s:load_cellwidths(file) abort
+    let l:rules = []
+    for l:line in readfile(a:file)
+        let l:line = substitute(l:line, '#.*$', '', '')
+        let l:line = substitute(l:line, '\s', '', 'g')
+        if empty(l:line)
+            continue
+        endif
+        let l:parts = split(l:line, '-')
+        let l:first = str2nr(l:parts[0], 16)
+        let l:last = len(l:parts) > 1 ? str2nr(l:parts[1], 16) : l:first
+        call add(l:rules, [l:first, l:last, 2])
+    endfor
+    return l:rules
+endfunction
 
-" Fix cell width for CJK, Symbols and Emojis
-let s:cjk_width_rules = []
-
-" --- 1. CJK (中日韩) 基础范围 ---
-let s:cjk_width_rules += [
-\   [0x1100, 0x115f, 2],
-\   [0x2e80, 0x2eff, 2],
-\   [0x3000, 0x303f, 2],
-\   [0x3040, 0x309f, 2],
-\   [0x30a0, 0x30ff, 2],
-\   [0x31c0, 0x31ef, 2],
-\   [0x3200, 0x32ff, 2],
-\   [0x4e00, 0x9fff, 2],
-\   [0xac00, 0xd7af, 2],
-\   [0xf900, 0xfaff, 2],
-\ ]
-
-" --- 2. 标点与符号 (非 PUA，不冲突 Nerd Font) ---
-" 包含全角冒号、感叹号、带圈数字等
-let s:cjk_width_rules += [
-\   [0xfe30, 0xfe4f, 2],
-\   [0xff01, 0xff60, 2],
-\   [0xffe0, 0xffe6, 2],
-\   [0x2460, 0x24ff, 2],
-\ ]
-
-" --- 省略号 和 破折号 ---
-let s:cjk_width_rules += [
-\   [0x2014, 0x2014, 2],
-\   [0x2026, 0x2026, 2],
-\ ]
-
-" --- 单双引号 ---
-let s:cjk_width_rules += [
-\   [0x2018, 0x2019, 2],
-\   [0x201c, 0x201d, 2],
-\ ]
-
-" --- 3. Emoji 表情符号 (位于 SMP 平面) ---
-" 修复火箭、笑脸等 Emoji 的宽度，不影响 Nerd Font
-let s:cjk_width_rules += [
-\   [0x1f100, 0x1f1ff, 2],
-\   [0x1f300, 0x1f5ff, 2],
-\   [0x1f600, 0x1f64f, 2],
-\   [0x1f680, 0x1f6ff, 2],
-\   [0x1f900, 0x1f9ff, 2],
-\ ]
-
-call setcellwidths(s:cjk_width_rules)
+let s:cellwidths_file = expand('<sfile>:h:h:h:h') . '/lua/brglng/cell_widths.txt'
+if filereadable(s:cellwidths_file)
+    call setcellwidths(s:load_cellwidths(s:cellwidths_file))
+endif
+unlet s:cellwidths_file
 
 " vim: ts=8 sts=4 sw=4 et
