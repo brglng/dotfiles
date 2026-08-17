@@ -13,6 +13,8 @@ return {
                 TelescopePrompt = false,
                 OverseerForm = false,
                 ["neo-tree-popup"] = false,
+                gitcommit = false,
+                codecompanion = false
             },
             default_filetype_enabled = true,
             key_bindings = {
