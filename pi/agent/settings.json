@@ -3,8 +3,8 @@
   "theme": "light",
   "tuiMode": "fullscreen",
   "defaultProvider": "openrouter",
-  "defaultModel": "deepseek/deepseek-v4-flash-0731",
-  "defaultThinkingLevel": "xhigh",
+  "defaultModel": "openai/gpt-5.6-luna",
+  "defaultThinkingLevel": "max",
   "session": {
     "titleGeneration": {
       "enabled": true,
