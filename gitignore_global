@@ -25,6 +25,10 @@ node_modules
 .conan
 .conan2
 
+.pi/*
 !.pi/settings.json
-!.pi/extensions/config.json
-.pi/
+!.pi/extensions/
+.pi/extensions/*
+!.pi/extensions/*/
+.pi/extensions/*/*
+!.pi/extensions/*/config.json
