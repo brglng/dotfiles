@@ -285,10 +285,10 @@
                 }
             ]
         },
-        "aliyun_bailian_tokenplan_enterprise": {
+        "bailian_tokenplan": {
             "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
             "api": "openai-completions",
-            "apiKey": "$ALIYUN_BAILIAN_TOKENPLAN_ENTERPRISE_API_KEY",
+            "apiKey": "$BAILIAN_TOKENPLAN_API_KEY",
             "compat": {
                 "supportsDeveloperRole": false
             },

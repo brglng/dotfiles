@@ -107,16 +107,16 @@ return {
                         }
                     })
                 end,
-                aliyun_bailian_tokenplan_enterprise = function()
+                bailian_tokenplan = function()
                     return require("codecompanion.adapters").extend("openai_compatible", {
                         -- url = "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1/messages",
                         vendor = "alibaba",
-                        name = "aliyun_bailian_tokenplan_enterprise",
+                        name = "bailian_tokenplan",
                         formatted_name = "阿里云百炼 Token Plan 企业版",
                         env = {
                             url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode",
                             chat_url = "/v1/chat/completions",
-                            api_key = "ALIYUN_BAILIAN_TOKENPLAN_ENTERPRISE_API_KEY",
+                            api_key = "BAILIAN_TOKENPLAN_API_KEY",
                         },
                         opts = {
                             stream = true,
@@ -141,11 +141,13 @@ return {
         },
         interactions = {
             chat = {
-                -- adapter = {
-                --     name = "aliyun_bailian_tokenplan_enterprise",
-                --     model = "glm-5.2",
-                -- },
-                adapter = "pi",
+                adapter = {
+                    -- name = "bailian_tokenplan",
+                    -- model = "glm-5.2",
+                    name = "openrouter",
+                    model = "deepseek/deepseek-v4-flash-0731"
+                },
+                -- adapter = "pi",
                 keymaps = {
                     send = {
                         modes = { n = "<CR>", i = "<C-CR>" },
