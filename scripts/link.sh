@@ -151,7 +151,7 @@ function link_common() {
     # link "pi/agent/extensions/pi-sandbox/config.json"
     # link "pi/agent/extensions/pi-session-auto-rename.json"
     link "pi/agent/skills"
-    link "pi/agent/SYSTEM.md"
+    link "pi/agent/APPEND_SYSTEM.md"
     link "pi/agent/keybindings.json"
     link "pi/agent/models.json"
     link "pi/agent/settings.json"

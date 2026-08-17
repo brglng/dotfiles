@@ -162,10 +162,10 @@ return {
                 opts = {
                     system_prompt = function(ctx)
                         local prompt = ctx.default_system_prompt
-                        -- The pi ACP adapter is a real Pi process that already loads SYSTEM.md and
+                        -- The pi ACP adapter is a real Pi process that already loads APPEND_SYSTEM.md and
                         -- skills natively, so only inject the skills index for HTTP adapters.
                         if not (ctx.adapter and ctx.adapter.type == "acp") then
-                            prompt = prompt .. table.concat(vim.fn.readfile(vim.env.BRGLNG_DOTFILES_DIR .. "/pi/agent/SYSTEM.md"), "\n") .. skills.render_available_skills()
+                            prompt = prompt .. table.concat(vim.fn.readfile(vim.env.BRGLNG_DOTFILES_DIR .. "/pi/agent/APPEND_SYSTEM.md"), "\n") .. skills.render_available_skills()
                         end
                         return prompt .. string.format(
                             [[
@@ -267,7 +267,7 @@ Additional context:
         opts.interactions.chat.tools.groups["agent"].system_prompt = function(group, ctx)
             local prompt = orig_agent_system_prompt(group, ctx)
             prompt, _ = prompt:gsub("<additionalContext>.*</additionalContext>", "")
-            return prompt .. "<additionalContext>\n" .. table.concat(vim.fn.readfile(vim.env.BRGLNG_DOTFILES_DIR .. "/pi/agent/SYSTEM.md"), "\n") .. string.format([[
+            return prompt .. "<additionalContext>\n" .. table.concat(vim.fn.readfile(vim.env.BRGLNG_DOTFILES_DIR .. "/pi/agent/APPEND_SYSTEM.md"), "\n") .. string.format([[
 - The user's current working directory is %s.
 - The current date is %s.
 - The user's Neovim version is %s.
