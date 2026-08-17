@@ -288,7 +288,7 @@
         "bailian_tokenplan": {
             "baseUrl": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
             "api": "openai-completions",
-            "apiKey": "$BAILIAN_TOKENPLAN_API_KEY",
+            "apiKey": "$DASHSCOPE_API_KEY",
             "compat": {
                 "supportsDeveloperRole": false
             },

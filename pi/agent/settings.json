@@ -38,7 +38,8 @@
     "npm:pi-background-tasks",
     "npm:pi-zentui",
     "npm:pi-list-tools",
-    "npm:@brglng/pi-portable-sessions"
+    "npm:@brglng/pi-portable-sessions",
+    "/Users/zpan/github/brglng/pi-packages/packages/pi-bailian"
   ],
   "hideThinkingBlock": false
 }
