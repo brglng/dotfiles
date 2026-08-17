@@ -277,6 +277,10 @@ Additional context:
         end
         require("codecompanion").setup(opts)
 
+        local function set_chat_win_options()
+            vim.cmd("startinsert")
+            vim.o.scrolloff = 5
+        end
         local function set_cli_win_options()
             vim.cmd("startinsert")
             vim.o.signcolumn = 'no'
@@ -285,15 +289,12 @@ Additional context:
             vim.o.statuscolumn = ''
             vim.o.number = false
         end
-
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "codecompanion_cli",
-            callback = set_cli_win_options
-        })
-        vim.api.nvim_create_autocmd("BufWinEnter", {
-            pattern = "*",
+        vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter" }, {
+            pattern = { "*" },
             callback = function ()
-                if vim.o.filetype == "codecompanion_cli" then
+                if vim.o.filetype == "codecompanion" then
+                    set_chat_win_options()
+                elseif vim.o.filetype == "codecompanion_cli" then
                     set_cli_win_options()
                 end
             end
