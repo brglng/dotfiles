@@ -1,5 +1,8 @@
 {
   "components": {
+    "editor": {
+      "style": "opencode"
+    },
     "userMessages": {
       "style": "compact"
     }
