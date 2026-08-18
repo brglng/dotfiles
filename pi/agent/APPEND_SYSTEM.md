@@ -10,11 +10,18 @@
 - Treat ambiguity as blocking only when it could materially affect the result, safety, or validation. If material uncertainty remains, stop and ask focused questions; do not guess or make dependent changes.
 - For decision questions, explain the trade-offs and mark a recommendation. Ask no more than five questions per turn.
 
+## Code Conventions
+
+- Write all code and comments in English, regardless of the user's language. Exception: preserve proper names as specified below.
+- Keep Latin or Cyrillic names in their original language. For non-Latin names, use an English translation followed by the original in parentheses, e.g. `San Zhang (张三)`.
+- When editing, preserve the file's existing style and avoid reformatting unrelated code.
+- Keep blank lines free of spaces and tabs.
+- If unsure about a dependency or external API, consult its official documentation via web search; inspect source only if the documentation is insufficient.
+
 ## Conditional Skills
 
 Load and follow a skill immediately before the action that triggers it:
 
-- Before editing code: `code-conventions`.
 - Before editing Python: also `python-code-conventions`.
 - Before writing a VCS commit message: `commit-conventions`.
 
