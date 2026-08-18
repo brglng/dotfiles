@@ -1,0 +1,269 @@
+{
+  "name": "Poe",
+  "baseUrl": "https://api.poe.com/v1",
+  "apiKey": "$POE_API_KEY",
+  "api": "openai-completions",
+  "discoverModels": true,
+  "models": {
+    "zpan-fable-5-agent": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text"],
+      "contextWindow": 1000000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": "none",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "xhigh": "xhigh",
+        "max": "max"
+      },
+      "cost": {
+        "input": 10.1,
+        "output": 50.51,
+        "cacheRead": 1.01,
+        "cacheWrite": 10.11
+      }
+    },
+    "zpan-opus-5-agent": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text"],
+      "contextWindow": 1000000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": "none",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "xhigh": "xhigh",
+        "max": "max"
+      },
+      "cost": {
+        "input": 5.05,
+        "output": 25.25,
+        "cacheRead": 0.51,
+        "cacheWrite": 6.32
+      }
+    },
+    "zpan-sonnet-5": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text"],
+      "contextWindow": 1000000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": "none",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "xhigh": "xhigh",
+        "max": "max"
+      },
+      "cost": {
+        "input": 2.02,
+        "output": 10.1,
+        "cacheRead": 0.2,
+        "cacheWrite": 2.53
+      }
+    },
+    "claude-opus-4.8": {
+      "api": "anthropic-messages",
+      "baseUrl": "https://api.poe.com",
+      "reasoning": true,
+      "input": ["text", "image"],
+      "contextWindow": 1000000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": "none",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "xhigh": "xhigh",
+        "max": "max"
+      },
+      "cost": {
+        "input": 4.29,
+        "output": 21.46,
+        "cacheRead": 0.43,
+        "cacheWrite": 5.37
+      }
+    },
+    "claude-sonnet-4.6": {
+      "api": "anthropic-messages",
+      "baseUrl": "https://api.poe.com",
+      "reasoning": true,
+      "input": ["text", "image"],
+      "contextWindow": 983040,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": "none",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "xhigh": null,
+        "max": "max"
+      },
+      "cost": {
+        "input": 2.58,
+        "output": 12.88,
+        "cacheRead": 0.26,
+        "cacheWrite": 3.22
+      }
+    },
+    "zpan-gpt-5.6-sol": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text"],
+      "contextWindow": 1050000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": "none",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "xhigh": "xhigh",
+        "max": "max"
+      },
+      "cost": {
+        "input": 4.55,
+        "output": 27.27,
+        "cacheRead": 0.46,
+        "cacheWrite": 6.82,
+        "tiers": [
+          {
+            "inputTokensAbove": 272000,
+            "input": 9.1,
+            "output": 54.54,
+            "cacheRead": 0.91,
+            "cacheWrite": 13.64
+          }
+        ]
+      }
+    },
+    "zpan-gpt-5.6-terra": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text"],
+      "contextWindow": 1050000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": "none",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "xhigh": "xhigh",
+        "max": "max"
+      },
+      "cost": {
+        "input": 1.82,
+        "output": 10.91,
+        "cacheRead": 0.19,
+        "cacheWrite": 2.73,
+        "tiers": [
+          {
+            "inputTokensAbove": 272000,
+            "input": 3.64,
+            "output": 21.82,
+            "cacheRead": 0.37,
+            "cacheWrite": 5.46
+          }
+        ]
+      }
+    },
+    "zpan-gpt-5.6-luna": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text"],
+      "contextWindow": 1050000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": "none",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "xhigh": "xhigh",
+        "max": "max"
+      },
+      "cost": {
+        "input": 0.18,
+        "output": 1.09,
+        "cacheRead": 0.02,
+        "cacheWrite": 0.28,
+        "tiers": [
+          {
+            "inputTokensAbove": 272000,
+            "input": 0.36,
+            "output": 2.18,
+            "cacheRead": 0.04,
+            "cacheWrite": 0.57
+          }
+        ]
+      }
+    },
+    "kimi-k3": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text", "image"],
+      "contextWindow": 1000000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": null,
+        "low": "low",
+        "medium": null,
+        "high": "high",
+        "xhigh": null,
+        "max": "max"
+      },
+      "cost": {
+        "input": 3.03,
+        "output": 15.15,
+        "cacheRead": 0.3,
+        "cacheWrite": 3.79
+      }
+    },
+    "deepseek-v4-pro": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text"],
+      "contextWindow": 1000000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": null,
+        "low": "low",
+        "medium": null,
+        "high": "high",
+        "xhigh": null,
+        "max": "max"
+      },
+      "cost": {
+        "input": 1.76,
+        "output": 3.52,
+        "cacheRead": 0.18,
+        "cacheWrite": 0.88
+      }
+    },
+    "deepseek-v4-flash": {
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text"],
+      "contextWindow": 1000000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": null,
+        "low": "low",
+        "medium": null,
+        "high": "high",
+        "xhigh": null,
+        "max": "max"
+      },
+      "cost": {
+        "input": 0.14,
+        "output": 0.28,
+        "cacheRead": 0.01,
+        "cacheWrite": 0.07
+      }
+    }
+  }
+}
