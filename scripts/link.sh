@@ -100,15 +100,7 @@ EOF
 
 function update_gvimrc {
     update_file '"' "$HOME/.gvimrc" "$(cat <<EOF
-source $PWD/config/nvim/ginit.vim
-EOF
-)"
-}
-
-function update_nvim_ginit_vim {
-    update_file '"' "$HOME/.config/nvim/ginit.vim" "$(cat <<EOF
-let $BRGLNG_DOTFILES_DIR = '$PWD'
-source $PWD/config/nvim/ginit.vim
+source $PWD/gvimrc
 EOF
 )"
 }
@@ -146,6 +138,7 @@ function link_common() {
     link "config/kitty/no-preference-theme.auto.conf"
     link "config/starship.toml"
     link "pi/agent/extensions/pi-auto-review/config.json"
+    link "pi/agent/extensions/pi-bailian/config.json"
     link "pi/agent/extensions/pi-custom-providers/poe.json"
     link "pi/agent/extensions/pi-permission-system/config.json"
     link "pi/agent/extensions/pi-portable-sessions/config.json"
@@ -153,6 +146,7 @@ function link_common() {
     # link "pi/agent/extensions/pi-session-auto-rename.json"
     link "pi/agent/skills"
     link "pi/agent/APPEND_SYSTEM.md"
+    link "pi/agent/hermes-memory-config.json"
     link "pi/agent/keybindings.json"
     link "pi/agent/mcp.json"
     link "pi/agent/models.json"
@@ -168,7 +162,6 @@ function link_common() {
     update_gvimrc
     update_kitty_conf
     update_nvim_init_lua
-    update_nvim_ginit_vim
     update_tmux_conf
     update_vimrc
     update_wezterm

@@ -3,15 +3,15 @@
   "theme": "light",
   "tuiMode": "fullscreen",
   "showHardwareCursor": true,
-  "defaultProvider": "openrouter",
-  "defaultModel": "openai/gpt-5.6-luna",
-  "defaultThinkingLevel": "high",
+  "defaultProvider": "loostone",
+  "defaultModel": "glm-5.2",
+  "defaultThinkingLevel": "off",
   "session": {
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "openrouter/deepseek/deepseek-v4-flash-0731:high",
-      "retries": 3,
+      "model": "openrouter/openai/gpt-5.6-terra:medium",
+      "retries": 100,
       "emojis": true,
       "maxLength": 52,
       "scopeMaxLength": 12,
@@ -20,6 +20,13 @@
       "useTags": true,
       "builtinTags": true,
       "tags": []
+    }
+  },
+  "subagents": {
+    "agentOverrides": {
+      "worker": {
+        "model": "loostone/deepseek-v4-flash-0731"
+      }
     }
   },
   "packages": [
@@ -43,5 +50,7 @@
     "npm:@brglng/pi-bailian",
     "/Users/zpan/github/brglng/pi-packages/packages/pi-custom-providers"
   ],
-  "hideThinkingBlock": false
+  "hideThinkingBlock": false,
+  "retry.maxRetries": 100,
+  "retry.provider.timeoutMs": 10000
 }

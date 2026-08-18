@@ -1,0 +1,7 @@
+{
+  "memoryCharLimit": 50000,
+  "userCharLimit": 50000,
+  "projectCharLimit": 50000,
+  "llmModelOverride": "openrouter/gpt/gpt-5.6-luna",
+  "llmThinkingOverride": "xhigh"
+}
