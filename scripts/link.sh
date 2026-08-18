@@ -137,32 +137,32 @@ EOF
 }
 
 function link_common() {
+    # link "config/alacritty/colors"
     link "config/neovide"
     # link "config/powerline"
-    link "config/starship.toml"
     link "config/kitty/themes"
     link "config/kitty/dark-theme.auto.conf"
     link "config/kitty/light-theme.auto.conf"
     link "config/kitty/no-preference-theme.auto.conf"
-    link "clang-format"
+    link "config/starship.toml"
     link "pi/agent/extensions/pi-auto-review/config.json"
+    link "pi/agent/extensions/pi-custom-providers/poe.json"
     link "pi/agent/extensions/pi-permission-system/config.json"
     link "pi/agent/extensions/pi-portable-sessions/config.json"
-    link "pi/agent/extensions/pi-custom-providers/poe.json"
     # link "pi/agent/extensions/pi-sandbox/config.json"
     # link "pi/agent/extensions/pi-session-auto-rename.json"
     link "pi/agent/skills"
     link "pi/agent/APPEND_SYSTEM.md"
     link "pi/agent/keybindings.json"
+    link "pi/agent/mcp.json"
     link "pi/agent/models.json"
     link "pi/agent/settings.json"
     link "pi/agent/zentui.json"
     link "pi-lens/config.json"
+    link "clang-format"
     link "zimrc"
 
     # update_alacritty_toml
-    # link "config/alacritty/colors"
-
     update_ghostty_config
     update_gitconfig
     update_gvimrc

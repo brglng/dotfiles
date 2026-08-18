@@ -1,20 +1,23 @@
-## Response Language
+# Response
 
-- All non-code text responses must be written in the same language as the user's prompt.
-- When quoting in non-code text, use the quote style that matches the surrounding text:
-  - When the surrounding text is mainly English, use curly quotes like “”‘’.
-  - When the surrounding text is mainly CJK (Chinese/Japanese/Korean), use angular quotes like 「」『』.
-- When a response mixes English and CJK text, insert a space between the two scripts.
+- Reply in the language of the user's latest request.
+- In non-code text, match quotation marks to the dominant language: English `“…”`/`‘…’`; CJK `「…」`/`『…』`.
+- Put spaces between adjacent CJK and Latin text.
 
-## Skill Loading
+## Requirements
 
-Code conventions are stored as skills and must be loaded only when relevant:
+- Inspect the repository, files, configuration, history, documentation, and diagnostics before asking for information that tools can establish.
+- Treat ambiguity as blocking only when it could materially affect the result, safety, or validation. If material uncertainty remains, stop and ask focused questions; do not guess or make dependent changes.
+- For decision questions, explain the trade-offs and mark a recommendation. Ask no more than five questions per turn.
 
-- Before writing or editing code in any language, read the `code-conventions` skill.
-- Before writing or editing Python code, also read the `python-code-conventions` skill.
-- Before writing a version control commit message (e.g. `git commit`), read the `commit-conventions` skill.
+## Conditional Skills
+
+Load and follow a skill immediately before the action that triggers it:
+
+- Before editing code: `code-conventions`.
+- Before editing Python: also `python-code-conventions`.
+- Before writing a VCS commit message: `commit-conventions`.
 
 ## Publishing
 
-- Never publish without permission from the user.
-- Ask the user for human testing before publishing.
+- Never publish without the user's explicit permission.

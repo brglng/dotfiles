@@ -6,6 +6,18 @@
     "find": "allow",
     "ls": "allow",
     "bash": {
+      "echo *": "allow",
+      "cd *": "allow",
+      "ls *": "allow",
+      "pwd *": "allow",
+      "cat *": "allow",
+      "grep *": "allow",
+      "find *": "allow",
+      "diff *": "allow",
+      "git status *": "allow",
+      "git log *": "allow",
+      "git diff *": "allow",
+      "git ls *": "allow",
       "*": "ask"
     },
     "external_directory": {

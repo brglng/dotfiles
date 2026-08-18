@@ -5,7 +5,7 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
-        -- "ravitemer/codecompanion-history.nvim",
+        "ravitemer/codecompanion-history.nvim",
         "franco-ruggeri/codecompanion-spinner.nvim",
         "Davidyz/codecompanion-dap.nvim",
         "jinzhongjia/codecompanion-gitcommit.nvim"
@@ -229,11 +229,11 @@ Additional context:
                     end)()
                 }
             },
-            -- cli = {
-            --     window = {
-            --         layout = "tab",
-            --     }
-            -- }
+            cli = {
+                window = {
+                    layout = "tab",
+                }
+            }
         },
         extensions = {
             dap = {
@@ -303,7 +303,7 @@ Additional context:
     keys = {
         { "<leader>cc", "<Cmd>CodeCompanionChat Toggle<CR>", mode = { "n", "v" }, desc = "CodeCompanionChat Toggle" },
         { "<leader>ca", "<Cmd>CodeCompanionChat Add<CR>", mode = { "n", "v" }, desc = "CodeCompanionChat Add" },
-        -- { "<leader>ch", "<Cmd>CodeCompanionHistory<CR>", mode = { "n", "v" }, desc = "CodeCompanionHistory" },
+        { "<leader>ch", "<Cmd>CodeCompanionHistory<CR>", mode = { "n", "v" }, desc = "CodeCompanionHistory" },
         { "<Leader>ci", "<Cmd>CodeCompanion <CR>", mode = { "n", "v" }, desc = "CodeCompanion Inline edit" },
         { "<Leader>cr", "<Cmd>CodeCompanionCodeReview<CR>", mode = { "n", "v" }, desc = "CodeCompanion Code Review" },
         { "<leader>c;", "<Cmd>CodeCompanionCLI<CR>", mode = { "n", "v" }, desc = "CodeCompanionCLI" },

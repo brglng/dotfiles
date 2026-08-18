@@ -1,44 +1,23 @@
 ---
 name: commit-conventions
-description: "Mandatory conventions for writing version control commit messages (Git, Mercurial, etc.). Commit messages must always be written in English and follow the Conventional Commits specification, e.g. \"feat(nvim): enable termsync\". Read before committing code or writing any commit message; not needed for other tasks."
+description: Mandatory conventions for writing VCS commit messages. Read before writing a commit message; not needed for other tasks.
 ---
 
-# Commit Conventions (Version Control)
+# Commit Conventions
 
-## When to Use
-
-Apply these rules whenever you write a version control commit message: `git commit`, `git commit --amend`, staged rebase/squash messages, or PR merge titles. Read this file before producing any commit message.
-
-## When to Commit
-
-Do not commit code changes automatically unless the user explicitly asks you to. When you have staged or completed changes that could be committed:
-
-- Ask the user whether they want you to commit (and how), or
-- Leave the changes uncommitted and let the user commit them manually.
-
-Never run `git commit` on your own initiative. Let the user decide the timing and granularity of commits.
+Use this skill before writing a commit message for `git commit`, amend, rebase, squash, or a PR merge title.
 
 ## Rules
 
-- Commit messages must be written in English, regardless of the language of the user's prompt or the changes being committed.
-- Follow the Conventional Commits specification: the message must start with `<type>(<optional scope>): <summary>`.
-- Use one of the standard types:
-  - `feat`: a new feature
-  - `fix`: a bug fix
-  - `docs`: documentation-only changes
-  - `style`: changes that do not affect code behavior (formatting, whitespace, missing semicolons)
-  - `refactor`: a code change that neither fixes a bug nor adds a feature
-  - `perf`: a performance improvement
-  - `test`: adding or correcting tests
-  - `build`: changes to the build system or external dependencies
-  - `ci`: changes to CI configuration files and scripts
-  - `chore`: other changes that do not modify source or test files (e.g. maintenance)
-  - `revert`: reverts a previous commit
-- Scope is optional and lowercase, describing the affected area, e.g. `feat(nvim): ...`, `fix(install): ...`.
-- Summary: imperative mood ("add", "fix", not "added"/"fixes"), capitalized first letter, no trailing period, keep it concise (under ~72 characters).
-- Breaking changes: append `!` after the type/scope (e.g. `feat(api)!: drop legacy endpoints`), and/or add a `BREAKING CHANGE:` footer explaining the migration path.
-- If more detail is needed, add a body and optional footers after a blank line, wrapped at 72 columns. Explain what changed and why, not the mechanics.
-- Do not rewrite existing commit messages that already follow these rules (e.g. when rebasing or merging).
+- Do not commit automatically. Ask the user whether to commit and how, or leave changes uncommitted.
+- Only commit in the current project. Committing in another project requires explicit double permission.
+- Write messages in English and follow Conventional Commits: `<type>(<optional scope>): <summary>`.
+- Use these types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+- Use a lowercase scope for the affected area when useful, e.g. `feat(nvim): ...`.
+- Use imperative mood, capitalize the summary, omit the final period, and keep it under about 72 characters.
+- For breaking changes, append `!` after the type/scope and/or add a `BREAKING CHANGE:` footer with migration guidance.
+- If needed, add a body and footers after a blank line, wrapping at 72 columns. Explain what changed and why, not mechanics.
+- Do not rewrite existing compliant messages.
 
 ## Examples
 

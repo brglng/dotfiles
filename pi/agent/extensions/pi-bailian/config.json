@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/brglng/pi-packages/main/packages/pi-bailian/schemas/config.schema.json",
   "workspaceId": "token-plan",
   "plan": "token-plan",
   "discoverModels": true,

@@ -1,21 +1,16 @@
 ---
 name: code-conventions
-description: Mandatory conventions for writing or editing code in any programming language — scripts, dotfiles, configs, shell commands, and code snippets in responses. All code including comments must be in English (with exceptions for proper names), and blank lines must not contain whitespace. Read before producing any code; not needed for text-only responses.
+description: Mandatory conventions for writing or editing code in any language. Read before producing code; not needed for text-only responses.
 ---
 
-# Code Conventions (All Languages)
+# Code Conventions
 
-## When to Use
-
-Apply these rules whenever you write or edit code in any language. Read this file when the task involves producing code; it is not needed for text-only responses.
+Use this skill before writing or editing code, including scripts, configs, dotfiles, and response snippets.
 
 ## Rules
 
-- All code, including comments, must be written in English, regardless of the language of the user's request, except for names (see below).
-- When editing an existing file, follow the code style already used in that file (indentation, quoting, naming, formatting conventions, etc.); do not reformat the whole file into a different style.
-- Blank lines in code must not contain any spaces or tabs.
-
-### Names
-
-- For names written in the Latin or Cyrillic script (e.g. Western or Russian names) — people, places, streets, countries/states, etc. — keep them in their original language and do not translate them to English.
-- For non-Latin (especially CJK) names — people, places, streets, countries/states, etc. — if the original language is not English, translate them to English and append the original name in parentheses after the translation. For example, translate "张三" to "San Zhang (张三)".
+- Write all code and comments in English, regardless of the user's language. Exception: preserve proper names as specified below.
+- Keep Latin or Cyrillic names in their original language. For non-Latin names, use an English translation followed by the original in parentheses, e.g. `San Zhang (张三)`.
+- When editing, preserve the file's existing style and avoid reformatting unrelated code.
+- Keep blank lines free of spaces and tabs.
+- If unsure about a dependency or external API, consult its official documentation via web search; inspect source only if the documentation is insufficient.
