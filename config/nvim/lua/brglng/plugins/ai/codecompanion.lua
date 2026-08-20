@@ -229,11 +229,11 @@ Additional context:
                     end)()
                 }
             },
-            cli = {
-                window = {
-                    layout = "tab",
-                }
-            }
+            -- cli = {
+            --     window = {
+            --         layout = "tab",
+            --     }
+            -- }
         },
         extensions = {
             dap = {
@@ -288,6 +288,7 @@ Additional context:
             vim.o.foldenable = false
             vim.o.statuscolumn = ''
             vim.o.number = false
+            vim.o.cursorline = false
         end
         vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter" }, {
             pattern = { "*" },
