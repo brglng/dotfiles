@@ -1,0 +1,10 @@
+{
+  "isSyncActive": true,
+  "themes": {
+    "light": "rose-pine-dawn",
+    "dark": "rose-pine"
+  },
+  "detection": {
+    "pollIntervalMs": 2000
+  }
+}

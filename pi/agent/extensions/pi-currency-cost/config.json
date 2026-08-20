@@ -1,0 +1,18 @@
+{
+  "currencies": {
+    "CNY": {
+      "usdRate": 0.147
+    }
+  },
+  "providers": {
+    "bailian": {
+      "currency": "CNY"
+    },
+    "loostone": {
+      "currency": "CNY"
+    }
+  },
+  "rateSource": {
+    "type": "frankfurter"
+  }
+}

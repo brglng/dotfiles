@@ -1,16 +1,16 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "theme": "light",
+  "theme": "rose-pine-dawn",
   "tuiMode": "fullscreen",
-  "showHardwareCursor": true,
-  "defaultProvider": "loostone",
-  "defaultModel": "glm-5.2",
-  "defaultThinkingLevel": "off",
+  "showHardwareCursor": false,
+  "defaultProvider": "openrouter",
+  "defaultModel": "openai/gpt-5.6-luna",
+  "defaultThinkingLevel": "high",
   "session": {
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "openrouter/openai/gpt-5.6-terra:medium",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731:high",
       "retries": 100,
       "emojis": true,
       "maxLength": 52,
@@ -38,19 +38,35 @@
     "npm:pi-hermes-memory",
     "npm:pi-interactive-shell",
     "npm:context-mode",
-    "npm:@brglng/pi-permission-system",
+    "npm:pi-rtk-optimizer",
+    "npm:@gotgenes/pi-permission-system",
     "npm:@brglng/pi-auto-review",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:pi-auto-theme",
     "npm:@furbyhaxx/pi-session-naming",
     "npm:pi-background-tasks",
-    "npm:pi-zentui",
-    "npm:pi-list-tools",
     "npm:@brglng/pi-portable-sessions",
     "npm:@brglng/pi-bailian",
-    "/Users/zpan/github/brglng/pi-packages/packages/pi-custom-providers"
+    "npm:@brglng/pi-custom-providers",
+    "/Users/zpan/github/brglng/pi-packages/packages/pi-currency-cost",
+    "npm:@tifan/pi-titlebar-spinner",
+    "npm:@tifan/pi-handoff",
+    "npm:@ff-labs/pi-fff",
+    "npm:pi-loadout",
+    "npm:@fadouse/pi-math",
+    "npm:pi-zentui",
+    "npm:pi-open-tui",
+    "npm:@zenobius/pi-rose-pine",
+    "npm:@gotgenes/pi-nocd",
+    "npm:@sherif-fanous/pi-theme-sync"
   ],
   "hideThinkingBlock": false,
-  "retry.maxRetries": 100,
-  "retry.provider.timeoutMs": 10000
+  "retry": {
+    "maxRetries": 100,
+    "provider": {
+      "timeoutMs": 10000
+    }
+  },
+  "terminal": {
+    "showImages": true
+  }
 }

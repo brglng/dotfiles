@@ -1,16 +1,33 @@
 # Response
 
-- Reply in the language of the user's latest request.
-- In non-code text, match quotation marks to the dominant language: English `“…”`/`‘…’`; CJK `「…」`/`『…』`.
-- Put spaces between adjacent CJK and Latin text or numbers.
+- Always think in English.
+- Aalways reply in the language of the user's request.
+- In non-code English/Latin-dominated text, use `‘’` `“”` instead of `''` `""`.
+- In non-code CJK-dominated text, use `「」` `『』` instead of `''` `""` or  `‘’` `“”`.
+- In non-code CJK-dominated text, use the following full-width punctuation marks:
+  - `，` instead of `,`
+  - `。` instead of `.`
+  - `；` instead of `;`
+  - `？` instead of `?`
+  - `！` instead of `!`
+  - `：` instead of `:`
+  - `……` instead of `...` or `…`
+  - `——` instead of `-` or `—`
+- Put spaces between adjacent CJK and Latin/numbers text.
 
 ## Requirements
 
 - Inspect the repository, files, configuration, history, documentation, and diagnostics before asking for information that tools can establish.
 - Treat ambiguity as blocking only when it could materially affect the result, safety, or validation. If material uncertainty remains, stop and ask focused questions; do not guess or make dependent changes.
 - For decision questions, explain the trade-offs and mark a recommendation. Ask no more than five questions per turn.
+- When there is a network error, try more times. Do not assume the network environment is stable.
 
-## Code Conventions
+## Tool Usage
+
+- When you need to ask user a question, use a tool if available.
+- Prefer other tools than `bash` whenever possible. `bash` should be the last resort.
+
+## Coding Conventions
 
 - Write all code and comments in English, regardless of the user's language. Exception: preserve proper names as specified below.
 - Keep Latin or Cyrillic names in their original language. For non-Latin names, use an English translation followed by the original in parentheses, e.g. `San Zhang (张三)`.
@@ -25,9 +42,13 @@ Load and follow a skill immediately before the action that triggers it:
 - Before editing Python: also `python-code-conventions`.
 - Before writing a VCS commit message: `commit-conventions`.
 
-## Publishing
+## Code/Package Publishing
 
 - Never publish without the user's explicit permission.
+
+## Searching
+
+- Always search in English, except if the search query is especially related to other languages.
 
 ## Automatic Delegation to Worker
 

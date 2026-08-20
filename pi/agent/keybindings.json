@@ -6,7 +6,7 @@
     "tui.editor.cursorWordLeft": ["alt+left", "alt+b"],
     "tui.editor.cursorWordRight": ["alt+right", "alt+f"],
     "tui.editor.deleteCharForward": ["delete", "ctrl+d"],
-    "tui.editor.deleteCharBackward": ["backspace", "ctrl+h"],
+    "tui.editor.deleteCharBackward": ["backspace"],
     "tui.select.up": ["ctrl+p", "up"],
     "tui.select.down": ["ctrl+n", "down"],
     "tui.input.newLine": ["shift+enter", "ctrl+j"],
