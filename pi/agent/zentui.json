@@ -1,6 +1,7 @@
 {
   "components": {
     "editor": {
+      "enabled": false,
       "style": "opencode"
     },
     "userMessages": {
