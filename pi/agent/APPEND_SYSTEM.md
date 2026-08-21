@@ -17,15 +17,14 @@
 
 ## Requirements
 
-- Inspect the repository, files, configuration, history, documentation, and diagnostics before asking for information that tools can establish.
-- Treat ambiguity as blocking only when it could materially affect the result, safety, or validation. If material uncertainty remains, stop and ask focused questions; do not guess or make dependent changes.
+- Treat ambiguity as blocking when it could materially affect the result, safety, or validation. If material uncertainty remains, stop and ask focused questions; do not guess or make dependent changes.
 - For decision questions, explain the trade-offs and mark a recommendation. Ask no more than five questions per turn.
 - When there is a network error, try more times. Do not assume the network environment is stable.
 
 ## Tool Usage
 
 - When you need to ask user a question, use a tool if available.
-- Prefer other tools than `bash` whenever possible. `bash` should be the last resort.
+- Prefer other tools than `bash` whenever possible. `bash` is your last resort.
 
 ## Coding Conventions
 
@@ -33,7 +32,7 @@
 - Keep Latin or Cyrillic names in their original language. For non-Latin names, use an English translation followed by the original in parentheses, e.g. `San Zhang (张三)`.
 - When editing, preserve the file's existing style and avoid reformatting unrelated code.
 - Keep blank lines free of spaces and tabs.
-- If unsure about a dependency or external API, consult its official documentation via web search; inspect source only if the documentation is insufficient.
+- If unsure about a dependency or external API, consult its documentation in local filesystem and/or via web search; inspect source only if the documentation is insufficient.
 
 ## Conditional Skills
 
