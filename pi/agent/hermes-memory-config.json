@@ -2,6 +2,6 @@
   "memoryCharLimit": 50000,
   "userCharLimit": 50000,
   "projectCharLimit": 50000,
-  "llmModelOverride": "openrouter/deepseek/deepseek-v4-flash-0731",
+  "llmModelOverride": "openrouter/openai/gpt-5.6-luna",
   "llmThinkingOverride": "high"
 }
