@@ -1,17 +1,17 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "theme": "rose-pine-dawn",
+  "theme": "rose-pine",
   "tuiMode": "fullscreen",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
-  "defaultModel": "openai/gpt-5.6-luna",
+  "defaultModel": "deepseek/deepseek-v4-flash-0731",
   "defaultThinkingLevel": "high",
   "session": {
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "openrouter/deepseek/deepseek-v4-flash-0731:high",
-      "retries": 100,
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731:medium",
+      "retries": 1000,
       "emojis": true,
       "maxLength": 52,
       "scopeMaxLength": 12,
@@ -20,12 +20,20 @@
       "useTags": true,
       "builtinTags": true,
       "tags": []
+    },
+    "browser": {
+      "enabled": false
     }
   },
   "subagents": {
     "agentOverrides": {
       "worker": {
-        "model": "loostone/deepseek-v4-flash-0731"
+        "model": "openrouter/deepseek/deepseek-v4-flash-0731",
+        "thinking": "high"
+      },
+      "reviewer": {
+        "model": "openrouter/openai/gpt-5.6-luna",
+        "thinking": "high"
       }
     }
   },
@@ -36,34 +44,39 @@
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:pi-hermes-memory",
-    "npm:pi-interactive-shell",
     "npm:context-mode",
-    "npm:pi-rtk-optimizer",
+    "npm:pi-caveman",
+    "npm:@firstpick/pi-extension-grill-me",
+    "npm:@gotgenes/pi-nocd",
     "npm:@gotgenes/pi-permission-system",
     "npm:@brglng/pi-auto-review",
+    "npm:pi-loadout",
+    "npm:pi-interactive-shell",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@furbyhaxx/pi-session-naming",
     "npm:pi-background-tasks",
+    "npm:@furbyhaxx/pi-session-naming",
     "npm:@brglng/pi-portable-sessions",
     "npm:@brglng/pi-bailian",
     "npm:@brglng/pi-custom-providers",
-    "/Users/zpan/github/brglng/pi-packages/packages/pi-currency-cost",
+    "npm@brglng/pi-currency-cost",
     "npm:@tifan/pi-titlebar-spinner",
-    "npm:@tifan/pi-handoff",
     "npm:@ff-labs/pi-fff",
-    "npm:pi-loadout",
     "npm:@fadouse/pi-math",
+    "npm:@sherif-fanous/pi-theme-sync",
     "npm:pi-zentui",
     "npm:pi-open-tui",
     "npm:@zenobius/pi-rose-pine",
-    "npm:@gotgenes/pi-nocd",
-    "npm:@sherif-fanous/pi-theme-sync"
+    "npm:@vanillagreen/pi-session-manager",
+    "npm:pi-edit-session-in-place",
+    "npm:@mohndoe/pi-atlas",
+    "npm:@pi-unipi/notify",
+    "npm:@ssweens/pi-handoff"
   ],
   "hideThinkingBlock": false,
   "retry": {
-    "maxRetries": 100,
+    "maxRetries": 1000,
     "provider": {
-      "timeoutMs": 10000
+      "timeoutMs": 30000
     }
   },
   "terminal": {
