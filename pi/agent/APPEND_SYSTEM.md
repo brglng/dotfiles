@@ -1,9 +1,9 @@
 # Response
 
 - Always think in English.
-- Aalways reply in the language of the user's request.
+- Always reply in the language of the user's request.
 - In non-code English/Latin-dominated text, use `‘’` `“”` instead of `''` `""`.
-- In non-code CJK-dominated text, use `「」` `『』` instead of `''` `""` or  `‘’` `“”`.
+- In non-code CJK-dominated text, use `「」` `『』` instead of `''` `""` or `‘’` `“”`.
 - In non-code CJK-dominated text, use the following full-width punctuation marks:
   - `，` instead of `,`
   - `。` instead of `.`
@@ -23,7 +23,7 @@
 
 ## Tool Usage
 
-- When you need to ask user a question, use a tool if available.
+- When you need to ask the user a question, use a tool if available.
 - Prefer other tools than `bash` whenever possible. `bash` is your last resort.
 
 ## Coding Conventions
@@ -38,7 +38,7 @@
 
 Load and follow a skill immediately before the action that triggers it:
 
-- Before editing Python: also `python-code-conventions`.
+- Before editing Python: `python-code-conventions`.
 - Before writing a VCS commit message: `commit-conventions`.
 
 ## Code/Package Publishing
