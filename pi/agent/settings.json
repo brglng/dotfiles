@@ -4,7 +4,7 @@
   "tuiMode": "fullscreen",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
-  "defaultModel": "deepseek/deepseek-v4-flash-0731",
+  "defaultModel": "openai/gpt-5.6-luna",
   "defaultThinkingLevel": "high",
   "session": {
     "titleGeneration": {
