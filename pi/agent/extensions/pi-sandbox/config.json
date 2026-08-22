@@ -7,6 +7,7 @@
     "additionalAllowRead": [
       "/Users/brglng/github/brglng/dotfiles",
       "/Users/brglng/github/brglng/pi-packages",
+      "/Users/brglng/github/brglng/work-sync",
       "/Users/brglng/.config/alacritty",
       "/Users/brglng/.config/coc",
       "/Users/brglng/.config/cppman",
@@ -75,6 +76,7 @@
       "/Users/brglng/.cache/Homebrew",
       "/Users/zpan/github/brglng/dotfiles",
       "/Users/zpan/github/brglng/pi-packages",
+      "/Users/zpan/github/brglng/work-sync",
       "/Users/zpan/.config/alacritty",
       "/Users/zpan/.config/coc",
       "/Users/zpan/.config/cppman",
