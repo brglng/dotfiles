@@ -1,6 +1,6 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "theme": "rose-pine",
+  "theme": "rose-pine-dawn",
   "tuiMode": "fullscreen",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
@@ -46,10 +46,9 @@
     "npm:pi-hermes-memory",
     "npm:context-mode",
     "npm:pi-caveman",
+    "npm:@ssweens/pi-handoff",
     "npm:@firstpick/pi-extension-grill-me",
     "npm:@gotgenes/pi-nocd",
-    "npm:@gotgenes/pi-permission-system",
-    "npm:@brglng/pi-auto-review",
     "npm:pi-loadout",
     "npm:pi-interactive-shell",
     "npm:@juicesharp/rpiv-ask-user-question",
@@ -69,8 +68,7 @@
     "npm:@vanillagreen/pi-session-manager",
     "npm:pi-edit-session-in-place",
     "npm:@mohndoe/pi-atlas",
-    "npm:@pi-unipi/notify",
-    "npm:@ssweens/pi-handoff"
+    "npm:@pi-unipi/notify"
   ],
   "hideThinkingBlock": false,
   "retry": {

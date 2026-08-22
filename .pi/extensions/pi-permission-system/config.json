@@ -1,7 +1,0 @@
-{
-  "permission": {
-    "external_directory": {
-      "~/.local/share/nvim": "allow"
-    }
-  }
-}

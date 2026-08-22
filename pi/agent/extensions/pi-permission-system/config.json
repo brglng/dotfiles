@@ -85,6 +85,7 @@
       "history *": "allow",
       "ls *": "allow",
       "man *": "allow",
+      "pnpm --filter *": "allow",
       "printenv *": "allow",
       "pwd *": "allow",
       "readlink *": "allow",
