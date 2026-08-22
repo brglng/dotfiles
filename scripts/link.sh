@@ -143,6 +143,7 @@ function link_common() {
     link "pi/agent/extensions/pi-currency-cost/config.json"
     link "pi/agent/extensions/pi-permission-system/config.json"
     link "pi/agent/extensions/pi-portable-sessions/config.json"
+    link "pi/agent/extensions/subagent/config.json"
     # link "pi/agent/extensions/pi-sandbox/config.json"
     # link "pi/agent/extensions/pi-session-auto-rename.json"
     link "pi/agent/theme-sync.json"
