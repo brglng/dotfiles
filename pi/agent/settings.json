@@ -1,6 +1,6 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "theme": "rose-pine-dawn",
+  "theme": "rose-pine",
   "tuiMode": "fullscreen",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
@@ -64,12 +64,12 @@
     "npm:@sherif-fanous/pi-theme-sync",
     "npm:pi-zentui",
     "npm:pi-open-tui",
-    "npm:pi-landstrip",
     "npm:@zenobius/pi-rose-pine",
     "npm:@vanillagreen/pi-session-manager",
     "npm:pi-edit-session-in-place",
     "npm:@mohndoe/pi-atlas",
-    "npm:@pi-unipi/notify"
+    "npm:@pi-unipi/notify",
+    "npm:pi-permission-modes"
   ],
   "hideThinkingBlock": false,
   "retry": {
