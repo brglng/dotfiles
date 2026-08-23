@@ -20,6 +20,7 @@
 - Treat ambiguity as blocking when it could materially affect the result, safety, or validation. If material uncertainty remains, stop and ask focused questions; do not guess or make dependent changes.
 - For decision questions, explain the trade-offs and mark a recommendation. Ask no more than five questions per turn.
 - When there is a network error, try more times. Do not assume the network environment is stable.
+- Always treat an error like "This model is not available in your region" as a network error.
 
 ## Tool Usage
 
