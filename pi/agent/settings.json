@@ -1,6 +1,6 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "theme": "rose-pine",
+  "theme": "rose-pine-dawn",
   "tuiMode": "fullscreen",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
@@ -44,8 +44,6 @@
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:pi-hermes-memory",
-    "npm:@erichll/pi-auto-review",
-    "npm:@erichll/pi-sandbox",
     "npm:context-mode",
     "npm:pi-caveman",
     "npm:@ssweens/pi-handoff",
