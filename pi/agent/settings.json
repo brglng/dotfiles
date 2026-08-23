@@ -64,6 +64,7 @@
     "npm:@sherif-fanous/pi-theme-sync",
     "npm:pi-zentui",
     "npm:pi-open-tui",
+    "npm:pi-landstrip",
     "npm:@zenobius/pi-rose-pine",
     "npm:@vanillagreen/pi-session-manager",
     "npm:pi-edit-session-in-place",
