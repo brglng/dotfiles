@@ -142,10 +142,8 @@ return {
             },
             ["external.new"] = {
                 config = {
-                    filename = function(args)
-                        return os.date("%Y/%m/%d-%H-%M-%S/") .. table.concat(vim.tbl_map(function(arg)
-                            return vim.fn.substitute(vim.fn.tolower(arg), "\\s\\+", "-", "g")
-                        end, args), "-")
+                    filename = function(_)
+                        return os.date("notes/%Y%m%d%H%M%S")
                     end
                 }
             }
