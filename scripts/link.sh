@@ -144,7 +144,7 @@ function link_common() {
     link "pi/agent/extensions/pi-permission-system/config.json"
     link "pi/agent/extensions/pi-portable-sessions/config.json"
     link "pi/agent/extensions/pi-sandbox/config.json"
-    link "pi/agent/permission-mode/permission-mode.json"
+    link "pi/agent/sandbox.json"
     link "pi/agent/extensions/subagent/config.json"
     link "pi/agent/skills"
     link "pi/agent/APPEND_SYSTEM.md"

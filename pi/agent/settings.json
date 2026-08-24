@@ -1,6 +1,6 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "theme": "rose-pine",
+  "theme": "rose-pine-dawn",
   "tuiMode": "fullscreen",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
@@ -69,7 +69,7 @@
     "npm:pi-edit-session-in-place",
     "npm:@mohndoe/pi-atlas",
     "npm:@pi-unipi/notify",
-    "npm:pi-permission-modes"
+    "npm:pi-sandbox"
   ],
   "hideThinkingBlock": false,
   "retry": {
