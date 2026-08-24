@@ -240,7 +240,7 @@ Additional context:
                 enabled = true,
             },
             history = {
-                enabled = false,
+                enabled = true,
                 opts = {
                     picker_keymaps = {
                         rename = { n = "r", i = "<M-r>" },
