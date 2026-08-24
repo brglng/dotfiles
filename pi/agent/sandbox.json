@@ -330,7 +330,10 @@
       "/usr/local/Library/Taps",
       "/usr/local/Library/Caches",
       "~/Library/Caches/Homebrew",
-      "~/Library/Logs/Homebrew"
+      "~/Library/Logs/Homebrew",
+      "~/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/SKILL.md",
+      "~/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/references/prompting-and-roles.md",
+      "~/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/references/execution-controls.md"
     ],
     "allowWrite": [
       ".",
