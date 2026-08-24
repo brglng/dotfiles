@@ -1,10 +1,10 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "theme": "rose-pine-dawn",
+  "theme": "rose-pine",
   "tuiMode": "fullscreen",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
-  "defaultModel": "openai/gpt-5.6-luna",
+  "defaultModel": "deepseek/deepseek-v4-flash-0731",
   "defaultThinkingLevel": "high",
   "session": {
     "titleGeneration": {
@@ -44,6 +44,7 @@
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:pi-hermes-memory",
+    "npm:pi-sandbox",
     "npm:context-mode",
     "npm:pi-caveman",
     "npm:@ssweens/pi-handoff",
@@ -68,8 +69,7 @@
     "npm:@vanillagreen/pi-session-manager",
     "npm:pi-edit-session-in-place",
     "npm:@mohndoe/pi-atlas",
-    "npm:@pi-unipi/notify",
-    "npm:pi-sandbox"
+    "npm:@pi-unipi/notify"
   ],
   "hideThinkingBlock": false,
   "retry": {
