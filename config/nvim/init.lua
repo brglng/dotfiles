@@ -1,14 +1,10 @@
--- Derive the dotfiles root from the path of this script so that the setup
--- works regardless of how the file is loaded (e.g. via dofile from the
--- bootstrap in ~/.config/nvim/init.lua).
--- Source the legacy Vimscript init.vim first (rtp setup, vim-plug, options, keymaps).
-local dotfiles_dir = vim.fs.dirname(vim.fs.dirname(vim.fs.dirname(debug.getinfo(1, "S").source:sub(2))))
+local dotfiles_dir = vim.fs.normalize(vim.fs.dirname(debug.getinfo(1, "S").source:sub(2)) .. "../../..")
 
 package.path = dotfiles_dir .. "/lua/?.lua;"
     .. dotfiles_dir .. "/lua/?/init.lua;"
     .. package.path
 
-vim.cmd("source " .. dotfiles_dir .. "/config/nvim/init.vim")
+vim.cmd("source " .. dotfiles_dir .. "/vimrc")
 
 vim.o.mousemoveevent = true
 vim.o.splitkeep = "screen"
