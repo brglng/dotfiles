@@ -93,7 +93,7 @@ EOF
 
 function update_vimrc {
     update_file '"' "$HOME/.vimrc" "$(cat <<EOF
-source $PWD/vimrc
+source $PWD/config/nvim/init.vim
 EOF
 )"
 }

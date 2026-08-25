@@ -4,7 +4,7 @@ package.path = dotfiles_dir .. "/lua/?.lua;"
     .. dotfiles_dir .. "/lua/?/init.lua;"
     .. package.path
 
-vim.cmd("source " .. dotfiles_dir .. "/vimrc")
+vim.cmd("source " .. dotfiles_dir .. "/config/nvim/init.vim")
 
 vim.o.mousemoveevent = true
 vim.o.splitkeep = "screen"
