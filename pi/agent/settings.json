@@ -1,6 +1,6 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "theme": "rose-pine",
+  "theme": "rose-pine-dawn",
   "tuiMode": "fullscreen",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
@@ -28,7 +28,7 @@
   "subagents": {
     "agentOverrides": {
       "worker": {
-        "model": "openrouter/deepseek/deepseek-v4-flash-0731",
+        "model": "loostone/deepseek-v4-flash-0731",
         "thinking": "high"
       },
       "reviewer": {
