@@ -123,45 +123,61 @@ $env.config.menus = ($env.config.menus | append {
     }
 })
 
-$env.config.keybindings = ($env.config.keybindings | append [
-    {
-        name: ide_completion_menu
-        modifier: none
-        keycode: tab
-        mode: [emacs vi_normal vi_insert]
-        event: {
-            until: [
-                { send: menu name: ide_completion_menu }
-                { send: menunext }
-                { edit: complete }
-            ]
-        }
+def upsert-keybinding [keybinding: record] {
+    if ($env.config.keybindings | where name == $keybinding.name | is-empty) {
+        $env.config.keybindings = ($env.config.keybindings | append $keybinding)
+    } else {
+        $env.config.keybindings = ($env.config.keybindings | each {|kb|
+            if $kb.name == $keybinding.name {
+                $kb
+                | update modifier $keybinding.modifier
+                | update keycode $keybinding.keycode
+            } else {
+                $kb
+            }
+        })
     }
-    {
-        name: move_up
-        modifier: control
-        keycode: char_p
-        mode: [emacs, vi_normal, vi_insert]
-        event: {
-            until: [
-                { send: menuup }
-                { send: up }
-            ]
-        }
+}
+
+upsert-keybinding {
+    name: ide_completion_menu
+    modifier: none
+    keycode: tab
+    mode: [emacs, vi_normal, vi_inserted helix_normal helix_insert]
+    event: {
+        until: [
+            { send: menu name: ide_completion_menu }
+            { send: menunext }
+            { edit: complete }
+        ]
     }
-    {
-        name: move_down
-        modifier: control
-        keycode: char_n
-        mode: [emacs, vi_normal, vi_insert]
-        event: {
-            until: [
-                { send: menudown }
-                { send: down }
-            ]
-        }
+}
+
+upsert-keybinding {
+    name: move_up
+    modifier: control
+    keycode: char_p
+    mode: [emacs, vi_normal, vi_inserted helix_normal helix_insert]
+    event: {
+        until: [
+            { send: menuup }
+            { send: up }
+        ]
     }
-])
+}
+
+upsert-keybinding {
+    name: move_down
+    modifier: control
+    keycode: char_n
+    mode: [emacs, vi_normal, vi_inserted helix_normal helix_insert]
+    event: {
+        until: [
+            { send: menudown }
+            { send: down }
+        ]
+    }
+}
 
 source ~/.cache/carapace/init.nu
 source ~/.cache/zlua.nu
