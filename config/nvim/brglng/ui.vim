@@ -309,31 +309,33 @@ else
     set signcolumn=yes
 endif
 
-" Fix cell width for CJK, Symbols and Emojis (double width in CJK contexts).
-" The canonical range table is lua/brglng/cell_widths.txt, shared with WezTerm
-" (loaded via lua/brglng/cell_widths.lua). All ranges avoid the Nerd Font
-" private-use areas (U+E000..U+F8FF, U+F0000..U+FFFFD) so Nerd Font icons stay
-" single width. Edit only the table file to change the rules.
-function! s:load_cellwidths(file) abort
-    let l:rules = []
-    for l:line in readfile(a:file)
-        let l:line = substitute(l:line, '#.*$', '', '')
-        let l:line = substitute(l:line, '\s', '', 'g')
-        if empty(l:line)
-            continue
-        endif
-        let l:parts = split(l:line, '-')
-        let l:first = str2nr(l:parts[0], 16)
-        let l:last = len(l:parts) > 1 ? str2nr(l:parts[1], 16) : l:first
-        call add(l:rules, [l:first, l:last, 2])
-    endfor
-    return l:rules
-endfunction
+if v:false
+    " Fix cell width for CJK, Symbols and Emojis (double width in CJK contexts).
+    " The canonical range table is lua/brglng/cell_widths.txt, shared with WezTerm
+    " (loaded via lua/brglng/cell_widths.lua). All ranges avoid the Nerd Font
+    " private-use areas (U+E000..U+F8FF, U+F0000..U+FFFFD) so Nerd Font icons stay
+    " single width. Edit only the table file to change the rules.
+    function! s:load_cellwidths(file) abort
+        let l:rules = []
+        for l:line in readfile(a:file)
+            let l:line = substitute(l:line, '#.*$', '', '')
+            let l:line = substitute(l:line, '\s', '', 'g')
+            if empty(l:line)
+                continue
+            endif
+            let l:parts = split(l:line, '-')
+            let l:first = str2nr(l:parts[0], 16)
+            let l:last = len(l:parts) > 1 ? str2nr(l:parts[1], 16) : l:first
+            call add(l:rules, [l:first, l:last, 2])
+        endfor
+        return l:rules
+    endfunction
 
-let s:cellwidths_file = expand('<sfile>:h:h:h:h') . '/lua/brglng/cell_widths.txt'
-if filereadable(s:cellwidths_file)
-    call setcellwidths(s:load_cellwidths(s:cellwidths_file))
+    let s:cellwidths_file = expand('<sfile>:h:h:h:h') . '/lua/brglng/cell_widths.txt'
+    if filereadable(s:cellwidths_file)
+        call setcellwidths(s:load_cellwidths(s:cellwidths_file))
+    endif
+    unlet s:cellwidths_file
 endif
-unlet s:cellwidths_file
 
 " vim: ts=8 sts=4 sw=4 et

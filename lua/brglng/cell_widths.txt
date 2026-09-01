@@ -67,6 +67,7 @@ ffe0-ffe6        # Fullwidth Signs
 2014             # em dash
 2018-2019        # single quotation marks
 201c-201d        # double quotation marks
+2022             # bullet
 2026             # horizontal ellipsis
 2460-24ff        # Enclosed Alphanumerics (① ⑴ ⒜ …)
 
