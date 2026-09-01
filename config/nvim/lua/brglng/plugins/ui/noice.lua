@@ -25,6 +25,23 @@ return {
         notify = {
             view = "notify",
         },
+        -- Override the default history command to open in a split window
+        commands = {
+            history = {
+                -- options for the message history that you get with `:Noice`
+                view = "split",
+                opts = { enter = true, format = "details" },
+                filter = {
+                    any = {
+                        { event = "notify" },
+                        { error = true },
+                        { warning = true },
+                        { event = "msg_show", kind = { "" } },
+                        { event = "lsp", kind = "message" },
+                    },
+                },
+            },
+        },
         lsp = {
             progress = {
                 enabled = false,
@@ -307,6 +324,12 @@ return {
     config = function(_, opts)
         require("noice").setup(opts)
         require('telescope').load_extension('noice')
+
+        -- Always open :Notifications in a split window via noice history
+        pcall(vim.api.nvim_del_user_command, "Notifications")
+        vim.api.nvim_create_user_command("Notifications", function()
+            require("noice").cmd("history")
+        end, { desc = "Show all messages/notifications in a split window" })
 
         local set_noice_color = function()
             local brglng = require("brglng")
