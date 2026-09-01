@@ -210,7 +210,7 @@ Additional context:
             cli = {
                 agent = "pi",
                 agents = {
-                    pi = { cmd = "pi", args = {}, description = "Pi Coding Agent" }
+                    pi = { cmd = "pi", args = { "--tui-mode", "fullscreen" }, description = "Pi Coding Agent" }
                 }
             }
         },
@@ -297,6 +297,14 @@ Additional context:
                     set_chat_win_options()
                 elseif vim.o.filetype == "codecompanion_cli" then
                     set_cli_win_options()
+                end
+            end
+        })
+        vim.api.nvim_create_autocmd("BufEnter", {
+            pattern = "*",
+            callback = function()
+                if vim.o.filetype == "codecompanion_cli" then
+                    vim.cmd("startinsert")
                 end
             end
         })
