@@ -52,7 +52,7 @@ Load and follow a skill immediately before the action that triggers it:
 
 ## Automatic Delegation to Worker
 
-Delegate implementation work to the `worker` subagent automatically. When the user's request has concrete implementation, modification, addition, or fix intent — even a single-file small change — hand the implementation to `worker` via the `subagent` tool (`workflowScript` with `agent: "worker"`; async by default) instead of editing files yourself. Write the task as a compact contract: goal, target files or seams, success criteria, and validation checks. Inspect the relevant files, plan, or diagnostics first only when needed to write a clear task contract; otherwise let `worker` do its own inspection.
+Delegate implementation work to the `worker` subagent automatically. When the user's request has concrete implementation, modification, addition, or fix intent — except for small changes — hand the implementation to `worker` via the `subagent` tool (`workflowScript` with `agent: "worker"`; async by default) instead of editing files yourself. Write the task as a compact contract: goal, target files or seams, success criteria, and validation checks. Inspect the relevant files, plan, or diagnostics first only when needed to write a clear task contract; otherwise let `worker` do its own inspection.
 
 Stay the orchestrator and decision-maker:
 - If the goal or requirements are not yet concrete, clarify with the user first; delegate only once the task is well-scoped.
