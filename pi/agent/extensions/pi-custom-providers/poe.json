@@ -232,8 +232,8 @@
         "cacheWrite": 3.79
       }
     },
-    "deepseek-v4-pro": {
-      "name": "DeepSeek v4 Pro",
+    "deepseek-v4-pro-0813": {
+      "name": "DeepSeek v4 Pro 0813",
       "api": "openai-completions",
       "reasoning": true,
       "input": ["text"],
@@ -248,14 +248,14 @@
         "max": "max"
       },
       "cost": {
-        "input": 1.76,
-        "output": 3.52,
-        "cacheRead": 0.18,
-        "cacheWrite": 0.88
+        "input": 1.33,
+        "output": 4.00,
+        "cacheRead": 0.13,
+        "cacheWrite": 0.40
       }
     },
-    "deepseek-v4-flash": {
-      "name": "DeepSeek v4 Flash",
+    "deepseek-v4-0731": {
+      "name": "DeepSeek v4 Flash 0731",
       "api": "openai-completions",
       "reasoning": true,
       "input": ["text"],
@@ -273,7 +273,29 @@
         "input": 0.14,
         "output": 0.28,
         "cacheRead": 0.01,
-        "cacheWrite": 0.07
+        "cacheWrite": 0.03
+      }
+    },
+    "glm-5.3-el": {
+      "name": "GLM 5.3",
+      "api": "openai-completions",
+      "reasoning": true,
+      "input": ["text", "image"],
+      "contextWindow": 1000000,
+      "maxTokens": 128000,
+      "thinkingLevelMap": {
+        "minimal": null,
+        "low": "low",
+        "medium": null,
+        "high": "high",
+        "xhigh": null,
+        "max": "max"
+      },
+      "cost": {
+        "input": 1.41,
+        "output": 4.44,
+        "cacheRead": 0.14,
+        "cacheWrite": 0.44
       }
     }
   }
