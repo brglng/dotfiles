@@ -20,7 +20,7 @@ normal = [
     # "Flog Symbols"
 ]
 hinting = "full"
-edging = "subpixelantialias"
+# edging = "subpixelantialias"
 size = 14.0
 
 [font.features]
