@@ -1,11 +1,11 @@
 {
-  "lastChangelogVersion": "0.84.2",
+  "lastChangelogVersion": "0.84.4",
   "theme": "rose-pine-dawn",
-  "tuiMode": "fullscreen",
-  "showHardwareCursor": false,
+  "tuiMode": "regular",
+  "showHardwareCursor": true,
   "defaultProvider": "openrouter",
-  "defaultModel": "deepseek/deepseek-v4-flash-0731",
-  "defaultThinkingLevel": "high",
+  "defaultModel": "openai/gpt-5.6-luna",
+  "defaultThinkingLevel": "max",
   "session": {
     "titleGeneration": {
       "enabled": true,
@@ -28,12 +28,12 @@
   "subagents": {
     "agentOverrides": {
       "worker": {
-        "model": "loostone/deepseek-v4-flash-0731",
-        "thinking": "high"
+        "model": "openrouter/openai/gpt-5.6-luna",
+        "thinking": "max"
       },
       "reviewer": {
         "model": "openrouter/openai/gpt-5.6-luna",
-        "thinking": "high"
+        "thinking": "max"
       }
     }
   },
@@ -47,7 +47,9 @@
     "npm:pi-sandbox",
     "npm:context-mode",
     "npm:pi-caveman",
-    "npm:@ssweens/pi-handoff",
+    "npm:@jackice/pi-handoff",
+    "npm:@narumitw/pi-plan-mode",
+    "npm:@narumitw/pi-goal",
     "npm:@firstpick/pi-extension-grill-me",
     "npm:@gotgenes/pi-nocd",
     "npm:pi-loadout",
@@ -55,27 +57,24 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-background-tasks",
     "npm:@furbyhaxx/pi-session-naming",
-    "npm:@brglng/pi-portable-sessions",
-    "npm:@brglng/pi-bailian",
-    "npm:@brglng/pi-custom-providers",
-    "npm:@brglng/pi-currency-cost",
+    "~/github/brglng/pi-bailian",
+    "~/github/brglng/pi-custom-providers",
+    "~/github/brglng/pi-currency-cost",
+    "~/github/brglng/pi-portable-sessions",
+    "~/github/brglng/pi-prompt-emulated-tool-call",
     "npm:@tifan/pi-titlebar-spinner",
     "npm:@ff-labs/pi-fff",
     "npm:@fadouse/pi-math",
     "npm:@sherif-fanous/pi-theme-sync",
-    "npm:pi-zentui",
-    "npm:pi-open-tui",
     "npm:@zenobius/pi-rose-pine",
-    "npm:@vanillagreen/pi-session-manager",
-    "npm:pi-edit-session-in-place",
     "npm:@mohndoe/pi-atlas",
-    "npm:@pi-unipi/notify"
+    "npm:pi-open-tui"
   ],
   "hideThinkingBlock": false,
   "retry": {
     "maxRetries": 1000,
     "provider": {
-      "timeoutMs": 30000
+      "timeoutMs": 120000
     }
   },
   "terminal": {
