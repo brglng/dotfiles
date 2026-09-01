@@ -1,0 +1,69 @@
+onboarding = false
+
+[terminal]
+default_shell = "/opt/homebrew/bin/nu"
+
+[theme]
+name = "rose-pine"
+auto_switch = true
+dark_name = "rose-pine"
+light_name = "rose-pine-dawn"
+
+[keys]
+prefix = "ctrl+a"
+detach = "prefix+q"
+reload_config = "prefix+r"
+resize_mode = "prefix+shift+r"
+split_horizontal = "prefix+s"
+split_vertical = "prefix+v"
+previous_tab = "ctrl+shift+{"
+next_tab = "ctrl+shift+}"
+move_tab_previous = "ctrl+shift+h"
+move_tab_next = "ctrl+shift+l"
+next_workspace = "ctrl+shift+n"
+previous_workspace = "ctrl+shift+p"
+
+[ui]
+tab_bar_position = "bottom"
+pane_borders = true
+pane_outer_borders = false
+pane_gaps = false
+hide_tab_bar_when_single_tab = false
+tab_bar_right_separator = " | "
+window_title = "{hostname}: {workspace}: {terminal_title}"
+
+[[ui.tab_bar_right]]
+type = "command"
+command = '''top -l 1 | awk "/^CPU usage/{gsub(/%,/,\"\");printf \"CPU %.0f%%\",100-\$(NF-1)}"'''
+interval_seconds = 5
+timeout_seconds = 6
+
+[[ui.tab_bar_right]]
+type = "command"
+command = '''memory_pressure 2>/dev/null | awk "/free percentage/{printf \"MEM %.0f%%\",100-\$NF}"'''
+interval_seconds = 3
+timeout_seconds = 2
+
+[[ui.tab_bar_right]]
+type = "datetime"
+format = "%-m/%-d %a %H:%M"
+
+[[ui.tab_bar_right]]
+type = "command"
+command = '''uptime | sed -E 's/^.* up +/up /; s/, *[0-9]+ users?.*$//' | sed 's/ *$//''''
+interval_seconds = 60
+timeout_seconds = 2
+
+[[ui.tab_bar_right]]
+type = "command"
+command = '''echo "$(whoami)@$(hostname -s)"'''
+interval_seconds = 3600
+timeout_seconds = 2
+
+[ui.toast]
+delivery = "system"
+
+[experimental]
+kitty_graphics = true
+# reveal_hidden_cursor_for_cjk_ime = true
+# cjk_ime_agents = ["claude", "pi", "codex"]

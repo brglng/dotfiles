@@ -157,6 +157,9 @@ function link_common() {
     link "pi/agent/theme-sync.json"
     link "pi/agent/zentui.json"
     link "pi-lens/config.json"
+
+    link "herdr/config.toml" "$HOME/.config/herdr/config.toml"
+
     link "clang-format"
     link "zimrc"
 
