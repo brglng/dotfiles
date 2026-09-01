@@ -10,7 +10,7 @@
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "openrouter/deepseek/deepseek-v4-flash-0731:medium",
+      "model": "poe/zpan/gpt-5.6-luna:low",
       "retries": 1000,
       "emojis": true,
       "maxLength": 52,
