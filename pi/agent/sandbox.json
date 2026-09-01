@@ -217,7 +217,8 @@
       "minimax.chat",
       "*.minimax.chat",
       "localhost",
-      "127.0.0.1"
+      "127.0.0.1",
+      "www.npmjs.com"
     ],
     "deniedDomains": [
       "169.254.169.254",
@@ -333,7 +334,11 @@
       "~/Library/Logs/Homebrew",
       "~/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/SKILL.md",
       "~/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/references/prompting-and-roles.md",
-      "~/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/references/execution-controls.md"
+      "~/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/references/execution-controls.md",
+      "/Users/zpan/.pi/agent/npm/node_modules/context-mode/skills/context-mode/SKILL.md",
+      "/Users/zpan/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/references/constraints-and-recipes.md",
+      "/Users/zpan/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/references/review-and-validation.md",
+      "/Users/zpan/.pi/agent/npm/node_modules/pi-interactive-shell/skills/pi-interactive-shell/SKILL.md"
     ],
     "allowWrite": [
       ".",
