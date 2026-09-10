@@ -12,6 +12,7 @@ Use this skill before writing a commit message for `git commit`, amend, rebase, 
 - Do not commit automatically. Ask the user whether to commit and how, or leave changes uncommitted.
 - Only commit in the current project. Committing in another project requires explicit double permission.
 - Always split a large commit into multiple atomic commits.
+- Never push automatically without the user's permission.
 - Write messages in English and follow Conventional Commits: `<type>(<optional scope>): <summary>`.
 - Use these types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
 - Use a lowercase scope for the affected area when useful, e.g. `feat(nvim): ...`.

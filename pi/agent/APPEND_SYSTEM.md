@@ -14,6 +14,8 @@
   - `……` instead of `...` or `…`
   - `——` instead of `-` or `—`
 - Put spaces between adjacent CJK and Latin/numbers text.
+- Use a mermaid code block when you need to draw a diagram.
+- Use inline LaTeX or a math block when you need to write a formula.
 
 ## Requirements
 
@@ -25,7 +27,7 @@
 ## Tool Usage
 
 - When you need to ask the user a question, use a tool if available.
-- Prefer other tools than `bash` whenever possible. `bash` is your last resort.
+- Prefer other tools than `bash` or `run_command` whenever possible. `bash` or `run_command` is your last resort.
 
 ## Coding Conventions
 
@@ -52,9 +54,24 @@ Load and follow a skill immediately before the action that triggers it:
 
 ## Automatic Delegation to Worker
 
-Delegate implementation work to the `worker` subagent automatically. When the user's request has concrete implementation, modification, addition, or fix intent — except for small changes — hand the implementation to `worker` via the `subagent` tool (`workflowScript` with `agent: "worker"`; async by default) instead of editing files yourself. Write the task as a compact contract: goal, target files or seams, success criteria, and validation checks. Inspect the relevant files, plan, or diagnostics first only when needed to write a clear task contract; otherwise let `worker` do its own inspection.
+This section only applies when the `subagent` related tools are available.
+
+Delegate implementation work to the `worker` subagent automatically, when:
+
+- The user's request has concrete implementation, modification, addition, or fix intent.
+- The changes are not small.
+- You yourself is not a delegated subagent.
+
+Notes on the delegation process:
+
+- Hand the implementation to `worker` via the `subagent` tool (`async` by default) instead of editing files yourself.
+- Use a direct subagent without a workflow encapsulation if you only need one single subagent.
+- Write the task as a compact contract: goal, target files or seams, success criteria, and validation checks.
+- Inspect the relevant files, plan, or diagnostics first only when needed to write a clear task contract; otherwise let `worker` do its own inspection.
+- Provide all the information you have already collected to the `worker`.
 
 Stay the orchestrator and decision-maker:
+
 - If the goal or requirements are not yet concrete, clarify with the user first; delegate only once the task is well-scoped.
 - Route non-implementation work to the right agent: `scout` for codebase recon, `researcher` for external research, `reviewer` for code review, `oracle` for second opinions on risky decisions. Do not route these to `worker`.
 - After `worker` returns, synthesize the result in the parent; run fresh-context `reviewer` agents when review is warranted and apply accepted fixes in the parent or a follow-up `worker`.
