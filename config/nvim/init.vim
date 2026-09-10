@@ -88,8 +88,14 @@ autocmd BufReadPost *
             \   exe "normal! g`\"" |
             \   exe "normal! zz" |
             \ endif
-"autocmd BufWinLeave ?* if &buflisted && &modifiable && !(&bufhidden) && &buftype == '' | mkview | endif
-"autocmd BufWinEnter ?* if &buflisted && &modifiable && !(&bufhidden) && &buftype == '' | silent loadview | endif
+" Persist view for file, including folds, cursor position, etc.
+augroup AutoSaveView
+    autocmd BufWinLeave ?* if &buflisted && &modifiable && !(&bufhidden) && &buftype == '' | silent! mkview | endif
+    autocmd BufWinEnter ?* if &buflisted && &modifiable && !(&bufhidden) && &buftype == '' | silent! loadview | endif
+augroup END
+set viewoptions+=folds
+set viewoptions+=cursor
+set viewoptions-=curdir
 
 " general settings
 set mouse=a                     " mouse is on
@@ -186,6 +192,7 @@ set tabpagemax=50
 set sessionoptions-=globals
 set sessionoptions-=localoptions
 set sessionoptions-=options
+set sessionoptions-=folds
 
 " set confirm
 "set switchbuf=usetab,newtab,useopen
@@ -215,7 +222,7 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set smarttab            " use shiftwidth as indent at line's beginning
-set shiftwidth=4
+set shiftwidth=2
 set shiftround
 set preserveindent
 set copyindent

@@ -138,6 +138,91 @@ vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
     end,
 })
 
+vim.opt.viewoptions:append("folds")
+vim.opt.sessionoptions:remove("folds")
+
+-- Delayed restoration, after filetype/fold setup.
+local auto_view_group = vim.api.nvim_create_augroup("AutoSaveView", { clear = true })
+
+local function valid_view_buffer(buf)
+    return vim.api.nvim_buf_is_valid(buf)
+        and vim.bo[buf].buflisted
+        and vim.bo[buf].modifiable
+        and vim.bo[buf].bufhidden == ""
+        and vim.bo[buf].buftype == ""
+end
+
+local function prepare_treesitter_folds(buf, win)
+    local ok, foldmethod = pcall(function()
+        return vim.wo[win].foldmethod
+    end)
+    if not ok or foldmethod ~= "expr" then
+        return
+    end
+
+    local ok_expr, foldexpr = pcall(function()
+        return vim.wo[win].foldexpr
+    end)
+    if not ok_expr or not foldexpr:find("treesitter", 1, true) then
+        return
+    end
+
+    if not vim.treesitter or not vim.treesitter.language then
+        return
+    end
+
+    local filetype = vim.bo[buf].filetype
+    local ok_lang, lang = pcall(vim.treesitter.language.get_lang, filetype)
+    if not ok_lang or not lang then
+        return
+    end
+
+    local ok_parser, parser = pcall(vim.treesitter.get_parser, buf, lang)
+    if ok_parser and parser then
+        pcall(function()
+            parser:parse()
+        end)
+    end
+end
+
+vim.api.nvim_create_autocmd("BufWinLeave", {
+    group = auto_view_group,
+    pattern = "?*",
+    callback = function(args)
+        if valid_view_buffer(args.buf) then
+            vim.cmd("silent! mkview")
+        end
+    end,
+})
+
+vim.api.nvim_create_autocmd("BufWinEnter", {
+    group = auto_view_group,
+    pattern = "?*",
+    callback = function(args)
+        local buf = args.buf
+        if not valid_view_buffer(buf) then
+            return
+        end
+
+        local win = vim.api.nvim_get_current_win()
+
+        vim.schedule(function()
+            if not valid_view_buffer(buf)
+                or not vim.api.nvim_win_is_valid(win)
+                or vim.api.nvim_win_get_buf(win) ~= buf
+            then
+                return
+            end
+
+            prepare_treesitter_folds(buf, win)
+
+            vim.api.nvim_win_call(win, function()
+                vim.cmd("silent! loadview")
+            end)
+        end)
+    end,
+})
+
 vim.api.nvim_set_hl(0, "LazyNormal", { link = "Normal" })
 require("lazy").setup("brglng/plugins", {
     lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
