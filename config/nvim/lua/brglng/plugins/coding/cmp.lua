@@ -29,6 +29,68 @@ return {
             return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
         end
 
+        -- Read a module-local upvalue by name (private API), searching transitively through
+        -- function-valued upvalues. Neovim's native on-type formatting module only exposes
+        -- `enable()` publicly, so its internals are reachable only via upvalue chains.
+        local function find_named_upvalue(fn, name, depth, seen)
+            if type(fn) ~= 'function' or (depth or 0) > 8 then return nil end
+            seen = seen or {}
+            if seen[fn] then return nil end
+            seen[fn] = true
+            local i = 1
+            while true do
+                local upname, value = debug.getupvalue(fn, i)
+                if upname == nil then return nil end
+                if upname == name then return value end
+                if type(value) == 'function' then
+                    local found = find_named_upvalue(value, name, (depth or 0) + 1, seen)
+                    if found ~= nil then return found end
+                end
+                i = i + 1
+            end
+        end
+
+        -- Manually trigger native LSP on-type formatting after a manually inserted <CR> by
+        -- reusing the internal pipeline of vim.lsp.on_type_formatting instead of hand-rolling
+        -- textDocument/onTypeFormatting requests: its `format_iter` builds the standard params,
+        -- requests per client and applies edits with the buffer-version guard. Trigger-character
+        -- registration is intentionally left untouched: the native module's trigger table and
+        -- vim.on_key listener are never engaged, so this cannot interfere with the cmp <CR>
+        -- mapping or with the configured on_type_formatting triggers.
+        local function trigger_native_on_type_formatting()
+            local otf = vim.lsp.on_type_formatting
+            if type(otf) ~= 'table' or type(otf.enable) ~= 'function' then return end
+
+            -- The native on_key normalizes typed '\r' to '\n'; the LSP expects '\n' as `ch`.
+            local format_iter = find_named_upvalue(otf.enable, 'format_iter')
+            if type(format_iter) ~= 'function' then return end
+
+            local bufnr = vim.api.nvim_get_current_buf()
+            -- get_clients({ method = ... }) already applies supports_method for this buffer.
+            local clients = vim.lsp.get_clients({ bufnr = bufnr, method = 'textDocument/onTypeFormatting' })
+            if #clients == 0 then return end
+
+            local triggered_clients = {}
+            for _, client in ipairs(clients) do
+                local provider = client.server_capabilities
+                    and client.server_capabilities.documentOnTypeFormattingProvider
+                local native_newline_trigger = provider
+                    and (provider.firstTriggerCharacter == '\n'
+                        or vim.tbl_contains(provider.moreTriggerCharacter or {}, '\n')
+                        or provider.firstTriggerCharacter == '\r'
+                        or vim.tbl_contains(provider.moreTriggerCharacter or {}, '\r'))
+                -- If native on-type formatting is enabled for this client and it already
+                -- handles newline, vim.on_key() has scheduled the native request before cmp.
+                -- Avoid sending the same request a second time from this mapping.
+                if not (client._otf_enabled and native_newline_trigger) then
+                    triggered_clients[client.id] = client
+                end
+            end
+            if not next(triggered_clients) then return end
+            -- Mirrors the native on_key schedule: format_iter(bufnr, typed, clients, next(clients)).
+            format_iter(bufnr, '\n', triggered_clients, next(triggered_clients))
+        end
+
         cmp.setup {
             window = {
                 completion = cmp.config.window.bordered({
@@ -143,16 +205,16 @@ return {
             mapping = cmp.mapping.preset.insert({
                 ['<C-x><C-x>'] = cmp.mapping.complete(),
                 ['<Tab>'] = cmp.mapping(function(fallback)
-                    if cmp.visible() and cmp.get_active_entry() then
+                    if cmp.visible() and cmp.get_selected_entry() then
                         cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
                     elseif luasnip.locally_jumpable(1) then
                         luasnip.jump(1)
-                    -- elseif require("copilot.suggestion").is_visible() then
-                    --     require("copilot.suggestion").accept()
+                    elseif require("copilot.suggestion").is_visible() then
+                        require("copilot.suggestion").accept()
                     -- elseif require("minuet.virtualtext").action.is_visible() then
                     --     require("minuet.virtualtext").action.accept()
-                    elseif require("codeium.virtual_text").get_current_completion_item() then
-                        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(CodeiumAccept)", true, true, true), "n ", false)
+                    -- elseif require("codeium.virtual_text").get_current_completion_item() then
+                    --     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(CodeiumAccept)", true, true, true), "n ", false)
                     else
                         fallback()
                     end
@@ -165,8 +227,13 @@ return {
                     end
                 end, { 'i', 's' }),
                 ["<CR>"] = cmp.mapping(function(fallback)
-                    if cmp.visible() and cmp.get_active_entry() then
+                    if cmp.visible() and cmp.get_selected_entry() then
                         cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+                    elseif vim.api.nvim_get_mode().mode == 'i' and vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
+                        fallback()
+                        -- Match native timing: request only after the inserted newline has been
+                        -- processed (didChange flushed, cursor settled on the new line).
+                        vim.schedule(trigger_native_on_type_formatting)
                     else
                         fallback()
                     end
@@ -197,12 +264,12 @@ return {
                     i = function(fallback)
                         if cmp.visible() then
                             cmp.abort()
-                        -- elseif require("copilot.suggestion").is_visible() then
-                        --     require("copilot.suggestion").accept_line()
+                        elseif require("copilot.suggestion").is_visible() then
+                            require("copilot.suggestion").accept_line()
                         -- elseif require("minuet.virtualtext").action.is_visible() then
                         --     require("minuet.virtualtext").action.accept_line()
-                        elseif require("codeium.virtual_text").get_current_completion_item() then
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(CodeiumAcceptLine)", true, true, true), "n ", false)
+                        -- elseif require("codeium.virtual_text").get_current_completion_item() then
+                        --     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(CodeiumAcceptLine)", true, true, true), "n ", false)
                         elseif vim.fn.col('.') > vim.fn.strlen(vim.fn.getline('.')) then
                             fallback()
                         else

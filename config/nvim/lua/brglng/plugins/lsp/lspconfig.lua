@@ -88,7 +88,7 @@ return {
         },
         on_type_formatting = {
             enabled = true,
-            -- trigger_characters = { ";", "}", "\r", "\n" }
+            trigger_characters = { ";", "}", "end" }
         },
         servers = {
             basedpyright = {
@@ -436,10 +436,15 @@ return {
             callback = function(ev)
                 if opts.on_type_formatting.enabled then
                     local client = vim.lsp.get_client_by_id(ev.data.client_id)
-                    if client and client.supports_method('textDocument/onTypeFormatting') then
-                        -- Override trigger characters
-                        if opts.on_type_formatting.trigger_characters and client.server_capabilities and client.server_capabilities.documentOnTypeFormattingProvider then
-                            client.server_capabilities.documentOnTypeFormattingProvider.triggerCharacters = opts.on_type_formatting.trigger_characters
+                    if client and client:supports_method('textDocument/onTypeFormatting', ev.buf) then
+                        -- Override trigger characters before re-enabling this client.
+                        local provider = client.server_capabilities and client.server_capabilities.documentOnTypeFormattingProvider
+                        local trigger_characters = opts.on_type_formatting.trigger_characters
+                        if provider and trigger_characters and #trigger_characters > 0 then
+                            vim.lsp.on_type_formatting.enable(false, { client_id = client.id })
+                            provider.firstTriggerCharacter = trigger_characters[1]
+                            provider.moreTriggerCharacter = vim.list_slice(trigger_characters, 2)
+                            vim.lsp.on_type_formatting.enable(true, { client_id = client.id })
                         end
                     end
                 end
