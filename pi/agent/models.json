@@ -1,4 +1,455 @@
 {
   "providers": {
+    "poe": {
+      "name": "Poe",
+      "baseUrl": "https://api.poe.com/v1",
+      "apiKey": "$POE_API_KEY",
+      "api": "openai-completions",
+      "discoverModels": true,
+      "compat": {
+        "sendSessionAffinityHeaders": true,
+        "supportsLongCacheRetention": true
+      },
+      "models": [
+        {
+          "id": "zpan-fable-5-agent",
+          "name": "Claude Fable 5 (zpan)",
+          "api": "openai-completions",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "cost": {
+            "input": 10.1,
+            "output": 50.51,
+            "cacheRead": 1.01,
+            "cacheWrite": 10.11
+          }
+        },
+        {
+          "id": "zpan-opus-5-agent",
+          "name": "Claude Opus 5 (zpan)",
+          "api": "openai-completions",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "cost": {
+            "input": 5.05,
+            "output": 25.25,
+            "cacheRead": 0.51,
+            "cacheWrite": 6.32
+          }
+        },
+        {
+          "id": "zpan-sonnet-5",
+          "name": "Claude Sonnet 5 (zpan)",
+          "api": "openai-completions",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "cost": {
+            "input": 2.02,
+            "output": 10.1,
+            "cacheRead": 0.2,
+            "cacheWrite": 2.53
+          }
+        },
+        {
+          "id": "claude-opus-4.8",
+          "name": "Claude Opus 4.8",
+          "api": "anthropic-messages",
+          "baseUrl": "https://api.poe.com",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "compat": {
+            "sendSessionAffinityHeaders": true,
+            "supportsLongCacheRetention": false
+          },
+          "cost": {
+            "input": 4.29,
+            "output": 21.46,
+            "cacheRead": 0.43,
+            "cacheWrite": 5.37
+          }
+        },
+        {
+          "id": "claude-sonnet-4.6",
+          "name": "Claude Sonnet 4.6",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 983040,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "compat": {
+            "sendSessionAffinityHeaders": true,
+            "supportsLongCacheRetention": false
+          },
+          "cost": {
+            "input": 2.58,
+            "output": 12.88,
+            "cacheRead": 0.26,
+            "cacheWrite": 3.22
+          }
+        },
+        {
+          "id": "zpan-gpt-5.6-sol",
+          "name": "GPT 5.6 Sol (zpan)",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1050000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "cost": {
+            "input": 4.55,
+            "output": 27.27,
+            "cacheRead": 0.46,
+            "cacheWrite": 6.82,
+            "tiers": [
+              {
+                "inputTokensAbove": 272000,
+                "input": 9.1,
+                "output": 54.54,
+                "cacheRead": 0.91,
+                "cacheWrite": 13.64
+              }
+            ]
+          }
+        },
+        {
+          "id": "zpan-gpt-5.6-terra",
+          "name": "GPT 5.6 Terra (zpan)",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1050000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "cost": {
+            "input": 1.82,
+            "output": 10.91,
+            "cacheRead": 0.19,
+            "cacheWrite": 2.73,
+            "tiers": [
+              {
+                "inputTokensAbove": 272000,
+                "input": 3.64,
+                "output": 21.82,
+                "cacheRead": 0.37,
+                "cacheWrite": 5.46
+              }
+            ]
+          }
+        },
+        {
+          "id": "zpan-gpt-5.6-luna",
+          "name": "GPT 5.6 Luna (zpan)",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1050000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "cost": {
+            "input": 0.18,
+            "output": 1.09,
+            "cacheRead": 0.02,
+            "cacheWrite": 0.28,
+            "tiers": [
+              {
+                "inputTokensAbove": 272000,
+                "input": 0.36,
+                "output": 2.18,
+                "cacheRead": 0.04,
+                "cacheWrite": 0.57
+              }
+            ]
+          }
+        },
+        {
+          "id": "kimi-k3",
+          "name": "Kimi K3",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "cost": {
+            "input": 3.03,
+            "output": 15.15,
+            "cacheRead": 0.3,
+            "cacheWrite": 3.79
+          }
+        },
+        {
+          "id": "deepseek-v4-pro-0813",
+          "name": "DeepSeek v4 Pro 0813",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "samplingParams": {
+            "temperature": 1.0
+          },
+          "compat": {
+            "thinkingFormat": "deepseek"
+          },
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "cost": {
+            "input": 1.33,
+            "output": 4.00,
+            "cacheRead": 0.13,
+            "cacheWrite": 0.40
+          }
+        },
+        {
+          "id": "deepseek-v4-0731",
+          "name": "DeepSeek v4 Flash 0731",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "samplingParams": {
+            "temperature": 1.0
+          },
+          "compat": {
+            "thinkingFormat": "deepseek"
+          },
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "cost": {
+            "input": 0.14,
+            "output": 0.28,
+            "cacheRead": 0.01,
+            "cacheWrite": 0.03
+          }
+        },
+        {
+          "id": "glm-5.3-el",
+          "name": "GLM 5.3",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "samplingParams": {
+            "temperature": 1.0
+          },
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "cost": {
+            "input": 1.41,
+            "output": 4.44,
+            "cacheRead": 0.14,
+            "cacheWrite": 0.44
+          }
+        }
+      ]
+    },
+    "loostone": {
+      "name": "Loostone",
+      "baseUrl": "http://192.168.5.46:18000/v1",
+      "apiKey": "$LOOSTONE_API_KEY",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "input": ["text"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "samplingParams": {
+            "temperature": 1.0
+          },
+          "compat": {
+            "sendSessionAffinityHeaders": true,
+            "supportsLongCacheRetention": true,
+            "thinkingFormat": "deepseek"
+          },
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "id": "deepseek-v4-pro",
+          "name": "DeepSeek V4 Pro",
+          "input": ["text"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "samplingParams": {
+            "temperature": 1.0
+          },
+          "compat": {
+            "sendSessionAffinityHeaders": true,
+            "supportsLongCacheRetention": true,
+            "thinkingFormat": "deepseek"
+          },
+          "cost": {
+            "input": 0.3,
+            "output": 27,
+            "cacheRead": 9,
+            "cacheWrite": 9
+          }
+        },
+        {
+          "id": "glm-5.3-flash",
+          "name": "GLM 5.3 Flash",
+          "input": ["text", "image"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "samplingParams": {
+            "temperature": 1.0
+          },
+          "compat": {
+            "sendSessionAffinityHeaders": true,
+            "supportsLongCacheRetention": true
+          },
+          "cost": {
+            "input": 0.8,
+            "output": 2.8,
+            "cacheRead": 0.115,
+            "cacheWrite": 0.115
+          }
+        },
+        {
+          "id": "GLM-5.3",
+          "name": "GLM 5.3",
+          "input": ["text", "image"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "samplingParams": {
+            "temperature": 1.0
+          },
+          "compat": {
+            "sendSessionAffinityHeaders": true,
+            "supportsLongCacheRetention": true
+          },
+          "cost": {
+            "input": 8,
+            "output": 28,
+            "cacheRead": 2,
+            "cacheWrite": 2
+          }
+        },
+        {
+          "id": "kimi-k3",
+          "name": "Kimi K3",
+          "input": ["text", "image"],
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "compat": {
+            "sendSessionAffinityHeaders": true,
+            "supportsLongCacheRetention": true
+          },
+          "cost": {
+            "input": 6.5,
+            "output": 27,
+            "cacheRead": 1.1,
+            "cacheWrite": 1.1
+          }
+        }
+      ]
+    },
+    "openrouter": {
+      "compat": {
+        "sendSessionAffinityHeaders": true,
+        "supportsLongCacheRetention": true
+      }
+    },
+    "github-copilot": {
+      "compat": {
+        "sendSessionAffinityHeaders": true,
+        "supportsLongCacheRetention": true
+      }
+    }
   }
 }

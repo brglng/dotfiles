@@ -1,16 +1,16 @@
 {
-  "lastChangelogVersion": "0.84.4",
+  "lastChangelogVersion": "0.85.1",
   "theme": "rose-pine-dawn",
   "tuiMode": "regular",
-  "showHardwareCursor": true,
+  "showHardwareCursor": false,
   "defaultProvider": "openrouter",
   "defaultModel": "openai/gpt-5.6-luna",
-  "defaultThinkingLevel": "max",
+  "defaultThinkingLevel": "high",
   "session": {
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "poe/zpan/gpt-5.6-luna:low",
+      "model": "openrouter/deepseek/deepseek-v4.1-flash:low",
       "retries": 1000,
       "emojis": true,
       "maxLength": 52,
@@ -28,7 +28,7 @@
   "subagents": {
     "agentOverrides": {
       "worker": {
-        "model": "openrouter/openai/gpt-5.6-luna",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
         "thinking": "max"
       },
       "reviewer": {
@@ -58,13 +58,15 @@
     "npm:pi-background-tasks",
     "npm:@furbyhaxx/pi-session-naming",
     "~/github/brglng/pi-bailian",
-    "~/github/brglng/pi-custom-providers",
     "~/github/brglng/pi-currency-cost",
-    "~/github/brglng/pi-portable-sessions",
+    "~/github/brglng/pi-model-discovery",
+    "~/github/brglng/pi-session-sync",
     "~/github/brglng/pi-prompt-emulated-tool-call",
     "npm:@tifan/pi-titlebar-spinner",
     "npm:@ff-labs/pi-fff",
-    "npm:@fadouse/pi-math",
+    "npm:pi-mermaid",
+    "npm:@monotykamary/pi-math",
+    "npm:pi-cache-optimizer",
     "npm:@sherif-fanous/pi-theme-sync",
     "npm:@zenobius/pi-rose-pine",
     "npm:@mohndoe/pi-atlas",
@@ -78,6 +80,7 @@
     }
   },
   "terminal": {
-    "showImages": true
+    "showImages": true,
+    "images": "kitty"
   }
 }
