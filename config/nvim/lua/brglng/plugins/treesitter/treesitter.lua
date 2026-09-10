@@ -66,6 +66,9 @@ return {
         },
         indent = {
             enable = true,
+            -- C/C++/cmake use the Lua bridge below (backslash splices for
+            -- C/C++; everything else delegates to treesitter queries).
+            disable = { "c", "cpp", "cmake" },
         },
         endwise = {
             enable = true,
@@ -75,6 +78,23 @@ return {
         -- require("nvim-treesitter.configs").setup(opts)
 
         require("treesitter-modules").setup(opts)
+
+        local indent_group = vim.api.nvim_create_augroup("brglng-treesitter-indent", {})
+        vim.api.nvim_create_autocmd({ "BufNewFile", "BufReadPost", "FileType" }, {
+            group = indent_group,
+            pattern = { "c", "cpp", "cmake" },
+            callback = function(args)
+                vim.schedule(function()
+                    if vim.api.nvim_buf_is_valid(args.buf)
+                        and (vim.bo[args.buf].filetype == "c"
+                            or vim.bo[args.buf].filetype == "cpp"
+                            or vim.bo[args.buf].filetype == "cmake") then
+                        vim.bo[args.buf].indentexpr =
+                            "v:lua.require'brglng.treesitter_indent'.indentexpr()"
+                    end
+                end)
+            end,
+        })
 
         -- require("nvim-treesitter").install(opts.ensure_installed)
         -- if opts.auto_install then

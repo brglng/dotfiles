@@ -236,6 +236,12 @@ function! brglng#indent_brackets#Get(lnum, kinds, lang) abort
     return 0
   endif
 
+  " C/C++ line splices disappear before bracket parsing; preserve the
+  " physical indentation of the line immediately before the splice.
+  if a:lang !=# 'cmake' && getline(pnum) =~# '\\\s*$'
+    return indent(pnum)
+  endif
+
   let floor = max([1, pnum - get(g:, 'brglng_indent_brackets_max_walk', s:max_walk)])
   let scans = s:GatherScans(a:kinds, floor, pnum)
 

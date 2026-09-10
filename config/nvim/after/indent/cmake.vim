@@ -1,6 +1,12 @@
-" Custom CMake indent rules layered on top of Neovim's stock cmake indent
+" Custom CMake indent rules layered on top of Vim's stock cmake indent
 " (runtime/indent/cmake.vim).  This file lives in after/indent/, so it runs
 " right after the stock one and simply overrides 'indentexpr'.
+"
+" Vim-only fallback. Neovim installs the treesitter/Lua indentexpr from the
+" treesitter plugin configuration instead of calling this Vimscript engine.
+if has('nvim')
+  finish
+endif
 
 " Extra rules handled here:
 "

@@ -29,6 +29,13 @@
 ((normal_command) @indent.align
   (#set! "indent.open_delimiter" "("))
 
+; Inner parens inside an argument list (multi-layer nesting) are direct
+; children of argument_list in this grammar; align them so the deepest
+; surviving bracket governs the continuation column.
+((argument_list) @indent.align
+  (#set! "indent.open_delimiter" "(")
+  (#set! "indent.close_delimiter" ")"))
+
 ; ---- stock rules ----
 [
   (if_condition)
