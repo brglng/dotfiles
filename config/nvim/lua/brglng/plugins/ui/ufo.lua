@@ -18,9 +18,14 @@ return {
     end,
     opts = {
         provider_selector = function(bufnr, filetype, buftype)
+            local disabled = { "neo-tree.*", "Neogit.*", "toggleterm", "norg" }
+            for _, ft in ipairs(disabled) do
+                if string.match(filetype, ft) then
+                    return ""
+                end
+            end
             return { 'treesitter', 'indent' }
         end,
-        disabled = { "neo-tree*", "Neogit*", "toggleterm" }
     },
     config = function (_, opts)
         require('ufo').setup(opts)

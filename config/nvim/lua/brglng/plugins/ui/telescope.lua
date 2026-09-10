@@ -83,7 +83,7 @@ return {
             },
             pickers = {
                 buffers = {
-                    previewer = false,
+                    -- previewer = false,
                     ignore_current_buffer = true,
                     sort_mru = true,
                     layout_config = {
@@ -99,13 +99,13 @@ return {
                     },
                 },
                 current_buffer_fuzzy_find = {
-                    previewer = false,
+                    -- previewer = false,
                     layout_config = {
                         -- width = 0.62,
                     },
                 },
                 find_files = {
-                    previewer = false,
+                    -- previewer = false,
                     layout_config = {
                         -- width = 0.62
                     },
@@ -174,11 +174,11 @@ return {
                     end
                 },
                 lsp_document_symbols = {
-                    previewer = false,
+                    -- previewer = false,
                     symbol_width = 0.8
                 },
                 oldfiles = {
-                    previewer = false,
+                    -- previewer = false,
                     hidden = true,
                 },
             },
@@ -196,7 +196,7 @@ return {
                     }
                 },
                 file_browser = {
-                    previewer = false,
+                    -- previewer = false,
                     hijack_netrw = false
                 },
                 ["ui-select"] = {

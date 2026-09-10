@@ -7,7 +7,12 @@ return {
         require("statuscol").setup {
             relculright = true,
             ft_ignore = {
-                "neo-tree", "neotree", "NeogitStatus", "toggleterm", "codecompanion_cli", "help", "pi-chat-prompt", "pi-chat-history",
+                "neo-tree", "neotree",
+                "NeogitStatus", "NeogitCommitView", "NeogitLogView",
+                "toggleterm",
+                "codecompanion_cli",
+                "help",
+                "pi-chat-prompt", "pi-chat-history",
                 "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes", "dapui_console", "dapui_hover", "dap-repl"
             },
             bt_ignore = { "terminal" },
