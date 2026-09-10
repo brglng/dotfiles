@@ -1,13 +1,13 @@
 onboarding = false
 
-[terminal]
-default_shell = "/opt/homebrew/bin/nu"
-
 [theme]
 name = "rose-pine"
 auto_switch = true
 dark_name = "rose-pine"
 light_name = "rose-pine-dawn"
+
+[terminal]
+default_shell = "/opt/homebrew/bin/nu"
 
 [keys]
 prefix = "ctrl+a"
@@ -16,12 +16,12 @@ reload_config = "prefix+r"
 resize_mode = "prefix+shift+r"
 split_horizontal = "prefix+s"
 split_vertical = "prefix+v"
-previous_tab = "ctrl+shift+{"
-next_tab = "ctrl+shift+}"
-move_tab_previous = "ctrl+shift+h"
-move_tab_next = "ctrl+shift+l"
-next_workspace = "ctrl+shift+n"
-previous_workspace = "ctrl+shift+p"
+previous_tab = "ctrl+cmd+["
+next_tab = "ctrl+cmd+]"
+previous_workspace = "ctrl+alt+["
+next_workspace = "ctrl+alt+]"
+move_tab_previous = "ctrl+alt+cmd+["
+move_tab_next = "ctrl+alt+cmd+]"
 
 [ui]
 tab_bar_position = "bottom"
@@ -31,6 +31,19 @@ pane_gaps = false
 hide_tab_bar_when_single_tab = false
 tab_bar_right_separator = " | "
 window_title = "{hostname}: {workspace}: {terminal_title}"
+
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "agent", "state_text"],
+  ["terminal_title_stripped"],
+  ["workspace", "tab"]
+]
+
+[ui.sidebar.spaces]
+rows = [
+  ["state_icon", "workspace"],
+  ["branch", "git_status"]
+]
 
 [[ui.tab_bar_right]]
 type = "command"
@@ -65,5 +78,6 @@ delivery = "system"
 
 [experimental]
 kitty_graphics = true
+switch_ascii_input_source_in_prefix = true
 # reveal_hidden_cursor_for_cjk_ime = true
 # cjk_ime_agents = ["claude", "pi", "codex"]
