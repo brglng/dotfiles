@@ -17,7 +17,9 @@ return {
         --     -- branch = "feature/windows",
         -- },
         { dir = vim.fs.normalize("~/github/brglng/neorg-auto-summary") },
-        { dir = vim.fs.normalize("~/github/brglng/neorg-nabla") },
+        -- { dir = vim.fs.normalize("~/github/brglng/neorg-nabla") },
+        { dir = vim.fs.normalize("~/github/brglng/neorg-math-renderer") },
+        { dir = vim.fs.normalize("~/github/brglng/neorg-table-renderer") },
         { dir = vim.fs.normalize("~/github/brglng/neorg-new") },
     },
     ft = "norg",
@@ -31,7 +33,9 @@ return {
             -- },
             ["core.concealer"] = {
                 config = {
-                    icon_preset = "diamond"
+                    icon_preset = "diamond",
+                    folds = true,
+                    init_open_folds = "never",
                 }
             },
             ["core.defaults"] = {
@@ -134,19 +138,32 @@ return {
             --     }
             -- },
             -- ["external.query"] = {},
-            ["external.nabla"] = {
-                config = {
-                    render_on_enter = true,
-                    conceal_math_tags = true,
-                }
-            },
+            -- ["external.nabla"] = {
+            --     config = {
+            --         render_on_enter = true,
+            --         conceal_math_tags = true,
+            --     }
+            -- },
             ["external.new"] = {
                 config = {
                     filename = function(_)
                         return os.date("notes/%Y%m%d%H%M%S")
                     end
                 }
-            }
+            },
+            ["external.math-renderer"] = {
+                config = {
+                    render_on_enter = true,
+                    scale = 0.83,
+                    conceal_math_tags = true,
+                    -- preserve_inline_spacing = true
+                }
+            },
+            ["external.table-renderer"] = {
+                config = {
+                    render_on_enter = true,
+                }
+            },
         }
     },
     config = function(_, opts)
@@ -158,6 +175,7 @@ return {
             --     config = {
             --         conceal = true,
             --         render_on_enter = true,
+            --         min_length = 1,
             --     }
             -- }
         end
@@ -165,7 +183,6 @@ return {
             pattern = "norg",
             callback = function()
                 vim.opt_local.cursorline = false
-                vim.opt_local.softtabstop = 2
                 vim.opt_local.shiftwidth = 2
             end
         })
