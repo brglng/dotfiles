@@ -145,6 +145,8 @@ function link_common() {
     link "pi/agent/extensions/pi-portable-sessions/config.json"
     link "pi/agent/extensions/pi-prompt-emulated-tool-call/config.json"
     link "pi/agent/extensions/pi-sandbox/config.json"
+    # link "pi/agent/extensions/pi-inline-viz-config.js"
+    # link "pi/agent/extensions/pi-inline-viz-mmdc"
     link "pi/agent/sandbox.json"
     link "pi/agent/extensions/subagent/config.json"
     link "pi/agent/skills"

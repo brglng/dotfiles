@@ -1,0 +1,56 @@
+#!/bin/sh
+set -eu
+
+puppeteer_config=""
+expect_config_path=false
+for arg in "$@"; do
+    if [ "$expect_config_path" = true ]; then
+        puppeteer_config=$arg
+        expect_config_path=false
+        continue
+    fi
+
+    case "$arg" in
+        --puppeteerConfigFile|-p)
+            expect_config_path=true
+            ;;
+    esac
+done
+
+if [ -n "$puppeteer_config" ]; then
+    script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+    extra_config="$script_dir/../../../config/nvim/lua/brglng/plugins/lang/puppeteer-config.json"
+
+    node - "$puppeteer_config" "$extra_config" <<'NODE'
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+
+const configPath = process.argv[2];
+const extraConfigPath = process.argv[3];
+const config = JSON.parse(readFileSync(configPath, "utf8"));
+const extraConfig = existsSync(extraConfigPath)
+	? JSON.parse(readFileSync(extraConfigPath, "utf8"))
+	: {};
+
+const configArgs = Array.isArray(config.args) ? config.args : [];
+const extraArgs = Array.isArray(extraConfig.args) ? extraConfig.args : [];
+if (![...configArgs, ...extraArgs].every((arg) => typeof arg === "string")) {
+	throw new Error("Puppeteer config args must be strings");
+}
+
+config.args = [
+	...new Set([
+		...configArgs,
+		...extraArgs,
+		"--no-sandbox",
+		"--disable-setuid-sandbox",
+	]),
+];
+writeFileSync(configPath, `${JSON.stringify(config)}\n`);
+NODE
+fi
+
+real_mmdc=${PI_INLINE_VIZ_REAL_MMDC_COMMAND:-}
+if [ -z "$real_mmdc" ]; then
+    real_mmdc=$(command -v mmdc)
+fi
+exec "$real_mmdc" "$@"
