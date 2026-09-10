@@ -8,7 +8,7 @@ SGR0=$(tput sgr0)
 
 install_dnf() {
     echo "Not implemented yet!"
-    exit -1
+    exit 1
 }
 
 install_apt() {
@@ -125,7 +125,7 @@ esac
 
 if type brew &>/dev/null; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
-    brew install git git-lfs subversion rustup-init cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli gh node npm rust rustup pi-coding-agent
+    brew install git git-lfs subversion rustup-init cmake ninja zsh tmux nushell starship z.lua fzf ripgrep-all fd vim luajit luarocks direnv carapace pixi universal-ctags global neovim imagemagick tree-sitter-cli gh node npm rust rustup pi-coding-agent plantuml gnuplot d2 graphviz librsvg
 fi
 
 if [[ $HOMEBREW_PREFIX != "" && -s "$HOMEBREW_PREFIX/bin/rustup-init" ]]; then
@@ -164,6 +164,8 @@ fi
 # nvm install node npm
 # nvm use node
 # nvm alias default $(nvm current)
+
+npm install -g @mermaid-js/mermaid-cli
 
 # gem install --user-install neovim
 npm install -g neovim
