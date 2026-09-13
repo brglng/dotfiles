@@ -88,7 +88,7 @@ return {
         },
         on_type_formatting = {
             enabled = true,
-            trigger_characters = { ";", "}", "end" }
+            trigger_characters = { ";", "}", ",", "end" }
         },
         servers = {
             basedpyright = {
