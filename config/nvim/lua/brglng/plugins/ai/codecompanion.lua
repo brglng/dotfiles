@@ -75,6 +75,21 @@ return {
             env = {
               api_key = "OPENROUTER_API_KEY",
             },
+            opts = {
+              args = {
+                "--retry", "1000",
+                "--retry-delay", "3",
+                "--connect-timeout", "120",
+              }
+            },
+            schema = {
+              model = {
+                default = "deepseek/deepseek-v4.1-flash",
+              },
+              max_tokens = {
+                default = 128000,
+              },
+            }
           })
         end,
         jina = function()
@@ -188,6 +203,9 @@ return {
                   "zpan-sonnet-5",
                 }
               },
+              max_tokens = {
+                default = 128000,
+              },
             }
           })
         end,
@@ -271,7 +289,7 @@ return {
       chat = {
         adapter = {
           name = "openrouter",
-          model = "deepseek/deepseek-v4-flash-0731"
+          model = "deepseek/deepseek-v4.1-flash"
         },
         -- adapter = "pi",
         keymaps = {
@@ -329,13 +347,13 @@ Additional context:
       inline = {
         adapter = {
           name = "openrouter",
-          model = "deepseek/deepseek-v4-flash-0731"
+          model = "deepseek/deepseek-v4.1-flash"
         },
       },
       cmd = {
         adapter = {
           name = "openrouter",
-          model = "deepseek/deepseek-v4-flash-0731"
+          model = "deepseek/deepseek-v4.1-flash"
         },
       },
       cli = {
