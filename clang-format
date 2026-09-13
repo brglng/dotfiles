@@ -21,11 +21,20 @@ KeepEmptyLines:
 PenaltyBreakAssignment: 4
 PointerAlignment: Left
 ReflowComments: Never
+AlignConsecutiveDeclarations:
+  Enabled: true
+---
+Language: C
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+...
 ---
 Language: Cpp
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: false
 AlignConsecutiveAssignments:
-  Enabled: true
-AlignConsecutiveDeclarations:
   Enabled: true
 AlignConsecutiveMacros:
   Enabled: true
