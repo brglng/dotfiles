@@ -1,6 +1,6 @@
 {
   "lastChangelogVersion": "0.85.1",
-  "theme": "rose-pine-dawn",
+  "theme": "rose-pine",
   "tuiMode": "regular",
   "showHardwareCursor": false,
   "defaultProvider": "openrouter",
@@ -46,7 +46,6 @@
     "npm:pi-hermes-memory",
     "npm:pi-sandbox",
     "npm:context-mode",
-    "npm:pi-caveman",
     "npm:@jackice/pi-handoff",
     "npm:@narumitw/pi-plan-mode",
     "npm:@narumitw/pi-goal",
