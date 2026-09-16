@@ -340,7 +340,8 @@
       "/Users/zpan/.pi/agent/npm/node_modules/pi-subagents/skills/pi-subagents/references/review-and-validation.md",
       "/Users/zpan/.pi/agent/npm/node_modules/pi-interactive-shell/skills/pi-interactive-shell/SKILL.md",
       "/Users/zpan/.pi/agent/npm/node_modules/pi-subagents/references/prompting-and-roles.md",
-      "/Users/zpan/.pi/agent/npm/node_modules/pi-subagents/references/execution-controls.md"
+      "/Users/zpan/.pi/agent/npm/node_modules/pi-subagents/references/execution-controls.md",
+      "/Users/zpan/.pi/agent/npm/node_modules/pi-lens/skills/pi-lens-lsp-navigation/SKILL.md"
     ],
     "allowWrite": [
       ".",

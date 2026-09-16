@@ -1,5 +1,37 @@
 {
   "providers": {
+    "openai-codex": {
+      "compat": {
+        "sendSessionAffinityHeaders": true,
+        "supportsLongCacheRetention": true
+      },
+      "modelOverrides": {
+        "gpt-5.6-luna": {
+          "contextWindow": 1050000
+        },
+        "gpt-5.6-terra": {
+          "contextWindow": 1050000
+        },
+        "gpt-5.6-sol": {
+          "contextWindow": 1050000
+        },
+        "gpt-6-astra": {
+          "contextWindow": 1050000
+        }
+      }
+    },
+    "openrouter": {
+      "compat": {
+        "sendSessionAffinityHeaders": true,
+        "supportsLongCacheRetention": true
+      }
+    },
+    "github-copilot": {
+      "compat": {
+        "sendSessionAffinityHeaders": true,
+        "supportsLongCacheRetention": true
+      }
+    },
     "poe": {
       "name": "Poe",
       "baseUrl": "https://api.poe.com/v1",
@@ -438,18 +470,6 @@
           }
         }
       ]
-    },
-    "openrouter": {
-      "compat": {
-        "sendSessionAffinityHeaders": true,
-        "supportsLongCacheRetention": true
-      }
-    },
-    "github-copilot": {
-      "compat": {
-        "sendSessionAffinityHeaders": true,
-        "supportsLongCacheRetention": true
-      }
     }
   }
 }

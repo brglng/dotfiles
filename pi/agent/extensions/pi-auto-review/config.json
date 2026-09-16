@@ -1,6 +1,7 @@
 {
-  "model": "openrouter/deepseek/deepseek-v4.1-flash",
-  "timeoutMs": 3600000,
+  "model": "openai-codex/gpt-5.6-luna",
+  "reasoning": "low",
+  "timeoutMs": 300000,
   "retries": 1000,
   "failureMode": "defer"
 }
