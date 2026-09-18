@@ -1,7 +1,4 @@
 {
-  "memoryCharLimit": 10000,
-  "userCharLimit": 10000,
-  "projectCharLimit": 15000,
-  "llmModelOverride": "openrouter/deepseek/deepseek-v4.1-flash",
+  "llmModelOverride": "poe/deepseek-v4.1-flash",
   "llmThinkingOverride": "max"
 }
