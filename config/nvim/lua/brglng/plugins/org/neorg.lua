@@ -16,7 +16,7 @@ return {
         --     -- "brglng/neorg-query",
         --     -- branch = "feature/windows",
         -- },
-        { dir = vim.fs.normalize("~/github/brglng/neorg-auto-summary") },
+        { dir = vim.fs.normalize("~/github/brglng/neorg-indexer") },
         -- { dir = vim.fs.normalize("~/github/brglng/neorg-nabla") },
         { dir = vim.fs.normalize("~/github/brglng/neorg-math-renderer") },
         { dir = vim.fs.normalize("~/github/brglng/neorg-table-renderer") },
@@ -101,12 +101,13 @@ return {
                     strategy = "default"
                 }
             },
-            ["external.auto-summary"] = {
+            ["external.indexer"] = {
                 config = {
-                    name = "index.norg",
-                    summary_on_launch = true,
-                    update_on_change = true,
-                    inject_metadata = true,
+                    {
+                        name = "index.norg",
+                        index_on_launch = true,
+                        index_on_change = true,
+                    }
                 }
             },
             ["external.conceal-wrap"] = {},
