@@ -371,9 +371,9 @@
       "api": "openai-completions",
       "models": [
         {
-          "id": "deepseek-v4-flash",
-          "name": "DeepSeek V4 Flash",
-          "input": ["text"],
+          "id": "deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash",
+          "input": ["text", "image"],
           "contextWindow": 1000000,
           "maxTokens": 128000,
           "samplingParams": {
@@ -385,31 +385,10 @@
             "thinkingFormat": "deepseek"
           },
           "cost": {
-            "input": 0,
-            "output": 0,
-            "cacheRead": 0,
-            "cacheWrite": 0
-          }
-        },
-        {
-          "id": "deepseek-v4-pro",
-          "name": "DeepSeek V4 Pro",
-          "input": ["text"],
-          "contextWindow": 1000000,
-          "maxTokens": 128000,
-          "samplingParams": {
-            "temperature": 1.0
-          },
-          "compat": {
-            "sendSessionAffinityHeaders": true,
-            "supportsLongCacheRetention": true,
-            "thinkingFormat": "deepseek"
-          },
-          "cost": {
-            "input": 0.3,
-            "output": 27,
-            "cacheRead": 9,
-            "cacheWrite": 9
+            "input": 2,
+            "output": 8,
+            "cacheRead": 0.04,
+            "cacheWrite": 0.04
           }
         },
         {
