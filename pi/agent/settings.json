@@ -28,7 +28,7 @@
   "subagents": {
     "agentOverrides": {
       "worker": {
-        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "model": "poe/deepseek-v4.1-flash",
         "thinking": "max"
       },
       "reviewer": {
@@ -38,8 +38,7 @@
     }
   },
   "packages": [
-    "npm:@gotgenes/pi-permission-system",
-    "~/github/brglng/pi-auto-review",
+    "npm:pi-sandbox",
     "npm:pi-lens",
     "npm:pi-intercom",
     "npm:pi-subagents",
