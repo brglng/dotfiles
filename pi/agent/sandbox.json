@@ -334,10 +334,12 @@
       "~/Library/Logs/Homebrew",
       "~/.pi/agent/skills/*/SKILL.md",
       "~/.pi/agent/skills/*/references/*.md",
-      "~/github/brglng/dotfiles/skills/*/SKILL.md",
-      "~/github/brglng/dotfiles/skills/*/references/*.md",
+      "~/github/brglng/dotfiles/pi/agent/skills/*/SKILL.md",
+      "~/github/brglng/dotfiles/pi/agent/skills/*/references/*.md",
       "~/.pi/agent/npm/node_modules/*/skills/*/SKILL.md",
-      "~/.pi/agent/npm/node_modules/*/skills/*/references/*.md"
+      "~/.pi/agent/npm/node_modules/*/skills/*/references/*.md",
+      "~/.pi/agent/npm/node_modules/*/*/skills/*/SKILL.md",
+      "~/.pi/agent/npm/node_modules/*/*/skills/*/references/*.md"
     ],
     "allowWrite": [
       ".",
