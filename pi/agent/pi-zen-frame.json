@@ -1,8 +1,14 @@
 {
+  "editorFrame": "blocky",
   "header": {
     "enable": true
   },
   "frame": {
     "showSpinner": true
+  },
+  "workingMessage": {
+    "messages": [
+      "Working"
+    ]
   }
 }
