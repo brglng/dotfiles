@@ -34,7 +34,10 @@ if (uname | get operating-system) == "Darwin" {
         path_prepend "/opt/homebrew/bin"
     }
     if (which brew | length) > 0 {
-        $"eval (brew shellenv)\nenv | grep '^HOMEBREW\\|^MANPATH\\|^INFOPATH'" | sh | parse "{k}={v}" | transpose -r -d | load-env
+        # `eval (brew shellenv)` is not POSIX, so `sh` rejected it and
+        # `brew shellenv` never ran. `parse "{k}={v}"` is also greedy across
+        # lines, merging every variable into one corrupted value.
+        ^sh -c 'eval "$(brew shellenv)"; env | grep -E "^HOMEBREW_|^MANPATH|^INFOPATH"' | lines | parse --regex '^(?<k>[^=]+)=(?<v>.*)$' | transpose -r -d | load-env
     }
 }
 
