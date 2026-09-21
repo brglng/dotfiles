@@ -23,11 +23,16 @@
 - For decision questions, explain the trade-offs and mark a recommendation. Ask no more than five questions per turn.
 - When there is a network error, try more times. Do not assume the network environment is stable.
 - Always treat an error like "This model is not available in your region" as a network error.
+- In a new session, read the memory of the current project before you start any work.
 
 ## Tool Usage
 
 - When you need to ask the user a question, use a tool if available.
 - Prefer other tools than `bash` or `run_command` whenever possible. `bash` or `run_command` is your last resort.
+- Whenever you want to `grep`, use `ffgrep`.
+- Whenever you want to `find`, use `fffind`.
+- If the `grep` or `find` is one of the command in a consecutive series of commands or a command pipeline, split the commands in order to use `ffgrep` and `fffind` instead of `grep` or `find`.
+- Never do a wide find or grep, e.g., find or grep from `/`.
 
 ## Coding Conventions
 
@@ -48,7 +53,7 @@ Load and follow a skill immediately before the action that triggers it:
 
 - Never publish without the user's explicit permission.
 
-## Searching
+## Web Searching
 
 - Always search in English, except if the search query is especially related to other languages.
 
