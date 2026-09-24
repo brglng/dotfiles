@@ -56,7 +56,6 @@
     "npm:pi-interactive-shell",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@furbyhaxx/pi-session-naming",
-    "~/github/brglng/pi-bailian",
     "~/github/brglng/pi-currency-cost",
     "~/github/brglng/pi-model-discovery",
     "~/github/brglng/pi-session-sync",
