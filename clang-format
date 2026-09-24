@@ -6,13 +6,14 @@ AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: Inline
 BreakBeforeBraces: Custom
 BraceWrapping:
-  AfterClass: true
+  AfterClass: false
   AfterControlStatement: Always
   SplitEmptyFunction: false
   SplitEmptyNamespace: false
   SplitEmptyRecord: false
 BreakStringLiterals: false
 ColumnLimit: 0
+EmptyLineBeforeAccessModifier: Never
 CommentPragmas: '^[ \t]*[@\\]'
 IndentCaseLabels: true
 IndentWidth: 4
@@ -41,9 +42,10 @@ AlignConsecutiveMacros:
 AllowShortLambdasOnASingleLine: Inline
 BreakAfterJavaFieldAnnotations: true
 BreakConstructorInitializers: BeforeComma
+ConstructorInitializerIndentWidth: 4
 BreakInheritanceList: BeforeComma
 ObjCBlockIndentWidth: 4
-PackConstructorInitializers: NextLine
+PackConstructorInitializers: Never
 SpacesInContainerLiterals: false
 Standard: c++17
 ...
