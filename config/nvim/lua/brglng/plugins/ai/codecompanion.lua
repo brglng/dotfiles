@@ -209,41 +209,6 @@ return {
             }
           })
         end,
-        bailian = function()
-          return require("codecompanion.adapters").extend("openai_compatible", {
-            -- url = "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1/messages",
-            vendor = "alibaba",
-            name = "bailian",
-            formatted_name = "阿里云百炼",
-            env = {
-              url = "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
-              chat_url = "/chat/completions",
-              api_key = "DASHSCOPE_API_KEY",
-            },
-            opts = {
-              stream = true,
-            },
-            schema = {
-              model = {
-                default = "glm-5.2",
-                choices = {
-                  "glm-5.2",
-                  "deepseek-v4-flash-0731",
-                  "qwen3.8-max"
-                }
-              },
-              reasoning_effort = {
-                enabled = function()
-                  return true
-                end,
-                default = "max",
-              },
-              max_tokens = {
-                default = 128000,
-              },
-            }
-          })
-        end,
         loostone = function()
           return require("codecompanion.adapters").extend("openai_compatible", {
             name = "loostone",
