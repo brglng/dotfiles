@@ -277,18 +277,26 @@ return {
             end
             return prompt .. string.format(
               [[
-Additional context:
+# Additional context
 
 - The user's current working directory is %s.
 - The current date is %s.
 - The user's Neovim version is %s.
 - The user is working on a %s machine. Please respond with system specific commands if applicable.
+
+# Working Directory
+
+Shell commands already execute in `%s`.
+Never prefix a command with `cd` into the current working directory — neither `cd %s &&` nor `cd $(pwd) &&`.
+Just run the command directly.
 ]],
               -- ctx.language,
               ctx.cwd,
               ctx.date,
               ctx.nvim_version,
-              ctx.os
+              ctx.os,
+              ctx.cwd,
+              ctx.cwd
             )
           end,
         },
@@ -385,8 +393,14 @@ Additional context:
 - The current date is %s.
 - The user's Neovim version is %s.
 - The user is working on a %s machine. Please respond with system specific commands if applicable.
+
+# Working Directory
+
+Shell commands already execute in `%s`.
+Never prefix a command with `cd` into the current working directory — neither `cd %s &&` nor `cd $(pwd) &&`.
+Just run the command directly.
 </additionalContext>
-            ]], ctx.cwd, ctx.date, ctx.nvim_version, ctx.os) .. skills.render_available_skills()
+            ]], ctx.cwd, ctx.date, ctx.nvim_version, ctx.os, ctx.cwd, ctx.cwd) .. skills.render_available_skills()
     end
     require("codecompanion").setup(opts)
 
