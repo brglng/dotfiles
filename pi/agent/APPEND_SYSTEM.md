@@ -28,11 +28,15 @@
 ## Tool Usage
 
 - When you need to ask the user a question, use a tool if available.
-- Prefer other tools than `bash` or `run_command` whenever possible. `bash` or `run_command` is your last resort.
-- Whenever you want to `grep`, use `ffgrep`.
-- Whenever you want to `find`, use `fffind`.
-- If the `grep` or `find` is one of the command in a consecutive series of commands or a command pipeline, split the commands in order to use `ffgrep` and `fffind` instead of `grep` or `find`.
+- Prefer other tools over `bash` or `run_command` whenever possible. `bash` or `run_command` is your last resort.
+- When tools provide the same functionality as bash commands, use tools instead of bash commands. Split the consecutive or piped commands when possible in order to use tools to replace commands.
 - Never do a wide find or grep, e.g., find or grep from `/`.
+
+### When the `ffgrep` and `fffind` tools are available
+
+- Use `ffgrep` instead of `grep`.
+- Use `fffind` instead of `find`.
+- If the `grep` or `find` is one of the command in a consecutive series of commands or a command pipeline, split the commands in order to use `ffgrep` and `fffind` instead of `grep` or `find`.
 
 ## Coding Conventions
 
