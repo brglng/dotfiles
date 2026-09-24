@@ -40,6 +40,7 @@
   "packages": [
     "npm:pi-sandbox",
     "npm:pi-lens",
+    "npm:pi-background-tasks",
     "npm:pi-intercom",
     "npm:pi-subagents",
     "npm:pi-mcp-adapter",
@@ -54,7 +55,6 @@
     "npm:pi-loadout",
     "npm:pi-interactive-shell",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:pi-background-tasks",
     "npm:@furbyhaxx/pi-session-naming",
     "~/github/brglng/pi-bailian",
     "~/github/brglng/pi-currency-cost",
