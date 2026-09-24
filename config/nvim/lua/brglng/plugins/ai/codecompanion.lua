@@ -223,10 +223,9 @@ return {
             },
             schema = {
               model = {
-                default = "glm-5.3-flash",
+                default = "deepseek-v4.1-flash",
                 choices = {
-                  "deepseek-v4-flash",
-                  "deepseek-v4-pro",
+                  "deepseek-v4.1-flash",
                   "glm-5.3-flash",
                   "GLM-5.3",
                   "kimi-k3",
@@ -236,7 +235,7 @@ return {
                 enabled = function()
                   return true
                 end,
-                default = "max",
+                default = "high",
               },
               max_tokens = {
                 default = 128000,
