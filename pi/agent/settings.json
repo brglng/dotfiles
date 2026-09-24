@@ -1,6 +1,6 @@
 {
-  "lastChangelogVersion": "0.85.1",
-  "theme": "rose-pine-dawn",
+  "lastChangelogVersion": "0.86.1",
+  "theme": "rose-pine",
   "tuiMode": "regular",
   "showHardwareCursor": false,
   "defaultProvider": "openai-codex",
