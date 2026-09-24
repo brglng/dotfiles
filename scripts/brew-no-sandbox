@@ -1,0 +1,114 @@
+#!/bin/bash
+
+set -u
+
+# Homebrew no longer supports HOMEBREW_NO_SANDBOX. Temporarily bypass every
+# Homebrew sandbox operation, then restore Homebrew's source when done.
+brew_bin=$(type -P brew || true)
+if [[ -z "$brew_bin" ]]; then
+    echo "$0: error: brew was not found in PATH." >&2
+    exit 127
+fi
+
+if [[ "${1:-}" = update ]]; then
+    "$brew_bin" "$@"
+    exit $?
+fi
+
+if ! brew_repository=$($brew_bin --repository); then
+    echo "$0: error: could not determine Homebrew's repository." >&2
+    exit 1
+fi
+
+sandbox_source="$brew_repository/Library/Homebrew/sandbox.rb"
+if [[ ! -f "$sandbox_source" ]]; then
+    echo "$0: error: could not find Homebrew's sandbox source: $sandbox_source" >&2
+    exit 1
+fi
+
+# Recover cleanly if a previous invocation was interrupted after patching.
+if grep -Fq 'temporary brew sandbox bypass' "$sandbox_source"; then
+    if ! perl -0pi -e 's/^[ \t]*return # brglng\/dotfiles: temporary brew sandbox bypass\r?\n//m' "$sandbox_source"; then
+        echo "$0: error: could not remove a stale sandbox bypass from $sandbox_source." >&2
+        exit 1
+    fi
+fi
+
+tmpdir=${TMPDIR:-/tmp}
+if [[ ! -d "$tmpdir" || ! -w "$tmpdir" ]]; then
+    tmpdir=/tmp
+fi
+
+backup=$(mktemp "$tmpdir/brew-no-sandbox.XXXXXX") || {
+    echo "$0: error: could not create a backup file." >&2
+    exit 1
+}
+patched=$(mktemp "$tmpdir/brew-no-sandbox-patched.XXXXXX") || {
+    rm -f "$backup"
+    echo "$0: error: could not create a temporary file." >&2
+    exit 1
+}
+
+if ! cp -p "$sandbox_source" "$backup"; then
+    rm -f "$backup" "$patched"
+    echo "$0: error: could not back up $sandbox_source." >&2
+    exit 1
+fi
+
+patch_complete=false
+restore() {
+    local status=$?
+    local cleanup_status=0
+    trap - EXIT INT TERM HUP
+
+    if [[ "$patch_complete" != true ]]; then
+        if ! cp -p "$backup" "$sandbox_source"; then
+            echo "$0: error: could not restore $sandbox_source." >&2
+            cleanup_status=1
+        fi
+    elif [[ -f "$sandbox_source" ]] && cmp -s "$sandbox_source" "$patched"; then
+        if ! cp -p "$backup" "$sandbox_source"; then
+            echo "$0: error: could not restore $sandbox_source." >&2
+            cleanup_status=1
+        fi
+    elif [[ -f "$sandbox_source" ]]; then
+        # An automatic Homebrew update may have replaced the file while the
+        # command was running. Remove only our marker and keep that update.
+        if ! perl -0pi -e 's/^[ \t]*return # brglng\/dotfiles: temporary brew sandbox bypass\r?\n//m' "$sandbox_source"; then
+            echo "$0: warning: could not remove the temporary sandbox bypass from $sandbox_source." >&2
+            cleanup_status=1
+        fi
+    else
+        echo "$0: warning: Homebrew removed $sandbox_source; leaving it untouched." >&2
+        cleanup_status=1
+    fi
+
+    rm -f "$backup" "$patched"
+    if [[ "$status" -eq 0 && "$cleanup_status" -ne 0 ]]; then
+        status=$cleanup_status
+    fi
+    exit "$status"
+}
+
+trap restore EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+trap 'exit 129' HUP
+
+if ! perl -0pi -e '
+    my $count = s{(^([ \t]*)def self\.use_for\?\([^\n]*\)\n)}{$1 . $2 . "  return # brglng/dotfiles: temporary brew sandbox bypass\n"}me;
+    die "could not find Sandbox.use_for?" unless $count == 1;
+' "$sandbox_source"; then
+    echo "$0: error: could not disable Homebrew's sandbox." >&2
+    exit 1
+fi
+
+if ! cp -p "$sandbox_source" "$patched"; then
+    echo "$0: error: could not save the patched source." >&2
+    exit 1
+fi
+patch_complete=true
+
+# Keep Homebrew's automatic update enabled. Ask its updater to restore the
+# stashed temporary patch after updating, instead of leaving it in the stash.
+HOMEBREW_NO_UPDATE_CLEANUP=1 "$brew_bin" "$@"
