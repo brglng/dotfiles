@@ -39,15 +39,32 @@ if (uname | get operating-system) == "Darwin" {
         # lines, merging every variable into one corrupted value.
         ^sh -c 'eval "$(brew shellenv)"; env | grep -E "^HOMEBREW_|^MANPATH|^INFOPATH"' | lines | parse --regex '^(?<k>[^=]+)=(?<v>.*)$' | transpose -r -d | load-env
 
-        # image.nvim's magick_rock processor loads ImageMagick through FFI.
-        # Homebrew may install ImageMagick as a keg-only formula, so its
-        # shared libraries are not on macOS's default lookup path.
-        let imagemagick_library_dir = [
-            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick", "lib"] | path join)
-            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick-full", "lib"] | path join)
-            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick@6", "lib"] | path join)
-        ] | where {|path| $path | path exists } | first
-        if $imagemagick_library_dir != null {
+        # image.nvim's magick_rock processor uses pkg-config and loads
+        # ImageMagick through FFI. Homebrew may install it as a keg-only
+        # formula, so its metadata and shared libraries need explicit paths.
+        let imagemagick_prefix = [
+            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick"] | path join)
+            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick-full"] | path join)
+            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick@6"] | path join)
+        ] | where {|path| ([$path, "lib"] | path join | path exists) } | first
+        if $imagemagick_prefix != null {
+            let imagemagick_library_dir = ([$imagemagick_prefix, "lib"] | path join)
+            let imagemagick_pkgconfig_dir = ([$imagemagick_library_dir, "pkgconfig"] | path join)
+
+            if ($imagemagick_pkgconfig_dir | path exists) {
+                let existing_pkgconfig_dirs = if "PKG_CONFIG_PATH" in $env {
+                    $env.PKG_CONFIG_PATH | split row (char esep)
+                } else {
+                    []
+                }
+                $env.PKG_CONFIG_PATH = (
+                    [$imagemagick_pkgconfig_dir, ...$existing_pkgconfig_dirs]
+                    | where {|path| $path != ""}
+                    | uniq
+                    | str join (char esep)
+                )
+            }
+
             let existing_library_dirs = if "DYLD_FALLBACK_LIBRARY_PATH" in $env {
                 $env.DYLD_FALLBACK_LIBRARY_PATH | split row (char esep)
             } else {

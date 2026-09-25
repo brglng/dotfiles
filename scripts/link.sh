@@ -124,7 +124,7 @@ function update_zprofile {
     update_file "#" "$HOME/.zprofile" "$(cat << EOF
 [[ -s "$HOME/.profile" ]] && source "$HOME/.profile"
 export BRGLNG_DOTFILES_DIR=$PWD
-[[ -r "\$BRGLNG_DOTFILES_DIR/zprofile" ]] && . "\$BRGLNG_DOTFILES_DIR/zprofile"
+[[ -r "\$BRGLNG_DOTFILES_DIR/profile" ]] && . "\$BRGLNG_DOTFILES_DIR/profile"
 EOF
 )"
 }
