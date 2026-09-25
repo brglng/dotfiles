@@ -3,6 +3,16 @@ set -e
 
 source "scripts/util.sh"
 
+function update_alacritty_toml {
+    mkdir -p "$HOME/.config/alacritty"
+    update_file "#" "$HOME/.config/alacritty/alacritty.toml" "$(cat << EOF
+import = [
+    $PWD/config/alacritty/alacritty.toml
+]
+EOF
+)"
+}
+
 function update_bashrc {
     update_file "#" "$1" "$(cat << EOF
 export BRGLNG_DOTFILES_DIR=$PWD
@@ -11,18 +21,10 @@ EOF
 )"
 }
 
-function update_zshrc {
-    update_file "#" "$HOME/.zshrc" "$(cat << EOF
-export BRGLNG_DOTFILES_DIR=$PWD
-[[ -r "\$BRGLNG_DOTFILES_DIR/zshrc" ]] && . "\$BRGLNG_DOTFILES_DIR/zshrc"
-EOF
-)"
-}
-
-function update_zprofile {
-    update_file "#" "$HOME/.zprofile" "$(cat << EOF
-export BRGLNG_DOTFILES_DIR=$PWD
-[[ -r "\$BRGLNG_DOTFILES_DIR/zprofile" ]] && . "\$BRGLNG_DOTFILES_DIR/zprofile"
+function update_ghostty_config {
+    mkdir -p "$HOME/.config/ghostty"
+    update_file "#" "$HOME/.config/ghostty/config" "$(cat << EOF
+config-file = $PWD/config/ghostty/config
 EOF
 )"
 }
@@ -37,28 +39,63 @@ EOF
 )"
 }
 
-function update_alacritty_toml {
-    mkdir -p "$HOME/.config/alacritty"
-    update_file "#" "$HOME/.config/alacritty/alacritty.toml" "$(cat <<EOF
-import = [
-    $PWD/config/alacritty/alacritty.toml
-]
+function update_kitty_conf {
+    mkdir -p "$HOME/.config/kitty"
+    update_file "#" "$HOME/.config/kitty/kitty.conf" "$(cat << EOF
+include $PWD/config/kitty/kitty.conf
+EOF
+)"
+}
+
+function update_gvimrc {
+    update_file '"' "$HOME/.gvimrc" "$(cat << EOF
+source $PWD/gvimrc
+EOF
+)"
+}
+
+function update_nushell_env {
+    update_file "#" "$1" "$(cat << EOF
+\$env.BRGLNG_DOTFILES_DIR = "$PWD"
+source "$PWD/config/nushell/env.nu"
+EOF
+)"
+}
+
+function update_nushell_config {
+    update_file "#" "$1" "$(cat << EOF
+source "$PWD/config/nushell/config.nu"
+EOF
+)"
+}
+
+function update_nvim_init_lua {
+    update_file "--" "$HOME/.config/nvim/init.lua" "$(cat << EOF
+vim.env.BRGLNG_DOTFILES_DIR="$PWD"
+dofile(vim.env.BRGLNG_DOTFILES_DIR .. "/config/nvim/init.lua")
+EOF
+)"
+}
+
+function update_profile {
+    update_file "#" "$HOME/.profile" "$(cat << EOF
+export BRGLNG_DOTFILES_DIR=$PWD
+[[ -s "\$BRGLNG_DOTFILES_DIR/profile" ]] && . "\$BRGLNG_DOTFILES_DIR/profile"
 EOF
 )"
 }
 
 function update_tmux_conf {
-    update_file "#" "$HOME/.tmux.conf" "$(cat <<EOF
+    update_file "#" "$HOME/.tmux.conf" "$(cat << EOF
 set-environment -g BRGLNG_DOTFILES_DIR "$PWD"
 source-file "$PWD/tmux.conf"
 EOF
 )"
 }
 
-function update_ghostty_config {
-    mkdir -p "$HOME/.config/ghostty"
-    update_file "#" "$HOME/.config/ghostty/config" "$(cat <<EOF
-config-file = $PWD/config/ghostty/config
+function update_vimrc {
+    update_file '"' "$HOME/.vimrc" "$(cat << EOF
+source $PWD/config/nvim/init.vim
 EOF
 )"
 }
@@ -66,7 +103,7 @@ EOF
 function update_wezterm {
     mkdir -p "$HOME/.config/wezterm"
     local created
-    created=$(update_file "--" "$HOME/.config/wezterm/wezterm.lua" "$(cat <<EOF
+    created=$(update_file "--" "$HOME/.config/wezterm/wezterm.lua" "$(cat << EOF
 BRGLNG_DOTFILES_DIR = "$PWD"
 package.path = BRGLNG_DOTFILES_DIR .. "/config/wezterm/?.lua;"
     .. BRGLNG_DOTFILES_DIR .. "/config/wezterm/?/init.lua;"
@@ -83,47 +120,19 @@ EOF
     fi
 }
 
-function update_kitty_conf {
-    mkdir -p "$HOME/.config/kitty"
-    update_file "#" "$HOME/.config/kitty/kitty.conf" "$(cat <<EOF
-include $PWD/config/kitty/kitty.conf
+function update_zprofile {
+    update_file "#" "$HOME/.zprofile" "$(cat << EOF
+[[ -s "$HOME/.profile" ]] && source "$HOME/.profile"
+export BRGLNG_DOTFILES_DIR=$PWD
+[[ -r "\$BRGLNG_DOTFILES_DIR/zprofile" ]] && . "\$BRGLNG_DOTFILES_DIR/zprofile"
 EOF
 )"
 }
 
-function update_vimrc {
-    update_file '"' "$HOME/.vimrc" "$(cat <<EOF
-source $PWD/config/nvim/init.vim
-EOF
-)"
-}
-
-function update_gvimrc {
-    update_file '"' "$HOME/.gvimrc" "$(cat <<EOF
-source $PWD/gvimrc
-EOF
-)"
-}
-
-function update_nvim_init_lua {
-    update_file "--" "$HOME/.config/nvim/init.lua" "$(cat <<EOF
-vim.env.BRGLNG_DOTFILES_DIR="$PWD"
-dofile(vim.env.BRGLNG_DOTFILES_DIR .. "/config/nvim/init.lua")
-EOF
-)"
-}
-
-function update_nushell_env {
-    update_file "#" "$1" "$(cat << EOF
-\$env.BRGLNG_DOTFILES_DIR = "$PWD"
-source "$PWD/config/nushell/env.nu"
-EOF
-)"
-}
-
-function update_nushell_config {
-    update_file "#" "$1" "$(cat << EOF
-source "$PWD/config/nushell/config.nu"
+function update_zshrc {
+    update_file "#" "$HOME/.zshrc" "$(cat << EOF
+export BRGLNG_DOTFILES_DIR=$PWD
+[[ -r "\$BRGLNG_DOTFILES_DIR/zshrc" ]] && . "\$BRGLNG_DOTFILES_DIR/zshrc"
 EOF
 )"
 }
@@ -174,6 +183,7 @@ function link_common() {
     update_gvimrc
     update_kitty_conf
     update_nvim_init_lua
+    update_profile
     update_tmux_conf
     update_vimrc
     update_wezterm

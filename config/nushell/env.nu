@@ -38,6 +38,28 @@ if (uname | get operating-system) == "Darwin" {
         # `brew shellenv` never ran. `parse "{k}={v}"` is also greedy across
         # lines, merging every variable into one corrupted value.
         ^sh -c 'eval "$(brew shellenv)"; env | grep -E "^HOMEBREW_|^MANPATH|^INFOPATH"' | lines | parse --regex '^(?<k>[^=]+)=(?<v>.*)$' | transpose -r -d | load-env
+
+        # image.nvim's magick_rock processor loads ImageMagick through FFI.
+        # Homebrew may install ImageMagick as a keg-only formula, so its
+        # shared libraries are not on macOS's default lookup path.
+        let imagemagick_library_dir = [
+            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick", "lib"] | path join)
+            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick-full", "lib"] | path join)
+            ([$env.HOMEBREW_PREFIX, "opt", "imagemagick@6", "lib"] | path join)
+        ] | where {|path| $path | path exists } | first
+        if $imagemagick_library_dir != null {
+            let existing_library_dirs = if "DYLD_FALLBACK_LIBRARY_PATH" in $env {
+                $env.DYLD_FALLBACK_LIBRARY_PATH | split row (char esep)
+            } else {
+                []
+            }
+            $env.DYLD_FALLBACK_LIBRARY_PATH = (
+                [$imagemagick_library_dir, ...$existing_library_dirs]
+                | where {|path| $path != ""}
+                | uniq
+                | str join (char esep)
+            )
+        }
     }
 }
 
