@@ -1,4 +1,4 @@
 {
-  "llmModelOverride": "poe/deepseek-v4.1-flash",
+  "llmModelOverride": "openai-codex/gpt-6-luna",
   "llmThinkingOverride": "max"
 }

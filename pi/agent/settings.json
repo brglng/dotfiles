@@ -1,16 +1,16 @@
 {
   "lastChangelogVersion": "0.87.1",
-  "theme": "rose-pine",
+  "theme": "rose-pine-dawn",
   "tuiMode": "regular",
   "showHardwareCursor": false,
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-luna",
+  "defaultModel": "gpt-6-luna",
   "defaultThinkingLevel": "max",
   "session": {
     "titleGeneration": {
       "enabled": true,
       "language": "auto",
-      "model": "openai-codex/gpt-5.6-luna:medium",
+      "model": "openai-codex/gpt-6-luna:medium",
       "retries": 1000,
       "emojis": true,
       "maxLength": 52,
@@ -28,11 +28,11 @@
   "subagents": {
     "agentOverrides": {
       "worker": {
-        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "model": "openai-codex/gpt-6-luna",
         "thinking": "max"
       },
       "reviewer": {
-        "model": "openai-codex/gpt-5.6-luna",
+        "model": "openai-codex/gpt-6-luna",
         "thinking": "max"
       }
     }

@@ -1,5 +1,5 @@
 {
-  "model": "openai-codex/gpt-5.6-luna",
+  "model": "openai-codex/gpt-6-luna",
   "reasoning": "low",
   "timeoutMs": 300000,
   "retries": 1000,
