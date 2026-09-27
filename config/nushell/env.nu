@@ -78,6 +78,14 @@ if (uname | get operating-system) == "Darwin" {
             )
         }
     }
+
+    # Puppeteer-based tools (mermaid-cli's mmdc) drive the installed Google Chrome
+    # instead of downloading a browser of their own; Chrome 150 is the last
+    # release that runs on macOS 12.
+    let chrome_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    if ($chrome_path | path exists) {
+        $env.PUPPETEER_EXECUTABLE_PATH = $chrome_path
+    }
 }
 
 if (which "/mnt/c/Windows/System32/cmd.exe" | length) > 0 {

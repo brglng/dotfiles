@@ -16,6 +16,8 @@ EOF
 function update_bashrc {
     update_file "#" "$1" "$(cat << EOF
 export BRGLNG_DOTFILES_DIR=$PWD
+[[ -s "$HOME/.profile" ]] && source "$HOME/.profile"
+[[ -r "\$BRGLNG_DOTFILES_DIR/profile" ]] && . "\$BRGLNG_DOTFILES_DIR/profile"
 [[ -r "\$BRGLNG_DOTFILES_DIR/bashrc" ]] && . "\$BRGLNG_DOTFILES_DIR/bashrc"
 EOF
 )"

@@ -34,3 +34,10 @@ if [ "$(uname -s)" = Darwin ] && [ -n "${HOMEBREW_PREFIX:-}" ]; then
     esac
   fi
 fi
+
+# Puppeteer-based tools (e.g. mermaid-cli's mmdc) drive the installed Google
+# Chrome instead of downloading a browser of their own; Chrome 150 is the last
+# release that runs on macOS 12.
+if [ "$(uname -s)" = Darwin ] && [ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]; then
+  export PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+fi
