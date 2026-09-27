@@ -338,6 +338,7 @@
       "~/github/brglng/dotfiles/pi/agent/skills/*/references/*.md",
       "~/.pi/agent/npm/node_modules/*/skills/*/SKILL.md",
       "~/.pi/agent/npm/node_modules/*/skills/*/references/*.md",
+      "~/.pi/agent/npm/node_modules/*/skills/references/*.md",
       "~/.pi/agent/npm/node_modules/*/*/skills/*/SKILL.md",
       "~/.pi/agent/npm/node_modules/*/*/skills/*/references/*.md"
     ],
