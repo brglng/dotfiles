@@ -1,0 +1,15 @@
+id = "brglng.tab-labels"
+name = "Workspace-local tab labels"
+version = "1.0.0"
+min_herdr_version = "0.9.1"
+platforms = ["macos", "linux"]
+description = "Label tabs with their workspace-local position and focused pane terminal title."
+
+[[startup]]
+command = ["/bin/sh", "-lc", "exec node \"$HERDR_PLUGIN_ROOT/start.js\""]
+
+[[actions]]
+id = "start"
+title = "Start tab label watcher"
+contexts = ["workspace"]
+command = ["/bin/sh", "-lc", "exec node \"$HERDR_PLUGIN_ROOT/start.js\""]

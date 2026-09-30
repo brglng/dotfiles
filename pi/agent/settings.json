@@ -61,15 +61,13 @@
     "~/github/brglng/pi-model-discovery",
     "~/github/brglng/pi-session-sync",
     "~/github/brglng/pi-prompt-emulated-tool-call",
-    "npm:@tifan/pi-titlebar-spinner",
     "npm:@ff-labs/pi-fff",
     "npm:@monotykamary/pi-math",
     "npm:pi-cache-optimizer",
     "npm:@sherif-fanous/pi-theme-sync",
     "npm:@zenobius/pi-rose-pine",
     "npm:@mohndoe/pi-atlas",
-    "npm:pi-cc-extensions",
-    "npm:pi-notify"
+    "npm:pi-cc-extensions"
   ],
   "hideThinkingBlock": false,
   "retry": {

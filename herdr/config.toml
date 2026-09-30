@@ -32,7 +32,7 @@ pane_outer_borders = false
 pane_gaps = false
 hide_tab_bar_when_single_tab = false
 tab_bar_right_separator = " | "
-window_title = "{hostname}: {terminal_title}"
+window_title = "{hostname} · {workspace} · {terminal_title}"
 
 [ui.sidebar.agents]
 rows = [

@@ -139,6 +139,20 @@ EOF
 )"
 }
 
+function link_herdr_tab_labels_plugin() {
+    local plugin_id="brglng.tab-labels"
+    local plugin_path="$PWD/herdr/tab-labels"
+
+    command -v herdr >/dev/null 2>&1 || return 0
+    if ! herdr status server >/dev/null 2>&1; then
+        log_warn "Herdr server is not running; rerun scripts/link.sh while Herdr is running to link the tab-label plugin."
+        return 0
+    fi
+
+    herdr plugin link "$plugin_path" --enabled
+    herdr plugin action invoke "$plugin_id.start"
+}
+
 function link_common() {
     # link "config/alacritty/colors"
     link "config/neovide"
@@ -176,6 +190,7 @@ function link_common() {
     link "pi-lens/config.json"
 
     link "herdr/config.toml" "$HOME/.config/herdr/config.toml"
+    link_herdr_tab_labels_plugin
 
     link "clang-format"
     link "zimrc"
