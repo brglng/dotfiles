@@ -1,5 +1,5 @@
 {
-  "model": "openai-codex/gpt-6-luna",
+  "model": "poe/deepseek-v4.1-flash",
   "reasoning": "low",
   "timeoutMs": 300000,
   "retries": 1000,

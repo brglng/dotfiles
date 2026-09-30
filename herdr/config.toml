@@ -24,13 +24,15 @@ move_tab_previous = "ctrl+alt+["
 move_tab_next = "ctrl+alt+]"
 
 [ui]
+sidebar_start_collapsed = true
+prompt_new_tab_name = false
 tab_bar_position = "bottom"
 pane_borders = true
 pane_outer_borders = false
 pane_gaps = false
 hide_tab_bar_when_single_tab = false
 tab_bar_right_separator = " | "
-window_title = "{hostname}: {workspace}: {terminal_title}"
+window_title = "{hostname}: {terminal_title}"
 
 [ui.sidebar.agents]
 rows = [
@@ -58,19 +60,9 @@ interval_seconds = 3
 timeout_seconds = 2
 
 [[ui.tab_bar_right]]
-type = "datetime"
-format = "%-m/%-d %a %H:%M"
-
-[[ui.tab_bar_right]]
 type = "command"
 command = '''uptime | sed -E 's/^.* up +/up /; s/, *[0-9]+ users?.*$//' | sed 's/ *$//''''
 interval_seconds = 60
-timeout_seconds = 2
-
-[[ui.tab_bar_right]]
-type = "command"
-command = '''echo "$(whoami)@$(hostname -s)"'''
-interval_seconds = 3600
 timeout_seconds = 2
 
 [ui.toast]

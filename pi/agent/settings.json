@@ -1,6 +1,6 @@
 {
   "lastChangelogVersion": "0.87.1",
-  "theme": "rose-pine-dawn",
+  "theme": "rose-pine",
   "tuiMode": "regular",
   "showHardwareCursor": false,
   "defaultProvider": "openai-codex",
@@ -34,25 +34,26 @@
       "reviewer": {
         "model": "openai-codex/gpt-6-luna",
         "thinking": "max"
+      },
+      "oracle": {
+        "model": "openai-codex/gpt-6-sol",
+        "thinking": "medium"
       }
     }
   },
   "packages": [
-    "npm:pi-sandbox",
     "npm:pi-lens",
     "npm:pi-background-tasks",
     "npm:pi-intercom",
     "npm:pi-subagents",
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
+    "npm:@narumitw/pi-usage",
     "npm:pi-hermes-memory",
     "npm:context-mode",
     "npm:@jackice/pi-handoff",
-    "npm:@narumitw/pi-plan-mode",
-    "npm:@narumitw/pi-goal",
     "npm:@firstpick/pi-extension-grill-me",
     "npm:@gotgenes/pi-nocd",
-    "npm:pi-loadout",
     "npm:pi-interactive-shell",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@furbyhaxx/pi-session-naming",
@@ -62,13 +63,13 @@
     "~/github/brglng/pi-prompt-emulated-tool-call",
     "npm:@tifan/pi-titlebar-spinner",
     "npm:@ff-labs/pi-fff",
-    "npm:pi-mermaid",
     "npm:@monotykamary/pi-math",
     "npm:pi-cache-optimizer",
     "npm:@sherif-fanous/pi-theme-sync",
     "npm:@zenobius/pi-rose-pine",
     "npm:@mohndoe/pi-atlas",
-    "npm:@leo-alvarenga/pi-zen-frame"
+    "npm:pi-cc-extensions",
+    "npm:pi-notify"
   ],
   "hideThinkingBlock": false,
   "retry": {

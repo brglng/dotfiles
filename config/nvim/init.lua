@@ -226,7 +226,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 vim.api.nvim_set_hl(0, "LazyNormal", { link = "Normal" })
 require("lazy").setup("brglng/plugins", {
     lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
-    concurrency = 4,
+    concurrency = 2,
     git = {
         timeout = 3600,
     },

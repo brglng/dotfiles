@@ -315,10 +315,10 @@
             "max": "max"
           },
           "cost": {
-            "input": 0.14,
-            "output": 0.28,
-            "cacheRead": 0.01,
-            "cacheWrite": 0.03
+            "input": 0.30,
+            "output": 1.21,
+            "cacheRead": 0.0061,
+            "cacheWrite": 0.0061
           }
         },
         {

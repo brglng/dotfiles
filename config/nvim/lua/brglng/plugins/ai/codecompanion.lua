@@ -252,10 +252,9 @@ return {
     interactions = {
       chat = {
         adapter = {
-          name = "openrouter",
-          model = "deepseek/deepseek-v4.1-flash"
+          name = "pi",
+          model = "openai-codex/gpt-6-luna"
         },
-        -- adapter = "pi",
         keymaps = {
           send = {
             modes = { n = "<CR>", i = "<C-CR>" },
@@ -407,6 +406,8 @@ Just run the command directly.
     local function set_chat_win_options()
       vim.cmd("startinsert")
       vim.wo.scrolloff = 5
+      vim.bo.buflisted = true
+      vim.bo.bufhidden = ''
     end
     local function set_cli_win_options()
       vim.cmd("startinsert")
@@ -416,6 +417,8 @@ Just run the command directly.
       vim.wo.statuscolumn = ''
       vim.wo.number = false
       vim.wo.cursorline = false
+      vim.bo.buflisted = true
+      vim.bo.bufhidden = ''
     end
     vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter" }, {
       pattern = { "*" },
