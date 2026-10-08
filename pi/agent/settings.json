@@ -1,6 +1,6 @@
 {
-  "lastChangelogVersion": "0.87.1",
-  "theme": "rose-pine",
+  "lastChangelogVersion": "1.0.0",
+  "theme": "rose-pine-dawn/rose-pine",
   "tuiMode": "regular",
   "showHardwareCursor": false,
   "defaultProvider": "openai-codex",
@@ -46,7 +46,6 @@
     "npm:pi-background-tasks",
     "npm:pi-intercom",
     "npm:pi-subagents",
-    "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:@narumitw/pi-usage",
     "npm:pi-hermes-memory",
@@ -64,10 +63,10 @@
     "npm:@ff-labs/pi-fff",
     "npm:@monotykamary/pi-math",
     "npm:pi-cache-optimizer",
-    "npm:@sherif-fanous/pi-theme-sync",
     "npm:@zenobius/pi-rose-pine",
     "npm:@mohndoe/pi-atlas",
-    "npm:pi-cc-extensions"
+    "npm:pi-cc-extensions",
+    "npm:@juicesharp/rpiv-todo"
   ],
   "hideThinkingBlock": false,
   "retry": {
