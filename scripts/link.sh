@@ -179,7 +179,7 @@ function link_common() {
     link "pi/agent/APPEND_SYSTEM.md"
     link "pi/agent/hermes-memory-config.json"
     link "pi/agent/keybindings.json"
-    link "pi/agent/mcp-adapter.json"
+    link "pi/agent/mcp.json"
     link "pi/agent/models.json"
     link "pi/agent/open-tui.json"
     link "pi/agent/pi-cc-extensions.json"
