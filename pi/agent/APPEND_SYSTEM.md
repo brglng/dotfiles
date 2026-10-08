@@ -48,7 +48,7 @@
 
 ## Conditional Skills
 
-Load and follow a skill immediately before the action that triggers it:
+Load and follow a skill immediately before the action that triggers it, unless you have already loaded that skill in the current session:
 
 - Before editing Python: `python-code-conventions`.
 - Before writing a VCS commit message: `commit-conventions`.
