@@ -1,11 +1,11 @@
 {
-  "lastChangelogVersion": "1.0.0",
+  "lastChangelogVersion": "1.0.4",
   "theme": "rose-pine-dawn/rose-pine",
-  "tuiMode": "regular",
   "showHardwareCursor": false,
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-6-luna",
-  "defaultThinkingLevel": "max",
+  "defaultProvider": "poe",
+  "defaultModel": "gpt-6.1-sol",
+  "defaultThinkingLevel": "medium",
+  "defaultTools": ["+codemode", "+tool_search"],
   "session": {
     "titleGeneration": {
       "enabled": true,
@@ -28,15 +28,15 @@
   "subagents": {
     "agentOverrides": {
       "worker": {
-        "model": "openai-codex/gpt-6-luna",
-        "thinking": "max"
+        "model": "poe/gpt-6.1-sol",
+        "thinking": "medium"
       },
       "reviewer": {
-        "model": "openai-codex/gpt-6-luna",
-        "thinking": "max"
+        "model": "poe/gpt-6.1-sol",
+        "thinking": "medium"
       },
       "oracle": {
-        "model": "openai-codex/gpt-6-sol",
+        "model": "openai-codex/gpt-6-astra",
         "thinking": "medium"
       }
     }
@@ -78,5 +78,6 @@
   "terminal": {
     "showImages": true,
     "images": "kitty"
-  }
+  },
+  "deviceId": "25649028-18e8-4d39-9c09-62a946abd041"
 }
