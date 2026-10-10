@@ -205,6 +205,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
         end
 
         local win = vim.api.nvim_get_current_win()
+        local cursor = vim.api.nvim_win_get_cursor(win)
 
         vim.schedule(function()
             if not valid_view_buffer(buf)
@@ -217,7 +218,17 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
             prepare_treesitter_folds(buf, win)
 
             vim.api.nvim_win_call(win, function()
+                local current_cursor = vim.api.nvim_win_get_cursor(win)
+                local navigated = current_cursor[1] ~= cursor[1]
+                    or current_cursor[2] ~= cursor[2]
+                local view = navigated and vim.fn.winsaveview() or nil
+
                 vim.cmd("silent! loadview")
+
+                if view then
+                    vim.fn.winrestview(view)
+                    vim.cmd("normal! zv")
+                end
             end)
         end)
     end,
