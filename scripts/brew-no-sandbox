@@ -2,113 +2,257 @@
 
 set -u
 
-# Homebrew no longer supports HOMEBREW_NO_SANDBOX. Temporarily bypass every
-# Homebrew sandbox operation, then restore Homebrew's source when done.
+program=${0##*/}
+error() {
+    echo "$program: error: $*" >&2
+}
+
+warning() {
+    echo "$program: warning: $*" >&2
+}
+
 brew_bin=$(type -P brew || true)
 if [[ -z "$brew_bin" ]]; then
-    echo "$0: error: brew was not found in PATH." >&2
+    error "brew was not found in PATH."
     exit 127
 fi
 
-if [[ "${1:-}" = update ]]; then
+# Homebrew accepts these global flags before a command; skip them to keep update
+# operations unpatched (and to avoid auto-update recursion during restoration).
+args=()
+for arg in "$@"; do
+    args+=("$arg")
+done
+command_index=0
+while [[ "$command_index" -lt "${#args[@]}" && "${args[$command_index]}" == -* ]]; do
+    case "${args[$command_index]}" in
+        --debug|--verbose|--quiet)
+            ((command_index += 1))
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+if [[ "${args[$command_index]:-}" == update ]]; then
     "$brew_bin" "$@"
     exit $?
 fi
 
-if ! brew_repository=$($brew_bin --repository); then
-    echo "$0: error: could not determine Homebrew's repository." >&2
+if ! brew_repository=$(HOMEBREW_NO_AUTO_UPDATE=1 "$brew_bin" --repository); then
+    error "could not determine Homebrew's repository."
     exit 1
 fi
 
 sandbox_source="$brew_repository/Library/Homebrew/sandbox.rb"
-if [[ ! -f "$sandbox_source" ]]; then
-    echo "$0: error: could not find Homebrew's sandbox source: $sandbox_source" >&2
+if [[ ! -f "$sandbox_source" || ! -r "$sandbox_source" || ! -w "$sandbox_source" ]]; then
+    error "Homebrew's sandbox source is not a readable, writable file: $sandbox_source"
     exit 1
 fi
 
-# Recover cleanly if a previous invocation was interrupted after patching.
-if grep -Fq 'temporary brew sandbox bypass' "$sandbox_source"; then
-    if ! perl -0pi -e 's/^[ \t]*return # brglng\/dotfiles: temporary brew sandbox bypass\r?\n//m' "$sandbox_source"; then
-        echo "$0: error: could not remove a stale sandbox bypass from $sandbox_source." >&2
-        exit 1
+if [[ "$(uname -s)" != Darwin ]] || ! command -v xattr >/dev/null 2>&1; then
+    error "cannot guarantee preservation of Homebrew source ACLs and extended attributes on this platform."
+    exit 1
+fi
+metadata_signature() {
+    local file=$1
+    local ownership_mode
+    local acl
+    local attributes
+    ownership_mode=$(stat -f '%u:%g:%Lp' "$file") || return 1
+    acl=$(ls -lde "$file" | sed '1d') || return 1
+    attributes=$(xattr -lx "$file") || return 1
+    printf '%s\n%s\n%s\n' "$ownership_mode" "$acl" "$attributes"
+}
+source_metadata=$(metadata_signature "$sandbox_source") || {
+    error "could not inspect metadata for $sandbox_source; refusing to patch it."
+    exit 1
+}
+
+# This lock serializes wrapper instances only; direct brew invocations cannot honor it.
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P) || {
+    error "could not locate the wrapper directory."
+    exit 1
+}
+lock_dir="$script_dir/.brew-no-sandbox.lock"
+if ! mkdir "$lock_dir" 2>/dev/null; then
+    lock_owner=''
+    if [[ -f "$lock_dir/pid" ]]; then
+        IFS= read -r lock_owner < "$lock_dir/pid" || true
     fi
-fi
-
-tmpdir=${TMPDIR:-/tmp}
-if [[ ! -d "$tmpdir" || ! -w "$tmpdir" ]]; then
-    tmpdir=/tmp
-fi
-
-backup=$(mktemp "$tmpdir/brew-no-sandbox.XXXXXX") || {
-    echo "$0: error: could not create a backup file." >&2
+    if [[ "$lock_owner" =~ ^[0-9]+$ ]] && kill -0 "$lock_owner" 2>/dev/null; then
+        error "another wrapper is running with PID $lock_owner; lock: $lock_dir"
+    else
+        error "stale or unverifiable wrapper lock at $lock_dir (owner PID: ${lock_owner:-unknown}); verify no wrapper is running, then remove that directory manually."
+    fi
     exit 1
-}
-patched=$(mktemp "$tmpdir/brew-no-sandbox-patched.XXXXXX") || {
-    rm -f "$backup"
-    echo "$0: error: could not create a temporary file." >&2
-    exit 1
-}
-
-if ! cp -p "$sandbox_source" "$backup"; then
-    rm -f "$backup" "$patched"
-    echo "$0: error: could not back up $sandbox_source." >&2
+fi
+lock_owned=1
+if ! printf '%s\n' "$$" > "$lock_dir/pid"; then
+    rmdir "$lock_dir" 2>/dev/null || true
+    error "could not record wrapper lock ownership in $lock_dir."
     exit 1
 fi
 
-patch_complete=false
-restore() {
+backup=''
+patched=''
+install_source=''
+restore_temp=''
+patch_installed=0
+
+cleanup() {
     local status=$?
     local cleanup_status=0
+    local backup_recovery=0
     trap - EXIT INT TERM HUP
 
-    if [[ "$patch_complete" != true ]]; then
-        if ! cp -p "$backup" "$sandbox_source"; then
-            echo "$0: error: could not restore $sandbox_source." >&2
+    if [[ "$patch_installed" -eq 1 ]]; then
+        restore_temp=$(mktemp "$sandbox_source.brew-no-sandbox-restore.XXXXXX") || {
+            warning "could not prepare restoration of $sandbox_source."
+            backup_recovery=1
+        }
+        if [[ -n "$restore_temp" ]]; then
+            # Copying the installed file's metadata preserves the original metadata;
+            # only its bytes are replaced with the private backup contents.
+            if ! cp -p "$sandbox_source" "$restore_temp" || ! cat "$backup" > "$restore_temp" || [[ "$(metadata_signature "$restore_temp")" != "$source_metadata" ]]; then
+                warning "could not stage restoration of $sandbox_source with its original metadata."
+                backup_recovery=1
+            elif [[ -f "$sandbox_source" ]] && cmp -s "$sandbox_source" "$patched"; then
+                if mv -f "$restore_temp" "$sandbox_source"; then
+                    restore_temp=''
+                    if ! cmp -s "$sandbox_source" "$backup" || [[ "$(metadata_signature "$sandbox_source")" != "$source_metadata" ]]; then
+                        warning "restoration of $sandbox_source did not match the original bytes and metadata."
+                        backup_recovery=1
+                    fi
+                else
+                    warning "could not restore $sandbox_source."
+                    backup_recovery=1
+                fi
+            elif [[ -f "$sandbox_source" ]] && cmp -s "$sandbox_source" "$backup" && [[ "$(metadata_signature "$sandbox_source")" == "$source_metadata" ]]; then
+                : # The source is already back to its original bytes and metadata.
+            else
+                # Never overwrite an update or user edit made while brew was running.
+                warning "$sandbox_source changed while brew was running; leaving it untouched."
+                backup_recovery=1
+            fi
+        fi
+        if [[ "$backup_recovery" -eq 1 ]]; then
+            chmod 600 "$backup" 2>/dev/null || true
+            warning "original backup retained at: $backup"
             cleanup_status=1
         fi
-    elif [[ -f "$sandbox_source" ]] && cmp -s "$sandbox_source" "$patched"; then
-        if ! cp -p "$backup" "$sandbox_source"; then
-            echo "$0: error: could not restore $sandbox_source." >&2
-            cleanup_status=1
-        fi
-    elif [[ -f "$sandbox_source" ]]; then
-        # An automatic Homebrew update may have replaced the file while the
-        # command was running. Remove only our marker and keep that update.
-        if ! perl -0pi -e 's/^[ \t]*return # brglng\/dotfiles: temporary brew sandbox bypass\r?\n//m' "$sandbox_source"; then
-            echo "$0: warning: could not remove the temporary sandbox bypass from $sandbox_source." >&2
-            cleanup_status=1
-        fi
-    else
-        echo "$0: warning: Homebrew removed $sandbox_source; leaving it untouched." >&2
-        cleanup_status=1
     fi
 
-    rm -f "$backup" "$patched"
+    if [[ "$backup_recovery" -eq 0 && -n "$backup" ]]; then
+        rm -f "$backup"
+    fi
+    [[ -z "$patched" ]] || rm -f "$patched"
+    [[ -z "$install_source" ]] || rm -f "$install_source"
+    [[ -z "$restore_temp" ]] || rm -f "$restore_temp"
+    if [[ "${lock_owned:-0}" -eq 1 ]]; then
+        rm -f "$lock_dir/pid"
+        if ! rmdir "$lock_dir" 2>/dev/null; then
+            warning "could not remove wrapper lock $lock_dir."
+            cleanup_status=1
+        fi
+    fi
     if [[ "$status" -eq 0 && "$cleanup_status" -ne 0 ]]; then
         status=$cleanup_status
     fi
     exit "$status"
 }
 
-trap restore EXIT
+trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 trap 'exit 129' HUP
 
-if ! perl -0pi -e '
-    my $count = s{(^([ \t]*)def self\.use_for\?\([^\n]*\)\n)}{$1 . $2 . "  return # brglng/dotfiles: temporary brew sandbox bypass\n"}me;
-    die "could not find Sandbox.use_for?" unless $count == 1;
-' "$sandbox_source"; then
-    echo "$0: error: could not disable Homebrew's sandbox." >&2
+if grep -Fq 'brglng/dotfiles: temporary brew sandbox bypass' "$sandbox_source"; then
+    error "a temporary sandbox bypass is already present in $sandbox_source; refusing to alter it."
     exit 1
 fi
 
-if ! cp -p "$sandbox_source" "$patched"; then
-    echo "$0: error: could not save the patched source." >&2
+# All staging files are adjacent to sandbox.rb for same-filesystem atomic replacement.
+backup=$(mktemp "$sandbox_source.brew-no-sandbox-backup.XXXXXX") || {
+    error "could not create a backup of $sandbox_source."
+    exit 1
+}
+patched=$(mktemp "$sandbox_source.brew-no-sandbox-patched.XXXXXX") || {
+    error "could not create a patched source file."
+    exit 1
+}
+install_source=$(mktemp "$sandbox_source.brew-no-sandbox-install.XXXXXX") || {
+    error "could not prepare the temporary patch."
+    exit 1
+}
+
+if ! cat "$sandbox_source" > "$backup" || ! chmod 600 "$backup"; then
+    error "could not create a private backup of $sandbox_source."
     exit 1
 fi
-patch_complete=true
 
-# Keep Homebrew's automatic update enabled. Ask its updater to restore the
-# stashed temporary patch after updating, instead of leaving it in the stash.
-HOMEBREW_NO_UPDATE_CLEANUP=1 "$brew_bin" "$@"
+# Match the API method declaration, not a specific line number or parameter list.
+# Requiring exactly one declaration and compiling the result rejects unknown seams.
+if ! perl - "$backup" > "$install_source" <<'PERL'
+use strict;
+use warnings;
+
+my $file = shift;
+open my $input, '<', $file or die "cannot read $file: $!\n";
+local $/;
+my $source = <$input>;
+close $input or die "cannot close $file: $!\n";
+
+my $count = $source =~ s{^([ \t]*)def[ \t]+self\.use_for\?(?=[ \t(\n])([^\n]*\n)}
+    {$1 . "def self.use_for?" . $2 . $1 . "  return false # brglng/dotfiles: temporary brew sandbox bypass\n"}gme;
+die "expected exactly one Sandbox.use_for? method declaration, found " . ($count || 0) . "\n"
+    unless $count == 1;
+print $source;
+PERL
+then
+    error "could not identify exactly one compatible Sandbox.use_for? declaration in $sandbox_source."
+    exit 1
+fi
+if ! cp -p "$sandbox_source" "$patched" || ! cat "$install_source" > "$patched" || [[ "$(metadata_signature "$patched")" != "$source_metadata" ]]; then
+    error "could not prepare patched source while preserving its metadata."
+    exit 1
+fi
+if cmp -s "$backup" "$patched"; then
+    error "the sandbox patch did not change $sandbox_source."
+    exit 1
+fi
+
+if ! HOMEBREW_NO_AUTO_UPDATE=1 "$brew_bin" ruby -c "$patched" >/dev/null; then
+    error "Homebrew Ruby rejected the temporary sandbox source; refusing to install the patch."
+    exit 1
+fi
+
+# Refuse to replace a source changed since it was backed up.
+if ! cmp -s "$sandbox_source" "$backup"; then
+    error "$sandbox_source changed while preparing the patch; refusing to overwrite it."
+    exit 1
+fi
+if ! cp -p "$sandbox_source" "$install_source" || ! cat "$patched" > "$install_source" || [[ "$(metadata_signature "$install_source")" != "$source_metadata" ]]; then
+    error "could not stage patched source while preserving its metadata."
+    exit 1
+fi
+if ! cmp -s "$sandbox_source" "$backup"; then
+    error "$sandbox_source changed while preparing the patch; refusing to overwrite it."
+    exit 1
+fi
+patch_installed=1
+if ! mv -f "$install_source" "$sandbox_source"; then
+    error "could not install the temporary patch in $sandbox_source."
+    exit 1
+fi
+install_source=''
+
+warning "do not run any other brew commands while this wrapper is active; they cannot be serialized by its lock."
+
+# Auto-update is disabled for this invocation so brew itself cannot replace the source.
+# Direct brew invocations can still race the compare-then-rename cleanup check.
+if HOMEBREW_NO_AUTO_UPDATE=1 "$brew_bin" "$@"; then
+    exit 0
+else
+    exit $?
+fi
