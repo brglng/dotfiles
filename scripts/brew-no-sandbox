@@ -222,7 +222,8 @@ if cmp -s "$backup" "$patched"; then
     exit 1
 fi
 
-if ! HOMEBREW_NO_AUTO_UPDATE=1 "$brew_bin" ruby -c "$patched" >/dev/null; then
+# Pass Ruby flags after Homebrew's option-parser delimiter.
+if ! HOMEBREW_NO_AUTO_UPDATE=1 "$brew_bin" ruby -- -c "$patched" >/dev/null; then
     error "Homebrew Ruby rejected the temporary sandbox source; refusing to install the patch."
     exit 1
 fi
