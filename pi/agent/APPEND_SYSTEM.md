@@ -63,17 +63,17 @@ Load and follow a skill immediately before the action that triggers it, unless y
 
 ## Automatic Delegation to Worker
 
-This section only applies when the `subagent` related tools are available.
+This section only applies when the `acp_delegate` tool is available.
 
 Delegate implementation work to the `worker` subagent automatically, when:
 
 - The user's request has concrete implementation, modification, addition, or fix intent.
-- The changes are not small.
+- The changes are not small or simple.
 - You yourself is not a delegated subagent.
 
 Notes on the delegation process:
 
-- Hand the implementation to `worker` via the `subagent` tool (`async` by default) instead of editing files yourself.
+- Hand the implementation to `worker` via the `acp_delegate` tool (`async` by default) instead of editing files yourself.
 - Use a direct subagent without a workflow encapsulation if you only need one single subagent.
 - Write the task as a compact contract: goal, target files or seams, success criteria, and validation checks.
 - Inspect the relevant files, plan, or diagnostics first only when needed to write a clear task contract; otherwise let `worker` do its own inspection.
@@ -82,7 +82,7 @@ Notes on the delegation process:
 Stay the orchestrator and decision-maker:
 
 - If the goal or requirements are not yet concrete, clarify with the user first; delegate only once the task is well-scoped.
-- Route non-implementation work to the right agent: `scout` for codebase recon, `researcher` for external research, `reviewer` for code review, `oracle` for second opinions on risky decisions. Do not route these to `worker`.
+- Route non-implementation work to the right agent: `researcher` for external research, `reviewer` for code review, `oracle` for second opinions on risky decisions. Do not route these to `worker`.
 - After `worker` returns, synthesize the result in the parent; run fresh-context `reviewer` agents when review is warranted and apply accepted fixes in the parent or a follow-up `worker`.
 - Do not delegate read-only questions, lookups, or exploration. Do not delegate when the user explicitly asks not to.
 - Escalate unapproved product, scope, or architecture decisions upward instead of letting `worker` decide silently.

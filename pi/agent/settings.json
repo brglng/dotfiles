@@ -1,11 +1,14 @@
 {
-  "lastChangelogVersion": "1.0.4",
+  "lastChangelogVersion": "1.1.0",
   "theme": "rose-pine-dawn/rose-pine",
   "showHardwareCursor": false,
   "defaultProvider": "poe",
-  "defaultModel": "gpt-6.1-sol",
+  "defaultModel": "zpan-gpt-6.1-sol",
   "defaultThinkingLevel": "medium",
-  "defaultTools": ["+codemode", "+tool_search"],
+  "defaultTools": [
+    "+codemode",
+    "+tool_search"
+  ],
   "session": {
     "titleGeneration": {
       "enabled": true,
@@ -28,16 +31,111 @@
   "subagents": {
     "agentOverrides": {
       "worker": {
-        "model": "poe/gpt-6.1-sol",
-        "thinking": "medium"
+        "model": "poe/zpan-gpt-6.1-sol",
+        "thinking": "medium",
+        "tools": [
+          "read",
+          "grep",
+          "find",
+          "ls",
+          "bash",
+          "edit",
+          "write",
+          "contact_supervisor",
+          "compress",
+          "decompress",
+          "search_context",
+          "acp_status"
+        ]
       },
       "reviewer": {
-        "model": "poe/gpt-6.1-sol",
-        "thinking": "medium"
+        "model": "poe/zpan-gpt-6.1-sol",
+        "thinking": "medium",
+        "tools": [
+          "read",
+          "grep",
+          "find",
+          "ls",
+          "watchdog_diff",
+          "contact_supervisor",
+          "compress",
+          "decompress",
+          "search_context",
+          "acp_status"
+        ]
       },
       "oracle": {
         "model": "openai-codex/gpt-6-astra",
-        "thinking": "medium"
+        "thinking": "medium",
+        "tools": [
+          "read",
+          "grep",
+          "find",
+          "ls",
+          "bash",
+          "compress",
+          "decompress",
+          "search_context",
+          "acp_status"
+        ]
+      },
+      "delegate": {
+        "tools": [
+          "read",
+          "grep",
+          "find",
+          "ls",
+          "bash",
+          "edit",
+          "write",
+          "contact_supervisor",
+          "compress",
+          "decompress",
+          "search_context",
+          "acp_status"
+        ]
+      },
+      "evidence-auditor": {
+        "tools": [
+          "read",
+          "web_search",
+          "fetch_content",
+          "get_search_content",
+          "source_check",
+          "compress",
+          "decompress",
+          "search_context",
+          "acp_status"
+        ]
+      },
+      "researcher": {
+        "tools": [
+          "read",
+          "write",
+          "web_search",
+          "fetch_content",
+          "get_search_content",
+          "source_check",
+          "compress",
+          "decompress",
+          "search_context",
+          "acp_status"
+        ]
+      },
+      "scout": {
+        "tools": [
+          "read",
+          "grep",
+          "find",
+          "ls",
+          "bash",
+          "write",
+          "contact_supervisor",
+          "compress",
+          "decompress",
+          "search_context",
+          "acp_status"
+        ]
       }
     }
   },
@@ -45,11 +143,10 @@
     "npm:pi-lens",
     "npm:pi-background-tasks",
     "npm:pi-intercom",
-    "npm:pi-subagents",
     "npm:pi-web-access",
     "npm:@narumitw/pi-usage",
     "npm:pi-hermes-memory",
-    "npm:context-mode",
+    "npm:billion-context-pi",
     "npm:@jackice/pi-handoff",
     "npm:@firstpick/pi-extension-grill-me",
     "npm:@gotgenes/pi-nocd",

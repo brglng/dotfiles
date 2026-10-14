@@ -1,0 +1,13 @@
+{
+  "delegate": {
+    "enabled": true,
+    "displayUsage": "merged",
+    "agents": {
+      "reviewer": { "model": "poe/zpan-gpt-6.1-sol", "thinkingLevel": "medium" },
+      "researcher": { "model": "poe/zpan-gpt-6.1-sol", "thinkingLevel": "medium" },
+      "worker":   { "model": "poe/zpan-gpt-6.1-sol", "thinkingLevel": "medium" },
+      "planner": { "model": "poe/zpan-gpt-6.1-sol", "thinkingLevel": "medium" },
+      "oracle":   { "model": "openai-codex/gpt-6-astra", "thinkingLevel": "xhigh" }
+    }
+  }
+}

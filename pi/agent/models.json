@@ -7,25 +7,25 @@
       },
       "modelOverrides": {
         "gpt-5.6-luna": {
-          "contextWindow": 1050000
+          "contextWindow": 372000
         },
         "gpt-5.6-terra": {
-          "contextWindow": 1050000
+          "contextWindow": 372000
         },
         "gpt-5.6-sol": {
-          "contextWindow": 1050000
+          "contextWindow": 500000
         },
         "gpt-6-luna": {
-          "contextWindow": 1050000
+          "contextWindow": 372000
         },
         "gpt-6-terra": {
-          "contextWindow": 1050000
+          "contextWindow": 372000
         },
         "gpt-6-astra": {
-          "contextWindow": 1050000
+          "contextWindow": 500000
         },
         "gpt-6.1-sol": {
-          "contextWindow": 1050000
+          "contextWindow": 500000
         }
       }
     },
@@ -39,7 +39,8 @@
           "compat": {
             "thinkingFormat": "deepseek",
             "requiresReasoningContentOnAssistantMessages": true
-          }
+          },
+          "contextWindow": 372000
         }
       }
     },
@@ -65,7 +66,23 @@
           "name": "GPT 6 Astra (zpan)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 1050000,
+          "contextWindow": 500000,
+          "maxTokens": 128000,
+          "thinkingLevelMap": {
+            "minimal": "none",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          }
+        },
+        {
+          "id": "zpan-gpt-6.1-sol",
+          "name": "GPT 6.1 Sol (zpan)",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 500000,
           "maxTokens": 128000,
           "thinkingLevelMap": {
             "minimal": "none",
@@ -81,7 +98,7 @@
           "name": "GPT 6 Luna (zpan)",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 1050000,
+          "contextWindow": 372000,
           "maxTokens": 128000,
           "thinkingLevelMap": {
             "minimal": "none",
@@ -97,7 +114,7 @@
           "name": "Kimi K3",
           "reasoning": true,
           "input": ["text", "image"],
-          "contextWindow": 1000000,
+          "contextWindow": 372000,
           "maxTokens": 128000,
           "thinkingLevelMap": {
             "minimal": null,
@@ -113,7 +130,7 @@
           "name": "DeepSeek v4.1 Flash",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 1000000,
+          "contextWindow": 372000,
           "maxTokens": 128000,
           "compat": {
             "thinkingFormat": "deepseek",
@@ -128,12 +145,7 @@
             "max": "max"
           }
         }
-      ],
-      "modelOverrides": {
-        "gpt-6.1-sol": {
-          "contextWindow": 1050000
-        }
-      }
+      ]
     },
     "loostone": {
       "name": "Loostone",
@@ -145,7 +157,7 @@
           "id": "deepseek-v4.1-flash",
           "name": "DeepSeek V4.1 Flash",
           "input": ["text", "image"],
-          "contextWindow": 1000000,
+          "contextWindow": 372000,
           "maxTokens": 128000,
           "samplingParams": {
             "temperature": 1.0
@@ -167,7 +179,7 @@
           "id": "glm-5.3-flash",
           "name": "GLM 5.3 Flash",
           "input": ["text", "image"],
-          "contextWindow": 1000000,
+          "contextWindow": 372000,
           "maxTokens": 128000,
           "samplingParams": {
             "temperature": 1.0
@@ -187,7 +199,7 @@
           "id": "GLM-5.3",
           "name": "GLM 5.3",
           "input": ["text", "image"],
-          "contextWindow": 1000000,
+          "contextWindow": 372000,
           "maxTokens": 128000,
           "samplingParams": {
             "temperature": 1.0
@@ -207,7 +219,7 @@
           "id": "gpt-6-luna",
           "name": "GPT 6 Luna",
           "input": ["text", "image"],
-          "contextWindow": 1000000,
+          "contextWindow": 372000,
           "maxTokens": 128000,
           "compat": {
             "sendSessionAffinityHeaders": true,

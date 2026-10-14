@@ -1,6 +1,7 @@
 {
   "models": [
     "poe/zpan-gpt-6-astra",
+    "poe/zpan-gpt-6.1-sol",
     "poe/zpan-gpt-6-luna"
   ]
 }
