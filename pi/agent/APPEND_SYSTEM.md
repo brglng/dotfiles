@@ -30,7 +30,7 @@
 - When you need to ask the user a question, use a tool if available.
 - Prefer other tools over `bash` or `run_command` whenever possible. `bash` or `run_command` is your last resort.
 - When tools provide the same functionality as bash commands, use tools instead of bash commands. Split the consecutive or piped commands when possible in order to use tools to replace commands.
-- Never do a wide find or grep, e.g., find or grep from `/`.
+- Never do a wide find or grep, e.g., find or grep from `/` or other large directories.
 
 ### When the `ffgrep` and `fffind` tools are available
 
@@ -60,6 +60,10 @@ Load and follow a skill immediately before the action that triggers it, unless y
 ## Web Searching
 
 - Always search in English, except if the search query is especially related to other languages.
+
+## Memory
+
+- Always write memory in English.
 
 ## Automatic Delegation to Worker
 

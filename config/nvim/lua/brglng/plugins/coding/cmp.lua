@@ -233,7 +233,7 @@ return {
                         fallback()
                         -- Match native timing: request only after the inserted newline has been
                         -- processed (didChange flushed, cursor settled on the new line).
-                        vim.schedule(trigger_native_on_type_formatting)
+                        -- vim.schedule(trigger_native_on_type_formatting)
                     else
                         fallback()
                     end

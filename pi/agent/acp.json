@@ -3,11 +3,11 @@
     "enabled": true,
     "displayUsage": "merged",
     "agents": {
-      "reviewer": { "model": "poe/zpan-gpt-6.1-sol", "thinkingLevel": "medium" },
-      "researcher": { "model": "poe/zpan-gpt-6.1-sol", "thinkingLevel": "medium" },
-      "worker":   { "model": "poe/zpan-gpt-6.1-sol", "thinkingLevel": "medium" },
-      "planner": { "model": "poe/zpan-gpt-6.1-sol", "thinkingLevel": "medium" },
-      "oracle":   { "model": "openai-codex/gpt-6-astra", "thinkingLevel": "xhigh" }
+      "reviewer": { "model": "openai/gpt-6.1-sol", "thinkingLevel": "medium" },
+      "researcher": { "model": "openai/gpt-6.1-sol", "thinkingLevel": "medium" },
+      "worker":   { "model": "openai/gpt-6.1-sol", "thinkingLevel": "medium" },
+      "planner": { "model": "openai/gpt-6.1-sol", "thinkingLevel": "medium" },
+      "oracle":   { "model": "openai/gpt-6-astra", "thinkingLevel": "xhigh" }
     }
   }
 }

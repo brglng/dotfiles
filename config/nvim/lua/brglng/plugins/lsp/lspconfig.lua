@@ -14,11 +14,10 @@ return {
             -- virtual_text = {
             --     current_line = true,
             -- },
-            virtual_lines = false,
-            -- virtual_lines = {
-            --     only_current_line = false,
-            --     highlight_whole_line = false,
-            -- },
+            virtual_lines = {
+                only_current_line = false,
+                highlight_whole_line = false,
+            },
             float = {
                 enabled = false,
                 -- border = "none",
@@ -87,7 +86,7 @@ return {
             enabled = true,
         },
         on_type_formatting = {
-            enabled = true,
+            enabled = false,
             trigger_characters = { ";", "}", ",", "end" }
         },
         servers = {

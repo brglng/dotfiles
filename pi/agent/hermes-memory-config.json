@@ -1,4 +1,10 @@
 {
   "llmModelOverride": "openai-codex/gpt-6-luna",
-  "llmThinkingOverride": "max"
+  "llmThinkingOverride": "max",
+  "lazyInitialization": true,
+  "reviewEnabled": false,
+  "correctionDetection": false,
+  "flushOnCompact": false,
+  "flushOnShutdown": false,
+  "usageHitTrackingEnabled": false
 }

@@ -84,7 +84,7 @@ return {
             },
             schema = {
               model = {
-                default = "deepseek/deepseek-v4.1-flash",
+                default = "deepseek/deepseek-v4.1-flash-1017",
               },
               max_tokens = {
                 default = 128000,
@@ -318,13 +318,13 @@ Just run the command directly.
       inline = {
         adapter = {
           name = "openrouter",
-          model = "deepseek/deepseek-v4.1-flash"
+          model = "deepseek/deepseek-v4.1-flash-1017"
         },
       },
       cmd = {
         adapter = {
           name = "openrouter",
-          model = "deepseek/deepseek-v4.1-flash"
+          model = "deepseek/deepseek-v4.1-flash-1017"
         },
       },
       cli = {
@@ -372,7 +372,7 @@ Just run the command directly.
       gitcommit = {
         opts = {
           adapter = "openrouter",
-          model = "openai/gpt-5.6-luna",
+          model = "deepseek/deepseek-v4.1-flash-1017",
           languages = { "English" }
         }
       },

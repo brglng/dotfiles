@@ -5,7 +5,7 @@ description: Mandatory conventions for writing or editing Python code. Read with
 
 # Python Code Conventions
 
-Apply these rules in addition to `code-conventions` when writing or editing Python code.
+Apply these rules when writing or editing Python code.
 
 ## Rules
 

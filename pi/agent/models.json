@@ -1,6 +1,6 @@
 {
   "providers": {
-    "openai-codex": {
+    "openai": {
       "compat": {
         "sendSessionAffinityHeaders": true,
         "supportsLongCacheRetention": true
@@ -41,6 +41,27 @@
             "requiresReasoningContentOnAssistantMessages": true
           },
           "contextWindow": 372000
+        },
+        "openai/gpt-5.6-luna": {
+          "contextWindow": 372000
+        },
+        "openai/gpt-5.6-terra": {
+          "contextWindow": 372000
+        },
+        "openai/gpt-5.6-sol": {
+          "contextWindow": 500000
+        },
+        "openai/gpt-6-luna": {
+          "contextWindow": 372000
+        },
+        "openai/gpt-6-terra": {
+          "contextWindow": 372000
+        },
+        "openai/gpt-6-astra": {
+          "contextWindow": 500000
+        },
+        "openai/gpt-6.1-sol": {
+          "contextWindow": 500000
         }
       }
     },
@@ -48,6 +69,29 @@
       "compat": {
         "sendSessionAffinityHeaders": true,
         "supportsLongCacheRetention": true
+      },
+      "modelOverrides": {
+        "gpt-5.6-luna": {
+          "contextWindow": 372000
+        },
+        "gpt-5.6-terra": {
+          "contextWindow": 372000
+        },
+        "gpt-5.6-sol": {
+          "contextWindow": 500000
+        },
+        "gpt-6-luna": {
+          "contextWindow": 372000
+        },
+        "gpt-6-terra": {
+          "contextWindow": 372000
+        },
+        "gpt-6-astra": {
+          "contextWindow": 500000
+        },
+        "gpt-6.1-sol": {
+          "contextWindow": 500000
+        }
       }
     },
     "poe": {
@@ -154,8 +198,8 @@
       "api": "openai-completions",
       "models": [
         {
-          "id": "deepseek-v4.1-flash",
-          "name": "DeepSeek V4.1 Flash",
+          "id": "deepseek-v4.1-flash-1017",
+          "name": "DeepSeek V4.1 Flash 1017",
           "input": ["text", "image"],
           "contextWindow": 372000,
           "maxTokens": 128000,
@@ -172,52 +216,13 @@
             "input": 2,
             "output": 8,
             "cacheRead": 0.04,
-            "cacheWrite": 0.04
-          }
-        },
-        {
-          "id": "glm-5.3-flash",
-          "name": "GLM 5.3 Flash",
-          "input": ["text", "image"],
-          "contextWindow": 372000,
-          "maxTokens": 128000,
-          "samplingParams": {
-            "temperature": 1.0
-          },
-          "compat": {
-            "sendSessionAffinityHeaders": true,
-            "supportsLongCacheRetention": true
-          },
-          "cost": {
-            "input": 0.8,
-            "output": 2.8,
-            "cacheRead": 0.115,
-            "cacheWrite": 0.115
-          }
-        },
-        {
-          "id": "GLM-5.3",
-          "name": "GLM 5.3",
-          "input": ["text", "image"],
-          "contextWindow": 372000,
-          "maxTokens": 128000,
-          "samplingParams": {
-            "temperature": 1.0
-          },
-          "compat": {
-            "sendSessionAffinityHeaders": true,
-            "supportsLongCacheRetention": true
-          },
-          "cost": {
-            "input": 8,
-            "output": 28,
-            "cacheRead": 2,
-            "cacheWrite": 2
+            "cacheWrite": 0.16
           }
         },
         {
           "id": "gpt-6-luna",
           "name": "GPT 6 Luna",
+          "api": "openai-responses",
           "input": ["text", "image"],
           "contextWindow": 372000,
           "maxTokens": 128000,
@@ -226,10 +231,28 @@
             "supportsLongCacheRetention": true
           },
           "cost": {
-            "input": 0.53,
-            "output": 2.66,
-            "cacheRead": 0.053,
-            "cacheWrite": 0.88
+            "input": 0.15,
+            "output": 0.5625,
+            "cacheRead": 0.015,
+            "cacheWrite": 0.1875
+          }
+        },
+        {
+          "id": "gpt-6.1-sol",
+          "name": "GPT 6.1 Sol",
+          "api": "openai-responses",
+          "input": ["text", "image"],
+          "contextWindow": 500000,
+          "maxTokens": 128000,
+          "compat": {
+            "sendSessionAffinityHeaders": true,
+            "supportsLongCacheRetention": true
+          },
+          "cost": {
+            "input": 10,
+            "output": 50,
+            "cacheRead": 0,
+            "cacheWrite": 10
           }
         }
       ]

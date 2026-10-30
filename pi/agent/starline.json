@@ -1,0 +1,40 @@
+{
+  "footerStyle": "pill",
+  "colors": {
+    "gitBranch": "bold purple"
+  },
+  "mouse": {
+    "transcriptCleanCopy": false
+  },
+  "colorSources": {
+    "editor": "terminal",
+    "userMessages": "terminal",
+    "starship": "terminal"
+  },
+  "features": {
+    "editor": true,
+    "copyFriendly": true
+  },
+  "separator": "pipe",
+  "footerSegments": {
+    "model": false,
+    "thinking": false,
+    "sessionDuration": true,
+    "username": false,
+    "os": true,
+    "cacheHit": true
+  },
+  "pill": {
+    "segments": [
+      "os",
+      "sessionDuration",
+      "queue",
+      "subagents",
+      "cwd",
+      "git",
+      "context",
+      "cost",
+      "extensionStatus"
+    ]
+  }
+}
