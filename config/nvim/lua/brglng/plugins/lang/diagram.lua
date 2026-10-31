@@ -3,6 +3,7 @@ local current_dir = vim.fs.normalize(vim.fs.dirname(debug.getinfo(1, "S").source
 return {
   "3rd/diagram.nvim",
   -- dir = vim.fs.normalize("~/github/brglng/diagram.nvim"),
+  cond = ((not vim.g.neovide) and vim.fn.has("win32") == 0),
   dependencies = {
     "3rd/image.nvim"
   },

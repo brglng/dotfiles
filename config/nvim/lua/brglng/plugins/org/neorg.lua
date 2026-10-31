@@ -152,14 +152,6 @@ return {
                     end
                 }
             },
-            ["external.math-renderer"] = {
-                config = {
-                    render_on_enter = true,
-                    scale = 0.83,
-                    conceal_math_tags = true,
-                    -- preserve_inline_spacing = true
-                }
-            },
             ["external.table-renderer"] = {
                 config = {
                     render_on_enter = true,
@@ -179,6 +171,14 @@ return {
             --         min_length = 1,
             --     }
             -- }
+            opts.load["core.math-renderer"] = {
+                config = {
+                    render_on_enter = true,
+                    scale = 0.83,
+                    conceal_math_tags = true,
+                    -- preserve_inline_spacing = true
+                }
+            }
         end
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "norg",
