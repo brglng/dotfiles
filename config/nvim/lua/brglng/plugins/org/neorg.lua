@@ -171,10 +171,10 @@ return {
             --         min_length = 1,
             --     }
             -- }
-            opts.load["core.math-renderer"] = {
+            opts.load["external.math-renderer"] = {
                 config = {
                     render_on_enter = true,
-                    scale = 0.83,
+                    scale = 1.0,
                     conceal_math_tags = true,
                     -- preserve_inline_spacing = true
                 }
